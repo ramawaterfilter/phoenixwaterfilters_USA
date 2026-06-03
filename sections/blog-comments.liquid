@@ -1,0 +1,65 @@
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-md-10">
+			<h2>
+				{% if article.comments.size > 0 %}
+					{{ 'blogs.article.comments.other' | t: count: article.comments.size }}
+				{% else %}
+					{{ 'blogs.article.comments.one' | t: count: article.comments.size }}
+				{% endif %}
+			</h2>
+
+			{% paginate article.comments by 5 %}
+
+				{% for comment in article.comments %}
+					<div class="comment">
+						<div class="comment__content">
+							{{ comment.content }}
+						</div>
+						<div class="comment__meta">
+							{{ comment.author }} | {{ comment.created_at }}
+						</div>
+					</div>
+				{% endfor %}
+
+				{% if paginate.pages > 1 %}
+	                <div class="pagination"> 
+	                    {{ paginate | default_pagination }}
+	                </div>
+				{% endif %}
+
+
+			{% endpaginate %}
+
+			<div class="comment__form">
+				<h4 class="mb-4">{{ 'blogs.article.post' | t }}</h4>
+
+				{% form 'new_comment', article %}
+					{{ form.errors | default_errors }}
+					<label for="CommentAuthor" class="sr-only">Name</label>
+					<input type="text" name="comment[author]" id="CommentAuthor" placeholder="Name" value="{{ form.author }}" autocapitalize="words">
+
+					<label for="CommentEmail" class="sr-only">Email</label>
+					<input type="email" name="comment[email]" id="CommentEmail" placeholder="Email" value="{{ form.email }}" autocorrect="off" autocapitalize="off">
+
+					<label for="CommentBody" class="sr-only">Message</label>
+					<textarea name="comment[body]" id="CommentBody" placeholder="Message">{{ form.body }}</textarea>
+
+					<input type="submit" value="{{ 'blogs.article.post' | t }}">
+				{% endform %}
+			</div>
+		</div>
+	</div>
+</div>
+
+
+{% schema %}
+{
+	"name": "Comments",
+    "tag": "section",
+	"class": "section-comments",
+    "enabled_on": {
+        "templates": ["article"]
+    }
+}
+{% endschema %}

@@ -1,0 +1,968 @@
+{% doc %}
+  @prompt
+    Create a Shopify section that displays a horizontally scrolling feature marquee like a premium ecommerce website.
+    
+    Design Requirements:
+    
+    - Add a centered heading at the top: "Our Filters Remove..."
+    - Below the heading, create a horizontal scrolling row of feature items.
+    
+    Each feature item must include:
+    - A circular icon container with a light background
+    - An icon image centered inside the circle
+    - A bold title (e.g., "Heavy Metals", "PFAs", "Microplastics")
+    - A percentage text below (e.g., "99.99%")
+    
+    Layout:
+    
+    - All items must be aligned in a single horizontal row
+    - Add a thin vertical divider line between each item
+    - Each item should have equal spacing
+    - The design should match a clean, modern ecommerce style
+    
+    Scrolling Behavior (VERY IMPORTANT):
+    
+    - The row must scroll continuously from right to left
+    - The scrolling must be perfectly smooth with no stopping, no jumping, and no reset visible
+    - It must behave like an infinite loop
+    - Duplicate the content internally to ensure seamless looping
+    - Use requestAnimationFrame OR a high-performance CSS transform (translate3d)
+    - Do NOT use Swiper or slider libraries
+    - Avoid any stuttering caused by image loading or layout shifts
+    - Ensure constant linear speed
+    
+    Technical Requirements:
+    
+    - Use flexbox for layout
+    - Prevent items from wrapping (white-space: nowrap or flex no-wrap)
+    - Use transform: translate3d for GPU-accelerated smooth animation
+    - Ensure the animation never pauses or resets visibly
+    - Handle dynamic content width properly
+    
+    Shopify Customization:
+    
+    - Add section settings:
+      - Heading text
+      - Scroll speed control (range slider)
+    - Add blocks:
+      - Icon (image picker)
+      - Title (text)
+      - Percentage (text)
+    
+    Styling Details:
+    
+    - Circular icon background (light grey or subtle color)
+    - Icon size consistent across items
+    - Divider line between items (1px, light grey, full height of item)
+    - Center all content vertically and horizontally
+    - Use clean typography (bold for title, lighter for percentage)
+    
+    Responsive:
+    
+    - Must work smoothly on mobile and desktop
+    - Reduce spacing and icon size on smaller screens
+    - Keep smooth scrolling performance on mobile
+    
+    Optional Enhancements:
+    
+    - Pause scrolling on hover
+    - Slight fade effect on left and right edges (gradient mask)
+    
+    Goal:
+    
+    The final result must look like a premium, smooth, continuously scrolling feature strip with icons and dividers, exactly like modern high-end Shopify stores., if the item is emty i dont need empty space or anything just remove that like that i need evething editable in mobile and desctop viweindiaully i edit the size space evething 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-feature-marquee-{{ ai_gen_id }} {
+    width: 100%;
+    overflow: hidden;
+    padding: {{ block.settings.padding_top_desktop }}px 0 {{ block.settings.padding_bottom_desktop }}px;
+    background-color: {{ block.settings.background_color }};
+    display: block;
+  }
+
+  .ai-feature-marquee__heading-{{ ai_gen_id }} {
+    text-align: center;
+    font-size: {{ block.settings.heading_size_desktop }}px;
+    font-weight: 700;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 {{ block.settings.heading_margin_bottom_desktop }}px;
+    padding: 0 20px;
+  }
+
+  .ai-feature-marquee__wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+  }
+
+  .ai-feature-marquee__track-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    will-change: transform;
+  }
+
+  .ai-feature-marquee__content-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .ai-feature-marquee__item-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 {{ block.settings.item_spacing_desktop }}px;
+    flex-shrink: 0;
+    min-width: {{ block.settings.item_min_width_desktop }}px;
+  }
+
+  .ai-feature-marquee__icon-container-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size_desktop }}px;
+    height: {{ block.settings.icon_size_desktop }}px;
+    border-radius: 50%;
+    background-color: {{ block.settings.icon_bg_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: {{ block.settings.icon_margin_bottom_desktop }}px;
+    flex-shrink: 0;
+  }
+
+  .ai-feature-marquee__icon-container-{{ ai_gen_id }} img {
+    width: calc({{ block.settings.icon_size_desktop }}px * 0.6);
+    height: calc({{ block.settings.icon_size_desktop }}px * 0.6);
+    object-fit: contain;
+  }
+
+  .ai-feature-marquee__icon-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-feature-marquee__icon-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-feature-marquee__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size_desktop }}px;
+    font-weight: 700;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 {{ block.settings.title_margin_bottom_desktop }}px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .ai-feature-marquee__percentage-{{ ai_gen_id }} {
+    font-size: {{ block.settings.percentage_size_desktop }}px;
+    font-weight: 400;
+    color: {{ block.settings.percentage_color }};
+    margin: 0;
+    text-align: center;
+  }
+
+  .ai-feature-marquee__divider-{{ ai_gen_id }} {
+    width: 1px;
+    height: {{ block.settings.divider_height_desktop }}px;
+    background-color: {{ block.settings.divider_color }};
+    flex-shrink: 0;
+  }
+
+  {% if block.settings.enable_fade_edges %}
+    .ai-feature-marquee__wrapper-{{ ai_gen_id }}::before,
+    .ai-feature-marquee__wrapper-{{ ai_gen_id }}::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: {{ block.settings.fade_width_desktop }}px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .ai-feature-marquee__wrapper-{{ ai_gen_id }}::before {
+      left: 0;
+      background: linear-gradient(to right, {{ block.settings.background_color }}, transparent);
+    }
+
+    .ai-feature-marquee__wrapper-{{ ai_gen_id }}::after {
+      right: 0;
+      background: linear-gradient(to left, {{ block.settings.background_color }}, transparent);
+    }
+  {% endif %}
+
+  {% if block.settings.pause_on_hover %}
+    .ai-feature-marquee__track-{{ ai_gen_id }}:hover {
+      animation-play-state: paused !important;
+    }
+  {% endif %}
+
+  @media screen and (max-width: 749px) {
+    .ai-feature-marquee-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding_top_mobile }}px 0 {{ block.settings.padding_bottom_mobile }}px;
+    }
+
+    .ai-feature-marquee__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size_mobile }}px;
+      margin-bottom: {{ block.settings.heading_margin_bottom_mobile }}px;
+    }
+
+    .ai-feature-marquee__item-{{ ai_gen_id }} {
+      padding: 0 {{ block.settings.item_spacing_mobile }}px;
+      min-width: {{ block.settings.item_min_width_mobile }}px;
+    }
+
+    .ai-feature-marquee__icon-container-{{ ai_gen_id }} {
+      width: {{ block.settings.icon_size_mobile }}px;
+      height: {{ block.settings.icon_size_mobile }}px;
+      margin-bottom: {{ block.settings.icon_margin_bottom_mobile }}px;
+    }
+
+    .ai-feature-marquee__icon-container-{{ ai_gen_id }} img {
+      width: calc({{ block.settings.icon_size_mobile }}px * 0.6);
+      height: calc({{ block.settings.icon_size_mobile }}px * 0.6);
+    }
+
+    .ai-feature-marquee__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size_mobile }}px;
+      margin-bottom: {{ block.settings.title_margin_bottom_mobile }}px;
+    }
+
+    .ai-feature-marquee__percentage-{{ ai_gen_id }} {
+      font-size: {{ block.settings.percentage_size_mobile }}px;
+    }
+
+    .ai-feature-marquee__divider-{{ ai_gen_id }} {
+      height: {{ block.settings.divider_height_mobile }}px;
+    }
+
+    {% if block.settings.enable_fade_edges %}
+      .ai-feature-marquee__wrapper-{{ ai_gen_id }}::before,
+      .ai-feature-marquee__wrapper-{{ ai_gen_id }}::after {
+        width: {{ block.settings.fade_width_mobile }}px;
+      }
+    {% endif %}
+  }
+{% endstyle %}
+
+<feature-marquee-{{ ai_gen_id }} class="ai-feature-marquee-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.heading != blank %}
+    <h2 class="ai-feature-marquee__heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+  {% endif %}
+
+  <div class="ai-feature-marquee__wrapper-{{ ai_gen_id }}">
+    <div class="ai-feature-marquee__track-{{ ai_gen_id }}" data-speed="{{ block.settings.scroll_speed }}">
+      <div class="ai-feature-marquee__content-{{ ai_gen_id }}">
+        {% liquid
+          assign items = ''
+          if block.settings.item_1_title != blank
+            assign items = items | append: '1,'
+          endif
+          if block.settings.item_2_title != blank
+            assign items = items | append: '2,'
+          endif
+          if block.settings.item_3_title != blank
+            assign items = items | append: '3,'
+          endif
+          if block.settings.item_4_title != blank
+            assign items = items | append: '4,'
+          endif
+          if block.settings.item_5_title != blank
+            assign items = items | append: '5,'
+          endif
+          if block.settings.item_6_title != blank
+            assign items = items | append: '6,'
+          endif
+          if block.settings.item_7_title != blank
+            assign items = items | append: '7,'
+          endif
+          if block.settings.item_8_title != blank
+            assign items = items | append: '8,'
+          endif
+          assign item_array = items | split: ','
+        %}
+
+        {% for item_num in item_array %}
+          {% if item_num != blank %}
+            {% assign icon_key = 'item_' | append: item_num | append: '_icon' %}
+            {% assign title_key = 'item_' | append: item_num | append: '_title' %}
+            {% assign percentage_key = 'item_' | append: item_num | append: '_percentage' %}
+            
+            {% assign icon = block.settings[icon_key] %}
+            {% assign title = block.settings[title_key] %}
+            {% assign percentage = block.settings[percentage_key] %}
+
+            {% if forloop.index > 1 %}
+              <div class="ai-feature-marquee__divider-{{ ai_gen_id }}"></div>
+            {% endif %}
+
+            <div class="ai-feature-marquee__item-{{ ai_gen_id }}">
+              <div class="ai-feature-marquee__icon-container-{{ ai_gen_id }}">
+                {% if icon != blank %}
+                  <img
+                    src="{{ icon | image_url: width: 200 }}"
+                    alt="{{ title | escape }}"
+                    loading="lazy"
+                    width="200"
+                    height="200"
+                  >
+                {% else %}
+                  <div class="ai-feature-marquee__icon-placeholder-{{ ai_gen_id }}">
+                    {{ 'image' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+              </div>
+              {% if title != blank %}
+                <h3 class="ai-feature-marquee__title-{{ ai_gen_id }}">{{ title }}</h3>
+              {% endif %}
+              {% if percentage != blank %}
+                <p class="ai-feature-marquee__percentage-{{ ai_gen_id }}">{{ percentage }}</p>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="ai-feature-marquee__content-{{ ai_gen_id }}" aria-hidden="true">
+        {% for item_num in item_array %}
+          {% if item_num != blank %}
+            {% assign icon_key = 'item_' | append: item_num | append: '_icon' %}
+            {% assign title_key = 'item_' | append: item_num | append: '_title' %}
+            {% assign percentage_key = 'item_' | append: item_num | append: '_percentage' %}
+            
+            {% assign icon = block.settings[icon_key] %}
+            {% assign title = block.settings[title_key] %}
+            {% assign percentage = block.settings[percentage_key] %}
+
+            {% if forloop.index > 1 %}
+              <div class="ai-feature-marquee__divider-{{ ai_gen_id }}"></div>
+            {% endif %}
+
+            <div class="ai-feature-marquee__item-{{ ai_gen_id }}">
+              <div class="ai-feature-marquee__icon-container-{{ ai_gen_id }}">
+                {% if icon != blank %}
+                  <img
+                    src="{{ icon | image_url: width: 200 }}"
+                    alt="{{ title | escape }}"
+                    loading="lazy"
+                    width="200"
+                    height="200"
+                  >
+                {% else %}
+                  <div class="ai-feature-marquee__icon-placeholder-{{ ai_gen_id }}">
+                    {{ 'image' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+              </div>
+              {% if title != blank %}
+                <h3 class="ai-feature-marquee__title-{{ ai_gen_id }}">{{ title }}</h3>
+              {% endif %}
+              {% if percentage != blank %}
+                <p class="ai-feature-marquee__percentage-{{ ai_gen_id }}">{{ percentage }}</p>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</feature-marquee-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class FeatureMarquee{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.track = this.querySelector('.ai-feature-marquee__track-{{ ai_gen_id }}');
+        this.content = this.querySelector('.ai-feature-marquee__content-{{ ai_gen_id }}');
+        this.speed = parseFloat(this.track.dataset.speed) || 1;
+        this.position = 0;
+        this.contentWidth = 0;
+        this.animationId = null;
+      }
+
+      connectedCallback() {
+        this.init();
+        window.addEventListener('resize', this.handleResize.bind(this));
+      }
+
+      disconnectedCallback() {
+        if (this.animationId) {
+          cancelAnimationFrame(this.animationId);
+        }
+        window.removeEventListener('resize', this.handleResize.bind(this));
+      }
+
+      init() {
+        this.contentWidth = this.content.offsetWidth;
+        this.animate();
+      }
+
+      handleResize() {
+        this.contentWidth = this.content.offsetWidth;
+      }
+
+      animate() {
+        this.position -= this.speed;
+
+        if (Math.abs(this.position) >= this.contentWidth) {
+          this.position = 0;
+        }
+
+        this.track.style.transform = `translate3d(${this.position}px, 0, 0)`;
+
+        this.animationId = requestAnimationFrame(this.animate.bind(this));
+      }
+    }
+
+    customElements.define('feature-marquee-{{ ai_gen_id }}', FeatureMarquee{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Feature marquee",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Filters Remove..."
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "label": "Heading size (desktop)",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Heading size (mobile)",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom_desktop",
+      "label": "Heading bottom margin (desktop)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom_mobile",
+      "label": "Heading bottom margin (mobile)",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Scrolling"
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "label": "Scroll speed",
+      "min": 0.5,
+      "max": 5,
+      "step": 0.5,
+      "default": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Item 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_1_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_1_title",
+      "label": "Title",
+      "default": "Heavy Metals"
+    },
+    {
+      "type": "text",
+      "id": "item_1_percentage",
+      "label": "Percentage",
+      "default": "99.99%"
+    },
+    {
+      "type": "header",
+      "content": "Item 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_2_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_2_title",
+      "label": "Title",
+      "default": "PFAs"
+    },
+    {
+      "type": "text",
+      "id": "item_2_percentage",
+      "label": "Percentage",
+      "default": "99.99%"
+    },
+    {
+      "type": "header",
+      "content": "Item 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_3_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_3_title",
+      "label": "Title",
+      "default": "Microplastics"
+    },
+    {
+      "type": "text",
+      "id": "item_3_percentage",
+      "label": "Percentage",
+      "default": "99.99%"
+    },
+    {
+      "type": "header",
+      "content": "Item 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_4_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_4_title",
+      "label": "Title",
+      "default": "Chlorine"
+    },
+    {
+      "type": "text",
+      "id": "item_4_percentage",
+      "label": "Percentage",
+      "default": "99.99%"
+    },
+    {
+      "type": "header",
+      "content": "Item 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_5_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_5_title",
+      "label": "Title",
+      "default": "Fluoride"
+    },
+    {
+      "type": "text",
+      "id": "item_5_percentage",
+      "label": "Percentage",
+      "default": "99.99%"
+    },
+    {
+      "type": "header",
+      "content": "Item 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_6_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_6_title",
+      "label": "Title",
+      "default": "Bacteria"
+    },
+    {
+      "type": "text",
+      "id": "item_6_percentage",
+      "label": "Percentage",
+      "default": "99.99%"
+    },
+    {
+      "type": "header",
+      "content": "Item 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_7_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_7_title",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "item_7_percentage",
+      "label": "Percentage"
+    },
+    {
+      "type": "header",
+      "content": "Item 8"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_8_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_8_title",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "item_8_percentage",
+      "label": "Percentage"
+    },
+    {
+      "type": "header",
+      "content": "Desktop item style"
+    },
+    {
+      "type": "range",
+      "id": "icon_size_desktop",
+      "label": "Icon size",
+      "min": 60,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "icon_margin_bottom_desktop",
+      "label": "Icon bottom margin",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Title size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom_desktop",
+      "label": "Title bottom margin",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "percentage_size_desktop",
+      "label": "Percentage size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "item_spacing_desktop",
+      "label": "Item spacing",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "item_min_width_desktop",
+      "label": "Item minimum width",
+      "min": 100,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 180
+    },
+    {
+      "type": "header",
+      "content": "Mobile item style"
+    },
+    {
+      "type": "range",
+      "id": "icon_size_mobile",
+      "label": "Icon size",
+      "min": 40,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "icon_margin_bottom_mobile",
+      "label": "Icon bottom margin",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Title size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom_mobile",
+      "label": "Title bottom margin",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "percentage_size_mobile",
+      "label": "Percentage size",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "item_spacing_mobile",
+      "label": "Item spacing",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "item_min_width_mobile",
+      "label": "Item minimum width",
+      "min": 80,
+      "max": 240,
+      "step": 10,
+      "unit": "px",
+      "default": 130
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "icon_bg_color",
+      "label": "Icon background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "percentage_color",
+      "label": "Percentage color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Desktop divider"
+    },
+    {
+      "type": "range",
+      "id": "divider_height_desktop",
+      "label": "Divider height",
+      "min": 20,
+      "max": 140,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "header",
+      "content": "Mobile divider"
+    },
+    {
+      "type": "range",
+      "id": "divider_height_mobile",
+      "label": "Divider height",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Desktop spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Mobile spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_fade_edges",
+      "label": "Enable fade edges",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "fade_width_desktop",
+      "label": "Fade width (desktop)",
+      "min": 30,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "fade_width_mobile",
+      "label": "Fade width (mobile)",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    }
+  ],
+  "presets": [
+    {
+      "name": "Feature marquee"
+    }
+  ]
+}
+{% endschema %}

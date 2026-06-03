@@ -1,0 +1,351 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "custom_code_section_QD4f49": {
+      "type": "custom-code-section",
+      "custom_css": [
+        ".custom-code-section {background-color: #ffffff;}"
+      ],
+      "name": "Custom Code Section",
+      "settings": {
+        "custom_html": "<section class=\"filter-setup\">\n  <div class=\"filter-header\">\n    <h2>How to set up your filter</h2>\n  </div>\n\n  <ul class=\"filter-list\">\n    <li><a href=\"#\" data-target=\".ai-embed-code-wrapper-as1fkzmjneg5wenbbsaigenblockff8d1fewwpevj\">How to set up your Phoenix Gravity Water Filter System</a></li>\n    <li><a href=\"#\" data-target=\".ai-embed-code-container-aywhptnz3bm52y2nulaigenblockff8d1fen7tghz\">How to set up your Carbon filter Elements</a></li>\n    <li><a href=\"#\" data-target=\".ai-embed-code-wrapper-aqkozmurlqnbotwtzuaigenblockff8d1fek4n9mg\">How to set up your POSTreat Steel Fluoride & Arsenic Reduction Filter Elements</a></li>\n    <li><a href=\"#\" data-target=\".ai-embed-code-wrapper-azejmanezmtztsvzhaaigenblockff8d1fez4brgt\">How to set up your Carbon filter Elements and POSTreat Steel Fluoride & Arsenic Reduction Filter Elements</a></li>\n    <li><a href=\"#\" data-target=\".ai-embed-code-wrapper-azwjvodjtzhhnodvptaigenblockff8d1fexnv4jr\">How to Prime Your Carbon filter Elements</a></li>\n    <li><a href=\"#\" data-target=\".ai-embed-code-wrapper-awk54zi9sv09xy3frbaigenblockff8d1fetqackn\">How to set up your Stainless Steel Spigot</a></li>\n  </ul>\n</section>",
+        "custom_css": ".filter-setup {\n  padding: 50px 0 20px 0;\n  color: #153A5B;\n  max-width: 1400px;\n  margin: 0 auto;\n  background-color: #fff;\n}\n\n.filter-header {\n  display: flex;\n  align-items: center;\n  gap: 15px;\n  margin-bottom: 25px;\n}\n\n.filter-icon {\n  width: 60px;\n  height: 60px;\n}\n\n.filter-header h2 {\n  font-size: 36px;\n  font-weight: 700;\n  color: #153A5B;\n  margin: 0;\n}\n\n/* List styling */\n.filter-list {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n}\n\n.filter-list li {\n  margin: 15px 0;\n}\n\n.filter-list a {\n  text-decoration: none;\n  color: #153A5B;\n  font-size: 18px;\n  transition: color 0.3s ease, text-decoration 0.3s ease;\n}\n\n.filter-list a:hover {\n  color: #0e2d46;\n  text-decoration: underline;\n}\n\n@media (max-width: 768px) {\n  .filter-setup {\n    padding: 30px 20px;\n  }\n\n  .filter-header {\n    flex-direction: row;\n    align-items: center;\n    gap: 10px;\n  }\n\n  .filter-icon {\n    width: 50px;\n    height: 50px;\n  }\n\n  .filter-header h2 {\n    font-size: 26px;\n  }\n\n  .filter-list {\n    margin-top: 15px;\n  }\n\n  .filter-list a {\n    font-size: 16px;\n  }\n}",
+        "custom_js": "document.addEventListener(\"DOMContentLoaded\", () => {\n  document.querySelectorAll(\".filter-list a\").forEach(link => {\n    link.addEventListener(\"click\", e => {\n      e.preventDefault();\n      const targetSelector = link.getAttribute(\"data-target\");\n      const targetElement = document.querySelector(targetSelector);\n\n      if (targetElement) {\n        const yOffset = -100; // adjust if you have a sticky header\n        const y = targetElement.getBoundingClientRect().top + window.pageYOffset + yOffset;\n        window.scrollTo({ top: y, behavior: \"smooth\" });\n      }\n    });\n  });\n});"
+      }
+    },
+    "176128309020d52955": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_ff8d1fe_wWpEVJ": {
+          "type": "ai_gen_block_ff8d1fe",
+          "settings": {
+            "heading": "How to set up your complete Phoenix Gravity Water Filter System",
+            "heading_font_size": 32,
+            "heading_color": "#153a5b",
+            "heading_alignment": "left",
+            "heading_padding_top": 0,
+            "heading_padding_bottom": 10,
+            "heading_padding_left": 0,
+            "heading_padding_right": 0,
+            "heading_margin_top": 0,
+            "heading_margin_bottom": 0,
+            "heading_margin_left": 0,
+            "heading_margin_right": 0,
+            "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async=\"\"></script><script src=\"https://fast.wistia.com/embed/nka2th3w5j.js\" async=\"\" type=\"module\"></script><style>wistia-player[media-id='nka2th3w5j']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/nka2th3w5j/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"nka2th3w5j\" aspect=\"1.7777777777777777\"></wistia-player>",
+            "embed_width": 1400,
+            "embed_height": 800
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_ff8d1fe_wWpEVJ"
+      ],
+      "custom_css": [
+        "@media (max-width: 786px) {.ai-embed-code-heading-as1fkzmjneg5wenbbsaigenblockff8d1fewwpevj {margin-top: 0px; margin-bottom: 10px; margin-left: 0px; padding-left: 20px; font-size: 18px; }}",
+        "@media (max-width: 786px) {.ai-embed-code-wrapper-as1fkzmjneg5wenbbsaigenblockff8d1fewwpevj {height: 260px; }}",
+        "@media (min-width: 1024px) {.ai-embed-code-heading-as1fkzmjneg5wenbbsaigenblockff8d1fewwpevj {width: 1400px; max-width: 100%; margin: 0 auto; }}"
+      ],
+      "settings": {}
+    },
+    "custom_code_section_UegAFP": {
+      "type": "custom-code-section",
+      "disabled": true,
+      "name": "Custom Code Section",
+      "settings": {
+        "custom_html": "<!-- Custom Download Section -->\n<section class=\"download-section\">\n  <p>\n    Download instructions manual \n    <a href=\"https://cdn.shopify.com/s/files/1/2644/2852/files/Instruction_Manual_V7.pdf?v=1761721766\" download>\n      <span class=\"yellow-text\">here</span>\n    </a>.\n  </p>\n</section>",
+        "custom_css": ".download-section a {\n  color: #007bff; /* link blue color */\nfont-weight:900;\n}\n\n.download-section a:hover {\n  color: #0056b3; /* hover blue */\n}\n\n.yellow-text {\n  color: #FFD700; /* yellow for 'here' */\nfont-weight:900;\n}\n\n/* Desktop view (786px and above) */\n@media (min-width: 786px) {\n  .download-section {\n    margin-left: 4%;\n    padding: 0px 0px 0px 0px;\n  }\n}\n@media (max-width: 785px) {\n    .download-section {\n        margin-left: 4%;\n        padding: 2px 0px 20px 0px;\n    }\n}",
+        "custom_js": ""
+      }
+    },
+    "blocks_mcPxRJ": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_ff8d1fe_n7Tghz": {
+          "type": "ai_gen_block_ff8d1fe",
+          "settings": {
+            "heading": "How to set up your Carbon filter Elements",
+            "heading_font_size": 32,
+            "heading_color": "#153a5b",
+            "heading_alignment": "left",
+            "heading_padding_top": 30,
+            "heading_padding_bottom": 10,
+            "heading_padding_left": 0,
+            "heading_padding_right": 0,
+            "heading_margin_top": 30,
+            "heading_margin_bottom": 20,
+            "heading_margin_left": 0,
+            "heading_margin_right": 0,
+            "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async=\"\"></script><script src=\"https://fast.wistia.com/embed/okc20zhlxl.js\" async=\"\" type=\"module\"></script><style>wistia-player[media-id='okc20zhlxl']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/okc20zhlxl/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"okc20zhlxl\" aspect=\"1.7777777777777777\"></wistia-player>",
+            "embed_width": 1400,
+            "embed_height": 800
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_ff8d1fe_n7Tghz"
+      ],
+      "custom_css": [
+        "@media (max-width: 786px) {.ai-embed-code-heading-aywhptnz3bm52y2nulaigenblockff8d1fen7tghz {margin-top: 0px; margin-bottom: 10px; margin-left: 0px; padding-left: 20px; font-size: 18px; padding-top: 3px; }}",
+        "@media (max-width: 786px) {.ai-embed-code-wrapper-aywhptnz3bm52y2nulaigenblockff8d1fen7tghz {height: 212px; }}",
+        "@media (min-width: 1024px) {.ai-embed-code-heading-aywhptnz3bm52y2nulaigenblockff8d1fen7tghz {width: 1400px; max-width: 100%; margin: 0 auto; }}"
+      ],
+      "settings": {}
+    },
+    "custom_code_section_fbPQXA": {
+      "type": "custom-code-section",
+      "custom_css": [],
+      "name": "Custom Code Section",
+      "settings": {
+        "custom_html": "<section class=\"manual-download\">\n  <p>\n    Download instructions manual \n    <a href=\"https://cdn.shopify.com/s/files/1/2644/2852/files/Instruction_Manual_V7.pdf?v=1761721766\" download>\n      <span class=\"highlight-text\">here</span>\n    </a>.\n  </p>\n</section>",
+        "custom_css": ".manual-download a {\n  color: #007bff !important; /* link blue color */\n  font-weight: 900 !important;\n}\n\n.manual-download a:hover {\n  color: #0056b3 !important; /* hover blue */\n}\n\n.highlight-text {\n  color: #FFD700 !important; /* yellow for 'here' */\n  font-weight: 900 !important;\n}\n\n/* Desktop view (786px and above) */\n@media (min-width: 786px) {\n  .manual-download {\n  width: 1400px;\n    max-width: 100%;\n    margin: 0 auto;\n  }\n}\n\n/* Mobile view */\n@media (max-width: 785px) {\n  .manual-download {\n    margin-left: 4% !important;\n        margin-top: 40px;\n    padding: 2px 0 0 0 !important;\n  }\n}",
+        "custom_js": ""
+      }
+    },
+    "blocks_gzRMTH": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_ff8d1fe_K4n9Mg": {
+          "type": "ai_gen_block_ff8d1fe",
+          "settings": {
+            "heading": "How to set up your POSTreat Steel Fluoride & Arsenic Reduction Filter Elements",
+            "heading_font_size": 32,
+            "heading_color": "#153a5b",
+            "heading_alignment": "left",
+            "heading_padding_top": 30,
+            "heading_padding_bottom": 10,
+            "heading_padding_left": 0,
+            "heading_padding_right": 0,
+            "heading_margin_top": 30,
+            "heading_margin_bottom": 20,
+            "heading_margin_left": 0,
+            "heading_margin_right": 0,
+            "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async=\"\"></script><script src=\"https://fast.wistia.com/embed/4r7y17piui.js\" async=\"\" type=\"module\"></script><style>wistia-player[media-id='4r7y17piui']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/4r7y17piui/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"4r7y17piui\" aspect=\"1.7777777777777777\"></wistia-player>",
+            "embed_width": 1400,
+            "embed_height": 800
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_ff8d1fe_K4n9Mg"
+      ],
+      "custom_css": [
+        "@media (max-width: 786px) {.ai-embed-code-heading-aqkozmurlqnbotwtzuaigenblockff8d1fek4n9mg {margin-top: 10px; margin-bottom: 0px; margin-left: 0px; padding-left: 20px; font-size: 18px; padding-top: 30px !important; }}",
+        "@media (min-width: 1024px) {.ai-embed-code-heading-aqkozmurlqnbotwtzuaigenblockff8d1fek4n9mg {width: 1400px; max-width: 100%; margin: 0 auto; }}",
+        "@media (max-width: 786px) {.ai-embed-code-wrapper-aqkozmurlqnbotwtzuaigenblockff8d1fek4n9mg {height: 212px; }}"
+      ],
+      "settings": {}
+    },
+    "custom_code_section_Ei4yzV": {
+      "type": "custom-code-section",
+      "name": "Custom Code Section",
+      "settings": {
+        "custom_html": "<section class=\"manual-download\">\n  <p>\n    Download instructions manual \n    <a href=\"https://cdn.shopify.com/s/files/1/2644/2852/files/POSTreat_Instruction_manual_V3.pdf?v=1761721766\" download>\n      <span class=\"highlight-text\">here</span>\n    </a>.\n  </p>\n</section>",
+        "custom_css": ".manual-download a {\n  color: #007bff !important; /* link blue color */\n  font-weight: 900 !important;\n}\n\n.manual-download a:hover {\n  color: #0056b3 !important; /* hover blue */\n}\n\n.highlight-text {\n  color: #FFD700 !important; /* yellow for 'here' */\n  font-weight: 900 !important;\n}\n\n/* Desktop view (786px and above) */\n@media (min-width: 786px) {\n  .manual-download {\n  width: 1400px;\n    max-width: 100%;\n    margin: 0 auto;\n  }\n}\n\n/* Mobile view */\n@media (max-width: 785px) {\n  .manual-download {\n    margin-left: 4% !important;\n        margin-top: 40px;\n    padding: 2px 0 0 0 !important;\n  }\n}",
+        "custom_js": ""
+      }
+    },
+    "blocks_PBFXGn": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_ff8d1fe_z4BRgt": {
+          "type": "ai_gen_block_ff8d1fe",
+          "settings": {
+            "heading": "How to set up your Carbon filter Elements and POSTreat Steel Fluoride & Arsenic Reduction Filter Elements",
+            "heading_font_size": 32,
+            "heading_color": "#153a5b",
+            "heading_alignment": "left",
+            "heading_padding_top": 12,
+            "heading_padding_bottom": 10,
+            "heading_padding_left": 0,
+            "heading_padding_right": 0,
+            "heading_margin_top": 30,
+            "heading_margin_bottom": 20,
+            "heading_margin_left": 0,
+            "heading_margin_right": 0,
+            "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async=\"\"></script><script src=\"https://fast.wistia.com/embed/nh58gudtyp.js\" async=\"\" type=\"module\"></script><style>wistia-player[media-id='nh58gudtyp']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/nh58gudtyp/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"nh58gudtyp\" aspect=\"1.7777777777777777\"></wistia-player>",
+            "embed_width": 1400,
+            "embed_height": 800
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_ff8d1fe_z4BRgt"
+      ],
+      "custom_css": [
+        "@media (min-width: 1024px) {.ai-embed-code-heading-azejmanezmtztsvzhaaigenblockff8d1fez4brgt {width: 1400px; max-width: 100%; margin: 0 auto; }}",
+        "@media (max-width: 786px) {.ai-embed-code-heading-azejmanezmtztsvzhaaigenblockff8d1fez4brgt {margin-top: 0px; margin-bottom: 10px; margin-left: 0px; padding-left: 20px; font-size: 18px; }}",
+        "@media (max-width: 786px) {.ai-embed-code-wrapper-azejmanezmtztsvzhaaigenblockff8d1fez4brgt {height: 212px; }}"
+      ],
+      "settings": {}
+    },
+    "blocks_fW3fE3": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_ff8d1fe_XNV4JR": {
+          "type": "ai_gen_block_ff8d1fe",
+          "settings": {
+            "heading": "How to Prime Carbon filter Elements",
+            "heading_font_size": 32,
+            "heading_color": "#153a5b",
+            "heading_alignment": "left",
+            "heading_padding_top": 30,
+            "heading_padding_bottom": 10,
+            "heading_padding_left": 0,
+            "heading_padding_right": 0,
+            "heading_margin_top": 30,
+            "heading_margin_bottom": 20,
+            "heading_margin_left": 0,
+            "heading_margin_right": 0,
+            "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async=\"\"></script><script src=\"https://fast.wistia.com/embed/mg0xm7vkzz.js\" async=\"\" type=\"module\"></script><style>wistia-player[media-id='mg0xm7vkzz']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/mg0xm7vkzz/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"mg0xm7vkzz\" aspect=\"1.7777777777777777\"></wistia-player>",
+            "embed_width": 1400,
+            "embed_height": 800
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_ff8d1fe_XNV4JR"
+      ],
+      "custom_css": [
+        "@media (min-width: 1024px) {.ai-embed-code-heading-azwjvodjtzhhnodvptaigenblockff8d1fexnv4jr {width: 1400px; max-width: 100%; margin: 0 auto; }}",
+        "@media (max-width: 786px) {.ai-embed-code-heading-azwjvodjtzhhnodvptaigenblockff8d1fexnv4jr {margin-top: 21px; margin-bottom: 10px; margin-left: 0px; padding-left: 20px; font-size: 18px; }}",
+        "@media (max-width: 786px) {.ai-embed-code-wrapper-azwjvodjtzhhnodvptaigenblockff8d1fexnv4jr {height: 212px; }}"
+      ],
+      "settings": {}
+    },
+    "blocks_KTjYCB": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_ff8d1fe_tqacKn": {
+          "type": "ai_gen_block_ff8d1fe",
+          "settings": {
+            "heading": "How to set up your Stainless Steel Spigot",
+            "heading_font_size": 32,
+            "heading_color": "#153a5b",
+            "heading_alignment": "left",
+            "heading_padding_top": 30,
+            "heading_padding_bottom": 0,
+            "heading_padding_left": 0,
+            "heading_padding_right": 0,
+            "heading_margin_top": 10,
+            "heading_margin_bottom": 0,
+            "heading_margin_left": 0,
+            "heading_margin_right": 0,
+            "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async=\"\"></script><script src=\"https://fast.wistia.com/embed/7o5r5qwwl9.js\" async=\"\" type=\"module\"></script><style>wistia-player[media-id='7o5r5qwwl9']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/7o5r5qwwl9/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"7o5r5qwwl9\" aspect=\"1.7777777777777777\"></wistia-player>",
+            "embed_width": 1400,
+            "embed_height": 800
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_ff8d1fe_tqacKn"
+      ],
+      "custom_css": [
+        "@media (min-width: 1024px) {.ai-embed-code-heading-awk54zi9sv09xy3frbaigenblockff8d1fetqackn {width: 1400px; max-width: 100%; margin: 0 auto; }}",
+        "@media (max-width: 786px) {.ai-embed-code-heading-awk54zi9sv09xy3frbaigenblockff8d1fetqackn {margin-top: 20px; margin-bottom: 10px; margin-left: 0px; padding-left: 20px; font-size: 18px; }}",
+        "@media (max-width: 786px) {.ai-embed-code-wrapper-awk54zi9sv09xy3frbaigenblockff8d1fetqackn {height: 212px; }}"
+      ],
+      "settings": {}
+    },
+    "wisita_videos_zzNRLP": {
+      "type": "wisita-videos",
+      "blocks": {
+        "video_pfqBQN": {
+          "type": "video",
+          "name": "Video",
+          "settings": {
+            "title": "How to set up your Phoenix Gravity System?",
+            "wistia_id": "nka2th3w5j"
+          }
+        },
+        "video_9hXzGk": {
+          "type": "video",
+          "settings": {
+            "title": "How to set up your Carbon Cartridge Filters?",
+            "wistia_id": "okc20zhlxl"
+          }
+        },
+        "video_jVJmiK": {
+          "type": "video",
+          "settings": {
+            "title": "How to set up your POSTreat filters?",
+            "wistia_id": "4r7y17piui"
+          }
+        },
+        "video_X8DF4c": {
+          "type": "video",
+          "settings": {
+            "title": "How to Prime Your Smart Carbon Cartridges?",
+            "wistia_id": "mg0xm7vkzz"
+          }
+        },
+        "video_cYbf8i": {
+          "type": "video",
+          "settings": {
+            "title": "How to set up your Stainless Steel Tap?",
+            "wistia_id": "7o5r5qwwl9"
+          }
+        }
+      },
+      "block_order": [
+        "video_pfqBQN",
+        "video_9hXzGk",
+        "video_jVJmiK",
+        "video_X8DF4c",
+        "video_cYbf8i"
+      ],
+      "disabled": true,
+      "name": "Wistia Video Grid",
+      "settings": {}
+    },
+    "1761287728411124d7": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_ffd217f_4hQjC3": {
+          "type": "ai_gen_block_ffd217f",
+          "settings": {
+            "heading": "Say hello to healthier hydration.",
+            "background_color": "#2b2b4e",
+            "button_text": "Shop",
+            "button_color": "#ffffff",
+            "product_1": "gravity-water-filter",
+            "product_2": "carbon-filter-element",
+            "product_3": "fluoride-reduction-elements"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_ffd217f_4hQjC3"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "custom_code_section_QD4f49",
+    "176128309020d52955",
+    "custom_code_section_UegAFP",
+    "blocks_mcPxRJ",
+    "custom_code_section_fbPQXA",
+    "blocks_gzRMTH",
+    "custom_code_section_Ei4yzV",
+    "blocks_PBFXGn",
+    "blocks_fW3fE3",
+    "blocks_KTjYCB",
+    "wisita_videos_zzNRLP",
+    "1761287728411124d7"
+  ]
+}

@@ -1,0 +1,366 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "product_hero_og_zxMJ8i": {
+      "type": "product-hero-og",
+      "disabled": true,
+      "settings": {
+        "countdown_text": "[month] SALE",
+        "countdown_time": "",
+        "countdown_products": []
+      }
+    },
+    "product-hero": {
+      "type": "product-hero",
+      "blocks": {
+        "judge_me_reviews_preview_badge_VQwrtE": {
+          "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_preview_badge_VQwrtE"
+      ],
+      "settings": {
+        "countdown_text": "{{ product.metafields.custom.month_sale.value }}",
+        "countdown_time": "",
+        "countdown_products": [],
+        "product_boost": []
+      }
+    },
+    "9600faf5-31b8-4d01-817d-b44b276a1d60": {
+      "type": "accordion",
+      "blocks": {
+        "text_HMCPT8": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "question": "Description",
+            "answer": "{{ product.description }}"
+          }
+        },
+        "text_VnAqfM": {
+          "type": "text",
+          "settings": {
+            "question": "What's in box",
+            "answer": "{{ product.metafields.custom.whatthebox | metafield_tag }}"
+          }
+        },
+        "text_DPA6Va": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "question": "Warranty",
+            "answer": "<p>We provide a <strong>10-year warranty</strong> on our Stainless Steel Gravity Water Filter housings, ensuring they are fully protected against defects in materials and workmanship.<br/><br/>The Phoenix Gravity Stainless Steel Spigot and Carbon Filter Elements come with a <strong>1-year warranty</strong>, covering any defects in materials and workmanship. All other parts and accessories are backed by a <strong>6-month warranty.</strong><br/><br/>With these warranties, you’re protected against any defects in materials and workmanship.</p>"
+          }
+        },
+        "text_C9YBez": {
+          "type": "text",
+          "settings": {
+            "question": "Compatibility",
+            "answer": "<p>Compatible with Phoenix Gravity, Berkey®, Waterdrop®, Purewell®, and similar gravity-fed water filter systems with a 7.5-inch base diameter.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "text_HMCPT8",
+        "text_VnAqfM",
+        "text_DPA6Va",
+        "text_C9YBez"
+      ],
+      "settings": {
+        "heading": "",
+        "content": "",
+        "show_shipping": true,
+        "accordion_styles": "full-width",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "secondary_details_qTHLFy": {
+      "type": "secondary-details",
+      "disabled": true,
+      "settings": {
+        "style": "bg-white",
+        "heading": "Revolutionary ‘Nano Adsorption’ filter technology",
+        "content": "<p><br/>Traditional filters simply trap unwanted pollutants, allowing them to accumulate and multiply where they become a breeding ground for contaminants within just two weeks - instantly contaminating any water that passes through it. To solve this crucial problem, we’ve developed revolutionary ‘Nano adsorption’ technology. <br/><br/><strong>How does it work?</strong><br/><br/>First, we use granular activated carbon derived from natural coconut husks to remove chemicals, toxins, and heavy metals such as zinc and lead. Then we’ve impregnated every filter with carbon adsorbents to prevent contaminant growth inside the filter itself.</p>",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": ""
+      }
+    },
+    "1762338755e3b05ea0": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_0b846d5_3mGJzB": {
+          "type": "ai_gen_block_0b846d5",
+          "settings": {
+            "desktop_image": "shopify://shop_images/Wooden_stand_01.jpg",
+            "mobile_image": "shopify://shop_images/Wooden_stand_M01.jpg",
+            "heading": "",
+            "subheading": "",
+            "button_text": "Shop Now",
+            "button_link": "",
+            "section_width": "100%",
+            "section_height_desktop": 650,
+            "section_height_mobile": 300,
+            "text_color": "#ffffff",
+            "heading_size": 56,
+            "heading_size_mobile": 36,
+            "subheading_size": 20,
+            "subheading_size_mobile": 16,
+            "overlay_color": "#000000",
+            "overlay_opacity": 0,
+            "button_bg_color": "#ffffff",
+            "button_text_color": "#000000",
+            "button_hover_bg_color": "#000000",
+            "button_hover_text_color": "#ffffff",
+            "button_font_size": 16,
+            "button_font_size_mobile": 14,
+            "button_padding_vertical": 16,
+            "button_padding_horizontal": 40,
+            "button_padding_vertical_mobile": 12,
+            "button_padding_horizontal_mobile": 32,
+            "button_border_radius": 4,
+            "enable_rounded_corners": false,
+            "corner_radius": 12,
+            "enable_shadow": false,
+            "custom_css": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_0b846d5_3mGJzB"
+      ],
+      "settings": {}
+    },
+    "blocks_Hp7YqY": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_0b846d5_YUfLkj": {
+          "type": "ai_gen_block_0b846d5",
+          "settings": {
+            "desktop_image": "shopify://shop_images/Wooden_stand_02.jpg",
+            "mobile_image": "shopify://shop_images/Wooden_stand_M02.jpg",
+            "heading": "",
+            "subheading": "",
+            "button_text": "",
+            "button_link": "",
+            "section_width": "100%",
+            "section_height_desktop": 650,
+            "section_height_mobile": 300,
+            "text_color": "#ffffff",
+            "heading_size": 56,
+            "heading_size_mobile": 36,
+            "subheading_size": 20,
+            "subheading_size_mobile": 16,
+            "overlay_color": "#000000",
+            "overlay_opacity": 0,
+            "button_bg_color": "#ffffff",
+            "button_text_color": "#000000",
+            "button_hover_bg_color": "#000000",
+            "button_hover_text_color": "#ffffff",
+            "button_font_size": 16,
+            "button_font_size_mobile": 14,
+            "button_padding_vertical": 16,
+            "button_padding_horizontal": 40,
+            "button_padding_vertical_mobile": 12,
+            "button_padding_horizontal_mobile": 32,
+            "button_border_radius": 4,
+            "enable_rounded_corners": false,
+            "corner_radius": 12,
+            "enable_shadow": false,
+            "custom_css": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_0b846d5_YUfLkj"
+      ],
+      "name": "Hero section",
+      "settings": {}
+    },
+    "blocks_FEwPTn": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_0b846d5_LwAr6k": {
+          "type": "ai_gen_block_0b846d5",
+          "settings": {
+            "desktop_image": "shopify://shop_images/Wooden_stand_03.jpg",
+            "mobile_image": "shopify://shop_images/Wooden_stand_M03.jpg",
+            "heading": "",
+            "subheading": "",
+            "button_text": "",
+            "button_link": "",
+            "section_width": "100%",
+            "section_height_desktop": 650,
+            "section_height_mobile": 300,
+            "text_color": "#ffffff",
+            "heading_size": 56,
+            "heading_size_mobile": 36,
+            "subheading_size": 20,
+            "subheading_size_mobile": 16,
+            "overlay_color": "#000000",
+            "overlay_opacity": 0,
+            "button_bg_color": "#ffffff",
+            "button_text_color": "#000000",
+            "button_hover_bg_color": "#000000",
+            "button_hover_text_color": "#ffffff",
+            "button_font_size": 16,
+            "button_font_size_mobile": 14,
+            "button_padding_vertical": 16,
+            "button_padding_horizontal": 40,
+            "button_padding_vertical_mobile": 12,
+            "button_padding_horizontal_mobile": 32,
+            "button_border_radius": 4,
+            "enable_rounded_corners": false,
+            "corner_radius": 12,
+            "enable_shadow": false,
+            "custom_css": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_0b846d5_LwAr6k"
+      ],
+      "name": "Hero section",
+      "settings": {}
+    },
+    "blocks_6igddf": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_0b846d5_3nWawh": {
+          "type": "ai_gen_block_0b846d5",
+          "settings": {
+            "desktop_image": "shopify://shop_images/Wooden_stand_04.jpg",
+            "mobile_image": "shopify://shop_images/Wooden_stand_M04.jpg",
+            "heading": "",
+            "subheading": "",
+            "button_text": "",
+            "button_link": "",
+            "section_width": "100%",
+            "section_height_desktop": 650,
+            "section_height_mobile": 300,
+            "text_color": "#ffffff",
+            "heading_size": 56,
+            "heading_size_mobile": 36,
+            "subheading_size": 20,
+            "subheading_size_mobile": 16,
+            "overlay_color": "#000000",
+            "overlay_opacity": 0,
+            "button_bg_color": "#ffffff",
+            "button_text_color": "#000000",
+            "button_hover_bg_color": "#000000",
+            "button_hover_text_color": "#ffffff",
+            "button_font_size": 16,
+            "button_font_size_mobile": 14,
+            "button_padding_vertical": 16,
+            "button_padding_horizontal": 40,
+            "button_padding_vertical_mobile": 12,
+            "button_padding_horizontal_mobile": 32,
+            "button_border_radius": 4,
+            "enable_rounded_corners": false,
+            "corner_radius": 12,
+            "enable_shadow": false,
+            "custom_css": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_0b846d5_3nWawh"
+      ],
+      "name": "Hero section",
+      "settings": {}
+    },
+    "blocks_KpkLJc": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_0b846d5_zDzxkf": {
+          "type": "ai_gen_block_0b846d5",
+          "settings": {
+            "desktop_image": "shopify://shop_images/Wooden_stand_M05.jpg",
+            "mobile_image": "shopify://shop_images/Wooden_stand_M05.jpg",
+            "heading": "",
+            "subheading": "",
+            "button_text": "",
+            "button_link": "",
+            "section_width": "100%",
+            "section_height_desktop": 650,
+            "section_height_mobile": 300,
+            "text_color": "#ffffff",
+            "heading_size": 56,
+            "heading_size_mobile": 36,
+            "subheading_size": 20,
+            "subheading_size_mobile": 16,
+            "overlay_color": "#000000",
+            "overlay_opacity": 0,
+            "button_bg_color": "#ffffff",
+            "button_text_color": "#000000",
+            "button_hover_bg_color": "#000000",
+            "button_hover_text_color": "#ffffff",
+            "button_font_size": 16,
+            "button_font_size_mobile": 14,
+            "button_padding_vertical": 16,
+            "button_padding_horizontal": 40,
+            "button_padding_vertical_mobile": 12,
+            "button_padding_horizontal_mobile": 32,
+            "button_border_radius": 4,
+            "enable_rounded_corners": false,
+            "corner_radius": 12,
+            "enable_shadow": false,
+            "custom_css": "@media (max-width: 786px) {\n    .ai-hero-image-asjdgt2k5akvadvnkmaigenblockde92f61auflu8 {\n        height:60% !important;  \nwidth:100%  !important ;\n\n    }\n}"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_0b846d5_zDzxkf"
+      ],
+      "name": "Hero section",
+      "settings": {}
+    },
+    "1762406103e010818c": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_ErHPkh": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_ErHPkh"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "product_hero_og_zxMJ8i",
+    "product-hero",
+    "9600faf5-31b8-4d01-817d-b44b276a1d60",
+    "secondary_details_qTHLFy",
+    "1762338755e3b05ea0",
+    "blocks_Hp7YqY",
+    "blocks_FEwPTn",
+    "blocks_6igddf",
+    "blocks_KpkLJc",
+    "1762406103e010818c"
+  ]
+}

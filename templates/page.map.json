@@ -1,0 +1,151 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "copy_image_rUyHJ6": {
+      "type": "copy-image",
+      "disabled": true,
+      "name": "Copy Image",
+      "settings": {
+        "style": "bg-light",
+        "layout": "centered-copy",
+        "vertical_align": "align-items-center",
+        "heading": "Register your product now and activate the 10-year warranty on your stainless steel system.",
+        "content": "",
+        "video_id": "",
+        "large_image": "img-standard",
+        "second_content": "",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "bg_image_style": "contain",
+        "section_randoimg_position": "top"
+      }
+    },
+    "support_cNgXx8": {
+      "type": "support",
+      "disabled": true,
+      "name": "Support Section",
+      "settings": {
+        "heading": "Register your product now and activate the 10-year warranty on your stainless steel system.",
+        "button_link": "shopify://pages/warranty-registration",
+        "button_text": "Register Here"
+      }
+    },
+    "1746437444c5b604dc": {
+      "type": "apps",
+      "blocks": {
+        "my_product_cares_registration_form_8i6RMY": {
+          "type": "shopify://apps/my-product-cares/blocks/registration-form/fd762697-cd8b-4acd-bd03-03c62edf58c9",
+          "settings": {
+            "slug": "product-registration",
+            "mode": "normal",
+            "openRegisteredEntities": false
+          }
+        }
+      },
+      "block_order": [
+        "my_product_cares_registration_form_8i6RMY"
+      ],
+      "disabled": true,
+      "settings": {}
+    },
+    "17798635599ce0d3b2": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_905424f_JJgDy3": {
+          "type": "ai_gen_block_905424f",
+          "name": "Region selector",
+          "settings": {
+            "heading": "Choose Your Region",
+            "subheading": "Select your country to continue shopping in your local store.",
+            "heading_size": 48,
+            "subheading_size": 18,
+            "heading_color": "#1a1a1a",
+            "subheading_color": "#4a4a4a",
+            "bg_gradient_start": "#f8f9fa",
+            "bg_gradient_end": "#e9ecef",
+            "card_bg_color": "#ffffff",
+            "card_border_color": "#e0e0e0",
+            "card_hover_border_color": "#000000",
+            "card_border_radius": 16,
+            "country_name_size": 24,
+            "country_name_color": "#1a1a1a",
+            "currency_text_size": 16,
+            "currency_text_color": "#6a6a6a",
+            "arrow_bg_color": "#f0f0f0",
+            "arrow_hover_bg_color": "#000000",
+            "arrow_color": "#1a1a1a",
+            "badge_text": "",
+            "badge_bg_color": "#000000",
+            "badge_text_color": "#ffffff",
+            "country_1_name": "United States",
+            "country_1_flag": "shopify://shop_images/download.png",
+            "country_1_currency": "",
+            "country_1_url": "https://phoenixwaterfilters.com/pages/warranty-registration",
+            "country_1_show_badge": false,
+            "country_2_name": "United Kingdom",
+            "country_2_flag": "shopify://shop_images/360_F_62198244_HcI4q6pS86tREeUYuseBfTzPP7nLaSPi.jpg",
+            "country_2_currency": "",
+            "country_2_url": "https://phoenixwaterfilters.co.uk/pages/product-registration-1",
+            "country_2_show_badge": false,
+            "country_3_name": "France",
+            "country_3_flag": "shopify://shop_images/Flag_of_France_svg.png",
+            "country_3_currency": "",
+            "country_3_url": "https://phoenixwaterfilters.fr/pages/enregistrement-des-produits",
+            "country_3_show_badge": false,
+            "country_4_name": "",
+            "country_4_currency": "",
+            "country_4_url": "",
+            "country_4_show_badge": false
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_7edea29_UjDYVe": {
+          "type": "ai_gen_block_7edea29",
+          "disabled": true,
+          "settings": {
+            "country_1_name": "United States",
+            "country_1_url": "",
+            "country_2_name": "Canada",
+            "country_2_url": "",
+            "country_3_name": "United Kingdom",
+            "country_3_url": "",
+            "desktop_width_percent": 100,
+            "section_padding": 40,
+            "flag_spacing": 40,
+            "flag_size": 120,
+            "flag_border_radius": 10,
+            "background_color": "#ffffff",
+            "text_color": "#000000",
+            "country_name_size": 16
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_905424f_JJgDy3",
+        "ai_gen_block_7edea29_UjDYVe"
+      ],
+      "custom_css": [
+        ".ai-region-selector-acmvnu1dbyytooeu3saigenblock905424fjjgdy3 {padding: 20px 20px;}"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "copy_image_rUyHJ6",
+    "support_cNgXx8",
+    "1746437444c5b604dc",
+    "17798635599ce0d3b2"
+  ]
+}

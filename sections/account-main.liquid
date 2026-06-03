@@ -1,0 +1,67 @@
+<div class="container">
+    <div class="row">
+    	<div class="col-12 col-lg-9 mb-5">
+			{% paginate customer.orders by 20 %}
+
+				<h3>{{ 'customer.orders.title' | t }}</h3>
+
+				{% if customer.orders.size != 0 %}
+					<div class="order-box">
+						<table class="responsive-table">
+							<thead>
+								<tr>
+									<th scope="col-2" class="id">{{ 'customer.orders.order_number' | t }}</th>
+									<th scope="col-2" class="date">{{ 'customer.orders.date' | t }}</th>
+									<th scope="col-3" class="payment">{{ 'customer.orders.payment_status' | t }}</th>
+									<th scope="col-3" class="status">{{ 'customer.orders.fulfillment_status' | t }}</th>
+									<th scope="col-2" class="total">{{ 'customer.orders.total' | t }}</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for order in customer.orders %}
+									<tr>
+										<td data-label="{{ customer.orders.order_number}}" scope="row" class="id">
+											<a href="{{ order.customer_url }}" class="" aria-label="{{ 'customer.orders.order_number_link' | t: number: order.name }}">{{ order.name }}</a>
+										</td>
+										<td data-label="{{ customer.orders.date}}" class="date">{{ order.created_at | time_tag: format: 'date' }}</td>
+										<td data-label="{{ customer.orders.payment_status}}" class="payment">{{ order.financial_status_label }}</td>
+										<td data-label="{{ customer.orders.fulfillment_status}}" class="status">{{ order.fulfillment_status_label }}</td>
+										<td data-label="{{ customer.orders.total}}" class="total">{{ order.total_price | money }}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				{% else %}
+					<p>No Orders Found!</p>
+				{% endif %}
+
+				{{ paginate | default_pagination }}
+
+			{% endpaginate %}
+		</div>
+
+    	<div class="col-12 col-lg-3">
+    		<div class="account-box">
+				<h3>{{ 'customer.account.details' | t }}</h3>
+
+				{{ customer.default_address | format_address }}
+
+				<a href="/account/addresses">
+					{{ 'customer.addresses.edit_address' | t }}
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% schema %}
+	{
+	    "name": "Account",
+	    "tag": "section",
+	    "class": "section-account",
+	    "enabled_on": {
+	        "templates": ["customers/account"]
+	    }
+	}
+{% endschema %}
