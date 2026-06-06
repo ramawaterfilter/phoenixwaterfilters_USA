@@ -1,0 +1,294 @@
+{% liquid
+  assign cta_product = section.settings.product
+  if cta_product == blank and product != blank
+    assign cta_product = product
+  endif
+
+  assign current_variant = cta_product.selected_or_first_available_variant
+  assign button_price = section.settings.price_text
+  if section.settings.use_product_price and current_variant != blank
+    assign button_price = current_variant.price | money_without_trailing_zeros
+  endif
+%}
+
+<section
+  class="custom-add-to-cart-section"
+  style="
+    --add-cart-background: {{ section.settings.background_color }};
+    --add-cart-text: {{ section.settings.text_color }};
+    --add-cart-accent: {{ section.settings.accent_color }};
+    --add-cart-muted: {{ section.settings.muted_text_color }};
+    --add-cart-button-background: {{ section.settings.button_background_color }};
+    --add-cart-button-text: {{ section.settings.button_text_color }};
+  "
+>
+  <div class="custom-add-to-cart-section__container">
+    {% if section.settings.heading != blank %}
+      <h2 class="custom-add-to-cart-section__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% if section.settings.subheading != blank %}
+      <div class="custom-add-to-cart-section__subheading rte">
+        {{ section.settings.subheading }}
+      </div>
+    {% endif %}
+
+    <div class="custom-add-to-cart-section__action">
+      {% if current_variant != blank %}
+        <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="custom-add-to-cart-section__form">
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+          <input type="hidden" name="quantity" value="1">
+
+          <button
+            class="custom-add-to-cart-section__button"
+            type="submit"
+            name="add"
+            {% unless current_variant.available %}disabled{% endunless %}
+          >
+            <span>
+              {% if current_variant.available %}
+                {{ section.settings.button_label | escape }}
+                {% if button_price != blank %}
+                  <span class="custom-add-to-cart-section__separator" aria-hidden="true">&mdash;</span>
+                  <span class="custom-add-to-cart-section__price">{{ button_price }}</span>
+                {% endif %}
+              {% else %}
+                {{ section.settings.sold_out_label | escape }}
+              {% endif %}
+            </span>
+            <span class="custom-add-to-cart-section__arrow" aria-hidden="true">&rarr;</span>
+          </button>
+        </form>
+      {% elsif section.settings.button_link != blank %}
+        <a class="custom-add-to-cart-section__button" href="{{ section.settings.button_link }}">
+          <span>
+            {{ section.settings.button_label | escape }}
+            {% if button_price != blank %}
+              <span class="custom-add-to-cart-section__separator" aria-hidden="true">&mdash;</span>
+              <span class="custom-add-to-cart-section__price">{{ button_price | escape }}</span>
+            {% endif %}
+          </span>
+          <span class="custom-add-to-cart-section__arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .custom-add-to-cart-section {
+    background: var(--add-cart-background);
+    color: var(--add-cart-text);
+    padding: 3rem 0;
+    text-align: center;
+  }
+
+  .custom-add-to-cart-section__container {
+    width: min(100% - 3.2rem, 64rem);
+    margin: 0 auto;
+  }
+
+  .custom-add-to-cart-section__heading {
+    margin: 0;
+    color: var(--add-cart-text);
+    font-family: Georgia Pro Bold, Georgia, serif;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -.04rem;
+    line-height: 1.15;
+  }
+
+  .custom-add-to-cart-section__heading strong {
+    color: var(--add-cart-accent);
+  }
+
+  .custom-add-to-cart-section__subheading {
+    margin: .7rem auto 0;
+    color: var(--add-cart-muted);
+    font-family: Value Sans, sans-serif;
+    font-size: 1.2rem;
+    line-height: 1.35;
+  }
+
+  .custom-add-to-cart-section__subheading > :first-child {
+    margin-top: 0;
+  }
+
+  .custom-add-to-cart-section__subheading > :last-child {
+    margin-bottom: 0;
+  }
+
+  .custom-add-to-cart-section__action {
+    margin-top: 2.1rem;
+  }
+
+  .custom-add-to-cart-section__form {
+    margin: 0;
+  }
+
+  .custom-add-to-cart-section__button {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    width: min(100%, 29.2rem);
+    min-height: 4.9rem;
+    margin: 0 auto;
+    padding: 1.2rem 1.7rem;
+    border: 0;
+    border-radius: .9rem;
+    background: var(--add-cart-button-background);
+    color: var(--add-cart-button-text);
+    cursor: pointer;
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: .01rem;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .custom-add-to-cart-section__button > span:first-child {
+    grid-column: 2;
+  }
+
+  .custom-add-to-cart-section__button:disabled {
+    cursor: not-allowed;
+    opacity: .65;
+  }
+
+  .custom-add-to-cart-section__separator {
+    margin: 0 .35rem;
+  }
+
+  .custom-add-to-cart-section__arrow {
+    grid-column: 3;
+    justify-self: end;
+    font-size: 1.7rem;
+    line-height: 1;
+  }
+
+  @media (min-width: 750px) {
+    .custom-add-to-cart-section {
+      padding: 3.2rem 0 3rem;
+    }
+
+    .custom-add-to-cart-section__container {
+      width: min(100% - 6.4rem, 72rem);
+    }
+
+    .custom-add-to-cart-section__heading {
+      font-size: 2.2rem;
+    }
+
+    .custom-add-to-cart-section__subheading {
+      font-size: 1.3rem;
+    }
+
+    .custom-add-to-cart-section__button {
+      width: 29.2rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Custom add to cart",
+  "tag": "section",
+  "class": "section-custom-add-to-cart",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ready for <strong>Fluoride-Free Water?</strong>"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>Join 2,400+ Americans who've made the switch.</p>"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Uses the current product when this section is on a product page and no product is selected."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Add to Cart"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_product_price",
+      "label": "Use selected product price",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "price_text",
+      "label": "Fallback price text",
+      "default": "$99"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_label",
+      "label": "Sold out label",
+      "default": "Sold Out"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Fallback button link",
+      "info": "Used only when no product is available."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading color",
+      "default": "#07182d"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Heading accent color",
+      "default": "#006d6d"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Subheading color",
+      "default": "#667085"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Button background color",
+      "default": "#071c2b"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom add to cart"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

@@ -1,0 +1,426 @@
+<section
+  class="custom-tabular-comparison-table"
+  style="
+    --comparison-background: {{ section.settings.background_color }};
+    --comparison-text: {{ section.settings.text_color }};
+    --comparison-accent: {{ section.settings.accent_color }};
+    --comparison-header-background: {{ section.settings.header_background_color }};
+    --comparison-header-text: {{ section.settings.header_text_color }};
+    --comparison-row-background: {{ section.settings.row_background_color }};
+    --comparison-check: {{ section.settings.check_color }};
+    --comparison-cross: {{ section.settings.cross_color }};
+  "
+>
+  <div class="custom-tabular-comparison-table__container">
+    {% if section.settings.eyebrow != blank %}
+      <p class="custom-tabular-comparison-table__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {% endif %}
+
+    {% if section.settings.heading != blank %}
+      <h2 class="custom-tabular-comparison-table__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="custom-tabular-comparison-table__scroll" tabindex="0">
+      <table class="custom-tabular-comparison-table__table">
+        <thead>
+          <tr>
+            <th scope="col">{{ section.settings.feature_column_label | escape }}</th>
+            <th scope="col">{{ section.settings.column_one_label | escape }}</th>
+            <th scope="col">{{ section.settings.column_two_label | escape }}</th>
+            <th scope="col">{{ section.settings.column_three_label | escape }}</th>
+            <th scope="col">{{ section.settings.column_four_label | escape }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for block in section.blocks %}
+            <tr {{ block.shopify_attributes }}>
+              <th scope="row">{{ block.settings.feature | escape }}</th>
+              <td>
+                {% if block.settings.column_one %}
+                  <span class="custom-tabular-comparison-table__mark custom-tabular-comparison-table__mark--check" aria-label="Yes">✓</span>
+                {% else %}
+                  <span class="custom-tabular-comparison-table__mark custom-tabular-comparison-table__mark--cross" aria-label="No">×</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if block.settings.column_two %}
+                  <span class="custom-tabular-comparison-table__mark custom-tabular-comparison-table__mark--check" aria-label="Yes">✓</span>
+                {% else %}
+                  <span class="custom-tabular-comparison-table__mark custom-tabular-comparison-table__mark--cross" aria-label="No">×</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if block.settings.column_three %}
+                  <span class="custom-tabular-comparison-table__mark custom-tabular-comparison-table__mark--check" aria-label="Yes">✓</span>
+                {% else %}
+                  <span class="custom-tabular-comparison-table__mark custom-tabular-comparison-table__mark--cross" aria-label="No">×</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if block.settings.column_four %}
+                  <span class="custom-tabular-comparison-table__mark custom-tabular-comparison-table__mark--check" aria-label="Yes">✓</span>
+                {% else %}
+                  <span class="custom-tabular-comparison-table__mark custom-tabular-comparison-table__mark--cross" aria-label="No">×</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .custom-tabular-comparison-table {
+    background: var(--comparison-background);
+    color: var(--comparison-text);
+    padding: .8rem 0 2.4rem;
+  }
+
+  .custom-tabular-comparison-table__container {
+    width: min(100% - 1.6rem, 92rem);
+    margin: 0 auto;
+  }
+
+  .custom-tabular-comparison-table__eyebrow {
+    margin: 0 0 .7rem;
+    color: var(--comparison-accent);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: .95rem;
+    font-weight: 700;
+    letter-spacing: .27rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .custom-tabular-comparison-table__heading {
+    margin: 0 0 1.8rem;
+    color: var(--comparison-text);
+    font-family: Georgia Pro Bold, Georgia, serif;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -.04rem;
+    line-height: 1.16;
+  }
+
+  .custom-tabular-comparison-table__heading strong {
+    color: var(--comparison-accent);
+  }
+
+  .custom-tabular-comparison-table__scroll {
+    overflow-x: auto;
+    padding-bottom: .2rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .custom-tabular-comparison-table__table {
+    width: 100%;
+    min-width: 36rem;
+    border-collapse: collapse;
+    table-layout: fixed;
+    color: var(--comparison-text);
+    font-family: Value Sans, sans-serif;
+  }
+
+  .custom-tabular-comparison-table__table th,
+  .custom-tabular-comparison-table__table td {
+    padding: 1.15rem .6rem;
+    border: 0;
+    font-size: 1.15rem;
+    line-height: 1.25;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .custom-tabular-comparison-table__table thead th {
+    background: var(--comparison-header-background);
+    color: #d5a94f;
+    font-family: Value Sans Bold, sans-serif;
+    font-weight: 700;
+  }
+
+  .custom-tabular-comparison-table__table thead th:first-child {
+    color: var(--comparison-header-text);
+    text-align: left;
+  }
+
+  .custom-tabular-comparison-table__table thead th:nth-child(2) {
+    color: #59bd93;
+  }
+
+  .custom-tabular-comparison-table__table tbody tr:nth-child(odd) {
+    background: var(--comparison-row-background);
+  }
+
+  .custom-tabular-comparison-table__table tbody th {
+    color: var(--comparison-text);
+    font-family: Value Sans Bold, sans-serif;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  .custom-tabular-comparison-table__mark {
+    display: inline-grid;
+    min-width: 1.8rem;
+    place-items: center;
+    font-family: Value Sans, sans-serif;
+    font-size: 1.9rem;
+    line-height: 1;
+  }
+
+  .custom-tabular-comparison-table__mark--check {
+    color: var(--comparison-check);
+  }
+
+  .custom-tabular-comparison-table__mark--cross {
+    color: var(--comparison-cross);
+  }
+
+  @media (min-width: 750px) {
+    .custom-tabular-comparison-table {
+      padding: 4rem 0 5rem;
+    }
+
+    .custom-tabular-comparison-table__container {
+      width: min(100% - 6.4rem, 110rem);
+    }
+
+    .custom-tabular-comparison-table__eyebrow {
+      font-size: 1.1rem;
+    }
+
+    .custom-tabular-comparison-table__heading {
+      font-size: 3rem;
+    }
+
+    .custom-tabular-comparison-table__table th,
+    .custom-tabular-comparison-table__table td {
+      padding: 1.6rem 1.4rem;
+      font-size: 1.5rem;
+    }
+
+    .custom-tabular-comparison-table__mark {
+      font-size: 2.4rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Comparison table",
+  "tag": "section",
+  "class": "section-custom-tabular-comparison-table",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Smart choice"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Most Affordable Way to <strong>Pure Water</strong>"
+    },
+    {
+      "type": "text",
+      "id": "feature_column_label",
+      "label": "Feature column label",
+      "default": "Feature"
+    },
+    {
+      "type": "text",
+      "id": "column_one_label",
+      "label": "Column 1 label",
+      "default": "Phoenix"
+    },
+    {
+      "type": "text",
+      "id": "column_two_label",
+      "label": "Column 2 label",
+      "default": "In-Home"
+    },
+    {
+      "type": "text",
+      "id": "column_three_label",
+      "label": "Column 3 label",
+      "default": "Bottles"
+    },
+    {
+      "type": "text",
+      "id": "column_four_label",
+      "label": "Column 4 label",
+      "default": "Pitchers"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#07182d"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#006d6d"
+    },
+    {
+      "type": "color",
+      "id": "header_background_color",
+      "label": "Header background color",
+      "default": "#071c2b"
+    },
+    {
+      "type": "color",
+      "id": "header_text_color",
+      "label": "Header feature text color",
+      "default": "#d5a94f"
+    },
+    {
+      "type": "color",
+      "id": "row_background_color",
+      "label": "Alternate row color",
+      "default": "#eef5f4"
+    },
+    {
+      "type": "color",
+      "id": "check_color",
+      "label": "Check color",
+      "default": "#2f8c44"
+    },
+    {
+      "type": "color",
+      "id": "cross_color",
+      "label": "Cross color",
+      "default": "#cbd3d9"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "comparison_row",
+      "name": "Comparison row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature",
+          "label": "Feature",
+          "default": "Affordable"
+        },
+        {
+          "type": "checkbox",
+          "id": "column_one",
+          "label": "Column 1 has feature",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "column_two",
+          "label": "Column 2 has feature",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "column_three",
+          "label": "Column 3 has feature",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "column_four",
+          "label": "Column 4 has feature",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [
+    {
+      "name": "Comparison table",
+      "blocks": [
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature": "Affordable",
+            "column_one": true,
+            "column_two": false,
+            "column_three": false,
+            "column_four": true
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature": "Portable",
+            "column_one": true,
+            "column_two": false,
+            "column_three": true,
+            "column_four": true
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature": "Steel Build",
+            "column_one": true,
+            "column_two": true,
+            "column_three": false,
+            "column_four": false
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature": "100-Day Trial",
+            "column_one": true,
+            "column_two": false,
+            "column_three": false,
+            "column_four": false
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature": "Easy Maint.",
+            "column_one": true,
+            "column_two": true,
+            "column_three": false,
+            "column_four": false
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature": "Large Capacity",
+            "column_one": true,
+            "column_two": true,
+            "column_three": false,
+            "column_four": false
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature": "No Plumbing",
+            "column_one": true,
+            "column_two": false,
+            "column_three": true,
+            "column_four": true
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

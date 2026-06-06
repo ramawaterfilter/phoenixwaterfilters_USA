@@ -1,0 +1,443 @@
+<section
+  class="custom-trust-badges"
+  style="
+    --trust-background: {{ section.settings.background_color }};
+    --trust-text: {{ section.settings.text_color }};
+    --trust-accent: {{ section.settings.accent_color }};
+    --trust-border: {{ section.settings.border_color }};
+    --trust-card-background: {{ section.settings.card_background_color }};
+    --trust-icon-background: {{ section.settings.icon_background_color }};
+  "
+>
+  <div class="custom-trust-badges__container">
+    {% if section.settings.eyebrow != blank
+      or section.settings.heading != blank
+      or section.settings.description != blank
+    %}
+      <div class="custom-trust-badges__header">
+        {% if section.settings.eyebrow != blank %}
+          <p class="custom-trust-badges__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="custom-trust-badges__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.description != blank %}
+          <div class="custom-trust-badges__description rte">
+            {{ section.settings.description }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="custom-trust-badges__grid">
+        {% for block in section.blocks %}
+          <article class="custom-trust-badges__badge" {{ block.shopify_attributes }}>
+            <div class="custom-trust-badges__icon" aria-hidden="true">
+              {% if block.settings.custom_icon != blank %}
+                {{
+                  block.settings.custom_icon
+                  | image_url: width: 160
+                  | image_tag:
+                    class: 'custom-trust-badges__image',
+                    loading: 'lazy',
+                    widths: '80, 120, 160',
+                    sizes: '(max-width: 749px) 52px, 56px',
+                    alt: ''
+                }}
+              {% else %}
+                {% case block.settings.icon %}
+                  {% when 'lab' %}
+                    <svg viewBox="0 0 48 48" focusable="false">
+                      <path d="M19 6h10v4h-2v10l11 19c1 2-.4 4-2.7 4H13.7c-2.3 0-3.7-2-2.7-4l11-19V10h-3V6Z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"/>
+                      <path d="M18 34h18l-4-7c-4 2-8-2-12 0l-2 7Z" fill="currentColor"/>
+                      <circle cx="31" cy="18" r="2.2" fill="currentColor"/>
+                      <circle cx="23" cy="38" r="1.8" fill="currentColor"/>
+                    </svg>
+                  {% when 'warranty' %}
+                    <svg viewBox="0 0 48 48" focusable="false">
+                      <path d="M24 5 39 10v11c0 10-6.2 17.5-15 22-8.8-4.5-15-12-15-22V10l15-5Z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"/>
+                      <path d="m16 29 3-8 4 5 5-9 5 12" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M12 33h36l-5 5H17l-5-5Z" fill="var(--trust-icon-background)" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round"/>
+                    </svg>
+                  {% when 'aluminum' %}
+                    <svg viewBox="0 0 48 48" focusable="false">
+                      <circle cx="24" cy="24" r="18" fill="none" stroke="currentColor" stroke-width="2.8"/>
+                      <path d="M14 36 35 12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                      <path d="m15 31 8-19h2l8 19m-14-6h10" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  {% when 'toxic' %}
+                    <svg viewBox="0 0 48 48" focusable="false">
+                      <path d="M19 42c-4-6-8-11-8-18 0-7 4-13 9-17 1 7 6 10 6 18 0 7-3 12-7 17Z" fill="currentColor"/>
+                      <path d="M30 41c-2-5-2-10 1-15 2-4 6-6 10-8 0 6 2 10-1 15-2 4-6 7-10 8Z" fill="currentColor"/>
+                      <path d="M24 43c1-9 3-17 12-25" fill="none" stroke="var(--trust-icon-background)" stroke-width="2.2" stroke-linecap="round"/>
+                    </svg>
+                  {% when 'trial' %}
+                    <svg viewBox="0 0 48 48" focusable="false">
+                      <path d="M13 10h27v29H13V10Z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"/>
+                      <path d="M13 18h27M20 6v8M33 6v8" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
+                      <path d="M20 30h12" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
+                      <text x="18" y="28" fill="currentColor" font-size="7" font-family="Arial, sans-serif" font-weight="700">100</text>
+                      <path d="M37 29c4 5 5 7 5 9a5 5 0 0 1-10 0c0-2 1-4 5-9Z" fill="currentColor"/>
+                    </svg>
+                  {% else %}
+                    <svg viewBox="0 0 48 48" focusable="false">
+                      <circle cx="24" cy="24" r="20" fill="currentColor"/>
+                      <text x="24" y="29" text-anchor="middle" fill="var(--trust-icon-background)" font-size="14" font-family="Arial, sans-serif" font-weight="700">NSF</text>
+                    </svg>
+                {% endcase %}
+              {% endif %}
+            </div>
+
+            {% if block.settings.label != blank %}
+              <h3 class="custom-trust-badges__label">{{ block.settings.label | escape }}</h3>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .custom-trust-badges {
+    background: var(--trust-background);
+    color: var(--trust-text);
+    padding: 4.8rem 0;
+  }
+
+  .custom-trust-badges__container {
+    width: min(100% - 7.8rem, 1280px);
+    margin: 0 auto;
+  }
+
+  .custom-trust-badges__header {
+    margin-bottom: 3rem;
+  }
+
+  .custom-trust-badges__eyebrow {
+    margin: 0 0 1rem;
+    color: var(--trust-text);
+    font-family: Value Sans, sans-serif;
+    font-size: 2.4rem;
+    line-height: 1.2;
+  }
+
+  .custom-trust-badges__heading {
+    max-width: 96rem;
+    margin: 0;
+    color: var(--trust-accent);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: clamp(4.2rem, 5vw, 6.2rem);
+    font-weight: 700;
+    letter-spacing: -0.22rem;
+    line-height: 1.08;
+  }
+
+  .custom-trust-badges__description {
+    margin-top: 2.8rem;
+    color: var(--trust-text);
+    font-family: Value Sans, sans-serif;
+    font-size: 2.5rem;
+    line-height: 1.35;
+  }
+
+  .custom-trust-badges__description > :last-child {
+    margin-bottom: 0;
+  }
+
+  .custom-trust-badges__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.2rem;
+  }
+
+  .custom-trust-badges__badge {
+    display: flex;
+    align-items: center;
+    min-height: 10.6rem;
+    gap: 1.8rem;
+    padding: 2.4rem 2.2rem;
+    border: 1px solid var(--trust-border);
+    border-radius: 2rem;
+    background: var(--trust-card-background);
+    box-shadow: 0 1rem 2.4rem rgba(8, 30, 54, 0.03);
+  }
+
+  .custom-trust-badges__icon {
+    display: grid;
+    flex: 0 0 5.6rem;
+    width: 5.6rem;
+    height: 5.6rem;
+    place-items: center;
+    border-radius: 1.4rem;
+    background: var(--trust-icon-background);
+    color: var(--trust-accent);
+  }
+
+  .custom-trust-badges__icon svg,
+  .custom-trust-badges__image {
+    display: block;
+    width: 4.4rem;
+    height: 4.4rem;
+  }
+
+  .custom-trust-badges__image {
+    object-fit: contain;
+  }
+
+  .custom-trust-badges__label {
+    margin: 0;
+    color: var(--trust-text);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.04rem;
+    line-height: 1.25;
+  }
+
+  @media (max-width: 749px) {
+    .custom-trust-badges {
+      padding: 1.2rem 0 2.4rem;
+    }
+
+    .custom-trust-badges__container {
+      width: min(100% - 1.8rem, 48rem);
+    }
+
+    .custom-trust-badges__header {
+      margin-bottom: 2.2rem;
+    }
+
+    .custom-trust-badges__eyebrow {
+      margin-bottom: 0.9rem;
+      color: #006d6d;
+      font-family: Value Sans Bold, sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.25rem;
+      text-transform: uppercase;
+    }
+
+    .custom-trust-badges__heading {
+      max-width: 34rem;
+      font-family: Georgia Pro Bold, Georgia, serif;
+      font-size: 1.9rem;
+      letter-spacing: -0.04rem;
+      line-height: 1.1;
+    }
+
+    .custom-trust-badges__description {
+      display: none;
+    }
+
+    .custom-trust-badges__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 2rem;
+      row-gap: 1.7rem;
+    }
+
+    .custom-trust-badges__badge {
+      display: grid;
+      min-height: 0;
+      gap: 0.9rem;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .custom-trust-badges__icon {
+      flex-basis: 5.4rem;
+      width: 5.4rem;
+      height: 5.4rem;
+      border-radius: 0;
+    }
+
+    .custom-trust-badges__icon svg,
+    .custom-trust-badges__image {
+      width: 4.4rem;
+      height: 4.4rem;
+    }
+
+    .custom-trust-badges__label {
+      font-size: 1rem;
+      letter-spacing: 0;
+      line-height: 1.2;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Custom trust badges",
+  "tag": "section",
+  "class": "section-custom-trust-badges",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Built on Trust"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "2,400+ Americans Trust Their Water to POSTreat&trade;"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Certified, tested, and verified &mdash; backed by real customers who've made the switch.</p>"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#00142c"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#153b5e"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Card border color",
+      "default": "#e1e6ef"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "icon_background_color",
+      "label": "Icon background color",
+      "default": "#ededed"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "NSF/ANSI 42 & 372"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Default icon",
+          "default": "nsf",
+          "options": [
+            {
+              "value": "nsf",
+              "label": "NSF"
+            },
+            {
+              "value": "lab",
+              "label": "Lab tested"
+            },
+            {
+              "value": "warranty",
+              "label": "Warranty"
+            },
+            {
+              "value": "aluminum",
+              "label": "Aluminum-free"
+            },
+            {
+              "value": "toxic",
+              "label": "Non-toxic"
+            },
+            {
+              "value": "trial",
+              "label": "Trial"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon",
+          "info": "Overrides the selected default icon."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 9,
+  "presets": [
+    {
+      "name": "Custom trust badges",
+      "blocks": [
+        {
+          "type": "badge",
+          "settings": {
+            "label": "NSF/ANSI 42 & 372",
+            "icon": "nsf"
+          }
+        },
+        {
+          "type": "badge",
+          "settings": {
+            "label": "Lab Tested",
+            "icon": "lab"
+          }
+        },
+        {
+          "type": "badge",
+          "settings": {
+            "label": "10-Year Warranty",
+            "icon": "warranty"
+          }
+        },
+        {
+          "type": "badge",
+          "settings": {
+            "label": "Aluminum-Free",
+            "icon": "aluminum"
+          }
+        },
+        {
+          "type": "badge",
+          "settings": {
+            "label": "Non-Toxic",
+            "icon": "toxic"
+          }
+        },
+        {
+          "type": "badge",
+          "settings": {
+            "label": "100-Day Trial",
+            "icon": "trial"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

@@ -1,0 +1,483 @@
+<section
+  class="custom-certificate-info-card"
+  style="
+    --certificate-background: {{ section.settings.background_color }};
+    --certificate-text: {{ section.settings.text_color }};
+    --certificate-muted: {{ section.settings.muted_text_color }};
+    --certificate-line: {{ section.settings.line_color }};
+    --certificate-icon-background: {{ section.settings.icon_background_color }};
+    --certificate-accent: {{ section.settings.accent_color }};
+    --certificate-step-count: {{ section.blocks.size | at_least: 1 }};
+  "
+>
+  <div class="custom-certificate-info-card__container">
+    {% if section.settings.eyebrow != blank or section.settings.heading != blank %}
+      <div class="custom-certificate-info-card__header">
+        {% if section.settings.eyebrow != blank %}
+          <p class="custom-certificate-info-card__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="custom-certificate-info-card__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <ol class="custom-certificate-info-card__steps" role="list">
+        {% for block in section.blocks %}
+          {% liquid
+            assign step_number = forloop.index | prepend: '0' | slice: -2, 2
+            assign step_label = block.settings.step_label | default: step_number
+          %}
+
+          <li class="custom-certificate-info-card__step" {{ block.shopify_attributes }}>
+            <span class="custom-certificate-info-card__mobile-number" aria-hidden="true">{{ step_label | escape }}</span>
+
+            <div class="custom-certificate-info-card__icon-wrap">
+              <div class="custom-certificate-info-card__icon">
+                {% if block.settings.icon != blank %}
+                  {{
+                    block.settings.icon
+                    | image_url: width: 220
+                    | image_tag:
+                      class: 'custom-certificate-info-card__icon-image',
+                      loading: 'lazy',
+                      widths: '90, 140, 180, 220',
+                      sizes: '(max-width: 749px) 72px, 104px',
+                      alt: block.settings.icon_alt
+                  }}
+                {% else %}
+                  <span class="custom-certificate-info-card__icon-text">{{ step_number }}</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="custom-certificate-info-card__content">
+              <p class="custom-certificate-info-card__step-label">{{ 'Step ' | append: step_label | escape }}</p>
+
+              {% if block.settings.heading != blank %}
+                <h3 class="custom-certificate-info-card__step-heading">{{ block.settings.heading }}</h3>
+              {% endif %}
+
+              {% if block.settings.description != blank %}
+                <div class="custom-certificate-info-card__description rte">
+                  {{ block.settings.description }}
+                </div>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ol>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .custom-certificate-info-card {
+    overflow: hidden;
+    background: var(--certificate-background);
+    color: var(--certificate-text);
+    padding: 1rem 0 4rem;
+  }
+
+  .custom-certificate-info-card__container {
+    width: min(100% - 3.2rem, 1280px);
+    margin: 0 auto;
+  }
+
+  .custom-certificate-info-card__header {
+    max-width: 94rem;
+    margin: 0 auto 8.8rem;
+    text-align: center;
+  }
+
+  .custom-certificate-info-card__eyebrow {
+    margin: 0 0 2.4rem;
+    color: var(--certificate-text);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: .42rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .custom-certificate-info-card__heading {
+    margin: 0;
+    color: var(--certificate-text);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: clamp(3.8rem, 4.2vw, 5rem);
+    font-weight: 700;
+    letter-spacing: -.22rem;
+    line-height: 1.1;
+  }
+
+  .custom-certificate-info-card__steps {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--certificate-step-count), minmax(0, 1fr));
+    gap: 3rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .custom-certificate-info-card__steps::before {
+    content: "";
+    position: absolute;
+    top: 5.1rem;
+    right: calc((100% / var(--certificate-step-count)) / 2);
+    left: calc((100% / var(--certificate-step-count)) / 2);
+    height: .4rem;
+    background: var(--certificate-line);
+  }
+
+  .custom-certificate-info-card__step {
+    position: relative;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .custom-certificate-info-card__mobile-number {
+    display: none;
+  }
+
+  .custom-certificate-info-card__icon-wrap {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    width: 14.4rem;
+    height: 14.4rem;
+    margin: 0 auto 3.7rem;
+    place-items: center;
+    border: .2rem solid #dfe5ef;
+    border-radius: 50%;
+    background: var(--certificate-background);
+  }
+
+  .custom-certificate-info-card__icon {
+    display: grid;
+    width: 10.8rem;
+    height: 10.8rem;
+    place-items: center;
+    overflow: hidden;
+    border: .2rem solid var(--certificate-accent);
+    border-radius: 50%;
+    background: var(--certificate-icon-background);
+  }
+
+  .custom-certificate-info-card__icon-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .custom-certificate-info-card__icon-text {
+    color: var(--certificate-accent);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 3.2rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .custom-certificate-info-card__step-label {
+    margin: 0 0 2rem;
+    color: var(--certificate-text);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: .22rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .custom-certificate-info-card__step-heading {
+    max-width: 27rem;
+    margin: 0 auto;
+    color: var(--certificate-text);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: -.08rem;
+    line-height: 1.18;
+  }
+
+  .custom-certificate-info-card__description {
+    max-width: 27rem;
+    margin: 1.8rem auto 0;
+    color: var(--certificate-muted);
+    font-family: Value Sans, sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.65;
+  }
+
+  .custom-certificate-info-card__description > :last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 989px) and (min-width: 750px) {
+    .custom-certificate-info-card__steps {
+      gap: 2rem;
+    }
+
+    .custom-certificate-info-card__step-heading {
+      font-size: 2.3rem;
+    }
+
+    .custom-certificate-info-card__description {
+      font-size: 1.4rem;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .custom-certificate-info-card {
+      padding: 1.4rem 0 2.2rem;
+      background: #fff;
+    }
+
+    .custom-certificate-info-card__container {
+      width: min(100% - 3rem, 54rem);
+    }
+
+    .custom-certificate-info-card__header {
+      margin: 0 0 1.8rem;
+      text-align: left;
+    }
+
+    .custom-certificate-info-card__eyebrow {
+      margin-bottom: .8rem;
+      color: #006d6d;
+      font-size: .9rem;
+      letter-spacing: .24rem;
+    }
+
+    .custom-certificate-info-card__heading {
+      font-family: Georgia Pro Bold, Georgia, serif;
+      font-size: 2rem;
+      letter-spacing: -.04rem;
+      line-height: 1.15;
+    }
+
+    .custom-certificate-info-card__steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .custom-certificate-info-card__steps::before {
+      content: none;
+    }
+
+    .custom-certificate-info-card__step {
+      display: grid;
+      grid-template-columns: 4.8rem 3.8rem minmax(0, 1fr);
+      align-items: start;
+      gap: .9rem;
+      min-height: 8.6rem;
+      padding: 1.7rem 1.5rem;
+      border-radius: .8rem;
+      background: #f3f4f7;
+      text-align: left;
+    }
+
+    .custom-certificate-info-card__step:last-child {
+      padding-bottom: 1.7rem;
+    }
+
+    .custom-certificate-info-card__mobile-number {
+      display: grid;
+      width: 3.5rem;
+      height: 3.5rem;
+      place-items: center;
+      border-radius: 50%;
+      background: #061a2b;
+      color: #f0b74f;
+      font-family: Value Sans Bold, sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: .05rem;
+      line-height: 1;
+    }
+
+    .custom-certificate-info-card__icon-wrap {
+      width: 3.4rem;
+      height: 3.4rem;
+      margin: 0;
+      border: 0;
+      background: transparent;
+    }
+
+    .custom-certificate-info-card__icon {
+      width: 3.2rem;
+      height: 3.2rem;
+      border-width: .15rem;
+    }
+
+    .custom-certificate-info-card__icon-text {
+      font-size: 1.8rem;
+    }
+
+    .custom-certificate-info-card__content {
+      min-width: 0;
+      padding: 0;
+    }
+
+    .custom-certificate-info-card__step-label {
+      display: none;
+    }
+
+    .custom-certificate-info-card__step-heading {
+      max-width: none;
+      margin: 0;
+      font-size: 1.4rem;
+      letter-spacing: 0;
+      line-height: 1.25;
+    }
+
+    .custom-certificate-info-card__description {
+      max-width: none;
+      margin: .4rem 0 0;
+      font-size: 1.2rem;
+      line-height: 1.45;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Certificate info card",
+  "tag": "section",
+  "class": "section-custom-certificate-info-card",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "The science behind it"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How POSTreat™ Filters Your Water"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f5f8fd"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#071733"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Description color",
+      "default": "#697895"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Timeline line color",
+      "default": "#d3d7e2"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Icon border color",
+      "default": "#193d65"
+    },
+    {
+      "type": "color",
+      "id": "icon_background_color",
+      "label": "Icon background color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "step_label",
+          "label": "Step number",
+          "default": "01"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon image"
+        },
+        {
+          "type": "text",
+          "id": "icon_alt",
+          "label": "Icon alt text"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Fill Upper Chamber"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Pour tap water into the upper stainless steel chamber.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Certificate info card",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "step_label": "01",
+            "heading": "Fill Upper Chamber",
+            "description": "<p>Pour tap water into the upper stainless steel chamber.</p>"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "step_label": "02",
+            "heading": "Carbon Filtration",
+            "description": "<p>Coconut-shell carbon elements remove 99.9% of chlorine, heavy metals, microplastics & PFAS.</p>"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "step_label": "03",
+            "heading": "POSTreat™ Stage",
+            "description": "<p>Water passes through FluoRid media inside AISI 304 steel casings, capturing fluoride efficiently.</p>"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "step_label": "04",
+            "heading": "Pure Water Collected",
+            "description": "<p>Clean, mineral-rich water collects in the lower chamber - ready to drink.</p>"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

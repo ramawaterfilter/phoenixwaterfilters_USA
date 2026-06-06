@@ -76,6 +76,7 @@
               {% endfor %}
             </div>
           </div>
+          <div class="product-swiper-pagination" aria-label="Product image pagination"></div>
           <div class="swiper-container swiper control {% if product.media.size == 3 %} control-three {% endif %} {% if product.media.size == 5 %}control-five{% endif %}" id="product-slider-nav">
             <div class="swiper-wrapper {% if product.media.size == 3 or product.media.size == 5 %}wide{% endif %}">
               {% for media in product.media %}
@@ -383,6 +384,62 @@
       });
   </script>
 {% endunless %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const sliderEl = document.getElementById('product-slider');
+  const paginationEl = document.querySelector('.product-swiper-pagination');
+  let dotInitAttempts = 0;
+
+  if (!sliderEl || !paginationEl) return;
+
+  function initMobileProductDots() {
+    const swiper = sliderEl.swiper;
+    const slides = sliderEl.querySelectorAll('.swiper-slide:not(.swiper-slide-duplicate)');
+
+    if (slides.length <= 1) return;
+
+    if (!swiper) {
+      dotInitAttempts += 1;
+      if (dotInitAttempts > 30) return;
+      window.setTimeout(initMobileProductDots, 100);
+      return;
+    }
+
+    paginationEl.innerHTML = '';
+
+    slides.forEach((slide, index) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'product-swiper-pagination__dot';
+      dot.setAttribute('aria-label', `Show product image ${index + 1}`);
+      dot.addEventListener('click', function () {
+        if (typeof swiper.slideToLoop === 'function') {
+          swiper.slideToLoop(index);
+        } else {
+          swiper.slideTo(index);
+        }
+      });
+      paginationEl.appendChild(dot);
+    });
+
+    function updateActiveDot() {
+      const activeIndex = typeof swiper.realIndex === 'number' ? swiper.realIndex : swiper.activeIndex || 0;
+      paginationEl.querySelectorAll('.product-swiper-pagination__dot').forEach((dot, index) => {
+        const isActive = index === activeIndex;
+        dot.classList.toggle('is-active', isActive);
+        dot.setAttribute('aria-current', isActive ? 'true' : 'false');
+      });
+    }
+
+    swiper.on('slideChange', updateActiveDot);
+    swiper.on('activeIndexChange', updateActiveDot);
+    updateActiveDot();
+  }
+
+  initMobileProductDots();
+});
+</script>
 
 
 
@@ -744,6 +801,39 @@ label.carbon-filter-elements {
 
 .variant-img-box.active {
   border: 2px solid black;
+}
+
+.product-swiper-pagination {
+  display: none;
+}
+
+.product-swiper-pagination__dot {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  margin: 0 4px;
+  border: 0;
+  border-radius: 50%;
+  background: #c9c9c9;
+  cursor: pointer;
+}
+
+.product-swiper-pagination__dot.is-active {
+  background: #153A5B;
+}
+
+@media (max-width: 768px) {
+  div#product-slider-nav {
+    display: none;
+  }
+
+  .product-swiper-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    margin-top: 12px;
+  }
 }
 
 /* hide default selector UI */

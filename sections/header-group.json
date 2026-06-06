@@ -83,7 +83,7 @@
       "custom_css": [],
       "settings": {
         "sitelogo": "shopify://shop_images/Logo_with_Register_Mark.png",
-        "sitemenu": "main-menu"
+        "sitemenu": "megamenu-copy"
       }
     }
   },

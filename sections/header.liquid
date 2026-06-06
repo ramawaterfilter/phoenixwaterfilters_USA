@@ -36,25 +36,20 @@ No time to revert. soz.
 
 								{% endcomment %}
 
+	      <button class="hamburger d-block d-lg-none" type="button" aria-label="Open menu" aria-expanded="false">
+	      	<span></span>
+	      	<span></span>
+	      	<span></span>
+	      </button>
+
 	      <div class="site-header__nav">
-					
-				{% if allmenus contains mega_menu_name %}
-						        <li class="{% if original_link == request.path %}active{% endif %}" data-mega-menu="#{{ mega_menu_name }}">
-
-					           	 	{% assign links = linklists[mega_menu_name].links %}
-
-					           	 	<a href="{{ original_link }}" aria-label="Open menu">{{ link.title }}
-							            {% if links.size > 0 %}
-						           	 		<span class="sub-menu-trigger"></span>
-						        		{% endif %}
-					           	 	</a>
-
-									{% render 'megamenu', megamenu: mega_menu_name, index: forloop.index %}
-
-											{% endif %}
-				
-
-
+	      	<div class="site-header__drawer-logo d-block d-lg-none">
+	      		<a href="{{ routes.root_url }}">
+	      			{% if section.settings.sitelogo != blank %}
+	      				{{ section.settings.sitelogo | image_url: width: 240 | image_tag: alt: shop.name }}
+	      			{% endif %}
+	      		</a>
+	      	</div>
 
 					<ul>
 					    {% for link in section.settings.sitemenu.links %}
@@ -64,9 +59,9 @@ No time to revert. soz.
 					    	{% assign original_link = original_link[0] %}
 
 			        		{% if allmenus contains mega_menu_name %}
-						        <li class="{% if original_link == request.path %}active{% endif %}" data-mega-menu="#{{ mega_menu_name }}">
+						        {% assign links = linklists[mega_menu_name].links %}
 
-					           	 	{% assign links = linklists[mega_menu_name].links %}
+						        <li class="{% if original_link == request.path %}active{% endif %}" data-mega-menu="#{{ mega_menu_name }}">
 
 					           	 	<a href="{{ original_link }}" aria-label="mega menu">{{ link.title }}
 							            {% if links.size > 0 %}
@@ -76,7 +71,21 @@ No time to revert. soz.
 
 									{% render 'megamenu', megamenu: mega_menu_name, index: forloop.index %}
 
+						            {% if links.size > 0 %}
+						                <ul class="sub-menu">
+						                    {% for sublink in links %}
+						                    <li class="{% if sublink.url == request.path %}active{% endif %}">
+						                        <a href="{{ sublink.url }}" target="{{ sublink.target }}">
+						                       		{{ sublink.title }}
+						                   		</a>
+						                    </li>
+						                    {% endfor %}
+						                </ul>
+						            {% endif %}
+						        </li>
 				        	{% else %}
+				        		{% assign links = link.links %}
+
 						        <li class="{% if original_link == request.path %}active{% endif %}">
 					           		<a href="{{ original_link }}" target="{{ link.target }}">
 						           		{{ link.title }}
@@ -85,29 +94,26 @@ No time to revert. soz.
 						           	 		<span class="sub-menu-trigger"></span>
 						        		{% endif %}
 						           	</a>
-					           	 	{% assign links = link.links %}
-									
+
+						            {% if links.size > 0 %}
+						                <ul class="sub-menu">
+						                    {% for sublink in links %}
+						                    <li class="{% if sublink.url == request.path %}active{% endif %}">
+						                        <a href="{{ sublink.url }}" target="{{ sublink.target }}">
+						                       		{{ sublink.title }}
+						                   		</a>
+						                    </li>
+						                    {% endfor %}
+						                </ul>
+						            {% endif %}
+						        </li>
 				        	{% endif %}
-
-					            {% if links.size > 0 %}
-
-					                <ul class="sub-menu">
-					                    {% for sublink in links %}
-					                    <li class="{% if sublink.url == request.path %}active{% endif %}">
-					                        <a href="{{ sublink.url }}" target="{{ sublink.target }}">
-					                       		{{ sublink.title }}
-					                   		</a>
-					                    </li>
-					                    {% endfor %}
-					                </ul>
-					            {% endif %}
-					        </li>
 					    {% endfor %}
 				</ul>
 			</div>
 
 			<div class="site-header__logo">
-					<a href="/">
+					<a href="{{ routes.root_url }}">
 						{% if section.settings.sitelogo != blank %}
 	      	   	{{ section.settings.sitelogo | image_url: width: 1000 | image_tag: alt: shop.name }}
 					 	{% endif %}
@@ -141,14 +147,14 @@ No time to revert. soz.
 						{% if customer == nil %}
 				            <li>
 				            	<a href="{{ routes.account_login_url }}">
-												<img src="{{ 'icon-account.svg' | asset_url }}" loading="lazy"  title="Login" alt="Login" />
+												<img src="{{ 'icon-account.svg' | asset_url }}" loading="lazy" width="24" height="24" title="Login" alt="Login" />
 				            	</a>
 				            </li>
-						{% else: %}
+						{% else %}
 							<li>
 				            	<a href="{{ routes.account_url }}">
 												Welcome {{ customer.first_name }}
-				            	<img src="{{ 'icon-account.svg' | asset_url }}" loading="lazy" class="" alt="Welcome" />
+				            	<img src="{{ 'icon-account.svg' | asset_url }}" loading="lazy" width="24" height="24" class="" alt="Welcome" />
 				            	</a>
 				            </li>
 							<li>
@@ -156,21 +162,20 @@ No time to revert. soz.
 				            		{{ 'customer.log_out' | t }}
 				            	</a>
 				            </li>
-						{% endif; %}
+						{% endif %}
+						{% endif %}
 						<li>
 				            	<a href="#" class="search-toggle" aria-label="Open menu">
-				            	<img src="{{ 'icon-search.svg' | asset_url }}" loading="lazy" class="" alt="Search" />
+				            	<img src="{{ 'icon-search.svg' | asset_url }}" loading="lazy" width="24" height="24" class="" alt="Search" />
 				            	</a>
 				            </li>
-							<li>
-						{% endif; %}
 					</ul>
 				            	
 	                <div class="cart-icon">
 											
 	                    <a href="{{ routes.cart_url }}" {% if settings.enable_slide_cart %}data-cartslide{% endif %}>
 
-													<img src="{{ 'icon-cart.svg' | asset_url }}" loading="lazy" class="" alt="Cart" />
+													<img src="{{ 'icon-cart.svg' | asset_url }}" loading="lazy" width="24" height="24" class="" alt="Cart" />
 	                        <span class="count">{{ cart.item_count }}</span>
 	                     
 	                    </a>
@@ -192,6 +197,7 @@ let hamburger = document.querySelector('.hamburger');
 if(hamburger){
 	hamburger.addEventListener('click', function(){
 		document.documentElement.classList.toggle('menu-open');
+		hamburger.setAttribute('aria-expanded', document.documentElement.classList.contains('menu-open'));
 	});
 }
 
@@ -271,6 +277,29 @@ mmLinks.forEach(function(el, index){
 <script>
   window.developer = atob("S2FsaWVzd2FyYW4gLSBXZWJzaXRlIERldmVsb3Blcg==");
 </script>
+
+<style>
+@media (min-width: 992px) {
+	.site-header__main {
+		align-items: flex-end;
+	}
+
+	.site-header__logo,
+	.site-header__nav,
+	.site-header__aux {
+		align-items: flex-end;
+	}
+
+	.site-header__nav {
+		align-self: flex-end;
+	}
+
+	.site-header__nav > ul,
+	.site-header__top__nav {
+		align-items: flex-end;
+	}
+}
+</style>
 
 {% schema %}
 	{

@@ -1,0 +1,264 @@
+<section
+  class="custom-product-details-tabular-form"
+  style="
+    --product-details-background: {{ section.settings.background_color }};
+    --product-details-text: {{ section.settings.text_color }};
+    --product-details-accent: {{ section.settings.accent_color }};
+    --product-details-border: {{ section.settings.border_color }};
+    --product-details-width: {{ section.settings.content_width }}rem;
+  "
+>
+  <div class="custom-product-details-tabular-form__container">
+    {% if section.settings.eyebrow != blank %}
+      <p class="custom-product-details-tabular-form__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {% endif %}
+
+    {% if section.settings.heading != blank %}
+      <h2 class="custom-product-details-tabular-form__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="custom-product-details-tabular-form__table" role="table" aria-label="{{ section.settings.heading | strip_html | escape }}">
+        {% for block in section.blocks %}
+          <div class="custom-product-details-tabular-form__row" role="row" {{ block.shopify_attributes }}>
+            {% if block.settings.label != blank %}
+              <div class="custom-product-details-tabular-form__label" role="rowheader">
+                {{ block.settings.label | escape }}
+              </div>
+            {% endif %}
+
+            {% if block.settings.value != blank %}
+              <div class="custom-product-details-tabular-form__value rte" role="cell">
+                {{ block.settings.value }}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .custom-product-details-tabular-form {
+    background: var(--product-details-background);
+    color: var(--product-details-text);
+    padding: 1rem 0 3rem;
+  }
+
+  .custom-product-details-tabular-form__container {
+    width: min(100% - 2rem, var(--product-details-width));
+    margin: 0 auto;
+  }
+
+  .custom-product-details-tabular-form__eyebrow {
+    margin: 0 0 .8rem;
+    color: var(--product-details-accent);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .32rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .custom-product-details-tabular-form__heading {
+    margin: 0 0 2.2rem;
+    color: var(--product-details-text);
+    font-family: Georgia Pro Bold, Georgia, serif;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -.04rem;
+    line-height: 1.15;
+  }
+
+  .custom-product-details-tabular-form__table {
+    border-bottom: 1px solid var(--product-details-border);
+  }
+
+  .custom-product-details-tabular-form__row {
+    display: grid;
+    grid-template-columns: minmax(10.8rem, 38%) minmax(0, 1fr);
+    gap: 3rem;
+    padding: 1.35rem 0;
+    border-top: 1px solid var(--product-details-border);
+  }
+
+  .custom-product-details-tabular-form__label {
+    color: var(--product-details-accent);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .custom-product-details-tabular-form__value {
+    color: var(--product-details-text);
+    font-family: Value Sans, sans-serif;
+    font-size: 1.25rem;
+    line-height: 1.45;
+  }
+
+  .custom-product-details-tabular-form__value > :first-child {
+    margin-top: 0;
+  }
+
+  .custom-product-details-tabular-form__value > :last-child {
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 750px) {
+    .custom-product-details-tabular-form {
+      padding: 3.6rem 0 4.8rem;
+    }
+
+    .custom-product-details-tabular-form__container {
+      width: min(100% - 6.4rem, var(--product-details-width));
+    }
+
+    .custom-product-details-tabular-form__heading {
+      font-size: 2.8rem;
+    }
+
+    .custom-product-details-tabular-form__label,
+    .custom-product-details-tabular-form__value {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (max-width: 374px) {
+    .custom-product-details-tabular-form__row {
+      grid-template-columns: minmax(8.6rem, 34%) minmax(0, 1fr);
+      gap: 1.8rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product details table",
+  "tag": "section",
+  "class": "section-custom-product-details-tabular-form",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Product details"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Technical Specifications"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 32,
+      "max": 100,
+      "step": 2,
+      "unit": "rem",
+      "default": 72
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#00142c"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#006d6d"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Divider color",
+      "default": "#e6e9ee"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "detail",
+      "name": "Detail row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Material"
+        },
+        {
+          "type": "richtext",
+          "id": "value",
+          "label": "Value",
+          "default": "<p>AISI 304 stainless steel &mdash; rust-resistant and non-leaching</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [
+    {
+      "name": "Product details table",
+      "blocks": [
+        {
+          "type": "detail",
+          "settings": {
+            "label": "Material",
+            "value": "<p>AISI 304 stainless steel &mdash; rust-resistant and non-leaching</p>"
+          }
+        },
+        {
+          "type": "detail",
+          "settings": {
+            "label": "Capacity",
+            "value": "<p>Up to 1,100 gallons per pair</p>"
+          }
+        },
+        {
+          "type": "detail",
+          "settings": {
+            "label": "Compatibility",
+            "value": "<p>Phoenix Gravity Carbon Filter Elements &amp; Black Berkey&reg; Elements</p>"
+          }
+        },
+        {
+          "type": "detail",
+          "settings": {
+            "label": "Media",
+            "value": "<p>FluoRid &mdash; activated carbon blend + proprietary fluoride-reduction media</p>"
+          }
+        },
+        {
+          "type": "detail",
+          "settings": {
+            "label": "Warranty",
+            "value": "<p>10-year coverage on defects in materials or performance</p>"
+          }
+        },
+        {
+          "type": "detail",
+          "settings": {
+            "label": "Fluoride Reduction",
+            "value": "<p>&gt;95% from drinking water</p>"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}
