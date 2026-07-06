@@ -1,0 +1,789 @@
+# Recreation specification: `custom-nice-product.liquid`
+
+Audit date: 2026-06-27
+
+## 1. Purpose
+
+Recreate the product-page features documented here in another Shopify theme.
+
+The destination implementation must use the destination theme's existing/native product section, product form, variant state, gallery, media modal, money formatter, cart drawer, app blocks, translation system, CSS variables, and section lifecycle wherever those capabilities already exist. Do not transplant this section wholesale and do not copy its theme-specific cart renderer or global JavaScript.
+
+The objective is functional and visual parity at the feature level, adapted to the architecture of the destination theme.
+
+Before implementation, inspect the destination theme and map each required behavior to a native component. Typical mappings are: the existing variant picker plus custom card contents, the native media gallery plus variant-metafield images, and the native product form/cart drawer with no parallel cart implementation.
+
+## 2. Audited source files
+
+Primary source:
+
+- `sections/custom-nice-product.liquid`
+
+Direct dependencies:
+
+- `snippets/product-hero-countdown.liquid`
+- `snippets/sticky-add-to-cart.liquid`
+- `snippets/basic-add-to-cart.liquid`
+- `templates/product.metafields.liquid`
+
+Indirect theme dependencies:
+
+- `snippets/cart-slideout.liquid`
+- `snippets/free-shipping.liquid`
+- `assets/main.js`
+- `assets/main.css`
+- `layout/theme.liquid`
+- Judge.me app-generated scripts/metafields
+
+Product templates using the section:
+
+- `templates/product.phoenix-metafield-variant.json`: enabled.
+- `templates/product.phoenix-metafield-varints.json`: enabled.
+- `templates/product.tap.json`: enabled.
+- `templates/product.main-product-filter-system.json`: section exists but is disabled.
+
+The three enabled template instances have effectively the same block configuration.
+
+## 3. Current production configuration
+
+Current enabled block order:
+
+1. Image gallery
+2. Comparison table — disabled
+3. Countdown — disabled
+4. Sale badge
+5. Product title
+6. Judge.me rating
+7. Description and product USPs
+8. Variant picker
+9. Price and inventory status
+10. Add to cart
+11. Payment image
+12. Trust badges
+
+Important layout detail: blocks are iterated twice. Gallery and comparison-table blocks are rendered in the left column. All other supported blocks are rendered in the right column. Block order is therefore respected only within each column, not as one global sequence.
+
+Current settings:
+
+- Gallery `hide_variants`: `false`.
+- Badge: `VENTE PRINTEMPS`.
+- Countdown settings: empty, and the block is disabled.
+- Size-guide product handle list: empty, so option-name auto-detection is used.
+- Trust text color: `#315879`.
+- Trust icon size: `34px`.
+- Comparison table is configured with defaults but disabled.
+- No `variant_metafield_tab` or app blocks are present in the enabled instances.
+
+Current trust badge text:
+
+1. `LIVRAISON GRATUITE DANS TOUTE L'EUROPE`
+2. `ESSAI DE 100 JOURS`
+3. `GARANTIE DE 10 ANS`
+4. `SUPPORT CLIENT`
+5. Intended text: shipping from a France-based warehouse; stored source text has broken French encoding.
+6. Intended text: `CERTIFIÉ NSF 372, ANSI 42`; stored source text has broken French encoding.
+
+## 4. Feature status summary
+
+### Visible in the enabled templates
+
+- Responsive two-column product layout.
+- Variant-aware media gallery.
+- Sale badge and product H1.
+- Judge.me preview rating.
+- Variant description fallback and product USP list.
+- Custom stepped/card variant picker.
+- Variant price, compare-at price, tax label, and stock indicator.
+- AJAX add to cart integrated with the source theme's drawer.
+- Static French payment-method image.
+- Six configurable trust badges.
+- Stand/size guide when detected.
+- Product app-block support in the section schema.
+
+### Implemented but currently disabled or unused
+
+- Countdown timer.
+- Three-product comparison table.
+- Up to ten variant-metafield accordion blocks.
+- Sticky add-to-cart markup and scripts.
+
+### Present in code but ineffective or incomplete
+
+- Variant descriptions and variant-metafield accordions do not update after an in-page variant change.
+- Sticky add to cart receives an `.in` class while scrolling, but source CSS applies `display: none !important` to `.sticky-add-to-cart.in`; it is effectively hidden.
+- Minimum/maximum quantities are loaded, but the custom fast-add path does not enforce them.
+- “Pre-order” state is coded, but its availability calculation makes that state effectively unreachable.
+- Product videos work in the initial server render, but the JavaScript gallery rebuild turns non-image media into preview images.
+- “Hide variant-attached media” is respected initially but not when JavaScript rebuilds the gallery.
+
+Do not silently recreate these incomplete behaviors as defects.
+
+## 5. Detailed feature specification
+
+### 5.1 Initial variant and page-load behavior
+
+Initial variant:
+
+- Use `product.selected_or_first_available_variant`.
+- Shopify's `?variant=<id>` URL must select that variant on initial load.
+- Initial price, compare-at price, stock state, gallery, description, and variant radios derive from that variant.
+
+Source-only global scroll behavior:
+
+- With no URL hash, sets `history.scrollRestoration = manual`.
+- Scrolls to `(0, 0)` on `pageshow` and again after `load`.
+- With a URL hash, leaves scroll behavior alone.
+
+Migration rule: this is not a normal PDP feature. Do not add it unless explicitly requested.
+
+### 5.2 Responsive product layout
+
+- Mobile/tablet base layout is one column: media first, product information second.
+- At `992px` and above, layout becomes two columns.
+- Normal desktop split is 50% media / 50% product information.
+- Between `992px` and `1199px`, split is 52% / 48%.
+- Desktop product-information column has left padding.
+- Source does not actually make the information column sticky.
+- Main content uses the source `.container`; global CSS raises its maximum width to `1350px` at `1200px`.
+
+Destination behavior:
+
+- Reuse native page width, grid, breakpoints, gutters, and sticky behavior.
+- Preserve the broad desktop two-column and mobile stacked composition.
+- Avoid duplicate global container rules.
+
+### 5.3 Variant-aware product media gallery
+
+#### Data priority
+
+For the selected variant:
+
+1. If `variant.metafields.custom.variant_images.value` contains images, show only that list.
+2. Otherwise show `product.media`.
+3. When product media is used, optionally omit `media.attached_to_variant?` items if gallery setting `hide_variants` is enabled.
+
+Initial active media:
+
+- Prefer `selected_variant.featured_media.id`.
+- Otherwise use `product.featured_media.id`.
+- If that media is absent from the rendered gallery, activate the first rendered item.
+- For a variant metafield image list, activate its first image.
+- If no media item renders, fall back to `product.featured_image`; if that is also absent, show Shopify's image placeholder.
+
+#### Media support in the source
+
+- Shopify image media.
+- External video media.
+- Shopify-hosted video media.
+- No explicit 3D model rendering.
+- Images/video previews open through Fancybox using `data-fancybox=gallery`.
+- Source Fancybox comes from `assets/main.js`, version 5.0.33.
+
+Destination rule:
+
+- Use the destination's native zoom/lightbox and media components.
+- Preserve all media types it supports, especially video and 3D models.
+- Do not add Fancybox if the destination has a media modal.
+
+#### Gallery controls and styling
+
+- Main media frame is square (`1 / 1`) with `object-fit: contain`.
+- Only the active slide is displayed by the local implementation.
+- Previous/next arrows wrap infinitely.
+- From `750px`, show a horizontally scrollable row of square thumbnails.
+- Source desktop thumbnails are about `130px × 130px`, use `object-fit: cover`, and show an active border.
+- Through `768px`, hide thumbnails and show pagination dots.
+- Mobile still shows previous/next arrows.
+- Local code does not implement touch dragging; use native swipe behavior.
+- Clicking main media opens the lightbox.
+
+#### Image loading
+
+- Active main image: eager/high priority.
+- Other main images: lazy/low priority.
+- Main responsive widths: `352, 600, 832, 1200, 1600, 1946`.
+- Full lightbox request width: `2560`.
+- Thumbnail widths: `90, 120, 160, 220, 416`; lazy loaded.
+
+Use the destination's responsive-image snippet and loading strategy where better.
+
+#### Variant changes
+
+- A new variant with `custom.variant_images` replaces the gallery with that list and selects the first image.
+- A variant without custom images restores product media and selects its featured media when possible.
+- Arrows, thumbnails, dots, active state, modal, and accessibility must continue working.
+
+Preferred implementation: use the native gallery selection API. If markup must change, use the destination section-rendering/component mechanism, not a reduced duplicate gallery built from string HTML.
+
+### 5.4 Optional comparison table
+
+Status: implemented, but disabled in all audited enabled templates.
+
+- Renders below gallery in the left column.
+- One feature-name column plus three comparison columns.
+- Each comparison column has editable title and optional image.
+- Column 1 represents the promoted product and gets light-blue highlighting.
+- Supports up to eight rows; a row renders only when feature name is nonblank.
+- Every row has values for columns 1, 2, and 3.
+- Horizontally scrolls when needed.
+
+Schema keys: `col1_title/image` through `col3_title/image`, `feature_1` through `feature_8`, and `col1_row_1` through `col3_row_8`.
+
+Prefer a destination-native comparison section/block. Correct broken French accents before using source defaults.
+
+### 5.5 Optional countdown
+
+Status: implemented, but disabled in current enabled templates.
+
+Settings:
+
+- `countdown_text`: free text supporting `[month]` and `[time]`.
+- `countdown_time`: ISO-style timestamp with timezone, or evergreen duration such as `15 minutes`.
+- `countdown_products`: optional product list. Blank means all products.
+
+Behavior:
+
+- `[time]` becomes `days:hours:minutes:seconds`.
+- `[month]` becomes the current month; source month names are hardcoded in English.
+- Evergreen duration rounds to the next interval boundary and counts down.
+- Expired fixed timer stops at `00:00:00:00`.
+
+Prefer a native countdown block. Use locale-aware month names and decide whether evergreen state resets per visit or persists.
+
+### 5.6 Sale/promotional badge
+
+- Optional block, limit one.
+- Displays editable `badge_text`; current value is `VENTE PRINTEMPS`.
+- Source style: red background, white uppercase text, compact padding, small rounded corners.
+
+Use the destination's native product-badge block/style when available.
+
+### 5.7 Product title
+
+- Optional block, limit one.
+- Renders `product.title` as `<h1>`.
+- Dark blue, bold, and responsive in the source.
+- Ensure the destination page contains only the intended primary product H1.
+
+### 5.8 Judge.me preview rating
+
+- Optional block, limit one.
+- Renders Judge.me preview badge for `product.id` from `product.metafields.judgeme.badge`.
+- Source CSS aligns stars/review text and sizes stars around `18px` desktop / `17px` mobile.
+
+Use the official Judge.me app block or existing review integration. Verify clicking it reaches the reviews area. Do not hardcode Judge.me if the destination store uses another provider.
+
+### 5.9 Description and product USPs
+
+Description priority on initial render:
+
+1. `selected_variant.metafields.custom.variant_level_description`, via `metafield_tag`.
+2. Otherwise `product.description`.
+3. Nothing if both are blank.
+
+Then optionally render a bulleted list from `product.metafields.custom.product_usps.value`.
+
+Expected types:
+
+- `custom.variant_level_description`: variant rich text or compatible type.
+- `custom.product_usps`: product list of text values.
+
+Source style is about `15px`, `1.7` line height, with a standard bullet list.
+
+Source limitation: variant description does not refresh after an in-page variant change. Recommended destination behavior is to update it immediately and use product description as the per-variant fallback.
+
+### 5.10 Custom stepped variant picker
+
+For each `product.options_with_values` item:
+
+- Render a circular step number starting at 1.
+- Render the Shopify option name and current selected value.
+- Render one radio-card per option value.
+- Initially check values from `selected_or_first_available_variant`.
+- Source gives the last option special styling and assumes it is the stand option for the guide.
+
+#### Variant resolution
+
+On radio change:
+
+1. Read one selected value from every option position.
+2. Find the variant whose complete option array exactly matches.
+3. If no variant matches, source does nothing.
+4. If matched, update variant selector, price, compare-at, inventory, button, gallery, and `?variant=<id>` using `replaceState`.
+5. Dispatch `variant:change` and `product:variant-change` with `{ detail: { variant } }`.
+
+Source shortcomings:
+
+- All independent values display even when a combination is impossible.
+- Sold-out values are not marked clearly.
+- A radio's `data-variant-id` is unreliable for multi-option products.
+- Variant description and accordion content stay stale.
+
+Reuse the destination's native availability algorithm and selected-variant object. Preserve native deep linking, analytics, and app events.
+
+#### Special cards: size
+
+Source recognizes option names containing `taille` or `Size`.
+
+Value mappings:
+
+- `6 litres`, `6 litri`, or `6 litros` → family icon, `1-2 personnes`, `6 litres`.
+- `8 litres`, `8 litri`, or `8 litros` → family icon, `2-4 personnes`, `8 litres`.
+- `12 litres`, `12 litri`, or `12 litros` → family icon, `4-6 personnes`, `12 litres`.
+
+Desktop uses three rectangular cards with icon, household label, and capacity. Selected card gets dark-blue border and pale-blue background. Mobile retains a three-card grid.
+
+#### Special cards: filter cartridges
+
+Source recognizes option names containing `cartouches`, `Filter`, or `Cartuchos`.
+
+Value mappings:
+
+- Smart carbon: `Cartouches de carbone intelligentes`, `Smart Carbon`, `Cartucce`, or `Cartuchos`.
+- Fluoride version: `fluorures`, `Fluoride`, `fluoruri`, or `fluoruros`.
+
+Presentation is circular image cards, about `85px` desktop / `75px` mobile, with thick selected border.
+
+#### Special cards: stand
+
+Source recognizes option names containing `stand` or `Stand`.
+
+Value mappings:
+
+- No stand: `Pas de support` or `No Stand`.
+- Stainless: `acier inoxydable`, `Stainless`, or `Soporte`.
+- Wood/teak: `teck`, `Wooden`, or `Teak`.
+
+Presentation is circular image cards with thick selected border and pale-blue selected background. The last option gets this mobile layout whether or not it is actually the stand option.
+
+#### Migration requirement for cards
+
+Do not retain locale-dependent CSS IDs such as `choisissez-votre-taille-:-options`, `choisissez-vos-cartouches-:-options`, or `choisissez-votre-stand-:-options`.
+
+Use theme-editor mappings, product/variant metafields or metaobjects, or a localized normalized mapping. Always show the actual option value as a fallback; source currently produces blank cards for unrecognized values.
+
+### 5.11 Stand/size guide modal
+
+#### Visibility
+
+`show_size_guide` is true when:
+
+- Section setting lists current product handle, one per line; or
+- Setting is blank and any option name contains `stand` or `support`, case-insensitive.
+
+If the handle list is non-empty, auto-detection is not used. Source puts the trigger only in the last option group, not necessarily the matched option.
+
+#### Behavior
+
+- Trigger text: `GUIDE DES TAILLES`.
+- Centered white modal over dark full-screen backdrop.
+- Locks body scrolling.
+- Reads selected stand radio and changes title/image.
+- Backdrop click and Escape close it; inside click does not.
+- Source has no visible close button or complete focus management/dialog semantics.
+
+Guide mappings:
+
+- No stand → generic 6-size guide.
+- Stainless → stainless-stand guide.
+- Teak/wood → teak-stand guide.
+- Unknown → no-stand guide.
+
+Use the destination's native modal. Put trigger beside the actual stand option and include visible close control, dialog semantics, focus trap, Escape, focus restoration, and scroll lock.
+
+### 5.12 Price, compare-at, tax, and inventory
+
+Initial display:
+
+- Current variant price.
+- Compare-at only when greater than price.
+- Hardcoded `(TTC)`.
+- `En stock` or `Rupture de stock`.
+
+Source treats a variant as in stock if `variant.available`, inventory is above zero, or policy is `continue`.
+
+Available uses green text/blinking dot; unavailable uses red. Mobile puts price cluster left and stock right.
+
+Use native market-aware money, translations, tax inclusion messaging, and availability/preorder policy. Do not copy source `window.formatMoney`; it hardcodes euros and can mishandle low numeric prices.
+
+### 5.13 Optional variant-metafield accordions
+
+Status: schema supports them, but none are configured in current enabled templates. Limit: 10.
+
+Each block has:
+
+- Heading.
+- Optional emoji/raw HTML icon.
+- Metafield namespace, default `custom`.
+- Metafield key, default `specifications`.
+- `hide_if_empty`.
+
+Rendering:
+
+- Native `<details>/<summary>`, closed initially.
+- Rotating chevron.
+- Value via `metafield_tag`.
+- If empty and not hidden: `No information available for this variant.`
+
+Source limitation: reads only the initial variant. Destination should update all configured accordions on variant change, translate empty text, and use a safe native icon system instead of raw HTML.
+
+### 5.14 Main add-to-cart form
+
+Source form:
+
+- Posts to `routes.cart_add_url` as `multipart/form-data`.
+- Contains selected variant ID and product handle.
+- Contains all section `@app` blocks.
+- Has no visible quantity selector; implied quantity is one.
+- Disables button for unavailable variant.
+- Button text changes for add, adding, added, error, sold out, and nominal preorder.
+- Uses `disable-ajax` to bypass the old global handler, then installs a separate capturing AJAX handler.
+
+Source AJAX flow:
+
+1. Prevent submit for main/sticky forms.
+2. Synchronize selected variant.
+3. POST `FormData` to localized `cart/add.js`.
+4. Optimistically update source drawer.
+5. Fetch `cart.js`.
+6. Re-render drawer items/totals.
+7. Update cart count and free-shipping progress.
+8. Open drawer through `body.cart-open`.
+9. If drawer is disabled, use source toast.
+
+FormData preserves app properties and selling-plan inputs. `basic-add-to-cart.liquid` also adds private property `_variant_image` so source drawer can use the first custom gallery image.
+
+Destination implementation:
+
+- Use native `<product-form>`/controller and native cart drawer update mechanism.
+- Do not copy token-based cart HTML replacement.
+- Do not create duplicate `name=id` controls.
+- Preserve selling plans, line properties, file/personalization fields, loading state, analytics, and live regions.
+- Show Shopify's returned error to customer.
+- Prevent double submission.
+- Open the configured native cart drawer after success when appropriate.
+
+### 5.15 Minimum and maximum quantities
+
+Global source settings:
+
+- `settings.enable_minmax_buys`
+- `settings.min_buy_qty`
+- `settings.max_buy_qty`
+
+Product overrides:
+
+- `product.metafields.custom.min_buy_quantity`
+- `product.metafields.custom.max_buy_quantity`
+
+Source fetches `/products/<handle>?view=metafields` using `templates/product.metafields.liquid` for overrides and inventory.
+
+Current limitation: the fast-add code updates `data-min`/`data-max` but does not enforce them; main form has no quantity input.
+
+Use Shopify quantity rules/native quantity breaks first. Otherwise enforce effective min/max in product form, drawer, cart page, and requests with readable validation. Do not add an alternate product view for data already available in Liquid/native variant state.
+
+### 5.16 Sticky add to cart
+
+Status: markup/behavior exist but current source CSS hides it.
+
+Intended contents:
+
+- Product title on large screens.
+- Selected price and compare-at.
+- Quantity-one add form.
+- Selling-plan hidden input when relevant.
+- “100-day money-back guarantee” message, also hidden in source sticky CSS.
+
+Intended visibility: fixed at viewport bottom after scrolling beyond half the product section, removed near footer. Actual `.sticky-add-to-cart.in { display: none !important; }` prevents display.
+
+Treat as optional. If requested, use destination native sticky-buy feature sharing variant, availability, quantity, selling plan, price, loading, and errors with the main form.
+
+### 5.17 Payment image
+
+- Optional block, limit one.
+- One fixed French payment banner, about `280 × 21`, centered below add to cart.
+
+Prefer native enabled-payment SVGs or configurable image. Confirm payment methods apply to destination market; do not permanently hardcode source CDN.
+
+### 5.18 Trust badge grid
+
+- Optional block, limit one.
+- Up to six badges, each optional image picker plus text.
+- Blank custom image uses fallback.
+- Configurable text/icon color.
+- Icon size `24px`–`48px`, step `2px`.
+- Centered three-column grid, normally two rows.
+- Small bold uppercase centered text; reduced spacing on very small screens.
+- Leaving badge text blank hides that badge.
+
+Fallbacks:
+
+1. `assets/icon-truck.png`
+2. `assets/icon-tag.png`
+3. `assets/icon-award.png`
+4. `assets/icon-headset.png`
+5. External warehouse icon below
+6. External NSF icon below
+
+Prefer native icon-with-text/trust blocks. Move external icons to destination-owned assets/Files.
+
+### 5.19 App blocks
+
+- Schema accepts `@app` blocks.
+- Source renders every app block inside the add-to-cart form regardless of overall block position.
+
+Preserve destination-native placement. Do not blindly put every app block inside the form; purchase-option blocks may require it, while others require normal block order. Test all installed subscription, bundle, warranty, review, and personalization blocks.
+
+## 6. Data contract
+
+### Variant metafields
+
+| Namespace/key | Expected purpose | Required behavior |
+|---|---|---|
+| `custom.variant_images` | List of image/file references | Replaces normal gallery for that variant |
+| `custom.variant_level_description` | Rich text/compatible content | Overrides product description |
+| Configurable namespace/key | Variant accordion content | Up to ten configured accordions |
+
+### Product metafields
+
+| Namespace/key | Purpose |
+|---|---|
+| `custom.product_usps` | List of USP strings |
+| `custom.min_buy_quantity` | Product minimum quantity |
+| `custom.max_buy_quantity` | Product maximum quantity |
+| `custom.product_badge_text` | Added to global product JSON for another source feature; not this visible badge |
+| `judgeme.badge` | Judge.me preview HTML |
+| `custom.month_sale` | Used by other templates; can feed countdown text but is not directly read here |
+
+### Shopify fields used
+
+- Product: `id`, `handle`, `title`, `description`, `media`, `featured_media`, `featured_image`, `options`, `options_with_values`, `variants`, `selling_plan_groups`.
+- Variant: `id`, `title`, `options`, `price`, `compare_at_price`, `available`, inventory fields, `featured_media`, `featured_image`.
+
+### Source settings/globals
+
+- `settings.enable_minmax_buys`, `min_buy_qty`, `max_buy_qty`.
+- `settings.enable_slide_cart`, `enable_ajax_cart`.
+- `Shopify.routes.root`, `Shopify.formatMoney`.
+- `window.money_format`, `inventory_text`, `enable_slide_cart`.
+
+Do not assume these names exist in destination.
+
+## 7. Hardcoded source assets to replace or migrate
+
+### Size icons
+
+- `https://cdn.shopify.com/s/files/1/0739/6235/6836/files/family-1.svg?v=1760638763`
+- `https://cdn.shopify.com/s/files/1/0739/6235/6836/files/family-3.svg?v=1760638762`
+- `https://phoenixwaterfilters.com/cdn/shop/files/family-5.svg?v=1713147857&width=40`
+
+### Filter-option images
+
+- `https://cdn.shopify.com/s/files/1/0656/9898/8085/files/carbon-fr.png?v=1767765891`
+- `https://cdn.shopify.com/s/files/1/0656/9898/8085/files/carbon_with_postreat-fr.png?v=1767765891`
+
+### Stand-option images
+
+- `https://cdn.shopify.com/s/files/1/0656/9898/8085/files/pas_de_support_3.png?v=1762956199`
+- `https://cdn.shopify.com/s/files/1/0739/6235/6836/files/stand_ss.avif?v=1760639415`
+- `https://cdn.shopify.com/s/files/1/0739/6235/6836/files/stand_wooden.avif?v=1760639282`
+
+### Stand-guide images
+
+- No stand: `https://cdn.shopify.com/s/files/1/0656/9898/8085/files/6-Sizes_Guide.jpg?v=1782120442`
+- Stainless: `https://cdn.shopify.com/s/files/1/0656/9898/8085/files/12-Available_Sizes_SS_Stand-1.jpg?v=1782120442`
+- Teak: `https://cdn.shopify.com/s/files/1/0656/9898/8085/files/11-Available_Sizes_TStand-1.jpg?v=1782120443`
+
+### Payment/trust
+
+- Payment: `https://cdn.shopify.com/s/files/1/0656/9898/8085/files/France_Payment_Below_CTA_copy.webp?v=1777899592`
+- Warehouse: `https://cdn.shopify.com/s/files/1/2644/2852/files/product_warehouse.png`
+- NSF: `https://cdn.shopify.com/s/files/1/2644/2852/files/nsf-01.png?v=1751276325`
+
+Confirm ownership and reuse rights. Prefer destination-owned Files, image pickers, or native icons.
+
+## 8. Section schema inventory
+
+Section settings: countdown text/time/product list and size-guide product handles.
+
+| Block | Limit | Settings |
+|---|---:|---|
+| Image gallery | 1 | Hide variant-attached media |
+| Comparison table | 1 | 3 columns and 8 rows |
+| Countdown | 1 | Uses section countdown settings |
+| Badge | 1 | Text |
+| Product title | 1 | None |
+| Review rating | 1 | None |
+| Description | 1 | None |
+| Variant picker | 1 | None |
+| Price | 1 | None |
+| Variant metafield tab | 10 | Heading, icon, namespace, key, hide-if-empty |
+| Add to cart | 1 | None |
+| Payment icons | 1 | Source image hardcoded |
+| Trust badges | 1 | Color, size, six icon/text pairs |
+| `@app` | Shopify-controlled | App settings |
+
+Expose only settings missing from native destination blocks; avoid duplicating native title, price, quantity, buy buttons, gallery, or app settings.
+
+## 9. Source event and selector contracts
+
+Source emits `variant:change` and `product:variant-change`, both with:
+
+```js
+{ detail: { variant: matchingVariant } }
+```
+
+Source coupling includes:
+
+- `#product-variants`, `#product-selectors`, `#product-add-to-cart`, `#add-to-cart`.
+- `#inventory-indicator`, `.sticky-add-to-cart`.
+- `.cart-icon span`, `[data-cartcount]`, `.free-shipping`.
+- `#cart-template`, `#cart-slideout-contents`, `#cart-slideout-subtotal`, `body.cart-open`.
+- `window.product`, `productVariants`, `customNiceVariantGalleries`, `customNiceProductMedia`.
+- `window._getCart`, `_populateSlideOutCart`, `_toastAlert`.
+
+These document source coupling; they are not interfaces to reproduce. Map to destination-native events/APIs.
+
+## 10. Known source defects and migration decisions
+
+Normally fix these in the destination:
+
+1. Variant description is stale after changing variants.
+2. Variant accordions are stale after changing variants.
+3. Invalid option combinations remain selectable.
+4. Sold-out option values are not clearly marked/disabled.
+5. Preorder logic is inconsistent and effectively unreachable.
+6. JavaScript money output hardcodes euros.
+7. Numeric conversion can misread prices below €10.
+8. Videos degrade to preview images after gallery rebuild.
+9. 3D model media is not explicitly supported.
+10. `hide_variants` is lost after gallery rebuild.
+11. Sticky add to cart is hidden by `display: none !important`.
+12. Min/max quantities are loaded but not enforced by fast add.
+13. Source may create competing/duplicate variant-ID form controls.
+14. Add errors are mainly logged rather than shown usefully.
+15. Special-card recognition is case-sensitive and tied to exact multilingual strings.
+16. Unknown option values can produce blank radio cards.
+17. Size-guide trigger is attached to last option, not matched option.
+18. Size-guide modal lacks visible close/focus management.
+19. IDs/globals assume one product section per page.
+20. Section initializes on DOM ready but not `shopify:section:load`.
+21. Initial and rebuilt gallery media have unequal features.
+22. Broad CSS such as `button:hover, button:focus { color: #fff; }` affects unrelated controls.
+23. Multiple French strings/defaults have corrupted encoding/mojibake.
+24. Source forces scroll-to-top and overrides browser restoration.
+25. Countdown months and several ARIA labels are English on a French page.
+26. Static payment/trust assets may not match destination market.
+27. The section serializes the full product, all variants, every variant-gallery URL at three sizes, product media, and stock inline; this can make product HTML large.
+28. The metafield request hardcodes `/products/` instead of consistently using locale-aware Shopify routes.
+29. The size-guide modal lives inside the add-to-cart block, so a guide trigger can exist without modal markup if that block is removed.
+
+Unless bug-for-bug reproduction is explicitly requested, preserve intended experience while fixing these through destination-native code.
+
+## 11. Destination implementation sequence
+
+1. Identify destination theme/version and exact product templates.
+2. Audit native product section, gallery, variant picker, product form, cart drawer, modal, app blocks, and section lifecycle.
+3. Map every approved feature to an existing component.
+4. Confirm/add metafield definitions and types.
+5. Add only missing schema settings/blocks.
+6. Extend native variant state so all dependent regions update together.
+7. Connect `custom.variant_images` without reducing native media support.
+8. Layer special option cards over native availability logic.
+9. Implement stand guide with native modal.
+10. Route add through native product form/drawer.
+11. Use native money, localization, availability, quantity rules, and selling plans.
+12. Add optional comparison/countdown/sticky only after scope confirmation.
+13. Test theme editor and storefront, retaining native no-JS behavior where supported.
+
+## 12. Acceptance test matrix
+
+### Variant state
+
+- Direct URL with every valid `?variant=` ID.
+- Every option selection resolves correct complete variant.
+- Invalid combinations follow native behavior.
+- Sold-out and continue-selling states.
+- URL updates without reload.
+- Price, compare-at, inventory, button, gallery, description, and accordions all represent one variant.
+
+### Gallery
+
+- Variant with multiple, one, and zero `custom.variant_images`.
+- Transition custom-gallery → normal media → custom-gallery.
+- Product image, external video, Shopify video, and 3D model if present.
+- Variant featured media selection.
+- Hide-variant-media consistency.
+- Thumbnail, dot, arrow, swipe, modal, keyboard, and active ARIA state.
+- Responsive sizing and loading priority.
+
+### Product form/cart
+
+- Main add with every variant.
+- Rapid double click does not accidentally duplicate.
+- Sold-out/API errors are shown.
+- Continue-selling/preorder follows business rules.
+- Cart count and native drawer update.
+- Line properties and selling plans survive.
+- Decide/test native variant image versus `_variant_image` property.
+- Product/global quantity rules are enforced.
+- Drawer changes/removals, cart page, and checkout receive correct variant/quantity.
+
+### Content/optional blocks
+
+- Variant description present/absent and product fallback.
+- USP list present/absent.
+- Accordions present/empty/hidden.
+- Judge.me installed/absent.
+- Countdown fixed/evergreen/expired/restricted if included.
+- Comparison with blank rows/long text if included.
+- Trust badge custom/fallback/blank.
+- Payment block for correct market.
+
+### Responsive/accessibility
+
+- Test around `375px`, `768px`, `992px`, `1200px`, and wide desktop.
+- Keyboard-only picker, gallery, accordion, modal, add to cart.
+- Visible focus and screen-reader labels/live announcements.
+- Modal focus trap/restoration.
+- Reduced-motion handling for blinking/animations.
+- No horizontal page overflow.
+
+### Theme/platform integration
+
+- Add/remove/reload section in Shopify editor.
+- App blocks render in correct order/context.
+- No duplicate listeners after reload.
+- No globals collide with featured product/quick view.
+- Products with a large variant count remain performant and use the destination theme's supported variant-data strategy.
+- No console errors.
+- Drawer/page/notification cart modes still work.
+- Multi-currency and translated locales are correct.
+
+## 13. Follow-up questions requiring answers
+
+1. What is the destination theme name/version and local folder/repository path?
+2. Which destination product templates and products should receive these features?
+3. Reproduce only currently visible features, or also enable disabled comparison, countdown, variant accordions, and sticky add to cart?
+4. Preserve source visual design closely, or use destination-native styling while preserving layout/behavior?
+5. Should variant descriptions and accordions update immediately? Recommended: yes.
+6. Should impossible combinations be disabled and sold-out values marked unavailable? Recommended: use destination-native behavior.
+7. Is sticky add to cart wanted? Source has it but CSS currently hides it.
+8. Retain forced scroll-to-top? Recommended: no.
+9. Which languages, Markets, and currencies must work?
+10. Will option names/values remain exact, or should card content be managed through metafields/settings?
+11. Are Judge.me and subscription/bundle/personalization apps installed in destination?
+12. Reuse current payment, option, guide, and trust images, and does destination own them?
+13. Keep quantity fixed at one or use native quantity selector?
+14. Are `custom.min_buy_quantity` and `custom.max_buy_quantity` still requirements?
+15. Provide metafield definition types and one representative fully populated product, especially `custom.variant_images` and `custom.variant_level_description`.
+16. For variants with custom gallery images, replace videos/3D completely as source does, or append native media?
+17. Should cart use normal variant featured image or preserve `_variant_image` from first custom gallery image?
+
+## 14. Definition of done
+
+- Every approved feature is implemented through destination-native architecture.
+- All variant-dependent UI stays synchronized.
+- Cart, selling plans, app blocks, localization, money, and media work without source-theme globals.
+- Optional features match answers above.
+- Known defects are fixed or explicitly accepted.
+- Acceptance matrix passes on required products, devices, locales, and cart mode.

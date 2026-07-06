@@ -1,0 +1,12 @@
+# Editor / atomic-write temporary files.
+# `shopify theme dev` watches the folder and can catch these mid-write; their
+# names (e.g. cart-live.liquid.tmp.22452.e901167f8e7c) contain characters the
+# Asset API rejects as "illegal characters", which aborts the sync.
+*.tmp
+*.tmp.*
+*.liquid.tmp.*
+*~
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

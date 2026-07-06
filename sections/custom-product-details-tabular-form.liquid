@@ -6,36 +6,63 @@
     --product-details-accent: {{ section.settings.accent_color }};
     --product-details-border: {{ section.settings.border_color }};
     --product-details-width: {{ section.settings.content_width }}rem;
+    --product-details-image-width: {{ section.settings.image_width }}%;
   "
 >
+  {% liquid
+    assign product_details_image = section.settings.product_image
+
+    if product_details_image == blank and product.featured_image != blank
+      assign product_details_image = product.featured_image
+    endif
+  %}
+
   <div class="custom-product-details-tabular-form__container">
-    {% if section.settings.eyebrow != blank %}
-      <p class="custom-product-details-tabular-form__eyebrow">{{ section.settings.eyebrow | escape }}</p>
-    {% endif %}
+    <div class="custom-product-details-tabular-form__layout custom-product-details-tabular-form__layout--desktop-{{ section.settings.desktop_image_position }} custom-product-details-tabular-form__layout--mobile-{{ section.settings.mobile_image_position }}">
+      {% if product_details_image != blank %}
+        <div class="custom-product-details-tabular-form__media">
+          {{
+            product_details_image
+            | image_url: width: 1200
+            | image_tag:
+              class: 'custom-product-details-tabular-form__image',
+              loading: 'lazy',
+              sizes: '(min-width: 750px) 40vw, 100vw',
+              widths: '320, 480, 640, 800, 960, 1200'
+          }}
+        </div>
+      {% endif %}
 
-    {% if section.settings.heading != blank %}
-      <h2 class="custom-product-details-tabular-form__heading">{{ section.settings.heading }}</h2>
-    {% endif %}
+      <div class="custom-product-details-tabular-form__content">
+        {% if section.settings.eyebrow != blank %}
+          <p class="custom-product-details-tabular-form__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {% endif %}
 
-    {% if section.blocks.size > 0 %}
-      <div class="custom-product-details-tabular-form__table" role="table" aria-label="{{ section.settings.heading | strip_html | escape }}">
-        {% for block in section.blocks %}
-          <div class="custom-product-details-tabular-form__row" role="row" {{ block.shopify_attributes }}>
-            {% if block.settings.label != blank %}
-              <div class="custom-product-details-tabular-form__label" role="rowheader">
-                {{ block.settings.label | escape }}
+        {% if section.settings.heading != blank %}
+          <h2 class="custom-product-details-tabular-form__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.blocks.size > 0 %}
+          <div class="custom-product-details-tabular-form__table" role="table" aria-label="{{ section.settings.heading | strip_html | escape }}">
+            {% for block in section.blocks %}
+              <div class="custom-product-details-tabular-form__row" role="row" {{ block.shopify_attributes }}>
+                {% if block.settings.label != blank %}
+                  <div class="custom-product-details-tabular-form__label" role="rowheader">
+                    {{ block.settings.label | escape }}
+                  </div>
+                {% endif %}
+
+                {% if block.settings.value != blank %}
+                  <div class="custom-product-details-tabular-form__value rte" role="cell">
+                    {{ block.settings.value }}
+                  </div>
+                {% endif %}
               </div>
-            {% endif %}
-
-            {% if block.settings.value != blank %}
-              <div class="custom-product-details-tabular-form__value rte" role="cell">
-                {{ block.settings.value }}
-              </div>
-            {% endif %}
+            {% endfor %}
           </div>
-        {% endfor %}
+        {% endif %}
       </div>
-    {% endif %}
+    </div>
   </div>
 </section>
 
@@ -49,6 +76,39 @@
   .custom-product-details-tabular-form__container {
     width: min(100% - 2rem, var(--product-details-width));
     margin: 0 auto;
+  }
+
+  .custom-product-details-tabular-form__layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .custom-product-details-tabular-form__layout--mobile-above .custom-product-details-tabular-form__media {
+    order: 1;
+  }
+
+  .custom-product-details-tabular-form__layout--mobile-above .custom-product-details-tabular-form__content {
+    order: 2;
+  }
+
+  .custom-product-details-tabular-form__layout--mobile-below .custom-product-details-tabular-form__content {
+    order: 1;
+  }
+
+  .custom-product-details-tabular-form__layout--mobile-below .custom-product-details-tabular-form__media {
+    order: 2;
+  }
+
+  .custom-product-details-tabular-form__media {
+    width: 100%;
+  }
+
+  .custom-product-details-tabular-form__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: .5rem;
   }
 
   .custom-product-details-tabular-form__eyebrow {
@@ -116,6 +176,44 @@
       width: min(100% - 6.4rem, var(--product-details-width));
     }
 
+    .custom-product-details-tabular-form__layout {
+      gap: 3rem;
+    }
+
+    .custom-product-details-tabular-form__layout--desktop-left,
+    .custom-product-details-tabular-form__layout--desktop-right {
+      display: grid;
+      align-items: start;
+    }
+
+    .custom-product-details-tabular-form__layout--desktop-left {
+      grid-template-columns: minmax(16rem, var(--product-details-image-width)) minmax(0, 1fr);
+    }
+
+    .custom-product-details-tabular-form__layout--desktop-right {
+      grid-template-columns: minmax(0, 1fr) minmax(16rem, var(--product-details-image-width));
+    }
+
+    .custom-product-details-tabular-form__layout--desktop-left .custom-product-details-tabular-form__media,
+    .custom-product-details-tabular-form__layout--desktop-above .custom-product-details-tabular-form__media {
+      order: 1;
+    }
+
+    .custom-product-details-tabular-form__layout--desktop-left .custom-product-details-tabular-form__content,
+    .custom-product-details-tabular-form__layout--desktop-above .custom-product-details-tabular-form__content {
+      order: 2;
+    }
+
+    .custom-product-details-tabular-form__layout--desktop-right .custom-product-details-tabular-form__content,
+    .custom-product-details-tabular-form__layout--desktop-below .custom-product-details-tabular-form__content {
+      order: 1;
+    }
+
+    .custom-product-details-tabular-form__layout--desktop-right .custom-product-details-tabular-form__media,
+    .custom-product-details-tabular-form__layout--desktop-below .custom-product-details-tabular-form__media {
+      order: 2;
+    }
+
     .custom-product-details-tabular-form__heading {
       font-size: 2.8rem;
     }
@@ -151,6 +249,61 @@
       "id": "heading",
       "label": "Heading",
       "default": "Technical Specifications"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product image"
+    },
+    {
+      "type": "select",
+      "id": "desktop_image_position",
+      "label": "Desktop image position",
+      "options": [
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "above",
+          "label": "Above"
+        },
+        {
+          "value": "below",
+          "label": "Below"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "select",
+      "id": "mobile_image_position",
+      "label": "Mobile image position",
+      "options": [
+        {
+          "value": "above",
+          "label": "Above"
+        },
+        {
+          "value": "below",
+          "label": "Below"
+        }
+      ],
+      "default": "above"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "Desktop image width",
+      "min": 25,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "default": 40
     },
     {
       "type": "range",

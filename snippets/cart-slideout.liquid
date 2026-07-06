@@ -39,7 +39,19 @@
         id="cartform">
         <div id="cart-slideout-contents">
           <script>
-             var customCart = {{ cart | json }};
+            var customCart = {{ cart | json }};
+            var cartVariantImages = {
+              {% for item in cart.items %}
+                {% capture cart_variant_image_url -%}
+                  {% render 'variant-cart-image-url', product: item.product, variant: item.variant %}
+                {%- endcapture %}
+                "{{ item.variant.id }}": {{ cart_variant_image_url | strip | json }}{% unless forloop.last %},{% endunless %}
+              {% endfor %}
+            };
+            customCart.items.forEach(function(item) {
+              item.properties = item.properties || {};
+              item.properties._variant_image = cartVariantImages[String(item.id)] || item.image;
+            });
           </script>
 
           {% if cart.items == empty %}

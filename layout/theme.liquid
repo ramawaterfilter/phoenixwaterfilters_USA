@@ -447,6 +447,10 @@ u()
       {{ content_for_layout }}
     </main>
 
+    {% if request.page_type == 'product' %}
+      {% render 'sticky-add-to-cart', product: product %}
+    {% endif %}
+
     {% unless template.suffix == 'article' %}
       {% sections 'footer-group' %}
       {% if template == 'index' and settings.show_entry_popup %}
@@ -593,27 +597,7 @@ u()
 
 
 
-     <script>
-document.addEventListener("DOMContentLoaded", () => {
-  function toggleSticky() {
-    const sticky = document.querySelector(".sticky-add-to-cart");
-    if (!sticky) return;
 
-    if (document.body.classList.contains("cart-open")) {
-      sticky.style.display = "none";
-    } else {
-      sticky.style.display = "block";
-    }
-  }
-
-  // Run once
-  toggleSticky();
-
-  // Detect class change efficiently
-  const observer = new MutationObserver(toggleSticky);
-  observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
-});
-</script>
     
   </body>
 </html>

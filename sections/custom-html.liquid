@@ -1,3 +1,94 @@
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign conditional_visibility = false
+  if section.settings.visibility == 'variant_ids' and section.settings.variant_ids != blank
+    assign conditional_visibility = true
+  endif
+%}
+
+<div
+  id="CustomEmbed-{{ section.id }}"
+  class="custom-embed-video-container"
+  {% if conditional_visibility %}
+    hidden
+  {% endif %}
+>
+  <div class="responsive-embed-wrapper" data-embed-mount>
+    {% unless conditional_visibility %}
+      {{ section.settings.embed_code }}
+    {% endunless %}
+  </div>
+
+  {% if conditional_visibility %}
+    <template data-embed-template>
+      {{ section.settings.embed_code }}
+    </template>
+  {% endif %}
+</div>
+
+{% if conditional_visibility %}
+  <script>
+    (() => {
+      const section = document.getElementById('CustomEmbed-{{ section.id }}');
+      const allowedIds = {{ section.settings.variant_ids | json }}
+        .split(',')
+        .map(id => id.trim())
+        .filter(Boolean);
+      let loaded = false;
+
+      const loadEmbed = () => {
+        if (loaded) return;
+
+        const mount = section.querySelector('[data-embed-mount]');
+        const template = section.querySelector('[data-embed-template]');
+        mount.append(template.content.cloneNode(true));
+
+        mount.querySelectorAll('script').forEach(oldScript => {
+          const newScript = document.createElement('script');
+          [...oldScript.attributes].forEach(({ name, value }) => newScript.setAttribute(name, value));
+          newScript.textContent = oldScript.textContent;
+          oldScript.replaceWith(newScript);
+        });
+
+        loaded = true;
+      };
+
+      const update = variantId => {
+        const show = allowedIds.includes(String(variantId));
+        section.hidden = !show;
+        if (show) loadEmbed();
+      };
+
+      update({{ current_variant.id | json }});
+      document.addEventListener('variant:change', event => update(event.detail?.variant?.id));
+    })();
+  </script>
+{% endif %}
+
+{% stylesheet %}
+  .custom-embed-video-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .responsive-embed-wrapper {
+    position: relative;
+    height: 0;
+    padding-bottom: 56.25%;
+    overflow: hidden;
+  }
+
+  .responsive-embed-wrapper iframe,
+  .responsive-embed-wrapper .wistia_responsive_wrapper {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+  }
+{% endstylesheet %}
+
 {% schema %}
 {
   "name": "Custom Embed Video",
@@ -8,6 +99,28 @@
       "id": "embed_code",
       "label": "Embed Code",
       "info": "Paste your full Wistia/YouTube/Vimeo embed code here"
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "label": "Visibility",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always"
+        },
+        {
+          "value": "variant_ids",
+          "label": "Selected variant IDs"
+        }
+      ],
+      "default": "always"
+    },
+    {
+      "type": "textarea",
+      "id": "variant_ids",
+      "label": "Variant IDs",
+      "info": "Comma-separated variant IDs that should display this section"
     }
   ],
   "presets": [
@@ -17,31 +130,3 @@
   ]
 }
 {% endschema %}
-
-<div class="custom-embed-video-container">
-  <div class="responsive-embed-wrapper">
-    {{ section.settings.embed_code }}
-  </div>
-</div>
-
-<style>
-.custom-embed-video-container {
-  max-width: 100%;
-  margin: 0 auto;
-  padding:0px;
-}
-.responsive-embed-wrapper {
-  position: relative;
-  padding-bottom: 56.25%; /* 16:9 aspect ratio */
-  height: 0;
-  overflow: hidden;
-}
-.responsive-embed-wrapper iframe,
-.responsive-embed-wrapper .wistia_responsive_wrapper {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  width: 100% !important;
-  height: 100% !important;
-}
-</style>

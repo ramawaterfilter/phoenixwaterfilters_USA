@@ -1,154 +1,192 @@
-<div class="sticky-add-to-cart">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-12">
-        <div class="d-flex align-items-center justify-content-center justify-content-lg-between gap-3">
+{% doc %}
+Renders the mobile sticky product actions.
+@param {product} product - The current product.
+{% enddoc %}
 
-          <!-- Product title on lg+ only -->
-          <p class="h4 d-none d-lg-block m-0">{{ product.title }}</p>
+{% assign current_variant = product.selected_or_first_available_variant %}
 
-          <!-- Price cluster -->
-          <div class="priceline sub-price d-flex align-items-baseline gap-2">
-            <!-- Live price (mirrors #base-price on PDP) -->
-            <span data-price toggle-price class="fw-bold">
-              {{ product.variants.first.price | money }}
-            </span>
+<div class="sticky-add-to-cart" data-sticky-atc aria-hidden="true">
+  <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="{{ current_variant.id }}" data-sticky-variant>
+    <input type="hidden" name="quantity" value="1">
+    <input type="hidden" name="handle" value="{{ product.handle }}">
+    {% render 'variant-cart-image-property', product: product, current_variant: current_variant %}
 
-            <!-- Discount label (auto shown when compare_at > price) -->
-            {% comment %} <span get-data-price-discount toggle-discount class="sr-only small text-success"></span> {% endcomment %}
-
-            <!-- Compare-at -->
-            <span data-compare class="text-muted small" style="{% if product.variants.first.compare_at_price > product.variants.first.price %}{% else %}display:none;{% endif %}">
-              <s>
-                {% if product.variants.first.compare_at_price %}
-                  {{ product.variants.first.compare_at_price | money }}
-                {% endif %}
-              </s>
-            </span>
-          </div>
-
-          <!-- Your existing ATC partial -->
-          {% render 'basic-add-to-cart' %}
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Sticky price sync script -->
-  <script>
-    (function () {
-      function onReady(fn){ if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
-      onReady(function () {
-        // Elements inside sticky
-        const stickyRoot         = document.querySelector('.sticky-add-to-cart');
-        if (!stickyRoot) return;
-
-        const stickyPriceEl      = stickyRoot.querySelector('[data-price]');
-        const stickyCompareWrap  = stickyRoot.querySelector('[data-compare]');
-        const stickyCompareS     = stickyCompareWrap ? stickyCompareWrap.querySelector('s') : null;
-        const stickyDiscountEl   = stickyRoot.querySelector('[get-data-price-discount]');
-
-        // Elements on PDP (outside sticky) that already compute totals
-        const basePriceEl        = document.getElementById('base-price');   // <- your main PDP total (variant + addons)
-        const variantSelect      = document.getElementById('product-selectors'); // <- main variant selector
-
-        // Fallbacks
-        const productJSON = window.product || {{ product | json }};
-
-        // Shopify money formatter helper
-        function shopifyFormatMoney(cents) {
-          try {
-            if (window.Shopify && typeof Shopify.formatMoney === 'function') {
-              // Default to theme's money format when available
-              return Shopify.formatMoney(cents, window.theme && theme.moneyFormat ? theme.moneyFormat : '{{ shop.money_format | replace: "'", "\\'" }}');
-            }
-          } catch(e){}
-          // Graceful fallback using the symbol from base price text if present
-          const sample = basePriceEl ? (basePriceEl.textContent || '').trim() : '';
-          const symbol = (sample.match(/^[^\d-]+/) || [''])[0];
-          const value  = (Number(cents)/100).toFixed(2);
-          return symbol ? (symbol + Number(value).toLocaleString()) : Number(value).toLocaleString();
-        }
-
-        function getSelectedVariant() {
-          if (!productJSON || !productJSON.variants) return null;
-          if (variantSelect && variantSelect.value) {
-            const id = Number(variantSelect.value);
-            return productJSON.variants.find(v => Number(v.id) === id) || null;
-          }
-          // fallback to first available
-          return productJSON.variants.find(v => v.available) || productJSON.variants[0] || null;
-        }
-
-        function updateCompareAndDiscount(variant) {
-          if (!stickyCompareWrap || !stickyCompareS || !stickyDiscountEl) return;
-
-          if (variant && variant.compare_at_price && variant.compare_at_price > variant.price) {
-            stickyCompareWrap.style.display = '';
-            stickyCompareS.textContent = shopifyFormatMoney(variant.compare_at_price);
-
-            const pct = Math.round(((variant.compare_at_price - variant.price) / variant.compare_at_price) * 100);
-            stickyDiscountEl.textContent = `Save ${pct}%`;
-            stickyDiscountEl.classList.remove('sr-only');
-          } else {
-            stickyCompareS.textContent = '';
-            stickyCompareWrap.style.display = 'none';
-            stickyDiscountEl.textContent = '';
-            stickyDiscountEl.classList.add('sr-only');
-          }
-        }
-
-        function mirrorMainTotalIntoSticky() {
-          if (!stickyPriceEl) return;
-
-          // Prefer mirroring the PDP's already-computed total (includes add-ons)
-          const mainTotalText = basePriceEl ? (basePriceEl.textContent || '').trim() : '';
-          if (mainTotalText) {
-            stickyPriceEl.textContent = mainTotalText;
-          } else {
-            // Fallback to selected variant price if PDP total absent
-            const v = getSelectedVariant();
-            if (v) stickyPriceEl.textContent = shopifyFormatMoney(v.price);
-          }
-
-          // Compare/discount always from the selected variant
-          updateCompareAndDiscount(getSelectedVariant());
-        }
-
-        // Initial paint
-        mirrorMainTotalIntoSticky();
-
-        // Listen to variant selection
-        if (variantSelect) {
-          variantSelect.addEventListener('change', mirrorMainTotalIntoSticky);
-        }
-
-        // Common add-on controls (adjust selectors if yours differ)
-        const addonSelectors = [
-          '#addon-checkbox',                     // e.g., Vision Tap checkbox
-          'input[name="stand-addon"]',           // stand radio buttons
-          'input[name="filter-addon"]',          // POSTreat / filter-type radios
-          '.addon-card'                          // clickable cards
-        ];
-
-        addonSelectors.forEach(sel => {
-          document.querySelectorAll(sel).forEach(el => {
-            el.addEventListener('change', () => setTimeout(mirrorMainTotalIntoSticky, 30));
-            el.addEventListener('click',  () => setTimeout(mirrorMainTotalIntoSticky, 30));
-          });
-        });
-
-        // Also observe the PDP total (#base-price) for async changes
-        if (basePriceEl) {
-          const obs = new MutationObserver(mirrorMainTotalIntoSticky);
-          obs.observe(basePriceEl, { childList: true, characterData: true, subtree: true });
-        }
-      });
-    })();
-  </script>
+    <button
+      type="submit"
+      class="sticky-add-to-cart__add"
+      data-sticky-add
+      {% unless current_variant.available %}disabled{% endunless %}
+    >
+      {% if current_variant.available %}
+        {{ 'products.product.add_to_cart' | t }}
+      {% else %}
+        {{ 'products.product.sold_out' | t }}
+      {% endif %}
+    </button>
+    <button
+      type="button"
+      class="sticky-add-to-cart__buy"
+      data-sticky-buy
+      {% unless current_variant.available %}disabled{% endunless %}
+    >
+      {% if current_variant.available %}
+        {{ 'products.product.buy_now' | t }}
+      {% else %}
+        {{ 'products.product.sold_out' | t }}
+      {% endif %}
+    </button>
+  </form>
 </div>
 
+{% style %}
+  .sticky-add-to-cart {
+    display: none !important;
+  }
 
+  @media (max-width: 767px) {
+    .sticky-add-to-cart,
+    .sticky-add-to-cart.in {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 999;
+      display: block !important;
+      padding: 5px 0 max(0px, env(safe-area-inset-bottom));
+      background: #fff;
+      box-shadow: 0 -4px 18px rgb(0 0 0 / 14%);
+      visibility: hidden;
+      opacity: 0;
+      transform: translateY(100%);
+      transition: opacity 180ms ease, transform 180ms ease, visibility 180ms;
+    }
 
+    .sticky-add-to-cart.is-visible {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
 
+    .sticky-add-to-cart form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .sticky-add-to-cart button {
+      width: 100%;
+      min-width: 0;
+      height: 50px;
+      margin: 0;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 0;
+      /* color: #fff; */
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .sticky-add-to-cart__add {
+      background: #fff;
+      color: #000;
+    }
+
+    .sticky-add-to-cart__buy {
+      background: #153A5B;
+      color: #fff;
+    }
+
+    .sticky-add-to-cart button:disabled {
+      cursor: not-allowed;
+      opacity: .55;
+    }
+  }
+{% endstyle %}
+
+<script>
+  (() => {
+    const root = document.querySelector('[data-sticky-atc]');
+    if (!root) return;
+
+    const form = root.querySelector('form');
+    const variants = {{ product.variants | json }};
+    const variantInput = root.querySelector('[data-sticky-variant]');
+    const addButton = root.querySelector('[data-sticky-add]');
+    const buyButton = root.querySelector('[data-sticky-buy]');
+    const addText = {{ 'products.product.add_to_cart' | t | json }};
+    const buyText = {{ 'products.product.buy_now' | t | json }};
+    const soldText = {{ 'products.product.sold_out' | t | json }};
+    let mainButton;
+
+    const updateVariant = (id) => {
+      const variant = variants.find((item) => String(item.id) === String(id));
+      if (!variant) return;
+
+      variantInput.value = variant.id;
+      addButton.disabled = !variant.available;
+      buyButton.disabled = !variant.available;
+      addButton.textContent = variant.available ? addText : soldText;
+      buyButton.textContent = variant.available ? buyText : soldText;
+    };
+
+    const findMainButton = () => {
+      const buttons = [...document.querySelectorAll('main form[action*="/cart/add"] button[type="submit"]')];
+      return buttons.find((item) => item.getClientRects().length) || null;
+    };
+
+    const updateVisibility = () => {
+      mainButton ||= findMainButton();
+      const passedMainButton = mainButton && mainButton.getBoundingClientRect().bottom < 0;
+      const visible = window.innerWidth <= 767
+        && passedMainButton
+        && !document.body.classList.contains('cart-open');
+
+      root.classList.toggle('is-visible', Boolean(visible));
+      root.setAttribute('aria-hidden', String(!visible));
+    };
+
+    document.addEventListener('change', (event) => {
+      if (!event.target.closest('main')) return;
+      if (event.target.matches('select[name="id"], [data-variant-select]')) {
+        updateVariant(event.target.value);
+      }
+    });
+
+    ['variant:change', 'product:variant-change'].forEach((eventName) => {
+      document.addEventListener(eventName, (event) => {
+        if (event.detail?.variant?.id) updateVariant(event.detail.variant.id);
+      });
+    });
+
+    buyButton.addEventListener('click', async () => {
+      if (buyButton.disabled) return;
+
+      buyButton.disabled = true;
+      try {
+        const response = await fetch(`${window.Shopify.routes.root}cart/add.js`, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: new FormData(form)
+        });
+        if (!response.ok) throw new Error();
+        window.location.assign(`${window.Shopify.routes.root}checkout`);
+      } catch {
+        buyButton.disabled = false;
+      }
+    });
+
+    window.addEventListener('scroll', updateVisibility, { passive: true });
+    window.addEventListener('resize', updateVisibility);
+    new MutationObserver(updateVisibility).observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    updateVisibility();
+  })();
+</script>

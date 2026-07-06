@@ -50,23 +50,20 @@
               </dd>
             </div>
           {% endif %} {% endcomment %}
-         {% if description != blank 
-  and product.handle != 'phoenix-gravity-carbon-filter-elements-this-product-not-for-sale'
-  and product.handle != 'postreat™-steel-fluoride-arsenic-reduction-filter-elements-copy' 
-%}
-  <div class="mb-4 accordion-item">
-    <dt>{{ 'products.product.description' | t }}</dt>
-    <dd>
-      <div class="accordion-item__inner">
-        {{ description | metafield_tag }}
+           {% if description != blank and product.handle != 'phoenix-gravity-carbon-filter-elements-this-product-not-for-sale' %}
+      <div class="mb-4 accordion-item">
+        <dt>{{ 'products.product.description' | t }}</dt>
+        <dd>
+          <div class="accordion-item__inner">
+            {{ description | metafield_tag }}
+          </div>
+        </dd>
       </div>
-    </dd>
-  </div>
-{% endif %}
+    {% endif %}
 
 
 <!-- add the specification for the Filter System -->
-
+{% comment %} 
 {% if product.title contains 'Phoenix Gravity Water Filter System' %}
 <div class="mb-4 accordion-item">
   <dt>Technical Specifications & Certifications</dt>
@@ -149,129 +146,311 @@
 </div>
   </dd>
 </div>
-{% endif %}
+{% endif %} {% endcomment %}
           
-{% if product.title contains 'Phoenix Gravity Water Filter System' 
-   or product.title contains 'Phoenix Gravity Carbon Filter Elements New'
-   or product.title contains 'Phoenix Gravity Carbon Filter Elements' %}
+
+{% comment %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const accordions = document.querySelectorAll('.tech-accordion');
+
+  const data = {
+    "1.5 Gallon": {
+      height: "18.8 in",
+      diameter: "7.4 in",
+      weight: "8.65 Pounds",
+      lifespan: `<ul style="margin:0;padding-left:20px;">
+        <li>Up to 5,500 gallons per pair of Carbon Filter Elements</li>
+      </ul>`
+    },
+    "2.25 Gallon": {
+      height: "19.2 in",
+      diameter: "8.6 in",
+      weight: "10.41 Pounds",
+      lifespan: `<ul style="margin:0;padding-left:20px;">
+        <li>Up to 5,500 gallons per pair of Carbon Filter Elements</li>
+      </ul>`
+    },
+    "3.25 Gallon": {
+      height: "23.2 in",
+      diameter: "9.4 in",
+      weight: "12.46 Pounds",
+      lifespan: `<ul style="margin:0;padding-left:20px;">
+        <li>Up to 5,500 gallons per pair of Carbon Filter Elements</li>
+        <li>Up to 1,060 gallons per POSTreat Filter Elements</li>
+      </ul>`
+    }
+  };
+
+  function updateAccordion(size) {
+    accordions.forEach(acc => {
+      const active = acc.dataset.size === size;
+      acc.style.display = active ? 'flex' : 'none';
+
+      if (active && data[size]) {
+        acc.querySelector('.tech-dimensions-row td:last-child').innerHTML =
+          `Height - ${data[size].height}<br>
+           Diameter - ${data[size].diameter}<br>
+           Weight - ${data[size].weight}`;
+
+        acc.querySelector('.tech-filter-lifespan-row td:last-child').innerHTML =
+          data[size].lifespan;
+      }
+    });
+  }
+
+  // ✅ 1. DEFAULT ON PAGE LOAD (after Shopify finishes)
+  setTimeout(function () {
+    updateAccordion("2.25 Gallon");
+  }, 300);
+
+  // ✅ 2. ALWAYS UPDATE WHEN VARIANT CHANGES
+  document.addEventListener('change', function (e) {
+    if (e.target.classList.contains('variant-radio')) {
+      updateAccordion(e.target.dataset.optionValue);
+    }
+  });
+
+});
+</script>
+{% endcomment %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const accordions = document.querySelectorAll('.tech-accordion[data-size]');
+  if (!accordions.length) return;
+
+  const variantOptions = {
+    {% for variant in product.variants %}
+      '{{ variant.id }}': {{ variant.options | json }}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  };
+
+  const specifications = {
+    '1.5 Gallon': {
+      height: '18.8 in',
+      diameter: '7.4 in',
+      weightNormal: '8.65 Pounds',
+      weightPostreat: '10.47 Pounds'
+    },
+    '2.25 Gallon': {
+      height: '19.2 in',
+      diameter: '8.6 in',
+      weightNormal: '10.41 Pounds',
+      weightPostreat: '11.9 Pounds'
+    },
+    '3.25 Gallon': {
+      height: '23.2 in',
+      diameter: '9.4 in',
+      weightNormal: '12.46 Pounds',
+      weightPostreat: '14.2 Pounds'
+    }
+  };
+
+  const variantSelect =
+    document.querySelector('[data-variant-select]') ||
+    document.querySelector('#product-selectors') ||
+    document.querySelector('select[name=id]');
+
+  function updateAccordion(variantId) {
+    const options = variantOptions[String(variantId)];
+    if (!options) return;
+
+    const size = options[0];
+    const filterType = options[1] || '';
+    const details = specifications[size];
+    const hasPostreat = filterType.toLowerCase().includes('postreat');
+
+    accordions.forEach(function (accordion) {
+      const active = accordion.dataset.size === size;
+      accordion.style.display = active ? 'flex' : 'none';
+      if (!active || !details) return;
+
+      const dimensionsCell = accordion.querySelector('.tech-dimensions-row td:last-child');
+      const lifespanCell = accordion.querySelector('.tech-filter-lifespan-row td:last-child');
+
+      if (dimensionsCell) {
+        dimensionsCell.innerHTML =
+          'Height - ' + details.height + '<br>' +
+          'Diameter - ' + details.diameter + '<br>' +
+          'Weight - ' + (hasPostreat ? details.weightPostreat : details.weightNormal);
+      }
+
+      if (lifespanCell) {
+        lifespanCell.innerHTML = hasPostreat
+          ? '<ul class=tech-lifespan-list><li>Up to 5,500 gallons per pair of Carbon Filter Elements</li><li>Up to 1,060 gallons per pair of POSTreat Filter Elements</li></ul>'
+          : '<ul class=tech-lifespan-list><li>Up to 5,500 gallons per pair of Carbon Filter Elements</li></ul>';
+      }
+    });
+  }
+
+  if (variantSelect) {
+    variantSelect.addEventListener('change', function () {
+      updateAccordion(variantSelect.value);
+    });
+  }
+
+  ['variant:change', 'product:variant-change'].forEach(function (eventName) {
+    document.addEventListener(eventName, function (event) {
+      const variant = event.detail && event.detail.variant;
+      updateAccordion(variant && variant.id ? variant.id : variantSelect && variantSelect.value);
+    });
+  });
+
+  setTimeout(function () {
+    updateAccordion(variantSelect ? variantSelect.value : {{ product.selected_or_first_available_variant.id | json }});
+  }, 0);
+});
+</script>
+
+{% if product.title contains 'Phoenix Gravity Water Filter System' %}
 <div class="mb-4 accordion-item">
-  <dt>Lab Report</dt>
+  <dt>Technical Specifications & Certifications</dt>
   <dd class="mb-4 accordion-spec">
     <div class="tech-accordion-wrapper">
-      <div class="report-container">
 
-        <!-- PFOA / PFOS -->
-        <div class="report-item">
-          <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/9419215_2.avif?v=1773319944" alt="PFOA & PFOS">
-          <h3>PFOA PFOS LABORATORY TEST REPORT</h3>
-          <div class="link-wrapper">
-            <a href="https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_gravity_contaminants_lab_report_USA_Aug2024_2.pdf?v=1773321502"
-               download
-               class="text-link">
-              See more >
-            </a>
-          </div>
+      <!-- 1.5 Gallon -->
+      <div class="tech-accordion" data-size="1.5 Gallon">
+        <div class="tech-accordion-content">
+          <table class="tech-accordion-table">
+            <tr><td>System Capacity</td><td>1.5 gallons</td></tr>
+            <tr class="tech-dimensions-row"><td>Dimensions & Weight</td><td></td></tr>
+            <tr class="tech-filter-lifespan-row"><td>Filter Lifespan</td><td></td></tr>
+            <tr><td>Filtration Rate</td><td>Up to 4.2 gallons per hour</td></tr>
+            <tr><td>Certifications</td><td>NSF/ANSI 42<br>NSF/ANSI/CAN 372</td></tr>
+          </table>
         </div>
-
-        <!-- Pharmaceuticals -->
-         <div class="report-item">
-  <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/nsf-01_3_1.png?v=1775558599" alt="Pharmaceuticals">
-  <h3>NSF 42 certified for chlorine, taste & odor removal. Additional contaminants independently lab-tested.</h3>
-  <div class="link-wrapper">
-    <a href="https://info.nsf.org/Certified/DWTU/Listings.asp?Company=C0799666&Standard=042"
-       target="_blank"
-       rel="noopener noreferrer"
-       class="text-link">
-     view full report >
-    </a>
-  </div>
-</div>
-
-        <!-- Heavy Metals -->
-        <div class="report-item">
-          <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/9402263_3.avif?v=1773319944" alt="Heavy Metals">
-          <h3>HEAVY METALS TEST REPORT</h3>
-          <div class="link-wrapper">
-            <a href="https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_gravity_contaminants_lab_report_USA_Aug2024_2.pdf?v=1773321502"
-               download
-               class="text-link">
-              See more >
-            </a>
-          </div>
+        <div class="tech-accordion-image">
+          <img
+            src="https://cdn.shopify.com/s/files/1/2644/2852/files/1.5_gallon.png?v=1751522985"
+            alt="1.5 gallon Phoenix Gravity Water Filter System"
+            width="2000"
+            height="2000"
+            loading="lazy"
+          >
         </div>
-
       </div>
+
+      <!-- 2.25 Gallon -->
+      <div class="tech-accordion" data-size="2.25 Gallon">
+        <div class="tech-accordion-content">
+          <table class="tech-accordion-table">
+            <tr><td>System Capacity</td><td>2.25 gallons</td></tr>
+            <tr class="tech-dimensions-row"><td>Dimensions & Weight</td><td></td></tr>
+            <tr class="tech-filter-lifespan-row"><td>Filter Lifespan</td><td></td></tr>
+            <tr><td>Filtration Rate</td><td>Up to 4.2 gallons per hour</td></tr>
+            <tr><td>Certifications</td><td>NSF/ANSI 42<br>NSF/ANSI/CAN 372</td></tr>
+          </table>
+        </div>
+        <div class="tech-accordion-image">
+          <img
+            src="https://cdn.shopify.com/s/files/1/2644/2852/files/2.25_gallon.png?v=1751522985"
+            alt="2.25 gallon Phoenix Gravity Water Filter System"
+            width="2000"
+            height="2000"
+            loading="lazy"
+          >
+        </div>
+      </div>
+
+      <!-- 3.25 Gallon -->
+      <div class="tech-accordion" data-size="3.25 Gallon">
+        <div class="tech-accordion-content">
+          <table class="tech-accordion-table">
+            <tr><td>System Capacity</td><td>3.25 gallons</td></tr>
+            <tr class="tech-dimensions-row"><td>Dimensions & Weight</td><td></td></tr>
+            <tr class="tech-filter-lifespan-row"><td>Filter Lifespan</td><td></td></tr>
+            <tr><td>Filtration Rate</td><td>Up to 4.2 gallons per hour</td></tr>
+            <tr><td>Certifications</td><td>NSF/ANSI 42<br>NSF/ANSI/CAN 372</td></tr>
+          </table>
+        </div>
+        <div class="tech-accordion-image">
+          <img
+            src="https://cdn.shopify.com/s/files/1/2644/2852/files/3.25_gallons.png?v=1751522985"
+            alt="3.25 gallon Phoenix Gravity Water Filter System"
+            width="2000"
+            height="2000"
+            loading="lazy"
+          >
+        </div>
+      </div>
+
     </div>
   </dd>
 </div>
 {% endif %}
 
-<style>
-.report-container {
-  display: flex;
-  justify-content: center;
-  gap: 80px;
-  border-top: 1px solid #ddd;
-  padding-top: 40px;
-}
 
-.report-item {
-  text-align: center;
-  max-width: 200px;
-}
-.text-link {
-  color: #08c1ff !important;
-}
-.report-item img {
-  width: 30px;
-  margin-bottom: 10px;
-}
 
-.report-item h3 {
-  font-size: 13px;
-  color: #143d66;
-  line-height: 1.3;
-  margin-bottom: 6px;
-}
 
-/* LINK ALIGNMENT */
-.link-wrapper {
-  text-align: center;
-}
 
-.text-link {
-  font-size: 12px;
-  font-weight: 600;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-/* COLORS */
-.text-blue { color: #1e5aa8; }
-.text-green { color: #2e8b57; }
-.text-orange { color: #d97706; }
-
-/* MOBILE */
-@media (max-width: 768px) {
-  .report-container {
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .report-item {
-    max-width: 110px;
-  }
-
-  .report-item h3 {
-    font-size: 10px;
-  }
-
-  .text-link {
-    font-size: 11px;
-  }
-}
-</style>
 <!-- eND OF THE SPECIFICATION --> 
+
+<!-- add the starterkit-->
+
+{% if product.title contains 'Starter Kit' %}
+<div class="mb-4 accordion-item">
+  <dt>Technical Specifications & Certifications</dt>
+  <dd class="mb-4 accordion-spec"  ><div class="tech-accordion-wrapper">
+
+  
+
+  <!-- Variant 1 -->
+  <div class="tech-accordion" data-variant-id="42616432787499" style="display: none;">
+    <div class="tech-accordion-content">
+      <table class="tech-accordion-table">
+        <tr><td>System Capacity</td><td>2.25 gallons</td></tr>
+     <tr class="tech-dimensions-row">
+  <td>Dimensions & Weight</td>
+  <td>
+    Height - 19.2 in<br>
+    Diameter - 8.6 in<br>
+    Weight - 12.46 Pounds
+  </td>
+</tr>
+
+        <tr class="tech-filter-lifespan-row"><td>Filter Lifespan</td><td>Up to 5,500 gallons per pair of Carbon Filter Elements</td></tr>
+        <tr><td>Filtration Rate</td><td>Up to 4.2 gallons per hour</td></tr>
+        <tr><td>Certifications</td><td>NSF/ANSI 42 - Chlorine, taste, and odor free <BR>  NSF/ANSI/CAN 372 - Lead-free</td></tr>
+
+      </table>
+    </div>
+    <div class="tech-accordion-image">
+      <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/2.25_gallon.png?v=1751522985" alt="2.25 Gallon System">
+    </div>
+  </div>
+
+  <!-- Variant 2 -->
+  <div class="tech-accordion" data-variant-id="42616432984107" style="display: none;">
+    <div class="tech-accordion-content">
+      <table class="tech-accordion-table">
+        <tr><td>System Capacity</td><td>3.25 gallons</td></tr>
+        <tr class="tech-dimensions-row">
+  <td>Dimensions & Weight</td>
+  <td>
+    Height - 23.2 in<br>
+    Diameter - 9.4 in<br>
+    Weight - 12.46 Pounds
+  </td>
+</tr>
+        <tr class="tech-filter-lifespan-row"><td>Filter Lifespan</td><td>Up to 5,500 gallons per pair of Carbon Filter Elements</td></tr>
+        <tr><td>Filtration Rate</td><td>Up to 4.2 gallons per hour</td></tr>
+        <tr><td>Certifications</td><td>NSF/ANSI 42 - Chlorine, taste, and odor free <BR>  NSF/ANSI/CAN 372 - Lead-free</td></tr>
+
+      </table>
+    </div>
+    <div class="tech-accordion-image">
+      <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/3.25_gallons.png?v=1751522985" alt="3.25 Gallon System">
+    </div>
+  </div>
+</div>
+  </dd>
+</div>
+{% endif %}
+          
+<!-- eND OF THE starterkit --> 
+
           
 {% if product.handle == 'stainless-steel-stand' %}
   <!-- ✅ Stainless Steel Stand Content -->
@@ -299,8 +478,8 @@
     </div>
     <div class="spec-item">
       <div class="spec-title">Compatibility:</div>
-      {% comment %} <div class="spec-content">Compatible with Phoenix Gravity, Berkey®, Waterdrop®, Purewell®, and similar gravity-fed water filter systems with a 7.5-inch base diameter.
-</div> {% endcomment %}
+      <div class="spec-content">Compatible with Phoenix Gravity, Berkey®, Waterdrop®, Purewell®, and similar gravity-fed water filter systems with a 7.5-inch base diameter.
+</div>
     </div>
      
    </div>
@@ -402,8 +581,8 @@
     </div>
     <div class="spec-item">
       <div class="spec-title">Compatibility:</div>
-      {% comment %} <div class="spec-content">Compatible with Phoenix Gravity, Berkey®, Waterdrop®, Purewell®, and similar gravity-fed water filter systems with a 7.5-inch base diameter.
-</div> {% endcomment %}
+      <div class="spec-content">Compatible with Phoenix Gravity, Berkey®, Waterdrop®, Purewell®, and similar gravity-fed water filter systems with a 7.5-inch base diameter.
+</div>
     </div>
      
    </div>
@@ -497,7 +676,7 @@
     <div class="spec-item">
       <div class="spec-title">Dimension:</div>
       <div class="spec-content">Height - 14.2 in <br>
-Diameter - 3.5 in 
+Diameter - 3.5 in  <br> Weight - 
 </div>
     </div>
     <div class="spec-item">
@@ -545,7 +724,7 @@ Diameter - 3.5 in
     </div>
   </div>
   <div class="specs-image">
-    <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/SS_Tap.png?v=1752566831" alt="Steel Stand">
+   <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/SS_Tap_In.webp?v=1766556147" alt="Steel Stand"> 
   </div>
 </div>
 </div>
@@ -597,8 +776,8 @@ Diameter - 3.5 in
   </div>
 {% endif %}
 <!-- Below content for the specification for the spigot -->
-    
-   {% if product.handle == 'fluoride-reduction-elements' %}
+          {% if product.handle == 'fluoride-reduction-elements' %}
+  
   <div class="mb-4 accordion-item">
     <dt>Technical specifications</dt>
     <dd >
@@ -636,48 +815,6 @@ Diameter - 3.5 in
   </div>
 {% endif %}
   
-
-{% comment %} 
-   {% if product.handle == 'postreat™-steel-fluoride-arsenic-reduction-filter-elements-copy' %}
-  <div class="mb-4 accordion-item">
-    <dt>Technical specifications</dt>
-    <dd >
-      <div class="custom-accessory-specs">
-  <div class="specs-text">
-   
-    <div class="spec-item">
-      <div class="spec-title">Material:</div>
-      <div class="spec-content">Casing made of High Grade AISI 304 stainless steel (rust-resistant and non leaching)</div>
-    </div>
-    <div class="spec-item">
-      <div class="spec-title">Filtration Capacity:</div>
-      <div class="spec-content">Up to 1,100 gallons per pair</div>
-    </div>
-    <div class="spec-item">
-      <div class="spec-title">Compatible filters:</div>
-      <div class="spec-content">Phoenix Gravity Carbon Filter elements <br>
-Black Berkey® Replacement Elements
-</div>
-    </div>
-      <div class="spec-item">
-      <div class="spec-title">Composition:</div>
-      <div class="spec-content">FlouRid media comprises a specialized blend of activated carbon and a proprietary media specifically formulated to address fluoride.</div>
-    </div>
-     <div class="spec-item">
-      <div class="spec-title">Warranty:</div>
-      <div class="spec-content">The POSTreat Fluoride reduction filter elements are covered by a 10 year warranty, which includes defects in materials or performance under normal use conditions.
-</div>
-
-    </div>
-   </div>
-  <div class="specs-images">
-    <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/Postreat.png?v=1752566831" alt="POSTreat Fluoride filter elements">
-  </div>
-</div>
-
-    </dd>
-  </div>
-{% endif %} {% endcomment %}
 <!-- Below content for the specification for carbon and postreat-->
    
 {% if product.handle == 'phoenix-gravity-carbon-filter-elements-this-product-not-for-sale' %}
@@ -1258,70 +1395,119 @@ Installs easily — no tools needed.</div>
 
 
                     
-<!-- eND OF THE SPECIFICATION -->       
+<!-- eND OF THE SPECIFICATION -->  
+
+{% if product.title contains 'Phoenix Gravity Water Filter System' 
+   or product.title contains 'Phoenix Gravity Carbon Filter Elements New'
+   or product.title contains 'Phoenix Gravity Carbon Filter Elements' %}
+<div class="mb-4 accordion-item">
+  <dt>Lab Report</dt>
+  <dd class="mb-4 accordion-spec">
+    <div class="tech-accordion-wrapper">
+      <div class="report-container">
+
+        <!-- PFOA / PFOS -->
+        <div class="report-item">
+          <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/9419215_2.avif?v=1773319944" alt="PFOA & PFOS">
+          <h3>PFOA PFOS LABORATORY TEST REPORT</h3>
+          <div class="link-wrapper">
+            <a href="https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_gravity_contaminants_lab_report_USA_Aug2024_2.pdf?v=1773321502"
+               download
+               class="text-link">
+              See more >
+            </a>
+          </div>
+        </div>
+
+        <!-- Pharmaceuticals -->
+         <div class="report-item">
+  <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/nsf-01_3_1.png?v=1775558599" alt="Pharmaceuticals">
+  <h3>NSF 42 certified for chlorine, taste & odor removal. Additional contaminants independently lab-tested.</h3>
+  <div class="link-wrapper">
+    <a href="https://info.nsf.org/Certified/DWTU/Listings.asp?Company=C0799666&Standard=042"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="text-link">
+     view full report >
+    </a>
+  </div>
+</div>
+
+        <!-- Heavy Metals -->
+        <div class="report-item">
+          <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/9402263_3.avif?v=1773319944" alt="Heavy Metals">
+          <h3>HEAVY METALS TEST REPORT</h3>
+          <div class="link-wrapper">
+            <a href="https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_gravity_contaminants_lab_report_USA_Aug2024_2.pdf?v=1773321502"
+               download
+               class="text-link">
+              See more >
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </dd>
+</div>
+{% endif %}
 
 
-{% comment %} ///  Accordian for the what in the box {% endcomment %}
-          
-  {% comment %} {% if product.handle == 'gravity-water-filter' %}
-            <div class="mb-4 accordion-item">
-              <dt>
-              What's in box</dt>
-              <dd>
-                <div class="accordion-item__inner">
-                 <div class="variant-description">
-<ul style="list-style-type: disc; padding-left: 20px;">
-  <li>1 x AISI 304 Stainless Steel 8k finish housing unit.</li>
-  <li>1 x AISI 304 Stainless Steel Spigot for easy-access hydration.</li>
-  <li>2 x Activated Carbon Filter Elements.</li>
-  <li class="postreat-item" style="display: none;">2 x POSTreat Fluoride Removal Filter Elements.</li>
-</ul>
-
-<p>The Phoenix Gravity System is easy to set up for any countertop in your home or workplace, no plumber or electricity required.</p>
-
-   </div> 
-                </div>
-              </dd>
-            </div>
-          {% endif %}  {% endcomment %}
 
 
 
       {% comment %} ///  Accordian for the what in the box {% endcomment %}
        {% if product.handle == 'gravity-water-filter' %}
- <hr style="border: 0.5px solid #cecece;">
+ {% comment %} <hr style="border: 0.5px solid #cecece;"> {% endcomment %}
 
-<div class="mb-4 accordion-item" id="accordion-what-in-box">
  <div class="mb-4 accordion-item" id="accordion-what-in-box">
   <dt class="accordion-item__title">What's in box</dt>
   <dd class="accordion-item__content">
     <div class="accordion-item__inner">
       <div class="variant-description">
-        {{ product.selected_or_first_available_variant.metafields.custom.what_in_box | rich_text }}
+        {{ product.selected_or_first_available_variant.metafields.custom.what_in_box.value }}
       </div>
     </div>
   </dd>
 </div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const accordion = document.getElementById('accordion-what-in-box');
   if (!accordion) return;
 
-  const variantSelect = document.querySelector('select[name="id"]');
+  const variantSelect =
+    document.querySelector('[data-variant-select]') ||
+    document.querySelector('#product-selectors') ||
+    document.querySelector('select[name=id]');
   const variantDescription = accordion.querySelector('.variant-description');
   if (!variantSelect || !variantDescription) return;
 
   const variantData = {
     {% for variant in product.variants %}
-      "{{ variant.id }}": `{{ variant.metafields.custom.what_in_box | rich_text | strip_newlines }}`,
+      {% capture what_in_box %}{{ variant.metafields.custom.what_in_box.value }}{% endcapture %}
+      '{{ variant.id }}': {{ what_in_box | strip | json }}{% unless forloop.last %},{% endunless %}
     {% endfor %}
   };
 
-  variantSelect.addEventListener('change', function() {
-    const selectedVariantId = this.value;
+  function updateVariantBox(variantId) {
+    const selectedVariantId = String(variantId || variantSelect.value);
     variantDescription.innerHTML = variantData[selectedVariantId] || '<p>No details available for this variant.</p>';
+  }
+
+  variantSelect.addEventListener('change', function() {
+    updateVariantBox(variantSelect.value);
   });
+
+  ['variant:change', 'product:variant-change'].forEach(function(eventName) {
+    document.addEventListener(eventName, function(event) {
+      const variant = event.detail && event.detail.variant;
+      updateVariantBox(variant && variant.id);
+    });
+  });
+
+  updateVariantBox(variantSelect.value);
 });
 </script> 
 
@@ -1342,7 +1528,7 @@ document.addEventListener('DOMContentLoaded', function() {
   <dd class="accordion-item__content">
     <div class="accordion-item__inner">
       <div class="variant-description">
-        {{ product.selected_or_first_available_variant.metafields.custom.what_in_box | rich_text }}
+        {{ product.selected_or_first_available_variant.metafields.custom.what_in_box.value }}
       </div>
     </div>
   </dd>
@@ -1353,22 +1539,24 @@ document.addEventListener('DOMContentLoaded', function() {
   const accordion = document.getElementById('accordion-what-in-box');
   if (!accordion) return;
 
-  const variantSelect = document.querySelector('select[name="id"]');
+  const variantSelect =
+    document.querySelector('[data-variant-select]') ||
+    document.querySelector('#product-selectors') ||
+    document.querySelector('select[name=id]');
   const variantDescription = accordion.querySelector('.variant-description');
   if (!variantSelect || !variantDescription) return;
 
   // Map each variant ID → its metafield HTML content
   const variantData = {
     {% for variant in product.variants %}
-      "{{ variant.id }}": `{{ variant.metafields.custom.what_in_box | rich_text | strip_newlines }}`,
+      {% capture what_in_box %}{{ variant.metafields.custom.what_in_box.value }}{% endcapture %}
+      '{{ variant.id }}': {{ what_in_box | strip | json }}{% unless forloop.last %},{% endunless %}
     {% endfor %}
   };
 
   // Your specific variant ID (optional — for fallback logic if needed)
-  const specialVariantId = "42432542277675";
-
-  function updateVariantBox() {
-    const selectedVariantId = variantSelect.value;
+  function updateVariantBox(variantId) {
+    const selectedVariantId = String(variantId || variantSelect.value);
     let newContent = variantData[selectedVariantId];
 
     // If metafield is empty, show a default message
@@ -1380,98 +1568,27 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Initialize when page loads
-  updateVariantBox();
+  updateVariantBox(variantSelect.value);
 
   // Listen for dropdown variant changes
-  variantSelect.addEventListener('change', updateVariantBox);
+  variantSelect.addEventListener('change', function() {
+    updateVariantBox(variantSelect.value);
+  });
 
   // Also handle themes that trigger custom JS events
-  document.addEventListener('product:variant-change', updateVariantBox);
+  ['variant:change', 'product:variant-change'].forEach(function(eventName) {
+    document.addEventListener(eventName, function(event) {
+      const variant = event.detail && event.detail.variant;
+      updateVariantBox(variant && variant.id);
+    });
+  });
 });
 </script>
 {% endif %}
 
 
 
-{% comment %} 
 
-  {% if product.handle == 'carbon-filter-element' %}
- <hr style="border: 1px solid #ddd; margin: 16px 0;">
-
-<div class="mb-4 accordion-item" id="accordion-what-in-box">
- <div class="mb-4 accordion-item" id="accordion-what-in-box">
-  <dt class="accordion-item__title">What's in box</dt>
-  <dd class="accordion-item__content">
-    <div class="accordion-item__inner">
-      <div class="variant-description">
-        {{ product.selected_or_first_available_variant.metafields.custom.what_in_box | rich_text }}
-      </div>
-    </div>
-  </dd>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const accordion = document.getElementById('accordion-what-in-box');
-  if (!accordion) return;
-
-  const variantSelect = document.querySelector('select[name="id"]');
-  const variantDescription = accordion.querySelector('.variant-description');
-  if (!variantSelect || !variantDescription) return;
-
-  const variantData = {
-    {% for variant in product.variants %}
-      "{{ variant.id }}": `{{ variant.metafields.custom.what_in_box | rich_text | strip_newlines }}`,
-    {% endfor %}
-  };
-
-  variantSelect.addEventListener('change', function() {
-    const selectedVariantId = this.value;
-    variantDescription.innerHTML = variantData[selectedVariantId] || '<p>No details available for this variant.</p>';
-  });
-});
-</script> 
-
- {% endif %}  {% endcomment %}
-{% comment %} /// End Accordian for the what in the box {% endcomment %}
-
- {% comment %} ///  Accordian for the Technical Specifications & Certifications {% endcomment %}
-{% comment %} {% if product.handle == 'gravity-water-filter' %}
-<hr style="border: 1px solid #ddd; margin: 16px 0;">
-
-<div class="mb-4 accordion-item" id="accordion-tech-specs">
-  <dt class="accordion-item__title">Technical Specifications & Certifications</dt>
-  <dd class="accordion-item__content">
-    <div class="accordion-item__inner">
-      <div class="variant-description">
-        {{ product.selected_or_first_available_variant.metafields.custom.technical_specifications | rich_text }}
-      </div>
-    </div>
-  </dd>
-</div>
-{% endif %}
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const accordion = document.getElementById('accordion-tech-specs');
-  if (!accordion) return;
-
-  const variantSelect = document.querySelector('select[name="id"]');
-  const variantDescription = accordion.querySelector('.variant-description');
-  if (!variantSelect || !variantDescription) return;
-
-  const variantData = {
-    {% for variant in product.variants %}
-      "{{ variant.id }}": `{{ variant.metafields.custom.technical_specifications | rich_text | strip_newlines }}`,
-    {% endfor %}
-  };
-
-  variantSelect.addEventListener('change', function() {
-    const selectedVariantId = this.value;
-    variantDescription.innerHTML = variantData[selectedVariantId] || '<p>No details available for this variant.</p>';
-  });
-});
-</script> {% endcomment %}
 
 
 {% comment %} /// End Accordian for the Technical Specifications & Certifications {% endcomment %}
@@ -1546,8 +1663,8 @@ Phoenix Gravity Carbon Filter Elements are designed to seamlessly fit Berkey® a
               </dd>
             </div> -->
           {% endif %}
+
 {% if product.handle == 'fluoride-reduction-elements' %}
-   
             <div class="mb-4 accordion-item">
               <dt>
               Compatibility</dt>
@@ -1561,34 +1678,14 @@ POSTreat™ Fluoride & Removal Filters are precisely designed to work in tandem 
               </dd>
             </div>
           {% endif %}
-
-       {% comment %} {% if product.handle == 'postreat™-steel-fluoride-arsenic-reduction-filter-elements-copy' %}
-            <div class="mb-4 accordion-item">
-              <dt>
-              Compatible filters</dt>
-              <dd>
-                <div class="accordion-item__inner">
-                 <div class="variant-description">
-  Phoenix Gravity Carbon Filter Elements<br>
-  Black Berkey® Replacement Elements
-</div>
-                </div>
-              </dd>
-            </div>
-          {% endif %} {% endcomment %}
-          {% if product.handle == '2 Carbon Filters + POSTreat Fluoride and Arsenic Reduction Filter Elements' %}
-            <div class="mb-4 accordion-item">
-              <dt>
-              What's in box</dt>
-              <dd>
-                <div class="accordion-item__inner">
-                 <div class="variant-description">
-POSTreat™ Fluoride & Removal Filters are precisely designed to work in tandem with our Premium Carbon Filter Elements. Please note: These are not compatible with other brands.
-
-                 </div> 
-                </div>
-              </dd>
-            </div>
+          {% assign postreat_bundle_option = '2 Carbon Filters + POSTreat Fluoride and Arsenic Reduction Filter Elements' %}
+          {% assign has_postreat_bundle = false %}
+          {% for variant in product.variants %}
+            {% if variant.options contains postreat_bundle_option %}
+              {% assign has_postreat_bundle = true %}
+            {% endif %}
+          {% endfor %}
+          {% if has_postreat_bundles %}
             <div class="mb-4 accordion-item">
               <dt>
               Shipping and returns</dt>
@@ -1604,19 +1701,7 @@ POSTreat™ Fluoride & Removal Filters are precisely designed to work in tandem 
           {% endif %}
 
         
- {% comment %} 
-          {% if return_policy != blank and section.settings.show_shipping %}
-            <div class="mb-4 accordion-item">
-              <dt>
-                {{ 'products.product.return_policy' | t }}</dt>
-              <dd>
-                <div class="accordion-item__inner">
-                  {{ return_policy }}
-                </div>
-              </dd>
-            </div>
-          {% endif %}
- {% endcomment %} 
+
           
 
           {% if specifications != blank %}
@@ -1647,7 +1732,13 @@ POSTreat™ Fluoride & Removal Filters are precisely designed to work in tandem 
  
           
        {% for block in section.blocks %}
-  {% if block.settings.question and block.settings.answer %}
+  {% assign show_accordion_block = true %}
+  {% if product.handle == 'gravity-water-filter' %}
+    {% if block.settings.question == "What's in box" or block.settings.question == "What's in the box" %}
+      {% assign show_accordion_block = false %}
+    {% endif %}
+  {% endif %}
+  {% if block.settings.question and block.settings.answer and show_accordion_block %}
     <div class="mb-4 accordion-item">
       <dt>{{ block.settings.question }}</dt>
       <dd>
@@ -1791,62 +1882,6 @@ POSTreat™ Fluoride & Removal Filters are precisely designed to work in tandem 
   });
 </script>
 
-{% comment %} <script>
-document.addEventListener("DOMContentLoaded", function () {
-  // Get the selected variant ID
-  function getSelectedVariantId() {
-    const selectedRadio = document.querySelector('input[type="radio"][data-variant-id]:checked');
-    return selectedRadio ? selectedRadio.getAttribute("data-variant-id") : null;
-  }
-
-  // Get the selected filter name safely
-  function getSelectedFilterName() {
-    const selectedFilterRadio = document.querySelector('input[type="radio"][name="filter-type"]:checked');
-    return selectedFilterRadio ? selectedFilterRadio.getAttribute("data-filter-name") : "";
-  }
-
-  // Update accordion display and lifespan text
-  function updateAccordionAndLifespan() {
-    const selectedVariantId = getSelectedVariantId();
-    const selectedFilterName = getSelectedFilterName();
-
-    // Show/hide variant accordions
-    document.querySelectorAll(".variant-accordion").forEach(function (accordion) {
-      accordion.style.display = (accordion.dataset.variantId === selectedVariantId) ? "flex" : "none";
-    });
-
-    // Determine lifespan text based on selected filter
-    const isPostreat = selectedFilterName.includes("POSTreat Fluoride");
-
-    const lifespanText = isPostreat
-      ? "Up to 5,500 gallons per pair of Carbon Filter Elements & Up to 1060 gallons per pair of POSTreat Filter Elements"
-      : "Up to 5,500 gallons per pair of Carbon Filter Elements";
-
-    // Update all visible rows with .filter-lifespan-row
-    document.querySelectorAll(".variant-accordion").forEach(function (accordion) {
-      if (accordion.style.display !== "none") {
-        accordion.querySelectorAll(".filter-lifespan-row td:last-child").forEach(function (td) {
-          td.textContent = lifespanText;
-        });
-      }
-    });
-  }
-
-  // Initial update
-  updateAccordionAndLifespan();
-
-  // Event listeners for variant selection
-  document.querySelectorAll('input[type="radio"][data-variant-id]').forEach(function (radio) {
-    radio.addEventListener("change", updateAccordionAndLifespan);
-  });
-
-  // Event listeners for filter selection
-  document.querySelectorAll('input[type="radio"][name="filter-type"]').forEach(function (radio) {
-    radio.addEventListener("change", updateAccordionAndLifespan);
-  });
-});
-</script> {% endcomment %}
-
 
 
 
@@ -1881,91 +1916,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-
-{% comment %} 
-<style>
-  .variant-description {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .accordion-container {
-    display: flex;
-   
-    border-radius: 12px;
-    max-height: 400px;
-    /* overflow: hidden; */
-   
-  }
-
-  .accordion-content {
-    flex: 1;
-   
-  }
-
-  .accordion-image {
-    width: 40%;
-    max-height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-.accordion-info-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.accordion-info-table tr {
-  border-bottom: 1px solid #ccc;
-}
-
-.accordion-info-table tr:last-child {
-  border-bottom: none !important;
-}
-
-.accordion-info-table td {
-  padding: 15px 12px;
-  vertical-align: top;
-  color: #333;
-}
-
-.accordion-info-table td:first-child {
-  font-weight: 200;
-  color: #111;
-  width: 40%;
-}
-  .accordion-image img {
-    max-width: 100%;
-    max-height: 360px;
-    object-fit: contain;
-    border-radius: 8px;
-  }
-
-  .accordion-info-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .accordion-info-table td {
-    padding: 15px 12px;
-    vertical-align: top;
-    color: #333;
-  }
-
-  .accordion-info-table td:first-child {
-    font-weight: 200;
-    color: #111;
-   idth: 100%;
-    margin-top: 20px;
-  }
-
-  .accordion-image img {
-    max-height: 280px;
-  }
-}
-
-</style>{% endcomment %}
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -2019,8 +1969,9 @@ document.addEventListener("DOMContentLoaded", function () {
     setInterval(updateAccordionContent, 300); // Poll every 300ms
   });
 </script>
+{% comment %}
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener('DOMContentLoaded', function() {
   const variantRadios = document.querySelectorAll('input[type="radio"][data-variant-id]');
   const filterRadios = document.querySelectorAll('input[type="radio"][name="filter-type"]');
   const accordions = document.querySelectorAll('.tech-accordion');
@@ -2072,6 +2023,7 @@ document.addEventListener("DOMContentLoaded", function() {
   filterRadios.forEach(r => r.addEventListener('change', updateAccordion));
 });
 </script>
+{% endcomment %}
 
 
 
@@ -2105,6 +2057,11 @@ document.addEventListener("DOMContentLoaded", function() {
   border-collapse: collapse;
 }
 
+.tech-lifespan-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
 .tech-accordion-table tr {
   border-bottom: 1px solid #ddd;
 }
@@ -2120,7 +2077,9 @@ document.addEventListener("DOMContentLoaded", function() {
   vertical-align: top;
   font-size: 15px; /* desktop font size */
 }
-
+.tech-accordion {
+    display: none;
+  }
 .tech-accordion-table td:first-child {
   font-weight: 600;
   width: 40%;
@@ -2139,6 +2098,9 @@ document.addEventListener("DOMContentLoaded", function() {
   height: 100%;
   object-fit: cover; /* makes image fill height equal to content */
   border-radius: 0;
+}
+a.text-link {
+    font-size: 12px;
 }
 
 /* Responsive layout */
@@ -2167,5 +2129,49 @@ document.addEventListener("DOMContentLoaded", function() {
     object-fit: contain;
   }
 }
-</style>
 
+.report-container {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  border-top: 1px solid #ddd;
+  padding-top: 40px;
+}
+
+.report-item {
+  text-align: center;
+  max-width: 200px;
+}
+.text-link {
+  color: #08c1ff !important;
+}
+.report-item img {
+  width: 30px;
+  margin-bottom: 10px;
+}
+
+.report-item h3 {
+  font-size: 13px;
+  color: #143d66;
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+@media (max-width: 768px) {
+  .report-container {
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .report-item {
+    max-width: 110px;
+  }
+
+  .report-item h3 {
+    font-size: 10px;
+  }
+
+  .text-link {
+    font-size: 11px;
+  }
+}
+</style>

@@ -11,6 +11,7 @@
   "sections": {
     "product_hero_og_alt_gReXNE": {
       "type": "latest-main-products",
+      "disabled": true,
       "custom_css": [
         "@media (min-width: 786px) {.section-producthero {margin-top: 50px !important; }}"
       ],
@@ -19,6 +20,103 @@
         "countdown_text": "{{ product.metafields.custom.month_sale.value }}",
         "countdown_time": "",
         "countdown_products": []
+      }
+    },
+    "custom_nice_product_UFqVMW": {
+      "type": "custom-nice-product",
+      "blocks": {
+        "title_KVa3nN": {
+          "type": "title",
+          "settings": {
+            "show_vendor": false
+          }
+        },
+        "rating_YJ96fW": {
+          "type": "rating",
+          "settings": {}
+        },
+        "description_BH3tQg": {
+          "type": "description",
+          "settings": {
+            "show_usps": true
+          }
+        },
+        "variant_picker_D6X8dc": {
+          "type": "variant_picker",
+          "settings": {
+            "show_step_numbers": true,
+            "label_prefix": "Select",
+            "show_size_guide": true,
+            "size_guide_label": "Size Guide"
+          }
+        },
+        "price_Nmtfhg": {
+          "type": "price",
+          "settings": {
+            "show_stock": false,
+            "show_tax": true
+          }
+        },
+        "buy_buttons_93XD6J": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false
+          }
+        },
+        "shipping_wW84jK": {
+          "type": "shipping",
+          "settings": {
+            "text": "Ships in 3–7 business days via UPS/USPS | Free on orders $99+",
+            "alignment": "center"
+          }
+        },
+        "payment_icons_QbxHdd": {
+          "type": "payment_icons",
+          "settings": {
+            "heading": "",
+            "accessibility_label": "Accepted payment methods",
+            "icon_limit": 8
+          }
+        },
+        "trust_badges_tiPQji": {
+          "type": "trust_badges",
+          "settings": {
+            "columns_desktop": 3,
+            "columns_mobile": 2,
+            "badge_1_text": "Free Shipping in the US Mainland",
+            "badge_1_link": "",
+            "badge_2_text": "100 Day Trial",
+            "badge_2_link": "",
+            "badge_3_text": "10 Year Warranty",
+            "badge_3_link": "",
+            "badge_4_text": "Customer Support",
+            "badge_4_link": "",
+            "badge_5_text": "NSF Certified",
+            "badge_5_link": "",
+            "badge_6_text": "US-Based Warehouse Shipping",
+            "badge_6_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "title_KVa3nN",
+        "rating_YJ96fW",
+        "description_BH3tQg",
+        "variant_picker_D6X8dc",
+        "price_Nmtfhg",
+        "buy_buttons_93XD6J",
+        "shipping_wW84jK",
+        "payment_icons_QbxHdd",
+        "trust_badges_tiPQji"
+      ],
+      "custom_css": [
+        ".btn,button,input[type=\"submit\"],input[type=\"button\"] {margin: 0px;}"
+      ],
+      "name": "Custom main product",
+      "settings": {
+        "hide_variant_media": false,
+        "show_badge": true,
+        "badge_text": ""
       }
     },
     "9600faf5-31b8-4d01-817d-b44b276a1d60": {
@@ -1243,6 +1341,7 @@
   },
   "order": [
     "product_hero_og_alt_gReXNE",
+    "custom_nice_product_UFqVMW",
     "9600faf5-31b8-4d01-817d-b44b276a1d60",
     "icon-marquee",
     "secondary_details_qTHLFy",

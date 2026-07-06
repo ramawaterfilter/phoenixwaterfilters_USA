@@ -54,11 +54,15 @@
                   window.variantStock[{{- item.variant.id -}}] = {{ item.variant.inventory_quantity }};
                 </script>
 
+                {% capture cart_line_image_url -%}
+                  {% render 'variant-cart-image-url', product: item.product, variant: item.variant %}
+                {%- endcapture %}
+
                 <tr class="cart-item" data-id="{{item.variant.id}}">
                   <td class="cart-image">
                     <a href="{{ item.url }}">
-                      {% if item.image %}
-                        <img src="{{ item | image_url: width: 600 }}" alt="{{ item.title | escape }}">
+                      {% if cart_line_image_url != blank %}
+                        <img src="{{ cart_line_image_url | strip | escape }}" alt="{{ item.title | escape }}">
                       {% else %}
                         <img src="{{ 'default-feature.jpg' | asset_img_url: 'x1920' }}" alt="">
                       {% endif %}

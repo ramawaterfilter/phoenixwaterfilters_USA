@@ -1,0 +1,24 @@
+╭─ success ────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│  Preview your theme (t)                                                      │
+│    • [1]                                                                     │
+│                                                                              │
+│  Next steps                                                                  │
+│    • Share your theme preview (p) [2]                                        │
+│      https://07neys-f1.myshopify.com/?preview_theme_id=146922438709          │
+│    • Customize your theme at the theme editor (e) [3]                        │
+│    • Preview your gift cards (g) [4]                                         │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+[1] http://127.0.0.1:9294
+[2] https://07neys-f1.myshopify.com/?preview_theme_id=146922438709
+[3] https://07neys-f1.myshopify.com/admin/themes/146922438709/editor?hr=9294
+[4] http://127.0.0.1:9294/gift_cards/[store_id]/preview
+
+• 15:32:01 Request »    GET 404 /products/gravity-water-filter 
+• 15:32:02 Request »   POST 200 /shopify_pay/accelerated_checkout 
+• 15:32:04 Request »    GET 200 /apps/easylocation/geo?x-api-key=91e359ab7-2b63-539e-1de2-c4bf731367a7 
+• 15:32:05 Request »    GET 200 /apps/easylocation/geo?x-api-key=91e359ab7-2b63-539e-1de2-c4bf731367a7 
+• 15:32:05 Request »    GET 404 /products/Liquid error (layout/theme line 235): invalid url input 
+• 15:32:05 Request »   POST 200 /apps/easylocation/api/col 
+• 15:32:06 Request »    GET 404 /products/Liquid error (layout/theme line 241): invalid url input 

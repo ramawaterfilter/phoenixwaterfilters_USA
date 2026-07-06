@@ -22,6 +22,7 @@
     name="handle"
     value="{{ product.handle }}"
     type="hidden" />
+  {% render 'variant-cart-image-property', product: product, current_variant: product.selected_or_first_available_variant %}
 
   {% if product.selling_plan_groups.size > 0 %}
     <input

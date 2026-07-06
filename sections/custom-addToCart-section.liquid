@@ -38,6 +38,7 @@
         <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="custom-add-to-cart-section__form">
           <input type="hidden" name="id" value="{{ current_variant.id }}">
           <input type="hidden" name="quantity" value="1">
+          {% render 'variant-cart-image-property', product: cta_product, current_variant: current_variant %}
 
           <button
             class="custom-add-to-cart-section__button"

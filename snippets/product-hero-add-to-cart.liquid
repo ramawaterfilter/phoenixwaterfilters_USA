@@ -1,0 +1,42 @@
+{% doc %}
+Renders the product hero add to cart button.
+@param {product} product - Product to add.
+@param {variant} current_variant - Currently selected variant.
+@example
+{% render 'product-hero-add-to-cart', product: product, current_variant: current_variant %}
+{% enddoc %}
+
+{% if product.available %}
+  {% if current_variant.inventory_quantity > 0 or current_variant.inventory_management == null %}
+    <div class="select-product d-flex flex-row align-items-center mt-5">
+      <span
+        class="appstle_stand_alone_selector"
+        data-product-handle="{{ product.handle }}"
+        data-product-data=""
+        style="display:none;"
+      ></span>
+      <button class="btn btn-primary btn-product" type="submit" name="add" id="product-add-to-cart">
+        {{ 'products.product.add_to_cart' | t }}
+      </button>
+    </div>
+  {% elsif current_variant.inventory_policy == 'continue' %}
+    <div class="select-product d-flex flex-row align-items-center mt-5">
+      <button class="btn btn-primary btn-product" type="submit" name="add" id="product-add-to-cart">
+        {{ 'products.product.pre_order' | t }}
+      </button>
+    </div>
+  {% else %}
+    <div class="select-product d-flex flex-row align-items-center mt-5">
+      <button class="btn btn-primary btn-product" name="add" disabled type="submit">
+        {{ 'products.product.sold_out' | t }}
+      </button>
+    </div>
+  {% endif %}
+{% else %}
+  <div class="select-product d-flex flex-row align-items-center mt-5">
+    <input name="id" data-productid="{{ product.id }}" value="{{ product.variants.first.id }}" type="hidden">
+    <button class="btn btn-primary btn-product" name="add" disabled type="submit">
+      {{ 'products.product.sold_out' | t }}
+    </button>
+  </div>
+{% endif %}
