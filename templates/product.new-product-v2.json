@@ -22,104 +22,6 @@
         "countdown_products": []
       }
     },
-    "custom_nice_product_UFqVMW": {
-      "type": "custom-nice-product",
-      "blocks": {
-        "title_KVa3nN": {
-          "type": "title",
-          "settings": {
-            "show_vendor": false
-          }
-        },
-        "rating_YJ96fW": {
-          "type": "rating",
-          "settings": {}
-        },
-        "description_BH3tQg": {
-          "type": "description",
-          "settings": {
-            "show_usps": true
-          }
-        },
-        "variant_picker_D6X8dc": {
-          "type": "variant_picker",
-          "settings": {
-            "show_step_numbers": true,
-            "label_prefix": "Select",
-            "show_size_guide": true,
-            "size_guide_label": "Size Guide"
-          }
-        },
-        "price_Nmtfhg": {
-          "type": "price",
-          "settings": {
-            "show_stock": false,
-            "show_tax": true
-          }
-        },
-        "buy_buttons_93XD6J": {
-          "type": "buy_buttons",
-          "settings": {
-            "show_dynamic_checkout": false
-          }
-        },
-        "shipping_wW84jK": {
-          "type": "shipping",
-          "settings": {
-            "text": "Ships in 3–7 business days via UPS/USPS | Free on orders $99+",
-            "alignment": "center"
-          }
-        },
-        "payment_icons_QbxHdd": {
-          "type": "payment_icons",
-          "settings": {
-            "heading": "",
-            "accessibility_label": "Accepted payment methods",
-            "icon_limit": 8
-          }
-        },
-        "trust_badges_tiPQji": {
-          "type": "trust_badges",
-          "settings": {
-            "columns_desktop": 3,
-            "columns_mobile": 2,
-            "badge_1_text": "Free Shipping in the US Mainland",
-            "badge_1_link": "",
-            "badge_2_text": "100 Day Trial",
-            "badge_2_link": "",
-            "badge_3_text": "10 Year Warranty",
-            "badge_3_link": "",
-            "badge_4_text": "Customer Support",
-            "badge_4_link": "",
-            "badge_5_text": "NSF Certified",
-            "badge_5_link": "",
-            "badge_6_text": "US-Based Warehouse Shipping",
-            "badge_6_link": ""
-          }
-        }
-      },
-      "block_order": [
-        "title_KVa3nN",
-        "rating_YJ96fW",
-        "description_BH3tQg",
-        "variant_picker_D6X8dc",
-        "price_Nmtfhg",
-        "buy_buttons_93XD6J",
-        "shipping_wW84jK",
-        "payment_icons_QbxHdd",
-        "trust_badges_tiPQji"
-      ],
-      "disabled": true,
-      "custom_css": [
-        ".btn,button,input[type=\"submit\"],input[type=\"button\"] {margin: 0px;}"
-      ],
-      "name": "Custom main product",
-      "settings": {
-        "hide_variant_media": false,
-        "show_badge": true,
-        "badge_text": ""
-      }
-    },
     "custom_nice_product_v2_JjCEBd": {
       "type": "custom-nice-product-v2",
       "blocks": {
@@ -164,14 +66,8 @@
         "shipping_bUE9Fk": {
           "type": "shipping",
           "settings": {
-            "text": "Ships in 3–7 business days via UPS/USPS | Free on orders $99+",
+            "text": "Ships in 3–7 business days via UPS/USPS",
             "alignment": "center"
-          }
-        },
-        "custom_liquid_7qMjid": {
-          "type": "custom_liquid",
-          "settings": {
-            "custom_liquid": "<i data-govx-id></i>"
           }
         },
         "payment_icons_q3q737": {
@@ -179,7 +75,13 @@
           "settings": {
             "heading": "",
             "accessibility_label": "Accepted payment methods",
-            "icon_limit": 8
+            "icon_limit": 20
+          }
+        },
+        "custom_liquid_aXyUfM": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<i data-govx-id></i>"
           }
         },
         "trust_badges_LQBzjy": {
@@ -210,14 +112,15 @@
         "price_wL6F3g",
         "buy_buttons_BBxYbY",
         "shipping_bUE9Fk",
-        "custom_liquid_7qMjid",
         "payment_icons_q3q737",
+        "custom_liquid_aXyUfM",
         "trust_badges_LQBzjy"
       ],
       "custom_css": [
         "p.custom-nice-product__status {display: none;}",
         ".btn,button,input[type=\"submit\"],input[type=\"button\"] {font-size: 2rem;}",
-        ".custom-nice-product__shipping {margin-top: 0px;}"
+        ".custom-nice-product__shipping {margin-top: 0px;}",
+        ".below-atc-icons > div img {margin: 0 auto 0.8rem;}"
       ],
       "name": "Custom main product V2",
       "settings": {
@@ -291,6 +194,10 @@
         "text_WJ7Gm4",
         "text_4aC3aG",
         "text_XhjfjF"
+      ],
+      "custom_css": [
+        ".tech-lifespan-list {padding-left: 0px;}",
+        "ul.tech-lifespan-list {list-style: none;}"
       ],
       "settings": {
         "heading": "",
@@ -383,12 +290,12 @@
           },
           "blocks": {}
         },
-        "ai_gen_block_866760f_dQDrUW": {
+        "ai_gen_block_866760f_djfTQd": {
           "type": "ai_gen_block_866760f",
           "name": "Custom code",
           "settings": {
-            "custom_html": "<p class=\"marquee-qualification\">\n    <span aria-hidden=\"true\">*</span>Chlorine removal NSF/ANSI 42\n    certified. Other contaminants independently lab-tested — <a href=\"https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_gravity_contaminants_lab_report_USA_Aug2024.pdf?v=1724757203\" target=\"_tab\">view full report</a>.\n  </p>",
-            "custom_css": ".marquee-qualification {\n      margin: 6px 12px 0;\n      color: #555;\n      font-size: 12px;\n      line-height: 1.4;\n      text-align: center;\n    }\n\n    .marquee-qualification a {\n      color: inherit;\n      font-weight: 600;\n      text-decoration: underline;\n      text-underline-offset: 2px;\n    }\n  ",
+            "custom_html": "<p class=\"marquee-qualification\">\n    <span aria-hidden=\"true\">*</span>Chlorine removal NSF/ANSI 42\n    certified. Other contaminants independently lab-tested — <a href=\"https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_gravity_contaminants_lab_report_USA_Aug2024.pdf?v=1724757203\" target=\"_tab\">View full report</a>.\n  </p>",
+            "custom_css": ".marquee-qualification {\n      margin: 6px 12px 0;\n      color: #555;\n      font-size: 17px;\n      line-height: 1.4;\n      text-align: center;\n    }\n\n    .marquee-qualification a {\n      color: inherit;\n      font-weight: 600;\n      text-decoration: underline;\n      text-underline-offset: 2px;\n    }",
             "custom_js": "",
             "desktop_width_percent": 100
           },
@@ -397,7 +304,7 @@
       },
       "block_order": [
         "ai_gen_block_c272c47_fwiVwn",
-        "ai_gen_block_866760f_dQDrUW"
+        "ai_gen_block_866760f_djfTQd"
       ],
       "custom_css": [
         ".ai-feature-marquee__heading-ar1nxcgxzdxfvaxmysaigenblockc272c4783qbki {font-weight: 500;}",
@@ -405,140 +312,185 @@
       ],
       "settings": {}
     },
-    "1775640310f950968e": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_b79fab3_3VkTy9": {
-          "type": "ai_gen_block_b79fab3",
-          "settings": {
-            "heading": "",
-            "subheading": "",
-            "content": "",
-            "button_text": "",
-            "button_link": "",
-            "desktop_width_percent": 100,
-            "content_max_width": 1200,
-            "text_alignment": "left",
-            "background_color": "#ffffff",
-            "heading_color": "#000000",
-            "subheading_color": "#000000",
-            "content_color": "#000000",
-            "heading_font_size": 40,
-            "mobile_heading_font_size": 28,
-            "heading_font_weight": "700",
-            "heading_line_height": 1.2,
-            "heading_letter_spacing": 0,
-            "heading_margin_bottom": 0,
-            "subheading_font_size": 24,
-            "mobile_subheading_font_size": 18,
-            "subheading_font_weight": "500",
-            "subheading_line_height": 1.4,
-            "subheading_letter_spacing": 0,
-            "subheading_margin_bottom": 0,
-            "content_font_size": 24,
-            "mobile_content_font_size": 16,
-            "content_line_height": 1.6,
-            "paragraph_spacing": 12,
-            "content_margin_bottom": 0,
-            "button_background_color": "#000000",
-            "button_text_color": "#ffffff",
-            "button_border_color": "#000000",
-            "button_hover_background": "#333333",
-            "button_hover_text_color": "#ffffff",
-            "button_hover_border_color": "#333333",
-            "button_font_size": 24,
-            "mobile_button_font_size": 14,
-            "button_font_weight": "600",
-            "button_padding_vertical": 12,
-            "button_padding_horizontal": 24,
-            "button_border_radius": 4,
-            "button_border_width": 1,
-            "button_letter_spacing": 0.5,
-            "button_margin_top": 8,
-            "padding_top": 20,
-            "padding_bottom": 0,
-            "padding_left": 20,
-            "padding_right": 20,
-            "margin_top": 0,
-            "margin_bottom": 0,
-            "border_radius": 0,
-            "mobile_padding_top": 15,
-            "mobile_padding_bottom": 5,
-            "mobile_padding_left": 15,
-            "mobile_padding_right": 15
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_b79fab3_3VkTy9"
-      ],
-      "disabled": true,
-      "settings": {}
-    },
     "custom_html_eqYJTa": {
       "type": "custom-html",
       "custom_css": [
-        "/* Ensure the wistia player fills its container */wistia-player {display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background-color: transparent; object-fit: cover; border: none;}"
+        "/* Ensure the wistia player fills its container */wistia-player {display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background-color: transparent; object-fit: cover; border: none;}",
+        ".responsive-embed-wrapper {margin-bottom: -30px;}"
       ],
       "name": "Custom Embed Video",
       "settings": {
-        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/jr37r9792m.js\" async type=\"module\"></script><style>wistia-player[media-id='jr37r9792m']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/jr37r9792m/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"jr37r9792m\" aspect=\"1.7777777777777777\"></wistia-player>"
+        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/oon8hhww93.js\" async type=\"module\"></script><style>wistia-player[media-id='oon8hhww93']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/oon8hhww93/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"oon8hhww93\" aspect=\"1.7777777777777777\"></wistia-player>",
+        "visibility": "always",
+        "variant_ids": ""
       }
     },
-    "features_Nhkfiz": {
-      "type": "features",
+    "custom_certificate_info_card_pJcd48": {
+      "type": "custom-certificate-info-card",
       "blocks": {
-        "feature_col_1_zLGj6F": {
-          "type": "feature_col_1",
+        "step_J7Q7HW": {
+          "type": "step",
           "settings": {
-            "title": "Step 1: Pour tap water into top chamber.",
-            "icon": "shopify://shop_images/Experience_icon_showing_Phoenix_s_commitment_to_quality_water_solutions.svg"
+            "step_label": "Step 01",
+            "badge_text": "01",
+            "icon": "shopify://shop_images/Fill_the_upper_chamber.png",
+            "icon_alt": "",
+            "visibility": "always",
+            "variant_ids": "",
+            "heading": "Fill Upper Chamber",
+            "description": "<p>Pour tap water into the upper stainless steel chamber. No electricity or pressure required — gravity does the work.</p>"
           }
         },
-        "feature_col_2_idPJrG": {
-          "type": "feature_col_2",
+        "step_RMTVGe": {
+          "type": "step",
           "settings": {
-            "title": "Step 2: Gravity pulls water through carbon filters.",
-            "icon": "shopify://shop_images/Container.svg"
+            "step_label": "Step 02",
+            "badge_text": "02",
+            "icon": "shopify://shop_images/Carbon_Filtration.png",
+            "icon_alt": "",
+            "visibility": "always",
+            "variant_ids": "",
+            "heading": "Carbon Filtration",
+            "description": "<p>Activated coconut-shell carbon elements remove 99.9% of chlorine, heavy metals, microplastics, PFAS, hormones, and pharmaceutical residues.</p>"
           }
         },
-        "feature_col_1_p7gjKt": {
-          "type": "feature_col_1",
-          "disabled": true,
+        "step_4hkPUP": {
+          "type": "step",
           "settings": {
-            "title": "Step 3: Pour clean water from spigot",
-            "icon": "shopify://shop_images/Water_drop_icon_symbolizing_purity_and_effective_filtration_with_Phoenix_Gravity_systems.svg"
+            "step_label": "Step 03",
+            "badge_text": "03",
+            "icon": "shopify://shop_images/POSTreat_Stage.png",
+            "icon_alt": "",
+            "visibility": "always",
+            "variant_ids": "",
+            "heading": "POSTreat Steel Filter Stage",
+            "description": "<p>Pre-filtered water flows through our proprietary FluoRid media inside the AISI 304 steel casing — capturing fluoride and arsenic with 95%+ efficiency.</p>"
           }
         },
-        "feature_col_2_GWMxJp": {
-          "type": "feature_col_2",
+        "step_pRLDYw": {
+          "type": "step",
           "settings": {
-            "title": "Step 3: Pour clean water from spigot",
-            "icon": "shopify://shop_images/Water_drop_icon_symbolizing_purity_and_effective_filtration_with_Phoenix_Gravity_systems.svg"
+            "step_label": "Step 04",
+            "badge_text": "04",
+            "icon": "shopify://shop_images/Pure_water.png",
+            "icon_alt": "",
+            "visibility": "always",
+            "variant_ids": "",
+            "heading": "Pure Water Collected",
+            "description": "<p>Mineral-rich, fluoride-reduced water collects in the lower chamber. No stripping of beneficial minerals — just contaminants removed.</p>"
           }
         }
       },
       "block_order": [
-        "feature_col_1_zLGj6F",
-        "feature_col_2_idPJrG",
-        "feature_col_1_p7gjKt",
-        "feature_col_2_GWMxJp"
+        "step_J7Q7HW",
+        "step_RMTVGe",
+        "step_4hkPUP",
+        "step_pRLDYw"
       ],
-      "disabled": true,
       "custom_css": [
-        "@media (min-width: 768px) {.spacer {height: 29rem !important; }}"
+        "section {padding-top: 10px; padding-bottom: 0px;}",
+        ".custom-certificate-info-card__eyebrow {color: #153a5b;}",
+        ".custom-certificate-info-card__mobile-number {background: #153a5b; color: #fff;}"
       ],
-      "name": "Features",
+      "name": "HIW-post",
       "settings": {
-        "heading": "",
-        "content": "",
-        "section_video_bg": "gshkwot1gv",
-        "buttonlink": "",
-        "buttontext": "",
-        "afterbutton": "",
-        "custom_id": "",
-        "custom_class": ""
+        "eyebrow": "The science behind it",
+        "heading": "How It Works",
+        "description": "",
+        "background_color": "#ffffff",
+        "text_color": "#153a5b",
+        "muted_text_color": "#000000",
+        "line_color": "#153a5b",
+        "accent_color": "#153a5b",
+        "icon_background_color": "#153a5b",
+        "mobile_layout": "card_list",
+        "visibility": "variant_ids",
+        "variant_ids": "41681640521771, 41868949061675, 41868949028907, 41681640554539, 41868949192747, 41868949159979, 41681640587307, 41868949323819, 41868949291051"
+      }
+    },
+    "custom_certificate_info_card_NF87fy": {
+      "type": "custom-certificate-info-card",
+      "blocks": {
+        "step_icLt3T": {
+          "type": "step",
+          "settings": {
+            "step_label": "Step 01",
+            "badge_text": "01",
+            "icon": "shopify://shop_images/Fill_the_upper_chamber.png",
+            "icon_alt": "",
+            "visibility": "always",
+            "variant_ids": "",
+            "heading": "Fill Upper Chamber",
+            "description": "<p>Pour tap water into the upper stainless steel chamber. No electricity or pressure required — gravity does the work.</p>"
+          }
+        },
+        "step_YDfUmc": {
+          "type": "step",
+          "settings": {
+            "step_label": "Step 02",
+            "badge_text": "02",
+            "icon": "shopify://shop_images/Carbon_Filtration.png",
+            "icon_alt": "",
+            "visibility": "always",
+            "variant_ids": "",
+            "heading": "Carbon Filtration",
+            "description": "<p>Activated coconut-shell carbon elements remove 99.9% of chlorine, heavy metals, microplastics, PFAS, hormones, and pharmaceutical residues.</p>"
+          }
+        },
+        "step_gdz8Gm": {
+          "type": "step",
+          "disabled": true,
+          "settings": {
+            "step_label": "Step 03",
+            "badge_text": "03",
+            "icon": "shopify://shop_images/POSTreat_Stage.png",
+            "icon_alt": "",
+            "visibility": "always",
+            "variant_ids": "",
+            "heading": "POSTreat Steel Filter Stage",
+            "description": "<p>Pre-filtered water flows through our proprietary FluoRid media inside the AISI 304 steel casing — capturing fluoride and arsenic with 95%+ efficiency.</p>"
+          }
+        },
+        "step_UkqUCG": {
+          "type": "step",
+          "settings": {
+            "step_label": "Step 03",
+            "badge_text": "03",
+            "icon": "shopify://shop_images/Pure_water_-_without_POSTreat.webp",
+            "icon_alt": "",
+            "visibility": "always",
+            "variant_ids": "",
+            "heading": "Pure Water Collected",
+            "description": "<p>Mineral-rich, fluoride-reduced water collects in the lower chamber. No stripping of beneficial minerals — just contaminants removed.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "step_icLt3T",
+        "step_YDfUmc",
+        "step_gdz8Gm",
+        "step_UkqUCG"
+      ],
+      "custom_css": [
+        "section {padding-top: 10px; padding-bottom: 0px;}",
+        ".custom-certificate-info-card__eyebrow {color: #153a5b;}",
+        ".custom-certificate-info-card__mobile-number {background: #153a5b; color: #fff;}",
+        "section.custom-certificate-info-card.custom-certificate-info-card--mobile-card_list {padding-top: 0px; margin-top: -5px;}"
+      ],
+      "name": "HIW",
+      "settings": {
+        "eyebrow": "The science behind it",
+        "heading": "How It Works",
+        "description": "",
+        "background_color": "#ffffff",
+        "text_color": "#153a5b",
+        "muted_text_color": "#000000",
+        "line_color": "#153a5b",
+        "accent_color": "#153a5b",
+        "icon_background_color": "#153a5b",
+        "mobile_layout": "card_list",
+        "visibility": "variant_ids",
+        "variant_ids": "41681640423467, 41868948996139, 41868948963371, 41681640456235, 41868949127211, 41868949094443, 41681640489003, 41868949258283, 41868949225515"
       }
     },
     "product_feature_ckk7jj": {
@@ -640,8 +592,8 @@
       "type": "custom-code-section",
       "name": "Custom Code Section",
       "settings": {
-        "custom_html": "<div class=\"warranty-section\">\n  <img src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/10_years_1.png?v=1758890447\" alt=\"10-year warranty icon\">\n  <span>10 Years Warranty</span>\n</div>",
-        "custom_css": ".warranty-section {\n      background-color: #f5f3f1; /* same pink background */\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      padding: 20px;\n      gap: 10px;\nmargin-bottom: 30px;\n    }\n\n    .warranty-section img {\n      width: 50px; /* adjust size of icon */\n      height: auto;\n    }\n\n    .warranty-section span {\n      font-size: 30px;\n      font-weight: bold;\n      color: #153a5b; /* dark text */\n    }",
+        "custom_html": "<div class=\"warranty-section\">\n  <img src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/10_years_1.png?v=1758890447\" alt=\"10-year warranty icon\" width=\"50\" height=\"50\">\n  <span>10 Years Warranty</span>\n</div>",
+        "custom_css": ".warranty-section {\n      background-color: #f5f3f1; /* same pink background */\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      padding: 20px;\n      gap: 10px;\nmargin-bottom: 30px;\n    }\n\n    .warranty-section img {\n      width: 50px; /* adjust size of icon */\n      height: 50px;\n      object-fit: contain;\n      flex: 0 0 50px;\n    }\n\n    .warranty-section span {\n      font-size: 30px;\n      font-weight: bold;\n      color: #153a5b; /* dark text */\n    }",
         "custom_js": "console.log('Custom section loaded');"
       }
     },
@@ -665,7 +617,9 @@
       ],
       "name": "Custom Embed Video",
       "settings": {
-        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/c3cghpaqz1.js\" async type=\"module\"></script><style>wistia-player[media-id='c3cghpaqz1']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/c3cghpaqz1/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"c3cghpaqz1\" aspect=\"1.7777777777777777\"></wistia-player>"
+        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/c3cghpaqz1.js\" async type=\"module\"></script><style>wistia-player[media-id='c3cghpaqz1']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/c3cghpaqz1/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"c3cghpaqz1\" aspect=\"1.7777777777777777\"></wistia-player>",
+        "visibility": "variant_ids",
+        "variant_ids": "41681640521771, 41868949061675, 41868949028907, 41681640554539, 41868949192747, 41868949159979, 41681640587307, 41868949323819, 41868949291051"
       }
     },
     "d978efab-7803-45c3-a62d-eea1576f94a8": {
@@ -1046,6 +1000,292 @@
         "section_heading": ""
       }
     },
+    "accordion_tabs_bULkgE": {
+      "type": "accordion-tabs",
+      "blocks": {
+        "tab_BLqDaC": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Set Up & Maintenance"
+          }
+        },
+        "question_answer_Hymyxe": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Is It Essential To Prime The Carbon Filter Elements?",
+            "answer": "<p>Priming the Carbon Filter Elements is the first step to ensuring your filters are completely free of any residuals from the manufacturing process. The residuals are completely normal and safe but can lead to cloudy water if the filters are not correctly primed.</p><p>We recommend priming your Carbon Filter Elements for at least three minutes. If not primed sufficiently, the first four rounds of filtered water may have cloudy white particles that can be safely discarded.</p>"
+          }
+        },
+        "question_answer_LTARrj": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Why Is My Water Cloudy?",
+            "answer": "<p>Don’t worry, cloudy water after initial installation is normal and completely harmless. It’s simply safe residual dust from the manufacturing process. It can occur if the filters are not correctly primed - and we recommend priming filters fully (see above).</p><p>If it is not primed, it can take about four rounds of filtered water to clear.</p>"
+          }
+        },
+        "question_answer_7Up3zj": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Long Will My Carbon Filter Elements Last?",
+            "answer": "<p>We recommend replacing your Carbon Filter Elements every 12 months.</p>"
+          }
+        },
+        "question_answer_BnC9e4": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Long Will The POSTreat Fluoride Removal Filter Elements  Last?",
+            "answer": "<p>Our POSTreat Fluoride Removal Filter Elements are made from AISI 304 Grade Stainless Steel and are designed to last for years - which is why we include a 1 year warranty with our products.</p><p>The proprietary FluoRid media will last for 1060 gallons and need replacing approximately 4 months. </p><p>We also offer a subscription service for replacement media - we’ll remind you when they’re due, so you don’t have to. </p>"
+          }
+        },
+        "question_answer_A9iNex": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Long Will The FluoRid Media In The POSTreat Last?",
+            "answer": "<p>The lifespan of a pair of POSTreat Fluoride Removal Filter Elements are upto 1060 gallons. It is recommended to replace the \"FluoRid Media Refill\" every 4-6months.</p>"
+          }
+        },
+        "question_answer_64UFaw": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Will I Be Able To Assemble My System And Change My Filters Myself?",
+            "answer": "<p>Yes! Our systems are designed to be extremely easy to assemble and everything you need will be included. You can do it yourself with just your hands - there’s no specialist tools, plumbers or electricians required.</p><p>We include full instructions with every unit and we’re always here to help. </p>"
+          }
+        },
+        "question_answer_8KcMyC": {
+          "type": "question_answer",
+          "settings": {
+            "question": "My Phoenix Gravity Water Filter Has Water Dripping In Between The Upper And Lower Chambers, What Does This Mean?",
+            "answer": "<p>This will be from over-filling the Water Filter System. Careful use can help prevent overfilling by checking how much water is in the lower chamber before filling the upper chamber.</p><p>Once you get to know your usage rates the re-filling process will become second nature!</p><p>We also sell a Stainless Steel Spigot With Water Level Gauge which will enable you to see the water level from the outside.  </p>"
+          }
+        },
+        "question_answer_dH8NcP": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Frequently Do I Need To Change My Filters?",
+            "answer": "<p>This depends on the usage frequency and quality of your water input. As a guide, we recommend replacing them at the following milestones:</p><p>Carbon Filter Elements: 12 months.</p><p>POSTreat (and FluoRid Media Refill): 4 months</p><p>We also offer a subscription service, which also works out to 5% off each order. Let us remember when you need to change your filter, so you don’t have to!</p>"
+          }
+        },
+        "tab_ppWrr4": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Filtration"
+          }
+        },
+        "question_answer_C63EBU": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Do Your Filters Work?",
+            "answer": "<p>We use the highest grade AISI 304 Grade Stainless Steel, natural coconut carbon and other natural materials. Plus the mighty force of gravity! Our advanced filtration system removes up to 99.99% of commonly occurring contaminants and retains up to 100% of nutrients.</p>"
+          }
+        },
+        "question_answer_AyJqRC": {
+          "type": "question_answer",
+          "settings": {
+            "question": "What Do Your Filters Really Remove?",
+            "answer": "<p>Phoenix Gravity Carbon Filter Elements are made from pure coconut shells, which are a sustainable and renewable resource. The carbon in the filters is activated, which means that it has a high surface area and is very porous. This allows it to trap a wide range of contaminants, including chlorine, heavy metals, and other impurities. </p><p>Phoenix Gravity Carbon Filters are designed to provide clean, odorless water with a great taste. They do not release any harmful chemicals or by-products into the water, and they are very effective at removing chlorine and other volatile organic compounds. A pair of carbon filter elements can filter gallons of water by providing safe and healthy drinking water.</p>"
+          }
+        },
+        "question_answer_fAdiE4": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do Phoenix Gravity Filters Remove Residual Pharmaceutical Waste?",
+            "answer": "<p>Yes, up to 99.99%! our primary Carbon Filter Elements have been independently tested for many Volatile Organic compounds including 1,4- dichlorobenzene, 2-Butanone, Acetone, Allyl Chloride and many more.</p>"
+          }
+        },
+        "question_answer_qJMxwN": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do Your Filters Remove Fluoride?",
+            "answer": "<p>Yes ! We’ve designed a specialist fluoride removal filter called the POSTreat to remove over 95% of fluoride from your tap water.</p><p>Made from the AISI 304 Grade Stainless Steel, it’s completely reusable and refillable, with our POSTreat FluoRid Media Refill. The POSTtreat can be used in conjunction with primary Carbon Filter Elements.</p>"
+          }
+        },
+        "question_answer_rePDXn": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do The Phoenix Carbon Cartridges Remove Fluoride",
+            "answer": "<p>Yes ! We’ve designed a specialist fluoride cartridge called the POSTreat to remove over 95% of fluoride from your tap water.</p><p>Made from the highest grade stainless steel, it’s completely reusable and refillable, with our POSTreat FluoRid Refill. The POSTtreat can be used in conjunction with primary Carbon Cartridges.</p>"
+          }
+        },
+        "question_answer_cTYjCB": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do Phoenix Carbon Elements Eliminate Phthalates From Water?",
+            "answer": "<p>While we have not specifically tested for the removal of phthalates, our Phoenix Carbon Filter Elements are made with highest grade activated coconut carbon, which is known for its effectiveness in adsorbing phthalates from water. We are constantly improving and testing our filters.</p>"
+          }
+        },
+        "question_answer_hJmLgr": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do Phoenix Gravity Filters Remove Estrogen?",
+            "answer": "<p>While we have not specifically tested for the removal of estrogen, our Phoenix Carbon Filters are made with activated coconut carbon, which is known for its effectiveness in adsorbing estrogen from water. We are constantly improving and testing our filters.</p>"
+          }
+        },
+        "question_answer_DATHAh": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Do Your Gravity Filters And Filter Elements Compare To Others?",
+            "answer": "<p>We are one of the leaders in advanced Gravity Filtration. With over 50 plus years’ experience of manufacturing in-house, we have complete control over the process and the quality of our filters and filter elements. We are enormously proud of the effort it has taken us to become a leading manufacturer of Gravity Water Filters.</p>"
+          }
+        },
+        "question_answer_6y6mHA": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Are Your Filters As Comprehensive As Berkey?",
+            "answer": "<p>Absolutely! We have run extensive and independent tests on our filters for a variety of chemical contaminants such as Lead, chlorine, chromium, Volatile organic compounds and 100 more.</p><p>What’s more, with over 50 plus years’ experience of in-house manufacturing - we’re one of the leading global manufacturers of AISI 304 Grade Stainless Steel gravity filtration systems. We also have complete control over the process and the quality of our filters and replacement filter elements. We are enormously proud of the effort it has taken us to become the world’s leading manufacturer of Gravity Water Filters.</p>"
+          }
+        },
+        "question_answer_93dijN": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do Phoenix Gravity Filters Lower The TDS?",
+            "answer": "<p>TDS stands for Total Dissolved Solids and is measured in parts per million (ppm) or parts per billion (ppb). It’s a measure of the water’s organic and inorganic content including minerals and nutrients.</p><p>Natural water will have a TDS reading from minerals and nutrients picked up from the rocks and ground it flows through. It’s generally accepted that 300 ppm is a good mineral content. We purposely do not bring our TDS to zero, because we’re all about preserving the natural vitamins and minerals your body needs</p>"
+          }
+        },
+        "question_answer_Ye9VaP": {
+          "type": "question_answer",
+          "settings": {
+            "question": "What Is Inside The Cartridge Box?",
+            "answer": "<p>Phoenix Gravity Carbon Filter Elements includes the following accessories, 1) Filter elements pre-fitted with wingnut and washers 2) AISI 304 Grade Stainless steel spigot  3) Lid Knob 4) A single spare set of Washers and wingnut in case the existing filter washer and wing nut are damaged or misplaced 5) A spare hole blockers 6) instruction manual</p>"
+          }
+        },
+        "question_answer_PmK7Dw": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Will Phoenix Gravity Filters Remove Water Hardness?",
+            "answer": "<p>No. Phoenix Carbon Filter Elements are designed to remove up to 99.99% of chlorine, lead and over 100 other unwanted substances from your drinking water.</p>"
+          }
+        },
+        "tab_gWaeJ9": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Shipping & Returns"
+          }
+        },
+        "question_answer_3ahAVy": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Where Does Phoenix Gravity Ship To?",
+            "answer": "<p>We currently ship to the US. We’re working on shipping to more locations.</p>"
+          }
+        },
+        "question_answer_m8Tx6L": {
+          "type": "question_answer",
+          "settings": {
+            "question": "What’s Your Return And Exchange Policy?",
+            "answer": "<p>We'll be able to accept returns initiated within 30 days of purchase. You will be responsible for the safe return of the item, which must arrive in a resealable condition in the original packaging.</p><p>Once we accept the return we’ll refund you via the original payment method within 10 working days. We also offer a 100 Day Money-back Guarantee on our complete Gravity Water Filter Systems.</p>"
+          }
+        },
+        "question_answer_ptLkai": {
+          "type": "question_answer",
+          "settings": {
+            "question": "My Item Has Arrived Damaged Or Incorrect, What Can I Do?",
+            "answer": "<p>Please send a photograph of your full order including the packaging along with your order number to our support team at hello@phoenixwaterfilters.com, and we’ll get back to you as a matter of priority within 24 hours.</p>"
+          }
+        },
+        "tab_ECHmz8": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Warranty And 100 Day Money-Back Guarantee"
+          }
+        },
+        "question_answer_PBrxJH": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Does The 100-Day Money-Back Guarantee Work?",
+            "answer": "<p>The 100-Day Money Back Guarantee is applicable only to the Phoenix Gravity Systems purchased with the AISI 304 Grade Stainless Steel housings housings, via our website. The trial is not applicable for replacement filters and accessories purchased separately. </p><p><strong>Here’s how it works:</strong></p><p>Purchase your Phoenix Gravity Water Filter System via our website. Once it arrives, start using it straight away.</p><p>If you don’t fall in love with your Phoenix Gravity System within 100 days of use from the date of delivery, contact our support team to initiate a return. The return must be initiated within 100 days from the date of delivery.</p><p>The system must be returned complete with all original parts and packaging. The AISI 304 Grade Stainless Steel housing should not be dented or otherwise damaged. The filter elements must not be cracked or damaged upon our receipt of the return.</p><p>Upon safe receipt of the system and inspection of condition, we will be in touch to initiate a full refund to your original payment method. This process may take up to 10 business days to complete.</p><p><a href=\"/pages/contact-us\" title=\"Contact Us\">Talk To Us About The 100-Day Money Back Guarantee.</a></p>"
+          }
+        },
+        "question_answer_9PacW4": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Is The 100-Day Return Policy Valid If I Order From Amazon?",
+            "answer": "<p>No. Your Phoenix Gravity Filter system must be purchased via our website to qualify for our 100-day money back guarantee.</p>"
+          }
+        },
+        "question_answer_PX9aAb": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Does The Warranty Work?",
+            "answer": "<p>We offer a 1 year warranty on Phoenix Gravity 304 Grade Stainless Steel Spigots and Carbon Elements. You’re protected against any defects in material and workmanship.</p><p>We offer a 6 month warranty on all other parts and accessories. You’re protected against any defects in material and workmanship.</p>"
+          }
+        },
+        "tab_dRxTYU": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Your Account And Subscriptions"
+          }
+        },
+        "question_answer_Dxw7at": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Can I Get A Subscription On My Elements?",
+            "answer": "<p>Yes, we offer a subscription to replace your elements to save you time and headspace.</p>"
+          }
+        },
+        "question_answer_KbwaiP": {
+          "type": "question_answer",
+          "settings": {
+            "question": "What Is The Difference Between The Lifestyle Plan and Complete Lifestyle Plan?",
+            "answer": "<p>Both the Lifestyle Plan and Complete Lifestyle Plan is our solution to help everyday families achieve safe and clean water all year round, on their own terms. </p><p>The Lifestyle Plan offers the complete solution with our carbon filters delivered automatically every 12 months. </p><p>The Complete Lifestyle Plan offers Carbon Filter elements annually and FluoRid Media Refills for the POSTreat Fluoride Removal Filter elements every 4 months, straight to your door.</p>"
+          }
+        },
+        "question_answer_qqfJMR": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Do I Make Changes To My Subscription?",
+            "answer": "<p>Your subscription can be amended and updated from your Phoenix Gravity Account. Once you’ve logged into your account, click on subscriptions to make any changes.</p><p>If you need any further help, please don’t hesitate to contact us.</p>"
+          }
+        },
+        "question_answer_wpkPRR": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Can I Skip Or Cancel My Subscription?",
+            "answer": "<p>Yes, you can make changes to frequency or cancel your subscription at any time.</p><p>Please note that cancelling your subscription will forfeit any special pricing on your subscription, so if you wish to re-subscribe after canceling, you may not be able to recover the same special pricing you had previously.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "tab_BLqDaC",
+        "question_answer_Hymyxe",
+        "question_answer_LTARrj",
+        "question_answer_7Up3zj",
+        "question_answer_BnC9e4",
+        "question_answer_A9iNex",
+        "question_answer_64UFaw",
+        "question_answer_8KcMyC",
+        "question_answer_dH8NcP",
+        "tab_ppWrr4",
+        "question_answer_C63EBU",
+        "question_answer_AyJqRC",
+        "question_answer_fAdiE4",
+        "question_answer_qJMxwN",
+        "question_answer_rePDXn",
+        "question_answer_cTYjCB",
+        "question_answer_hJmLgr",
+        "question_answer_DATHAh",
+        "question_answer_6y6mHA",
+        "question_answer_93dijN",
+        "question_answer_Ye9VaP",
+        "question_answer_PmK7Dw",
+        "tab_gWaeJ9",
+        "question_answer_3ahAVy",
+        "question_answer_m8Tx6L",
+        "question_answer_ptLkai",
+        "tab_ECHmz8",
+        "question_answer_PBrxJH",
+        "question_answer_9PacW4",
+        "question_answer_PX9aAb",
+        "tab_dRxTYU",
+        "question_answer_Dxw7at",
+        "question_answer_KbwaiP",
+        "question_answer_qqfJMR",
+        "question_answer_wpkPRR"
+      ],
+      "settings": {
+        "heading": "Got Questions? We’ve Got Answers…",
+        "content": ""
+      }
+    },
     "accordion_tabs_kBhDkz": {
       "type": "accordion-tabs",
       "blocks": {
@@ -1327,6 +1567,7 @@
         "question_answer_ENTnPb",
         "question_answer_VTzXmQ"
       ],
+      "disabled": true,
       "settings": {
         "heading": "Got Questions? We’ve Got Answers…",
         "content": ""
@@ -1402,14 +1643,13 @@
   },
   "order": [
     "product_hero_og_alt_gReXNE",
-    "custom_nice_product_UFqVMW",
     "custom_nice_product_v2_JjCEBd",
     "9600faf5-31b8-4d01-817d-b44b276a1d60",
     "secondary_details_qTHLFy",
     "blocks_iFaweq",
-    "1775640310f950968e",
     "custom_html_eqYJTa",
-    "features_Nhkfiz",
+    "custom_certificate_info_card_pJcd48",
+    "custom_certificate_info_card_NF87fy",
     "product_feature_ckk7jj",
     "e7fc5ca3-7826-4ae3-8fda-deda4cc2fcf9",
     "custom_code_section_kFnpWQ",
@@ -1424,6 +1664,7 @@
     "cards_pUAXFa",
     "copy_image_JCKnek",
     "product_reviews_J4aYbK",
+    "accordion_tabs_bULkgE",
     "accordion_tabs_kBhDkz",
     "gallery_9QfaL3"
   ]

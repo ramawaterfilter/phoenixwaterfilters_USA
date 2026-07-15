@@ -1,0 +1,88 @@
+span.appstle_subscription_amount_compare_at_price.transcy-money {
+  display: inline !important;
+  font-size: inherit !important;
+}
+#add-to-cart > div.priceline.my-5 > span:nth-child(2).product-dyn-price.m-0 {
+  display: none !important;
+}
+.sticky-add-to-cart .appstle_subscription_final_price + .sub-price {
+  display: none !important;
+}
+
+.appstleSellingPlanDescription > p {
+  margin-bottom: -5px;
+}
+.appstle_subscription_save {
+  display: none !important;
+}
+
+.WIDGET_TYPE_7 span.appstle-save-badge {
+  font-size: 10px;
+}
+
+.sticky-add-to-cart .appstle_subscription_final_price ~ [data-price] {
+  display: none !important;
+}
+
+.WIDGET_TYPE_7 .appstle_widget_title {
+  margin-bottom: 0px !important;
+}
+#shopify-section-template--17715791331371__product_hero_og_alt_gReXNE
+  .appstle-save-badge {
+  display: none !important;
+}
+
+#appstle_selling_plan_label_20[value="8995766315"]
+  + label
+  > span.appstle-text-and-badge-wrapper
+  > span.appstle-save-badge,
+#appstle_selling_plan_label_20[value="8995799083"]
+  + label
+  > span.appstle-text-and-badge-wrapper
+  > span.appstle-save-badge {
+  visibility: hidden !important;
+}
+
+#appstle_selling_plan_label_20[value="8995766315"]
+  + label
+  > span.appstle-text-and-badge-wrapper
+  > span.appstle-save-badge::after,
+#appstle_selling_plan_label_20[value="8995799083"]
+  + label
+  > span.appstle-text-and-badge-wrapper
+  > span.appstle-save-badge::after {
+  visibility: visible !important;
+  content: "SAVE UP TO 55%" !important;
+  background-color: black !important;
+  padding: 0.75em 0.75em;
+  border-radius: 5px;
+  font-weight: bold;
+  transform: none;
+  vertical-align: middle;
+  color: white !important;
+  margin-left: -70px;
+}
+
+/* Show Appstle text ONLY on Gravity Water Filter product */
+.product-gravity-water-filter .appstle_one_time_description_text {
+  display: block !important;
+}
+
+#add-to-cart > div.priceline > span:nth-child(2) {
+  display: none !important;
+}
+
+/* Match one-time purchase price layout when subscription is selected */
+.priceline[data-appstle-price-modified="true"] {
+  text-decoration: none !important;
+}
+
+.custom-nice-product__price-stock:has(.appstle_subscription_final_price) {
+  justify-content: flex-start !important;
+  gap: 8px !important;
+}
+.section-producthero
+  .priceline[style="text-decoration: line-through;"]
+  span[data-price] {
+  display: none !important;
+}

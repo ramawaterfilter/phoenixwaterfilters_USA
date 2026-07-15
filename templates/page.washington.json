@@ -397,8 +397,8 @@
       "name": "Recent Articles",
       "settings": {
         "blog": "post",
-        "heading": "Water Filter Guides for Miami Homes & FAQS",
-        "heading1": "<p>Learn about Miami water contamination issues, tap water safety, and how to choose the right gravity  filter for your Miami home - plus answers to the questions we hear most.</p>",
+        "heading": "Resources & FAQs for Washington Water Filters ",
+        "heading1": "<p>Everything Washington residents need to understand their tap water, make informed choices, and find the right filtration solution for their home – all in one place.</p>",
         "posts_per_page": 3,
         "desktop_columns": 3,
         "tablet_columns": 2,
@@ -459,59 +459,57 @@
         "text_8HeDjV": {
           "type": "text",
           "settings": {
-            "question": "Is Miami's water quality safe?",
-            "answer": "<p>The water quality in Miami is at or above the minimum federal level required by law; however, Miami's water may contain pollutants such as microplastics, lead, and disinfection byproducts. Due to local conditions and old infrastructure, additional filtration is often suggested.</p>"
+            "question": "Is Washington DC tap water safe to drink? ",
+            "answer": "<p>DC water is technically federal compliant; however, it also contains 37 detected contaminants, including 13 that are above independent health guidelines. While it is 'legal', that does necessarily translate into it being 'safe'.</p>"
           }
         },
         "text_QbTBtT": {
           "type": "text",
           "settings": {
-            "question": "What contaminants does Phoenix Gravity remove from Miami tap water?",
-            "answer": "<p>Phoenix Gravity Water Filters eliminate 99.9% of all local pollutants, such as lead, microplastics, PFASs, and byproducts of disinfection (TTHMs/ HAA5). It also provides efficient filtration for industrial runoff or the nitrates of the Miami water quality report.</p>"
+            "question": "Can you drink DC tap water directly from the tap? ",
+            "answer": "<p>Yes, but there are risks. Tap water quality in Washington varies depending on neighbourhood, age of pipes and location of lead service lines, so filtration is a strongly recommended precaution.</p>"
           }
         },
         "text_XbcVQV": {
           "type": "text",
           "settings": {
-            "question": "Does Phoenix Gravity ship to Miami and South Florida?",
-            "answer": "<p>Of course! Phoenix Gravity provides free shipping to Miami and all of South Florida. We ship out quickly, so you will have great-tasting, clean drinking water ASAP.</p>"
+            "question": "How serious is Washington water contamination from lead? ",
+            "answer": "<p>Very serious. Lead contamination in Washington water is due to the countless numbers of aged pipes. These pipes are still being used. There is not a safe level of lead exposure, particularly among children and pregnant mothers.</p>"
           }
         },
         "text_NXHddK": {
           "type": "text",
           "settings": {
-            "question": "What warranty and guarantee come with the Phoenix Gravity filter?",
-            "answer": "<p>Phoenix Gravity Filter is covered by a 10-year warranty, and if, for any reason, you decide you don't like the water, you can return it within 100 days.</p>"
+            "question": "What is the current state of Washington contaminated water from PFAS? ",
+            "answer": "<p><strong>PFAS in Washington water</strong> has been found in a variety of water sources around Washington, including the Potomac River and industrially contaminated sites. Known as \"forever chemicals,\" PFAS do not degrade and steadily build up in the body over time.</p>"
           }
         },
         "text_yUeHba": {
           "type": "text",
           "settings": {
-            "question": "How often do I need to replace the Carbon filter elements?",
-            "answer": "<p>One pair of Phoenix Gravity Carbon filter elements is good for up to 5,500 gallons of water. So for most homes in Miami, you will be enjoying many years of fresh water at a price of less than 5 cents per gallon.</p>"
+            "question": "What makes a water filter truly effective for Washington homes?",
+            "answer": "<p>This level of contamination is, in general, more difficult and much more complex in nature. Lead, oxides from corroding pipes, PFAS from industrial run-off, TTHMs from chlorination, Atrazine from agricultural run-off ,all require different filtration methods. <strong>washington water filter systems</strong> are not one size fits all; rather, they should be created to meet the needs of this specific combination or elimination of up to 99.9% of the particular contaminants.</p>"
           }
         },
         "text_fE9Y4D": {
           "type": "text",
           "settings": {
-            "question": "Do I need a plumber or any installation for Phoenix Gravity Filters?",
-            "answer": "<p>There is no need for a plumber because of the tool-free gravity design of the system; there is no installation required and no power needed. The system offers the easiest solution to keep your Miami tap water safe from lead and microplastics and provide you with clean drinking water.</p>"
+            "question": "What are the best Washington water filter systems for everyday use? ",
+            "answer": "<p><strong>Washington water filter systems</strong> include pitchers designed for use on your countertop and those installed underneath the sink. If you want to be fully protected from lead, PFAS, and disinfection byproducts then a certified multi-stage system like Phoenix Gravity Water Filter is the best.</p>"
           }
         },
         "text_XzRedf": {
           "type": "text",
-          "disabled": true,
           "settings": {
-            "question": "Why is chloramine used in New York water?",
-            "answer": "<p>The main reason chloramines are added to NY water is because they provide protection for the water by serving as a disinfectant while being transported through pipes to customers. Chloramines can leave a particular flavor in the water therefore, they may need to be filtered to improve their quality. </p>"
+            "question": "Do I need a whole house water filter in Washington? ",
+            "answer": "<p>If you own an older property or where you live is in a danger zone of contamination, installation of a <strong>whole house water filter in Washington</strong> can guarantee that all water in your house is free from the highest level of impurities.</p>"
           }
         },
         "text_bVMT6E": {
           "type": "text",
-          "disabled": true,
           "settings": {
-            "question": "What is chromium 6 in New York water and should I worry?",
-            "answer": "<p>Chromium (VI) is a toxic heavy metal that is found in trace amounts in NY water and is associated with industrial pollution. The greatest worry is for long-term exposure; therefore, any kind of effective filtration is very important. </p>"
+            "question": "Why choose a stainless steel water filter Washington? ",
+            "answer": "<p>The durable construction of a <strong>stainless steel water filter in Washington</strong> is not only long-lasting and resistant to pathogens but also offers a great alternative to conventional plastic filter housings as they will not leach toxic chemicals into your drinking water.</p>"
           }
         }
       },
@@ -531,7 +529,7 @@
       ],
       "name": "Dropdown Accordion",
       "settings": {
-        "heading": "Frequently Asked Questions About Miami Water",
+        "heading": "Frequently Asked Questions About Washington Water",
         "content": "",
         "show_shipping": false,
         "accordion_styles": "full-width",
@@ -541,6 +539,7 @@
     },
     "product_slider_bL3VzA": {
       "type": "product-slider",
+      "disabled": true,
       "custom_css": [
         "@media (min-width: 768px) {h2.text-center {font-family: Open Sans; font-weight: 600; font-size: 52px; letter-spacing: 0%; padding-top: 30px; padding-bottom: 12px; } .container {max-width: 98% !important; }}",
         " {padding-top: 50px;}",
@@ -549,7 +548,7 @@
       ],
       "name": "Product Slider",
       "settings": {
-        "heading": "Water Filter Guides for Miami Homes & FAQS",
+        "heading": "Top Home Filters for Washington Homes",
         "select-products": [
           "carbon-filter-element",
           "gravity-water-filter",
@@ -606,7 +605,7 @@
         "phone_label": "Phone Number",
         "phone_number": "1 (800) 917-0455",
         "email_label": "Email Address",
-        "email_address": "hello@yourstore.com",
+        "email_address": "hello@phoenixwaterfilters.com",
         "show_name_field": true,
         "split_name_fields": false,
         "name_placeholder": "Full Name",

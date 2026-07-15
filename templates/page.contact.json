@@ -39,243 +39,243 @@
         "col2_content": "<p><a href=\"mailto:hello@phoenixwaterfilters.com\" title=\"mailto:hello@phoenixwaterfilters.com\">hello@phoenixwaterfilters.com</a></p>"
       }
     },
-    "accordion_tabs_MFqHDx": {
+    "accordion_tabs_KTyyDw": {
       "type": "accordion-tabs",
       "blocks": {
-        "tab_HPXac4": {
+        "tab_hDBiGq": {
           "type": "tab",
           "settings": {
             "tab_title": "Set Up & Maintenance"
           }
         },
-        "question_answer_K38zCJ": {
+        "question_answer_Pqe3YT": {
           "type": "question_answer",
           "settings": {
-            "question": "Is It Essential To Prime The Carbon Cartridges?",
-            "answer": "<p>Priming the Carbon Cartridges is the first step to ensuring your cartridges are completely free of any residuals from the manufacturing process. The residuals are completely normal and safe but can lead to cloudy water if the cartridges are not correctly primed.</p><p>We recommend priming your Carbon Cartridges for at least three minutes. If not primed sufficiently, the first four rounds of filtered water may have cloudy white particles that can be safely discarded.</p><p>NB: The recommended number of priming rounds depends on the type of cart you have. </p>"
+            "question": "Is It Essential To Prime The Carbon Filter Elements?",
+            "answer": "<p>Priming the Carbon Filter Elements is the first step to ensuring your filters are completely free of any residuals from the manufacturing process. The residuals are completely normal and safe but can lead to cloudy water if the filters are not correctly primed.</p><p>We recommend priming your Carbon Filter Elements for at least three minutes. If not primed sufficiently, the first four rounds of filtered water may have cloudy white particles that can be safely discarded.</p>"
           }
         },
-        "question_answer_YH9Tyg": {
+        "question_answer_eCbxRD": {
           "type": "question_answer",
           "settings": {
             "question": "Why Is My Water Cloudy?",
-            "answer": "<p>Don’t worry, cloudy water after initial installation is normal and completely harmless. It’s simply safe residual dust from the manufacturing process. It can occur if the cartridges are not correctly primed - and we recommend priming cartridges fully (see above).</p><p>If it is not primed, it can take about four rounds of filtered water to clear.</p>"
+            "answer": "<p>Don’t worry, cloudy water after initial installation is normal and completely harmless. It’s simply safe residual dust from the manufacturing process. It can occur if the filters are not correctly primed - and we recommend priming filters fully (see above).</p><p>If it is not primed, it can take about four rounds of filtered water to clear.</p>"
           }
         },
-        "question_answer_jEVb8T": {
+        "question_answer_GjGdar": {
           "type": "question_answer",
           "settings": {
-            "question": "How Long Will My Carbon Cartridges Last?",
-            "answer": "<p>We recommend replacing your Carbon Cartridges every 12 months . </p>"
+            "question": "How Long Will My Carbon Filter Elements Last?",
+            "answer": "<p>We recommend replacing your Carbon Filter Elements every 12 months.</p>"
           }
         },
-        "question_answer_iD9QdM": {
+        "question_answer_rQbdRp": {
           "type": "question_answer",
           "settings": {
-            "question": "How Long Will The POSTreat Fluoride Removal Filters Last?",
-            "answer": "<p>Our POSTreat Filter Cartridges are made from 304-Stainless Steel and are designed to last for years - which is why we include a 1 year warranty with our products.</p><p>The media inside our proprietary FluoRid media will last for 1,060 gallons and need replacing approximately 4 months. </p><p>We also offer a subscription service for replacement media - we’ll remember when they’re due, so you don’t have to. </p>"
+            "question": "How Long Will The POSTreat Fluoride Removal Filter Elements  Last?",
+            "answer": "<p>Our POSTreat Fluoride Removal Filter Elements are made from AISI 304 Grade Stainless Steel and are designed to last for years - which is why we include a 1 year warranty with our products.</p><p>The proprietary FluoRid media will last for 1060 gallons and need replacing approximately 4 months. </p><p>We also offer a subscription service for replacement media - we’ll remind you when they’re due, so you don’t have to. </p>"
           }
         },
-        "question_answer_jQNRA4": {
+        "question_answer_LJg4xR": {
           "type": "question_answer",
           "settings": {
-            "question": "How Long Will The FluoRide Media In The POSTreat Last?",
-            "answer": "<p>The lifespan of a pair of POSTreat Fluoride Removal filters are upto 1,060 gallons. It is recommended to replace the media with \"FluoRid Media Refill\" every 4-6months.</p>"
+            "question": "How Long Will The FluoRid Media In The POSTreat Last?",
+            "answer": "<p>The lifespan of a pair of POSTreat Fluoride Removal Filter Elements are upto 1060 gallons. It is recommended to replace the \"FluoRid Media Refill\" every 4-6months.</p>"
           }
         },
-        "question_answer_jPbHhA": {
+        "question_answer_ynfDYc": {
           "type": "question_answer",
           "settings": {
-            "question": "Will I Be Able To Assemble My System And Change My Cartridges Myself?",
+            "question": "Will I Be Able To Assemble My System And Change My Filters Myself?",
             "answer": "<p>Yes! Our systems are designed to be extremely easy to assemble and everything you need will be included. You can do it yourself with just your hands - there’s no specialist tools, plumbers or electricians required.</p><p>We include full instructions with every unit and we’re always here to help. </p>"
           }
         },
-        "question_answer_X8BdNU": {
+        "question_answer_448rbf": {
           "type": "question_answer",
           "settings": {
             "question": "My Phoenix Gravity Water Filter Has Water Dripping In Between The Upper And Lower Chambers, What Does This Mean?",
-            "answer": "<p>This will be from over-filling the Water Filter System. Careful use can help prevent overfilling by checking how much water is in the lower chamber before filling the upper chamber.</p><p>Once you get to know your usage rates the re-filling process will become second nature!</p><p>We also sell a vision spigot which will enable you to see the water level from the outside.  </p>"
+            "answer": "<p>This will be from over-filling the Water Filter System. Careful use can help prevent overfilling by checking how much water is in the lower chamber before filling the upper chamber.</p><p>Once you get to know your usage rates the re-filling process will become second nature!</p><p>We also sell a Stainless Steel Spigot With Water Level Gauge which will enable you to see the water level from the outside.  </p>"
           }
         },
-        "question_answer_UDnhbf": {
+        "question_answer_LNULJ4": {
           "type": "question_answer",
           "settings": {
-            "question": "How Frequently Do I Need To Change My Cartridges?",
-            "answer": "<p>This depends on the usage frequency and quality of your water input. As a guide, we recommend replacing them at the following milestones:</p><p>Carbon Cartridges: 6 months.</p><p>POSTreat (and FluoRid Media Refill): 4 months</p><p>We also offer a subscription service, which also works out to 5% off each order. Let us remember when you need to change your cartridge, so you don’t have to!</p>"
+            "question": "How Frequently Do I Need To Change My Filters?",
+            "answer": "<p>This depends on the usage frequency and quality of your water input. As a guide, we recommend replacing them at the following milestones:</p><p>Carbon Filter Elements: 12 months.</p><p>POSTreat (and FluoRid Media Refill): 4 months</p><p>We also offer a subscription service, which also works out to 5% off each order. Let us remember when you need to change your filter, so you don’t have to!</p>"
           }
         },
-        "tab_WjcFUA": {
+        "tab_WeGUGT": {
           "type": "tab",
           "settings": {
             "tab_title": "Filtration"
           }
         },
-        "question_answer_yUixgf": {
+        "question_answer_64Uph3": {
           "type": "question_answer",
           "settings": {
             "question": "How Do Your Filters Work?",
-            "answer": "<p>We use the highest grade 304 stainless steel, natural coconut carbon and other natural materials. Plus the mighty force of gravity! Our advanced filtration system removes up to 99.99% of commonly occurring contaminants and retains up to 100% of nutrients.</p>"
+            "answer": "<p>We use the highest grade AISI 304 Grade Stainless Steel, natural coconut carbon and other natural materials. Plus the mighty force of gravity! Our advanced filtration system removes up to 99.99% of commonly occurring contaminants and retains up to 100% of nutrients.</p>"
           }
         },
-        "question_answer_TwmjtY": {
+        "question_answer_VgwXnc": {
           "type": "question_answer",
           "settings": {
             "question": "What Do Your Filters Really Remove?",
-            "answer": "<p>Phoenix Gravity Carbon Filter Elements are made from pure coconut shells, which are a sustainable and renewable resource. The carbon in the filters is activated, which means that it has a high surface area and is very porous. This allows it to trap a wide range of contaminants, including chlorine, heavy metals, and other impurities.  </p><p>Phoenix Gravity Carbon Filters are designed to provide clean, odorless water with a great taste. They do not release any harmful chemicals or by-products into the water, and they are very effective at removing chlorine and other volatile organic compounds A pair of carbon elements can filter liters of water by providing safe and healthy drinking water.</p>"
+            "answer": "<p>Phoenix Gravity Carbon Filter Elements are made from pure coconut shells, which are a sustainable and renewable resource. The carbon in the filters is activated, which means that it has a high surface area and is very porous. This allows it to trap a wide range of contaminants, including chlorine, heavy metals, and other impurities. </p><p>Phoenix Gravity Carbon Filters are designed to provide clean, odorless water with a great taste. They do not release any harmful chemicals or by-products into the water, and they are very effective at removing chlorine and other volatile organic compounds. A pair of carbon filter elements can filter gallons of water by providing safe and healthy drinking water.</p>"
           }
         },
-        "question_answer_9yMg4X": {
+        "question_answer_JW7yTE": {
           "type": "question_answer",
           "settings": {
             "question": "Do Phoenix Gravity Filters Remove Residual Pharmaceutical Waste?",
-            "answer": "<p>Yes, up to 99.99%! Both our primary Carbon Elements have been independently tested for many Volatile Organic compounds including 1,4- dichlorobenzene, 2-Butanone, Acetone, Allyl Chloride and many more.</p>"
+            "answer": "<p>Yes, up to 99.99%! our primary Carbon Filter Elements have been independently tested for many Volatile Organic compounds including 1,4- dichlorobenzene, 2-Butanone, Acetone, Allyl Chloride and many more.</p>"
           }
         },
-        "question_answer_YaqX9K": {
+        "question_answer_t9UALm": {
           "type": "question_answer",
           "settings": {
             "question": "Do Your Filters Remove Fluoride?",
-            "answer": "<p>Yes — our POSTreat Fluoride Removal Filter removes over 95% of fluoride from your tap water. It works as an add-on to the main Carbon Filter system.</p>"
+            "answer": "<p>Yes ! We’ve designed a specialist fluoride removal filter called the POSTreat to remove over 95% of fluoride from your tap water.</p><p>Made from the AISI 304 Grade Stainless Steel, it’s completely reusable and refillable, with our POSTreat FluoRid Media Refill. The POSTtreat can be used in conjunction with primary Carbon Filter Elements.</p>"
           }
         },
-        "question_answer_tyGX4z": {
+        "question_answer_Dxgp8q": {
           "type": "question_answer",
           "settings": {
             "question": "Do The Phoenix Carbon Cartridges Remove Fluoride",
-            "answer": "<p>They certainly can! We’ve designed a specialist fluoride cartridge called the POSTreat to remove over 95% of fluoride from your tap water.</p><p>Made from the highest grade stainless steel, it’s completely reusable and refillable, with our POSTreat FluoRid Refill. The POSTtreat can be used in conjunction with primary Carbon Cartridges.</p>"
+            "answer": "<p>Yes ! We’ve designed a specialist fluoride cartridge called the POSTreat to remove over 95% of fluoride from your tap water.</p><p>Made from the highest grade stainless steel, it’s completely reusable and refillable, with our POSTreat FluoRid Refill. The POSTtreat can be used in conjunction with primary Carbon Cartridges.</p>"
           }
         },
-        "question_answer_8w4QRz": {
+        "question_answer_6BDPdx": {
           "type": "question_answer",
           "settings": {
             "question": "Do Phoenix Carbon Elements Eliminate Phthalates From Water?",
-            "answer": "<p>While we have not specifically tested for the removal of phthalates, our Phoenix Carbon Cartridges are made with highest grade activated coconut carbon, which is known for its effectiveness in adsorbing phthalates from water. We are constantly improving and testing our filters.</p>"
+            "answer": "<p>While we have not specifically tested for the removal of phthalates, our Phoenix Carbon Filter Elements are made with highest grade activated coconut carbon, which is known for its effectiveness in adsorbing phthalates from water. We are constantly improving and testing our filters.</p>"
           }
         },
-        "question_answer_TYE6gG": {
+        "question_answer_Fi8kxF": {
           "type": "question_answer",
           "settings": {
             "question": "Do Phoenix Gravity Filters Remove Estrogen?",
             "answer": "<p>While we have not specifically tested for the removal of estrogen, our Phoenix Carbon Filters are made with activated coconut carbon, which is known for its effectiveness in adsorbing estrogen from water. We are constantly improving and testing our filters.</p>"
           }
         },
-        "question_answer_6C7C4q": {
+        "question_answer_HdaYqW": {
           "type": "question_answer",
           "settings": {
-            "question": "How Do Your Gravity Filters And Cartridges Compare To Others?",
-            "answer": "<p>We are one of the leaders in advanced Gravity Filtration. With over 50 plus years’ experience of manufacturing in-house, we have complete control over the process and the quality of our filters and cartridges. We are enormously proud of the effort it has taken us to become a leading manufacturer of Gravity Water Filters.</p>"
+            "question": "How Do Your Gravity Filters And Filter Elements Compare To Others?",
+            "answer": "<p>We are one of the leaders in advanced Gravity Filtration. With over 50 plus years’ experience of manufacturing in-house, we have complete control over the process and the quality of our filters and filter elements. We are enormously proud of the effort it has taken us to become a leading manufacturer of Gravity Water Filters.</p>"
           }
         },
-        "question_answer_rzDw8m": {
+        "question_answer_k9B7Mh": {
           "type": "question_answer",
           "settings": {
             "question": "Are Your Filters As Comprehensive As Berkey?",
-            "answer": "<p>Absolutely! We have run extensive and independent tests on our filters for a variety of chemical contaminants such as Lead, chlorine, chromium, Volatile organic compounds and 100 more.<br/></p><p>What’s more, with over 50 plus years’ experience of in-house manufacturing - we’re one of the leading global manufacturers of stainless steel gravity filtration systems. We also have complete control over the process and the quality of our filters and replacement filter elements. We are enormously proud of the effort it has taken us to become the world’s leading manufacturer of Gravity Water Filters.</p>"
+            "answer": "<p>Absolutely! We have run extensive and independent tests on our filters for a variety of chemical contaminants such as Lead, chlorine, chromium, Volatile organic compounds and 100 more.</p><p>What’s more, with over 50 plus years’ experience of in-house manufacturing - we’re one of the leading global manufacturers of AISI 304 Grade Stainless Steel gravity filtration systems. We also have complete control over the process and the quality of our filters and replacement filter elements. We are enormously proud of the effort it has taken us to become the world’s leading manufacturer of Gravity Water Filters.</p>"
           }
         },
-        "question_answer_XdWRAV": {
+        "question_answer_HBFxVY": {
           "type": "question_answer",
           "settings": {
             "question": "Do Phoenix Gravity Filters Lower The TDS?",
             "answer": "<p>TDS stands for Total Dissolved Solids and is measured in parts per million (ppm) or parts per billion (ppb). It’s a measure of the water’s organic and inorganic content including minerals and nutrients.</p><p>Natural water will have a TDS reading from minerals and nutrients picked up from the rocks and ground it flows through. It’s generally accepted that 300 ppm is a good mineral content. We purposely do not bring our TDS to zero, because we’re all about preserving the natural vitamins and minerals your body needs</p>"
           }
         },
-        "question_answer_6UmfCk": {
+        "question_answer_yiELPC": {
           "type": "question_answer",
           "settings": {
             "question": "What Is Inside The Cartridge Box?",
-            "answer": "<p>Phoenix Gravity Carbon Filter Elements includes the following accessories, 1) filter cartridges pre-fitted with wingnut and washers 2) Stainless Steel Spigot 3) Lid Knob 4) A single spare set of Washers and wingnut in case the existing filter washer and wing nut are damaged or misplaced 5) A spare hole blockers 6) instruction manual</p>"
+            "answer": "<p>Phoenix Gravity Carbon Filter Elements includes the following accessories, 1) Filter elements pre-fitted with wingnut and washers 2) AISI 304 Grade Stainless steel spigot  3) Lid Knob 4) A single spare set of Washers and wingnut in case the existing filter washer and wing nut are damaged or misplaced 5) A spare hole blockers 6) instruction manual</p>"
           }
         },
-        "question_answer_N8dCix": {
+        "question_answer_Me6gMg": {
           "type": "question_answer",
           "settings": {
             "question": "Will Phoenix Gravity Filters Remove Water Hardness?",
             "answer": "<p>No. Phoenix Carbon Filter Elements are designed to remove up to 99.99% of chlorine, lead and over 100 other unwanted substances from your drinking water.</p>"
           }
         },
-        "tab_iwXnJF": {
+        "tab_UmXBRG": {
           "type": "tab",
           "settings": {
             "tab_title": "Shipping & Returns"
           }
         },
-        "question_answer_zVFWhQ": {
+        "question_answer_9radMm": {
           "type": "question_answer",
           "settings": {
             "question": "Where Does Phoenix Gravity Ship To?",
             "answer": "<p>We currently ship to the US. We’re working on shipping to more locations.</p>"
           }
         },
-        "question_answer_JTNDKd": {
+        "question_answer_cRMXhG": {
           "type": "question_answer",
           "settings": {
             "question": "What’s Your Return And Exchange Policy?",
             "answer": "<p>We'll be able to accept returns initiated within 30 days of purchase. You will be responsible for the safe return of the item, which must arrive in a resealable condition in the original packaging.</p><p>Once we accept the return we’ll refund you via the original payment method within 10 working days. We also offer a 100 Day Money-back Guarantee on our complete Gravity Water Filter Systems.</p>"
           }
         },
-        "question_answer_4GFfqF": {
+        "question_answer_jLP8At": {
           "type": "question_answer",
           "settings": {
             "question": "My Item Has Arrived Damaged Or Incorrect, What Can I Do?",
             "answer": "<p>Please send a photograph of your full order including the packaging along with your order number to our support team at hello@phoenixwaterfilters.com, and we’ll get back to you as a matter of priority within 24 hours.</p>"
           }
         },
-        "tab_RzNhx4": {
+        "tab_JKinfe": {
           "type": "tab",
           "settings": {
             "tab_title": "Warranty And 100 Day Money-Back Guarantee"
           }
         },
-        "question_answer_Adrh9b": {
+        "question_answer_cz7Ghz": {
           "type": "question_answer",
           "settings": {
             "question": "How Does The 100-Day Money-Back Guarantee Work?",
-            "answer": "<p>The 100-Day Money Back Guarantee is applicable only to the Phoenix Gravity Systems purchased with the stainless steel housings, via our website. The trial is not applicable for replacement filters and accessories purchased separately. Here’s how it works:</p><p>Purchase your Phoenix Gravity Water Filter System via our website. Once it arrives, start using it straight away.</p><p>If you don’t fall in love with your Phoenix Gravity System within 100 days of use from the date of delivery, contact our support team to initiate a return. The return must be initiated within 100 days from the date of purchase.</p><p>The system must be returned complete with all original parts and packaging. The stainless steel housing should not be dented or otherwise damaged. The filter cartridges must not be cracked or damaged upon our receipt of the return.</p><p>Upon safe receipt of the system and inspection of condition, we will be in touch to initiate a full refund to your original payment method. This process may take up to 10 business days to complete.</p><p><a href=\"/pages/contact-us\" title=\"Contact Us\">Talk To Us About The 100-Day Money Back Guarantee.</a></p>"
+            "answer": "<p>The 100-Day Money Back Guarantee is applicable only to the Phoenix Gravity Systems purchased with the AISI 304 Grade Stainless Steel housings housings, via our website. The trial is not applicable for replacement filters and accessories purchased separately. </p><p><strong>Here’s how it works:</strong></p><p>Purchase your Phoenix Gravity Water Filter System via our website. Once it arrives, start using it straight away.</p><p>If you don’t fall in love with your Phoenix Gravity System within 100 days of use from the date of delivery, contact our support team to initiate a return. The return must be initiated within 100 days from the date of delivery.</p><p>The system must be returned complete with all original parts and packaging. The AISI 304 Grade Stainless Steel housing should not be dented or otherwise damaged. The filter elements must not be cracked or damaged upon our receipt of the return.</p><p>Upon safe receipt of the system and inspection of condition, we will be in touch to initiate a full refund to your original payment method. This process may take up to 10 business days to complete.</p><p><a href=\"/pages/contact-us\" title=\"Contact Us\">Talk To Us About The 100-Day Money Back Guarantee.</a></p>"
           }
         },
-        "question_answer_Th8mED": {
+        "question_answer_fxdFUX": {
           "type": "question_answer",
           "settings": {
             "question": "Is The 100-Day Return Policy Valid If I Order From Amazon?",
             "answer": "<p>No. Your Phoenix Gravity Filter system must be purchased via our website to qualify for our 100-day money back guarantee.</p>"
           }
         },
-        "question_answer_HFdwpa": {
+        "question_answer_Dqhqi6": {
           "type": "question_answer",
           "settings": {
             "question": "How Does The Warranty Work?",
-            "answer": "<p>We offer a 1 year warranty on Phoenix Gravity Stainless Steel Spigots and Carbon Elements. You’re protected against any defects in material and workmanship.</p><p>We offer a 6 month warranty on all other parts and accessories. You’re protected against any defects in material and workmanship.</p>"
+            "answer": "<p>We offer a 1 year warranty on Phoenix Gravity 304 Grade Stainless Steel Spigots and Carbon Elements. You’re protected against any defects in material and workmanship.</p><p>We offer a 6 month warranty on all other parts and accessories. You’re protected against any defects in material and workmanship.</p>"
           }
         },
-        "tab_bXDpWP": {
+        "tab_CyyYVJ": {
           "type": "tab",
           "settings": {
             "tab_title": "Your Account And Subscriptions"
           }
         },
-        "question_answer_GPzrVP": {
+        "question_answer_XcFbfb": {
           "type": "question_answer",
           "settings": {
             "question": "Can I Get A Subscription On My Elements?",
             "answer": "<p>Yes, we offer a subscription to replace your elements to save you time and headspace.</p>"
           }
         },
-        "question_answer_NcqtkM": {
+        "question_answer_naGy6q": {
           "type": "question_answer",
           "settings": {
             "question": "What Is The Difference Between The Lifestyle Plan and Complete Lifestyle Plan?",
-            "answer": "<p>Both the Lifestyle Plan and Complete Lifestyle Plan is our solution to help everyday families achieve safe and clean water all year round, on their own terms. </p><p>The Lifestyle Plan offers the complete solution with our carbon filters delivered automatically every 12 months. </p><p>The Complete Lifestyle Plan offers the complete solution with our carbon filters and POStreat Steel Fluoride Media delivered automatically every 12 months.</p>"
+            "answer": "<p>Both the Lifestyle Plan and Complete Lifestyle Plan is our solution to help everyday families achieve safe and clean water all year round, on their own terms. </p><p>The Lifestyle Plan offers the complete solution with our carbon filters delivered automatically every 12 months. </p><p>The Complete Lifestyle Plan offers Carbon Filter elements annually and FluoRid Media Refills for the POSTreat Fluoride Removal Filter elements every 4 months, straight to your door.</p>"
           }
         },
-        "question_answer_ENTnPb": {
+        "question_answer_k64EMh": {
           "type": "question_answer",
           "settings": {
             "question": "How Do I Make Changes To My Subscription?",
             "answer": "<p>Your subscription can be amended and updated from your Phoenix Gravity Account. Once you’ve logged into your account, click on subscriptions to make any changes.</p><p>If you need any further help, please don’t hesitate to contact us.</p>"
           }
         },
-        "question_answer_VTzXmQ": {
+        "question_answer_A8QwXJ": {
           "type": "question_answer",
           "settings": {
             "question": "Can I Skip Or Cancel My Subscription?",
@@ -284,45 +284,45 @@
         }
       },
       "block_order": [
-        "tab_HPXac4",
-        "question_answer_K38zCJ",
-        "question_answer_YH9Tyg",
-        "question_answer_jEVb8T",
-        "question_answer_iD9QdM",
-        "question_answer_jQNRA4",
-        "question_answer_jPbHhA",
-        "question_answer_X8BdNU",
-        "question_answer_UDnhbf",
-        "tab_WjcFUA",
-        "question_answer_yUixgf",
-        "question_answer_TwmjtY",
-        "question_answer_9yMg4X",
-        "question_answer_YaqX9K",
-        "question_answer_tyGX4z",
-        "question_answer_8w4QRz",
-        "question_answer_TYE6gG",
-        "question_answer_6C7C4q",
-        "question_answer_rzDw8m",
-        "question_answer_XdWRAV",
-        "question_answer_6UmfCk",
-        "question_answer_N8dCix",
-        "tab_iwXnJF",
-        "question_answer_zVFWhQ",
-        "question_answer_JTNDKd",
-        "question_answer_4GFfqF",
-        "tab_RzNhx4",
-        "question_answer_Adrh9b",
-        "question_answer_Th8mED",
-        "question_answer_HFdwpa",
-        "tab_bXDpWP",
-        "question_answer_GPzrVP",
-        "question_answer_NcqtkM",
-        "question_answer_ENTnPb",
-        "question_answer_VTzXmQ"
+        "tab_hDBiGq",
+        "question_answer_Pqe3YT",
+        "question_answer_eCbxRD",
+        "question_answer_GjGdar",
+        "question_answer_rQbdRp",
+        "question_answer_LJg4xR",
+        "question_answer_ynfDYc",
+        "question_answer_448rbf",
+        "question_answer_LNULJ4",
+        "tab_WeGUGT",
+        "question_answer_64Uph3",
+        "question_answer_VgwXnc",
+        "question_answer_JW7yTE",
+        "question_answer_t9UALm",
+        "question_answer_Dxgp8q",
+        "question_answer_6BDPdx",
+        "question_answer_Fi8kxF",
+        "question_answer_HdaYqW",
+        "question_answer_k9B7Mh",
+        "question_answer_HBFxVY",
+        "question_answer_yiELPC",
+        "question_answer_Me6gMg",
+        "tab_UmXBRG",
+        "question_answer_9radMm",
+        "question_answer_cRMXhG",
+        "question_answer_jLP8At",
+        "tab_JKinfe",
+        "question_answer_cz7Ghz",
+        "question_answer_fxdFUX",
+        "question_answer_Dqhqi6",
+        "tab_CyyYVJ",
+        "question_answer_XcFbfb",
+        "question_answer_naGy6q",
+        "question_answer_k64EMh",
+        "question_answer_A8QwXJ"
       ],
       "settings": {
-        "heading": "But first! The answer to your question(s) may already be available on our website.",
-        "content": "<p>Click below if you want to know about:</p>"
+        "heading": "",
+        "content": "<p>Got Questions? We’ve Got Answers…</p>"
       }
     },
     "gallery_fRnMAA": {
@@ -396,7 +396,7 @@
   "order": [
     "hero_ikQman",
     "b74c754b-5cda-41d7-924f-0d9b99a91ca1",
-    "accordion_tabs_MFqHDx",
+    "accordion_tabs_KTyyDw",
     "gallery_fRnMAA"
   ]
 }

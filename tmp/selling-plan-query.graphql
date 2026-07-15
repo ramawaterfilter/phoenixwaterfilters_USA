@@ -1,0 +1,60 @@
+query {
+  products(first: 20, query: "selling_plan_groups_count:>0") {
+    nodes {
+      id
+      title
+      handle
+      variants(first: 10) {
+        nodes {
+          id
+          title
+          price
+        }
+      }
+      sellingPlanGroups(first: 10) {
+        nodes {
+          id
+          name
+          options
+          sellingPlans(first: 10) {
+            nodes {
+              id
+              name
+              options
+              pricingPolicies {
+                __typename
+                ... on SellingPlanFixedPricingPolicy {
+                  adjustmentType
+                  adjustmentValue {
+                    __typename
+                    ... on MoneyV2 {
+                      amount
+                      currencyCode
+                    }
+                    ... on SellingPlanPricingPolicyPercentageValue {
+                      percentage
+                    }
+                  }
+                }
+                ... on SellingPlanRecurringPricingPolicy {
+                  adjustmentType
+                  adjustmentValue {
+                    __typename
+                    ... on MoneyV2 {
+                      amount
+                      currencyCode
+                    }
+                    ... on SellingPlanPricingPolicyPercentageValue {
+                      percentage
+                    }
+                  }
+                  afterCycle
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

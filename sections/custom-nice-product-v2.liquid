@@ -1,13 +1,8 @@
 {% comment %}Variant-aware product section. Uses custom.variant_images with product.media fallback.{% endcomment %}
 {% liquid
-  assign current_variant = product.selected_or_first_available_variant
-  if product.handle == 'gravity-water-filter' and product.selected_variant == blank
-    for variant in product.variants
-      if variant.id == 41868949094443
-        assign current_variant = variant
-        break
-      endif
-    endfor
+  assign current_variant = product.selected_variant
+  if current_variant == blank
+    assign current_variant = product.variants.first
   endif
   assign variant_images = current_variant.metafields.custom.variant_images.value
   assign custom_gallery = false
@@ -35,7 +30,7 @@
 >
   <div class="container">
     <div class="row justify-content-center custom-nice-product__layout">
-      <div class="col-12 col-lg-6">
+      <div class="col-12 col-lg-6{% if section.settings.desktop_media_behavior == 'sticky' %} custom-nice-product__media-column--sticky{% endif %}">
         <div class="custom-nice-product__media">
           {% if section.settings.show_badge and badge_text != blank %}
             <div class="product-badge">{{ badge_text | escape }}</div>
@@ -53,9 +48,11 @@
                     assign media_alt = media.alt | default: product.title
                     assign loading = 'lazy'
                     assign priority = 'low'
+                    assign decoding = 'async'
                     if forloop.first
                       assign loading = 'eager'
                       assign priority = 'high'
+                      assign decoding = 'sync'
                     endif
                   %}
                   <div
@@ -82,6 +79,7 @@
                               sizes: gallery_image_sizes,
                               loading: loading,
                               fetchpriority: priority,
+                              decoding: decoding,
                               alt: media_alt
                           -}}
                         </a>
@@ -96,9 +94,11 @@
                   {%- assign media_alt = media.alt | default: product.title -%}
                   {%- assign loading = 'lazy' -%}
                   {%- assign priority = 'low' -%}
+                  {%- assign decoding = 'async' -%}
                   {%- if media.id == active_media_id or active_media_id == blank and rendered_media == 1 -%}
                     {%- assign loading = 'eager' -%}
                     {%- assign priority = 'high' -%}
+                    {%- assign decoding = 'sync' -%}
                   {%- endif %}
                   <div class="swiper-slide" data-media-id="{{ media.id }}" data-media-type="{{ media.media_type }}">
                     {% case media.media_type %}
@@ -116,6 +116,7 @@
                               sizes: gallery_image_sizes,
                               loading: loading,
                               fetchpriority: priority,
+                              decoding: decoding,
                               alt: media_alt
                           -}}
                         </a>
@@ -129,7 +130,7 @@
                           {{-
                             media.preview_image
                             | image_url: width: 1200
-                            | image_tag: loading: loading, alt: media_alt
+                            | image_tag: loading: loading, decoding: decoding, alt: media_alt
                           -}}
                         </a>
                       {% when 'video' -%}
@@ -142,7 +143,7 @@
                           {{-
                             media.preview_image
                             | image_url: width: 1200
-                            | image_tag: loading: loading, alt: media_alt
+                            | image_tag: loading: loading, decoding: decoding, alt: media_alt
                           -}}
                         </a>
                       {% when 'model' %}
@@ -159,7 +160,7 @@
                         {{-
                           product.featured_image
                           | image_url: width: 1200
-                          | image_tag: loading: 'eager', fetchpriority: 'high', alt: product.title
+                          | image_tag: loading: 'eager', fetchpriority: 'high', decoding: 'sync', alt: product.title
                         -}}
                       {%- else -%}
                         {{- 'product-1' | placeholder_svg_tag -}}
@@ -186,11 +187,7 @@
                   aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
                   aria-label="Show {{ media.media_type | default: 'media' }} {{ forloop.index }}"
                 >
-                  {{-
-                    media.preview_image
-                    | image_url: width: 900
-                    | image_tag: loading: 'lazy', alt: media_alt
-                  -}}
+                  {{- media.preview_image | image_url: width: 900 | image_tag: loading: 'lazy', alt: media_alt -}}
                   {%- if media.media_type == 'video' -%}
                     <span class="custom-nice-product__play" aria-hidden="true">&#9654;</span>
                   {%- endif -%}
@@ -507,7 +504,9 @@
                     aria-label="{{ block.settings.accessibility_label | escape }}"
                   >
                     {% for type in shop.enabled_payment_types limit: block.settings.icon_limit %}
-                      {{ type | payment_type_svg_tag }}
+                      {% unless type == 'google_pay' %}
+                        {{ type | payment_type_svg_tag }}
+                      {% endunless %}
                     {% else %}
                       {% if request.design_mode %}
                         <span class="custom-nice-product__editor-placeholder"
@@ -555,11 +554,20 @@
                           <a href="{{ link }}">
                         {% endif %}
                         {% if icon != blank %}
-                          {{ icon | image_url: width: 96 | image_tag: loading: 'lazy', widths: '48, 96', alt: '' }}
+                          {{
+                            icon
+                            | image_url: width: 136
+                            | image_tag:
+                              loading: 'lazy',
+                              widths: '68, 136',
+                              width: 68,
+                              height: 40,
+                              alt: ''
+                          }}
                         {% elsif fallback_asset != blank %}
-                          <img src="{{ fallback_asset | asset_url }}" alt="" width="48" height="48" loading="lazy">
+                          <img src="{{ fallback_asset | asset_url }}" alt="" width="68" height="40" loading="lazy">
                         {% elsif fallback_url != blank %}
-                          <img src="{{ fallback_url }}" alt="" width="48" height="48" loading="lazy">
+                          <img src="{{ fallback_url }}" alt="" width="68" height="40" loading="lazy">
                         {% endif %}
                         <span>{{ text | escape }}</span>
                         {% if link != blank %}
@@ -633,6 +641,14 @@
 
   #CustomNiceProduct-{{ section.id }} .custom-nice-product__media {
     position: relative;
+  }
+
+  @media (min-width: 992px) {
+    #CustomNiceProduct-{{ section.id }} .custom-nice-product__media-column--sticky {
+      position: sticky;
+      top: {{ section.settings.desktop_sticky_top }}px;
+      align-self: flex-start;
+    }
   }
 
   #CustomNiceProduct-{{ section.id }} .custom-nice-product__slider {
@@ -796,6 +812,15 @@
 
   #CustomNiceProduct-{{ section.id }} .custom-nice-product__description {
     margin-bottom: 15px;
+    font-family: Value Sans, Arial, sans-serif;
+    font-size: 1.6rem;
+    line-height: 1.5;
+  }
+
+  #CustomNiceProduct-{{ section.id }} .custom-nice-product__description p {
+    margin: 0 0 1em;
+    font: inherit;
+    line-height: inherit;
   }
 
   #CustomNiceProduct-{{ section.id }} .custom-nice-product__group {
@@ -1041,7 +1066,7 @@
   #CustomNiceProduct-{{ section.id }} .custom-nice-product__option-copy > b {
     font-size: 14px;
     line-height: 1.25;
-    
+
   }
 
   #CustomNiceProduct-{{ section.id }} .custom-nice-product__option-copy span,
@@ -1049,7 +1074,7 @@
     margin: 2px 0 0;
     font-size: 1.5rem;
     line-height: 1.25;
-    
+
   }
 
   #CustomNiceProduct-{{ section.id }} .custom-nice-product__card input:checked + .custom-nice-product__card-content {
@@ -2015,6 +2040,26 @@
       "label": "Hide variant-attached fallback media",
       "default": false
     },
+    {
+      "type": "select",
+      "id": "desktop_media_behavior",
+      "label": "Desktop media behavior",
+      "options": [
+        { "value": "static", "label": "Static" },
+        { "value": "sticky", "label": "Sticky while scrolling" }
+      ],
+      "default": "static"
+    },
+    {
+      "type": "range",
+      "id": "desktop_sticky_top",
+      "label": "Desktop sticky top offset",
+      "min": 0,
+      "max": 300,
+      "step": 5,
+      "unit": "px",
+      "default": 130
+    },
     { "type": "checkbox", "id": "show_badge", "label": "Show product badge", "default": true },
     {
       "type": "text",
@@ -2221,16 +2266,18 @@
       ]
     }
   ],
-  "enabled_on": {   "templates": ["product"] }
+  "enabled_on": { "templates": ["product"] }
 }
 {% endschema %}
 
-{% comment %} p.custom-nice-product__status {
-  display: none;
-}
-.btn,
-button,
-input[type="submit"],
-input[type="button"] {
-  font-size: 2rem; 
-} {% endcomment %}
+{% comment %}
+  p.custom-nice-product__status {
+    display: none;
+  }
+  .btn,
+  button,
+  input[type="submit"],
+  input[type="button"] {
+    font-size: 2rem;
+  }
+{% endcomment %}

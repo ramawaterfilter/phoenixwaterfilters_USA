@@ -6,61 +6,63 @@
   endif
 %}
 
-<div
+<variant-visibility-scope
   id="CustomEmbed-{{ section.id }}"
   class="custom-embed-video-container"
+  data-variant-visibility-item
+  {% if conditional_visibility %}data-variant-visibility-ids="{{ section.settings.variant_ids | escape }}"{% endif %}
+  current-variant-id="{{ current_variant.id }}"
   {% if conditional_visibility %}
     hidden
   {% endif %}
 >
-  <div class="responsive-embed-wrapper" data-embed-mount>
-    {% unless conditional_visibility %}
-      {{ section.settings.embed_code }}
-    {% endunless %}
-  </div>
+  <div class="responsive-embed-wrapper" data-variant-visibility-mount></div>
 
   {% if conditional_visibility %}
-    <template data-embed-template>
+    <template data-variant-visibility-template>
+      {{ section.settings.embed_code }}
+    </template>
+  {% else %}
+    <template data-custom-embed-template>
       {{ section.settings.embed_code }}
     </template>
   {% endif %}
-</div>
+</variant-visibility-scope>
 
 {% if conditional_visibility %}
+  <script src="{{ 'variant-visibility.js' | asset_url }}" defer></script>
+{% else %}
   <script>
     (() => {
-      const section = document.getElementById('CustomEmbed-{{ section.id }}');
-      const allowedIds = {{ section.settings.variant_ids | json }}
-        .split(',')
-        .map(id => id.trim())
-        .filter(Boolean);
-      let loaded = false;
+      const root = document.getElementById('CustomEmbed-{{ section.id }}');
+      if (!root) return;
 
-      const loadEmbed = () => {
-        if (loaded) return;
+      const load = () => {
+        if (root.dataset.customEmbedLoaded === 'true') return;
+        const mount = root.querySelector('[data-variant-visibility-mount]');
+        const template = root.querySelector('[data-custom-embed-template]');
+        if (!mount || !template) return;
 
-        const mount = section.querySelector('[data-embed-mount]');
-        const template = section.querySelector('[data-embed-template]');
         mount.append(template.content.cloneNode(true));
-
         mount.querySelectorAll('script').forEach(oldScript => {
-          const newScript = document.createElement('script');
-          [...oldScript.attributes].forEach(({ name, value }) => newScript.setAttribute(name, value));
-          newScript.textContent = oldScript.textContent;
-          oldScript.replaceWith(newScript);
+          const script = document.createElement('script');
+          Array.from(oldScript.attributes).forEach(({ name, value }) => script.setAttribute(name, value));
+          script.textContent = oldScript.textContent;
+          oldScript.replaceWith(script);
         });
-
-        loaded = true;
+        root.dataset.customEmbedLoaded = 'true';
       };
 
-      const update = variantId => {
-        const show = allowedIds.includes(String(variantId));
-        section.hidden = !show;
-        if (show) loadEmbed();
-      };
-
-      update({{ current_variant.id | json }});
-      document.addEventListener('variant:change', event => update(event.detail?.variant?.id));
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(entries => {
+          if (!entries.some(entry => entry.isIntersecting)) return;
+          observer.disconnect();
+          load();
+        }, { rootMargin: '600px 0px' });
+        observer.observe(root);
+      } else {
+        window.addEventListener('load', load, { once: true });
+      }
     })();
   </script>
 {% endif %}
@@ -80,12 +82,18 @@
   }
 
   .responsive-embed-wrapper iframe,
+  .responsive-embed-wrapper wistia-player,
   .responsive-embed-wrapper .wistia_responsive_wrapper {
     position: absolute !important;
     top: 0;
     left: 0;
     width: 100% !important;
     height: 100% !important;
+  }
+
+  .responsive-embed-wrapper wistia-player {
+    display: block;
+    aspect-ratio: 16 / 9;
   }
 {% endstylesheet %}
 

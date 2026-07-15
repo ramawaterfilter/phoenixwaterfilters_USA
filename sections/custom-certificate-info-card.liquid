@@ -1,5 +1,18 @@
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign section_conditional_visibility = false
+  if section.settings.visibility == 'variant_ids' and section.settings.variant_ids != blank
+    assign section_conditional_visibility = true
+  endif
+%}
+<variant-visibility-scope current-variant-id="{{ current_variant.id }}">
 <section
   class="custom-certificate-info-card custom-certificate-info-card--mobile-{{ section.settings.mobile_layout }}"
+  data-variant-visibility-item
+  {% if section_conditional_visibility %}data-variant-visibility-ids="{{ section.settings.variant_ids | escape }}"{% endif %}
+  {% if section_conditional_visibility %}
+    hidden
+  {% endif %}
   style="
     --certificate-background: {{ section.settings.background_color }};
     --certificate-text: {{ section.settings.text_color }};
@@ -40,15 +53,27 @@
         endfor
       %}
 
-      <ol class="custom-certificate-info-card__steps{% if has_markers %} custom-certificate-info-card__steps--has-icons{% endif %}" role="list">
+      <ol class="custom-certificate-info-card__steps{% if has_markers %} custom-certificate-info-card__steps--has-icons{% endif %}" role="list" data-variant-visibility-group>
         {% for block in section.blocks %}
           {% liquid
             assign step_number = forloop.index | prepend: '0' | slice: -2, 2
             assign step_label = block.settings.step_label
             assign badge_text = block.settings.badge_text | default: step_label | default: step_number
+            assign block_conditional_visibility = false
+            if block.settings.visibility == 'variant_ids' and block.settings.variant_ids != blank
+              assign block_conditional_visibility = true
+            endif
           %}
 
-          <li class="custom-certificate-info-card__step{% if block.settings.icon != blank %} custom-certificate-info-card__step--has-icon{% else %} custom-certificate-info-card__step--no-icon{% endif %}" {{ block.shopify_attributes }}>
+          <li
+            class="custom-certificate-info-card__step{% if block.settings.icon != blank %} custom-certificate-info-card__step--has-icon{% else %} custom-certificate-info-card__step--no-icon{% endif %}"
+            data-variant-visibility-item
+            {% if block_conditional_visibility %}data-variant-visibility-ids="{{ block.settings.variant_ids | escape }}"{% endif %}
+            {% if block_conditional_visibility %}
+              hidden
+            {% endif %}
+            {{ block.shopify_attributes }}
+          >
             {% if badge_text != blank %}
               <span class="custom-certificate-info-card__mobile-number" aria-hidden="true">{{ badge_text | escape }}</span>
             {% endif %}
@@ -58,12 +83,12 @@
                 <div class="custom-certificate-info-card__icon">
                   {{
                     block.settings.icon
-                    | image_url: width: 220
+                    | image_url: width: 720
                     | image_tag:
                       class: 'custom-certificate-info-card__icon-image',
                       loading: 'lazy',
-                      widths: '90, 140, 180, 220',
-                      sizes: '(max-width: 749px) 72px, 104px',
+                      widths: '180, 220, 320, 440, 560, 720',
+                      sizes: '(max-width: 749px) 72px, 144px',
                       alt: block.settings.icon_alt
                   }}
                 </div>
@@ -97,6 +122,7 @@
     {% endif %}
   </div>
 </section>
+</variant-visibility-scope>
 
 {% stylesheet %}
   .custom-certificate-info-card {
@@ -198,27 +224,28 @@
     height: 14.4rem;
     margin: 0 auto 3.7rem;
     place-items: center;
-    border: .2rem solid #dfe5ef;
+    overflow: hidden;
     border-radius: 50%;
-    background: var(--certificate-background);
+    background: #fff;
   }
 
   .custom-certificate-info-card__icon {
     display: grid;
-    width: 10.8rem;
-    height: 10.8rem;
+    width: 100%;
+    height: 120%;
     place-items: center;
     overflow: hidden;
-    border: .2rem solid var(--certificate-accent);
+    border: 0;
     border-radius: 50%;
-    background: var(--certificate-icon-background);
+    background: transparent;
   }
 
   .custom-certificate-info-card__icon-image {
     display: block;
-    width: 100%;
-    height: 100%;
+    width: 120%;
+    height: 125%;
     object-fit: contain;
+    max-width: 150%;
   }
 
   .custom-certificate-info-card__icon-text {
@@ -290,7 +317,7 @@
 
     .custom-certificate-info-card__header {
       margin: 0 0 1.8rem;
-      text-align: left;
+      text-align: center;
     }
 
     .custom-certificate-info-card__eyebrow {
@@ -301,8 +328,8 @@
     }
 
     .custom-certificate-info-card__heading {
-      font-family: Georgia Pro Bold, Georgia, serif;
-      font-size: 2rem;
+      /* font-family: Georgia Pro Bold, Georgia, serif; */
+      font-size: 2.4rem;
       letter-spacing: -.04rem;
       line-height: 1.15;
     }
@@ -468,7 +495,7 @@
       height: 3.4rem;
       margin: 0;
       border: 0;
-      background: transparent;
+      background: #F3F4F7;
     }
 
     .custom-certificate-info-card__icon {
@@ -534,14 +561,25 @@
     .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__icon-wrap {
       width: var(--certificate-mobile-icon-size);
       height: var(--certificate-mobile-icon-size);
-      /* border: .6rem solid #d3cacc;
-      background: #d3cacc; */
+      overflow: hidden;
+      background: #fff;
     }
 
     .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__icon {
-      width: calc(var(--certificate-mobile-icon-size) - .8rem);
-      height: calc(var(--certificate-mobile-icon-size) - .8rem);
-      border-width: .1rem;
+      position: relative;
+      width: 100%;
+      height: 130%;
+      border: 0;
+      background: #F3F4F7;
+    }
+
+    .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__icon-image {
+      position: relative;
+      width: 125%;
+      max-width: none;
+      height: 125%;
+      justify-self: center;
+      align-self: center;
     }
 
     .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__content,
@@ -566,6 +604,8 @@
     }
   }
 {% endstylesheet %}
+
+<script src="{{ 'variant-visibility.js' | asset_url }}" defer></script>
 
 {% schema %}
 {
@@ -642,6 +682,28 @@
         }
       ],
       "default": "card_list"
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "label": "Section visibility",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always"
+        },
+        {
+          "value": "variant_ids",
+          "label": "Selected variant IDs"
+        }
+      ],
+      "default": "always"
+    },
+    {
+      "type": "textarea",
+      "id": "variant_ids",
+      "label": "Section variant IDs",
+      "info": "Comma-separated variant IDs that should display this section"
     }
   ],
   "blocks": [
@@ -670,6 +732,28 @@
           "type": "text",
           "id": "icon_alt",
           "label": "Icon alt text"
+        },
+        {
+          "type": "select",
+          "id": "visibility",
+          "label": "Visibility",
+          "options": [
+            {
+              "value": "always",
+              "label": "Always"
+            },
+            {
+              "value": "variant_ids",
+              "label": "Selected variant IDs"
+            }
+          ],
+          "default": "always"
+        },
+        {
+          "type": "textarea",
+          "id": "variant_ids",
+          "label": "Variant IDs",
+          "info": "Comma-separated variant IDs that should display this step"
         },
         {
           "type": "inline_richtext",

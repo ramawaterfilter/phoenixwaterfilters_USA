@@ -1886,49 +1886,56 @@ html.with-fancybox body.hide-scrollbar {
   font-family: Inter;
   src: url(../assets/Inter-Regular.woff2) format("woff2"), url(../assets/Inter-Regular.woff) format("woff");
   font-weight: 400;
-  font-style: normal
+  font-style: normal;
+  font-display: swap
 }
 
 @font-face {
   font-family: Inter Bold;
   src: url(../assets/Inter-Bold.woff2) format("woff2"), url(../assets/Inter-Bold.woff) format("woff");
   font-weight: 700;
-  font-style: normal
+  font-style: normal;
+  font-display: swap
 }
 
 @font-face {
   font-family: Georgia Pro Bold;
   src: url(../assets/GeorgiaPro-Bold.woff2) format("woff2"), url(../assets/GeorgiaPro-Bold.woff) format("woff");
   font-weight: 700;
-  font-style: normal
+  font-style: normal;
+  font-display: swap
 }
 
 @font-face {
   font-family: Georgia Pro Semibold;
   src: url(../assets/GeorgiaPro-Semibold.woff2) format("woff2"), url(../assets/GeorgiaPro-Semibold.woff) format("woff");
   font-weight: 600;
-  font-style: normal
+  font-style: normal;
+  font-display: swap
 }
 
 @font-face {
   font-family: Value Sans;
   src: url(../assets/ValueSansPro-Regular.woff2) format("woff2"), url(../assets/ValueSansPro-Regular.woff) format("woff");
   font-weight: 400;
-  font-style: normal
+  font-style: normal;
+  font-display: swap
 }
 
 @font-face {
   font-family: Value Sans Bold;
   src: url(../assets/ValueSansPro-Bold.woff2) format("woff2"), url(../assets/ValueSansPro-Bold.woff) format("woff");
   font-weight: 700;
-  font-style: normal
+  font-style: normal;
+  font-display: swap
 }
 
 @font-face {
   font-family: Value Sans Medium;
   src: url(../assets/ValueSansPro-Medium.woff2) format("woff2"), url(../assets/ValueSansPro-Medium.woff) format("woff");
   font-weight: 500;
-  font-style: normal
+  font-style: normal;
+  font-display: swap
 }
 
 @font-face {
@@ -10166,7 +10173,7 @@ form select {
   height: 50px;
   border: 1px solid #dadada;
   margin-bottom: 15px;
-  font-family: Value Sans, sans-serif;
+  font-family: 'DM Sans' !important;
   font-size: 1.8rem;
   line-height: 1
 }

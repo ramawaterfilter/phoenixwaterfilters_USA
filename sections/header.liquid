@@ -1,319 +1,39 @@
-
-		<div class="site-header__top">
-	<div class="container">
-		<div class="row d-flex align-items-center justify-content-center">
-			
-			<div class="col-10">
-				{% render 'searchform' %}
-			</div>
-		</div>
-	</div>
-</div>
-			
-<div class="container">
-	<div class="row">
-		<div class="col-12">
-
-			<div class="site-header__main">
-					
-	            {% comment %}
-				
-				This gets a long string of all the menu handles. It's then matched to the hrefs set in the actual menu.
-				If a menu item links to another menu item, then we assume it wants it to act as a mega menu.
-
-				{% endcomment %}
-
-	            {%- capture allmenus -%}
-	            {%- for linklist in linklists -%}
-	            #{{ linklist.handle }}
-	            {%- endfor -%}
-	            {%- endcapture -%}
-
-							 {% comment %}
-HAMBURGER NOTE: Design was for a desktop with a hamburger nav that displayed all page links, with home and products in the main menu, this is why we built the nav using the mega menu funtion. We are now only showing the hamburger on mobile as we normally would so this function was not required.
-
-No time to revert. soz. 
-
-								 {% endcomment %}
-
-      <button
-        class="hamburger"
-        type="button"
-        aria-label="Open menu"
-        aria-expanded="false"
-        aria-controls="mobile-navigation-{{ section.id }}"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
-	      <div class="site-header__nav" id="mobile-navigation-{{ section.id }}">
-
-        <div class='site-header__drawer-logo'>
-          <a href='{{ routes.root_url }}' aria-label='{{ shop.name }}'>
-            {% if section.settings.sitelogo != blank %}
-              {{ section.settings.sitelogo | image_url: width: 240 | image_tag: alt: shop.name }}
-            {% endif %}
-          </a>
-        </div>
-
-					<ul>
-					    {% for link in section.settings.sitemenu.links %}
-
-					    	{% assign original_link = link.url | split: '#' %}
-					    	{% assign mega_menu_name = original_link[1] %}
-					    	{% assign original_link = original_link[0] %}
-                        {% assign is_navigation_menu = false %}
-                        {% if mega_menu_name == 'megamenu' %}
-                          {% assign is_navigation_menu = true %}
-                        {% endif %}
-
-			        		{% if allmenus contains mega_menu_name %}
-							    {% assign links = linklists[mega_menu_name].links %}
-						        <li class="{% if original_link == request.path %}active {% endif %}{% if is_navigation_menu %}nav-navigation{% endif %}" data-mega-menu="#{{ mega_menu_name }}">
-
-                                <a
-                                  href="{{ original_link }}"
-                                  {% if is_navigation_menu %}
-                                    class="navigation"
-                                    aria-label="Open menu"
-                                    aria-expanded="false"
-                                  {% else %}
-                                    aria-label="Mega menu"
-                                  {% endif %}
-                                >
-                                  {% unless is_navigation_menu %}
-                                    {{ link.title }}
-                                    {% if links.size > 0 %}
-                                      <span class="sub-menu-trigger"></span>
-                                    {% endif %}
-                                  {% endunless %}
-                                </a>
-
-									{% render 'megamenu', megamenu: mega_menu_name, index: forloop.index %}
-
-									{% if links.size > 0 %}
-						                <ul class="sub-menu">
-						                    {% for sublink in links %}
-						                    <li class="{% if sublink.url == request.path %}active{% endif %}">
-						                        <a href="{{ sublink.url }}" target="{{ sublink.target }}">
-						                       		{{ sublink.title }}
-						                   		</a>
-						                    </li>
-						                    {% endfor %}
-						                </ul>
-						            {% endif %}
-						        </li>
-				        	{% else %}
-							    {% assign links = link.links %}
-						        <li class="{% if original_link == request.path %}active{% endif %}">
-					           		<a href="{{ original_link }}" target="{{ link.target }}">
-						           		{{ link.title }}
-
-							            {% if link.links.size > 0 %}
-						           	 		<span class="sub-menu-trigger"></span>
-						        		{% endif %}
-						           	</a>
-									{% if links.size > 0 %}
-						                <ul class="sub-menu">
-						                    {% for sublink in links %}
-						                    <li class="{% if sublink.url == request.path %}active{% endif %}">
-						                        <a href="{{ sublink.url }}" target="{{ sublink.target }}">
-						                       		{{ sublink.title }}
-						                   		</a>
-						                    </li>
-						                    {% endfor %}
-						                </ul>
-						            {% endif %}
-						        </li>
-				        	{% endif %}
-					    {% endfor %}
-				</ul>
-			</div>
-
-			<div class="site-header__logo">
-					<a href="{{ routes.root_url }}">
-						{% if section.settings.sitelogo != blank %}
-	      	   	{{ section.settings.sitelogo | image_url: width: 1000 | image_tag: alt: shop.name }}
-					 	{% endif %}
-	        </a>
-	      </div>
-
-	            <div class="site-header__aux">
-
-							{% comment %} <ul>
-								{% if customer == nil %}
-				            <li class="d-block d-lg-none">
-				            	<a href="{{ routes.login_url }}">
-				            		{{ 'customer.log_in' | t }}
-				            	</a>
-				            </li>
-						{% else: %}
-				            <li class="d-block d-lg-none">
-				            	<a href="{{ routes.account_url }}">
-				            		{{ 'customer.account.title' | t }}
-				            	</a>
-				            </li>
-				            <li class="d-block d-lg-none">
-				            	<a href="{{ routes.logout_url }}">
-				            		{{ 'customer.log_out' | t }}
-				            	</a>
-				            </li>
-					{% endif; %}
-							</ul> {% endcomment %}
-							<ul class="site-header__top__nav">
-						{% if shop.customer_accounts_enabled %}
-						{% if customer == nil %}
-				            <li>
-				            	<a href="{{ routes.account_login_url }}">
-												<img src="{{ 'icon-account.svg' | asset_url }}" loading="lazy" width="24" height="24" title="Login" alt="Login" />
-				            	</a>
-				            </li>
-						{% else %}
-							<li>
-                            <a href="{{ routes.account_url }}" aria-label="Account">
-                              <span class="site-header__account-label">Welcome {{ customer.first_name }}</span>
-                              <img src="{{ 'icon-account.svg' | asset_url }}" loading="lazy" width="24" height="24" class="" alt="Welcome" />
-                            </a>
-					        </li>
-							<li class="site-header__logout">
-                            <a href="{{ routes.account_logout_url }}">
-                              {{ 'customer.log_out' | t }}
-                            </a>
-					        </li>
-						{% endif %}
-						{% endif %}
-						<li>
-                            <a href="#" class="search-toggle" aria-label="Open search">
-                              <img src="{{ 'icon-search.svg' | asset_url }}" loading="lazy" width="24" height="24" class="" alt="Search" />
-                            </a>
-					        </li>
-					</ul>
-				            	
-	                <div class="cart-icon">
-											
-	                    <a href="{{ routes.cart_url }}" {% if settings.enable_slide_cart %}data-cartslide{% endif %}>
-
-													<img src="{{ 'icon-cart.svg' | asset_url }}" loading="lazy" width="24" height="24" class="" alt="Cart" />
-	                        <span class="count">{{ cart.item_count }}</span>
-	                     
-	                    </a>
-	                </div>
-
-	                
-	            </div>
-            </div>
-
-		</div>
-	</div>
-</div>
-
-
-<script>
-// mob menu
-let hamburger = document.querySelector('.site-header__main > .hamburger');
-
-if (hamburger) {
-	hamburger.addEventListener('click', function() {
-		const isOpen = document.documentElement.classList.toggle('menu-open');
-		hamburger.setAttribute('aria-expanded', isOpen.toString());
-		hamburger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
-
-		if (newNavContainer && newNav) {
-			newNavContainer.classList.toggle('mega-active', isOpen);
-			newNav.setAttribute('aria-expanded', isOpen.toString());
-		}
-	});
-
-	document.addEventListener('keydown', function(event) {
-		if (event.key === 'Escape' && document.documentElement.classList.contains('menu-open')) {
-			document.documentElement.classList.remove('menu-open');
-			newNavContainer?.classList.remove('mega-active');
-			newNav?.setAttribute('aria-expanded', 'false');
-			hamburger.setAttribute('aria-expanded', 'false');
-			hamburger.setAttribute('aria-label', 'Open menu');
-			hamburger.focus();
-		}
-	});
-}
-
-let newNav = document.querySelector('.site-header__nav li[data-mega-menu="#megamenu"] > a.navigation');
-let newNavContainer = newNav ? newNav.closest('li') : null;
-
-// Open on hover (or click)
-if (newNavContainer) {
-    newNavContainer.addEventListener('click', function(event) {
-        // Check if the clicked element is newNav
-        if (event.target === newNav) {
-            event.preventDefault(); // Prevent default only if newNav is clicked
-            this.classList.add('mega-active');
-            newNav.setAttribute('aria-expanded', 'true');
-        }
-    });
-}
-
-// Close mega
-let closeMega = newNavContainer ? newNavContainer.querySelector('.megamenu .megamenu_close') : null;
-
-if (closeMega && newNav) {
-    closeMega.addEventListener('click', function(event) {
-        event.stopPropagation();  // Prevent event bubbling
-         
-        newNavContainer.classList.remove('mega-active');
-        newNav.setAttribute('aria-expanded', 'false');
-        document.documentElement.classList.remove('menu-open');
-        hamburger?.setAttribute('aria-expanded', 'false');
-        hamburger?.setAttribute('aria-label', 'Open menu');
-    });
-}
-
-
-
-
-
-// sub nav trigger
-let subNavTriggers = document.querySelectorAll('.sub-menu-trigger');
-subNavTriggers.forEach((el) => {
-	el.addEventListener('click', function(e){
-		e.preventDefault();
-		el.closest('li').classList.toggle('active');
-	});
-});
-
-// mega menu trigger
-let mmLinks = document.querySelectorAll('.megamenu__links li a');
-mmLinks.forEach(function(el, index){
-
-
-	el.addEventListener('mouseover', function(){
-		let thisIndex = el.dataset.index;
-		let relatedLists = el.closest('.megamenu').querySelectorAll('.megamenu li[data-index="'+thisIndex+'"]');
-		let activeLists =  el.closest('.megamenu').querySelectorAll('.megamenu li.active');
-
-		if(!relatedLists){
-			return;
-		}
-
-		activeLists.forEach((el) => {
-			el.classList.remove('active');
-		});
-
-		relatedLists.forEach((el) => {
-			el.classList.add('active');
-		});
-	});
-});
-
-</script>
-
-<script>
-  window.developer = atob("S2FsaWVzd2FyYW4gLSBXZWJzaXRlIERldmVsb3Blcg==");
-</script>
-
 <style>
 .site-header__drawer-logo {
 	display: none;
+}
+
+.site-header__aux {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	min-width: 11rem;
+	min-height: 2.4rem;
+}
+
+.site-header__top__nav {
+	display: flex;
+	align-items: center;
+	gap: 1.2rem;
+	margin: 0;
+	padding: 0;
+}
+
+.site-header__aux a,
+.site-header__aux .cart-icon a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.4rem;
+	min-height: 2.4rem;
+}
+
+.site-header__aux .count {
+	display: inline-flex;
+	min-width: 1.6rem;
+	height: 1.6rem;
+	align-items: center;
+	justify-content: center;
 }
 
 @media (max-width: 991.98px) {
@@ -527,6 +247,262 @@ mmLinks.forEach(function(el, index){
 }
 </style>
 
+		<div class="site-header__top">
+	<div class="container">
+		<div class="row d-flex align-items-center justify-content-center">
+			
+			<div class="col-10">
+				{% render 'searchform' %}
+			</div>
+		</div>
+	</div>
+</div>
+			
+<div class="container">
+	<div class="row">
+		<div class="col-12">
+
+			<div class="site-header__main">
+{%- capture allmenus -%}
+	            {%- for linklist in linklists -%}
+	            #{{ linklist.handle }}
+	            {%- endfor -%}
+	            {%- endcapture -%}
+<button
+        class="hamburger"
+        type="button"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-navigation-{{ section.id }}"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+	      <div class="site-header__nav" id="mobile-navigation-{{ section.id }}">
+
+        <div class='site-header__drawer-logo'>
+          <a href='{{ routes.root_url }}' aria-label='{{ shop.name }}'>
+            {% if section.settings.sitelogo != blank %}
+              {{ section.settings.sitelogo | image_url: width: 240 | image_tag: alt: shop.name }}
+            {% endif %}
+          </a>
+        </div>
+
+					<ul>
+					    {% for link in section.settings.sitemenu.links %}
+
+					    	{% assign original_link = link.url | split: '#' %}
+					    	{% assign mega_menu_name = original_link[1] %}
+					    	{% assign original_link = original_link[0] %}
+                        {% assign is_navigation_menu = false %}
+                        {% if mega_menu_name == 'megamenu' %}
+                          {% assign is_navigation_menu = true %}
+                        {% endif %}
+
+			        		{% if allmenus contains mega_menu_name %}
+							    {% assign links = linklists[mega_menu_name].links %}
+						        <li class="{% if original_link == request.path %}active {% endif %}{% if is_navigation_menu %}nav-navigation{% endif %}" data-mega-menu="#{{ mega_menu_name }}">
+
+                                <a
+                                  href="{{ original_link }}"
+                                  {% if is_navigation_menu %}
+                                    class="navigation"
+                                    aria-label="Open menu"
+                                    aria-expanded="false"
+                                  {% else %}
+                                    aria-label="Mega menu"
+                                  {% endif %}
+                                >
+                                  {% unless is_navigation_menu %}
+                                    {{ link.title }}
+                                    {% if links.size > 0 %}
+                                      <span class="sub-menu-trigger"></span>
+                                    {% endif %}
+                                  {% endunless %}
+                                </a>
+
+									{% render 'megamenu', megamenu: mega_menu_name %}
+
+									{% if links.size > 0 %}
+						                <ul class="sub-menu">
+						                    {% for sublink in links %}
+						                    <li class="{% if sublink.url == request.path %}active{% endif %}">
+						                        <a href="{{ sublink.url }}" target="{{ sublink.target }}">
+						                       		{{ sublink.title }}
+						                   		</a>
+						                    </li>
+						                    {% endfor %}
+						                </ul>
+						            {% endif %}
+						        </li>
+				        	{% else %}
+							    {% assign links = link.links %}
+						        <li class="{% if original_link == request.path %}active{% endif %}">
+					           		<a href="{{ original_link }}" target="{{ link.target }}">
+						           		{{ link.title }}
+
+							            {% if link.links.size > 0 %}
+						           	 		<span class="sub-menu-trigger"></span>
+						        		{% endif %}
+						           	</a>
+									{% if links.size > 0 %}
+						                <ul class="sub-menu">
+						                    {% for sublink in links %}
+						                    <li class="{% if sublink.url == request.path %}active{% endif %}">
+						                        <a href="{{ sublink.url }}" target="{{ sublink.target }}">
+						                       		{{ sublink.title }}
+						                   		</a>
+						                    </li>
+						                    {% endfor %}
+						                </ul>
+						            {% endif %}
+						        </li>
+				        	{% endif %}
+					    {% endfor %}
+				</ul>
+			</div>
+
+			<div class="site-header__logo">
+					<a href="{{ routes.root_url }}">
+						{% if section.settings.sitelogo != blank %}
+	      	   	{{ section.settings.sitelogo | image_url: width: 1000 | image_tag: alt: shop.name }}
+					 	{% endif %}
+	        </a>
+	      </div>
+
+	            <div class="site-header__aux">
+<ul class="site-header__top__nav">
+						{% if shop.customer_accounts_enabled %}
+						{% if customer == nil %}
+				            <li>
+				            	<a href="{{ routes.account_login_url }}">
+												<img src="{{ 'icon-account.svg' | asset_url }}" loading="lazy" width="24" height="24" title="Login" alt="Login" />
+				            	</a>
+				            </li>
+						{% else %}
+							<li>
+                            <a href="{{ routes.account_url }}" aria-label="Account">
+                              <span class="site-header__account-label">Welcome {{ customer.first_name }}</span>
+                              <img src="{{ 'icon-account.svg' | asset_url }}" loading="lazy" width="24" height="24" class="" alt="Welcome" />
+                            </a>
+					        </li>
+							<li class="site-header__logout">
+                            <a href="{{ routes.account_logout_url }}">
+                              {{ 'customer.log_out' | t }}
+                            </a>
+					        </li>
+						{% endif %}
+						{% endif %}
+						<li>
+                            <a href="#" class="search-toggle" aria-label="Open search">
+                              <img src="{{ 'icon-search.svg' | asset_url }}" loading="lazy" width="24" height="24" class="" alt="Search" />
+                            </a>
+					        </li>
+					</ul>
+				            	
+	                <div class="cart-icon">
+											
+	                    <a href="{{ routes.cart_url }}" {% if settings.enable_slide_cart %}data-cartslide{% endif %}>
+
+													<img src="{{ 'icon-cart.svg' | asset_url }}" loading="lazy" width="24" height="24" class="" alt="Cart" />
+	                        <span class="count">{{ cart.item_count }}</span>
+	                     
+	                    </a>
+	                </div>
+
+	                
+	            </div>
+            </div>
+
+		</div>
+	</div>
+</div>
+
+
+<script>
+let hamburger = document.querySelector('.site-header__main > .hamburger');
+
+if (hamburger) {
+	hamburger.addEventListener('click', function() {
+		const isOpen = document.documentElement.classList.toggle('menu-open');
+		hamburger.setAttribute('aria-expanded', isOpen.toString());
+		hamburger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+
+		if (newNavContainer && newNav) {
+			newNavContainer.classList.toggle('mega-active', isOpen);
+			newNav.setAttribute('aria-expanded', isOpen.toString());
+		}
+	});
+
+	document.addEventListener('keydown', function(event) {
+		if (event.key === 'Escape' && document.documentElement.classList.contains('menu-open')) {
+			document.documentElement.classList.remove('menu-open');
+			newNavContainer?.classList.remove('mega-active');
+			newNav?.setAttribute('aria-expanded', 'false');
+			hamburger.setAttribute('aria-expanded', 'false');
+			hamburger.setAttribute('aria-label', 'Open menu');
+			hamburger.focus();
+		}
+	});
+}
+
+let newNav = document.querySelector('.site-header__nav li[data-mega-menu="#megamenu"] > a.navigation');
+let newNavContainer = newNav ? newNav.closest('li') : null;
+if (newNavContainer) {
+    newNavContainer.addEventListener('click', function(event) {
+        if (event.target === newNav) {
+            event.preventDefault();
+            this.classList.add('mega-active');
+            newNav.setAttribute('aria-expanded', 'true');
+        }
+    });
+}
+let closeMega = newNavContainer ? newNavContainer.querySelector('.megamenu .megamenu_close') : null;
+
+if (closeMega && newNav) {
+    closeMega.addEventListener('click', function(event) {
+        event.stopPropagation();
+         
+        newNavContainer.classList.remove('mega-active');
+        newNav.setAttribute('aria-expanded', 'false');
+        document.documentElement.classList.remove('menu-open');
+        hamburger?.setAttribute('aria-expanded', 'false');
+        hamburger?.setAttribute('aria-label', 'Open menu');
+    });
+}
+let subNavTriggers = document.querySelectorAll('.sub-menu-trigger');
+subNavTriggers.forEach((el) => {
+	el.addEventListener('click', function(e){
+		e.preventDefault();
+		el.closest('li').classList.toggle('active');
+	});
+});
+let mmLinks = document.querySelectorAll('.megamenu__links li a');
+mmLinks.forEach(function(el){
+
+
+	el.addEventListener('mouseover', function(){
+		let thisIndex = el.dataset.index;
+		let relatedLists = el.closest('.megamenu').querySelectorAll('.megamenu li[data-index="'+thisIndex+'"]');
+		let activeLists =  el.closest('.megamenu').querySelectorAll('.megamenu li.active');
+
+		if(!relatedLists){
+			return;
+		}
+
+		activeLists.forEach((el) => {
+			el.classList.remove('active');
+		});
+
+		relatedLists.forEach((el) => {
+			el.classList.add('active');
+		});
+	});
+});
+
+</script>
 {% schema %}
 	{
 		"name": "Header",

@@ -1,7 +1,76 @@
+<style>
+  .us-water-badge {
+    display: inline-flex;
+    align-items: left;
+    justify-content: center;
+    gap: 12px;
 
-{% comment %}
-  Main Product
-{% endcomment %}
+    padding: 10px 18px;
+
+    background: #fff;
+    border: 2px solid #2D5CC7;
+    border-radius: 999px;
+
+    width: fit-content;
+    max-width: 100%;
+
+    box-sizing: border-box;
+margin-bottom: 20px;
+}
+
+.us-water-badge__flag {
+    width: 34px;
+    height: auto;
+    flex-shrink: 0;
+    display: block;
+}
+
+.us-water-badge__text {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2f2f2f;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .us-water-badge {
+        gap: 10px;
+        padding: 9px 16px;
+    }
+
+    .us-water-badge__flag {
+        width: 30px;
+    }
+
+    .us-water-badge__text {
+        font-size: 15px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+        .us-water-badge {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 14px;
+        gap: 15px;
+    }
+
+    .us-water-badge__flag {
+        width: 26px;
+    }
+
+       .us-water-badge__text {
+        font-size: 12px;
+        white-space: normal;
+        text-align: left;
+        line-height: 1.3;
+    }
+}
+</style>
 
 {% assign current_variant = product.selected_or_first_available_variant %}
 
@@ -113,6 +182,19 @@
         , section: section %}
 
       <h1>{{ product.title }}</h1>
+
+      <div class="us-water-badge">
+    <img
+        src="https://cdn.shopify.com/s/files/1/2644/2852/files/united-states-flag-icon.svg?v=1783937607"
+        alt="United States Flag"
+        class="us-water-badge__flag"
+    >
+
+    <span class="us-water-badge__text">
+        Specially Formulated for U.S. Water Conditions
+    </span>
+</div>
+
       <div class="product-rating">
         {% for block in section.blocks %}
           {% case block.type %}
@@ -323,7 +405,7 @@
             </s>
             </span>
             {% comment %}  {% endcomment %}    
-            <div class="sale-badge">SALE</div> 
+            {% comment %} <div class="sale-badge">SALE</div>  {% endcomment %}
         </div>
 
 
@@ -577,6 +659,13 @@
                     
                     
 </div>
+ 
+ 
+ 
+
+{% render 'sticky-add-to-cart' %}
+
+ 
 {% unless product == empty %}
 	<script>
 	    window.product = {{ product | json }} || {};

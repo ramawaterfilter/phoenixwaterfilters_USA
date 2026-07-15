@@ -128,7 +128,7 @@
         "height_mobile_large": 790,
         "bg_color": "#000000",
         "heading": "Common New York Water Issues",
-        "text": "<p>The question many people ask themselves is whether tap water in New York is safe to drink. Even though it meets federal standards, there are challenges of aging infrastructure and contaminants.</p><p>One of the major problems is lead of old service lines and plumbing that leads to the contamination of water in certain places. Other major issues to consider are:<br/></p><ul><li><strong>Microplastic pollution:</strong></li></ul><p></p><ul><li><strong>Pharmaceutical runoff</strong></li></ul><p></p><ul><li><strong>Decreased aesthetics</strong></li></ul><p></p><ul><li><strong>Biofilm formation</strong></li></ul>",
+        "text": "<p>The question many people ask themselves is whether tap water in New York is safe to drink. Even though it meets federal standards, there are challenges of aging infrastructure and contaminants.</p><p>One of the major problems is lead of old service lines and plumbing that leads to the contamination of water in certain places. Other major issues to consider are:<br/></p><ul><li><strong>Microplastic pollution</strong></li></ul><p></p><ul><li><strong>Pharmaceutical runoff</strong></li></ul><p></p><ul><li><strong>Decreased aesthetics</strong></li></ul><p></p><ul><li><strong>Biofilm formation</strong></li></ul>",
         "text_color": "#1e3a5f",
         "button_label": "",
         "button_link": "",
@@ -288,28 +288,28 @@
         "feature_col_2_KBpXf6": {
           "type": "feature_col_2",
           "settings": {
-            "title": "Step 2 : Fill  Fill with tap water",
+            "title": "Step 2 : Fill with tap water",
             "icon": "shopify://shop_images/Container.svg"
           }
         },
         "feature_col_1_NjRcYV": {
           "type": "feature_col_1",
           "settings": {
-            "title": "Step 1 : Assemble <br>Assemble in 5 minutes",
+            "title": "Step 1 : Assemble in 5 minutes",
             "icon": "shopify://shop_images/Experience_icon_showing_Phoenix_s_commitment_to_quality_water_solutions.svg"
           }
         },
         "feature_col_2_CmjNgm": {
           "type": "feature_col_2",
           "settings": {
-            "title": "Step 4 : Enjoy <br>Enjoy pure water",
+            "title": "Step 4 : Enjoy pure water",
             "icon": "shopify://shop_images/icon-bottle.svg_fill.svg"
           }
         },
         "feature_col_1_Uc4VgH": {
           "type": "feature_col_1",
           "settings": {
-            "title": "Step 3 : Filter <br>Let gravity filter",
+            "title": "Step 3 : Filter Let gravity filter",
             "icon": "shopify://shop_images/Water_drop_icon_symbolizing_purity_and_effective_filtration_with_Phoenix_Gravity_systems.svg"
           }
         }
@@ -377,7 +377,7 @@
       "name": "Testimonials",
       "settings": {
         "layout": "style-1",
-        "heading": "🇺🇸 Americans have trusted our water filters for over 50 years.",
+        "heading": "Americans have trusted our water filters for over 50 years.",
         "paragraph": "",
         "sub_header": "Based On 7,495 global reviews",
         "button_text": "View All Reviews",
@@ -539,6 +539,7 @@
     },
     "product_slider_bL3VzA": {
       "type": "product-slider",
+      "disabled": true,
       "custom_css": [
         "@media (min-width: 768px) {h2.text-center {font-family: Open Sans; font-weight: 600; font-size: 52px; letter-spacing: 0%; padding-top: 30px; padding-bottom: 12px; } .container {max-width: 98% !important; }}",
         " {padding-top: 50px;}",
@@ -604,7 +605,7 @@
         "phone_label": "Phone Number",
         "phone_number": "1 (800) 917-0455",
         "email_label": "Email Address",
-        "email_address": "hello@yourstore.com",
+        "email_address": "hello@phoenixwaterfilters.com",
         "show_name_field": true,
         "split_name_fields": false,
         "name_placeholder": "Full Name",
@@ -622,7 +623,7 @@
         "subject_placeholder": "Subject",
         "subject_options": "General Inquiry, Order Support, Returns, Wholesale",
         "show_message_field": true,
-        "message_placeholder": "Your Message",
+        "message_placeholder": "YOUR MESSAGE",
         "message_required": false,
         "textarea_resize": "both",
         "textarea_height": 45,
