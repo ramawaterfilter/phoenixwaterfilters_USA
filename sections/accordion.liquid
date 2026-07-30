@@ -147,8 +147,8 @@
 
                   if (lifespanCell) {
                     lifespanCell.innerHTML = hasPostreat
-                      ? '<ul class=tech-lifespan-list><li>Up to 5,500 gallons per pair of Carbon Filter Elements</li><li>Up to 1,060 gallons per pair of POSTreat Filter Elements</li></ul>'
-                      : '<ul class=tech-lifespan-list><li>Up to 5,500 gallons per pair of Carbon Filter Elements</li></ul>';
+                      ? '<ul class=tech-lifespan-list><li>Rated up to 5,500 gallons; replace at 12 months or 5,500 gallons, whichever comes first (typical family use: 12 months).</li><li>Up to 1,060 gallons per pair of POSTreat Filter Elements</li></ul>'
+                      : '<ul class=tech-lifespan-list><li>Rated up to 5,500 gallons; replace at 12 months or 5,500 gallons, whichever comes first (typical family use: 12 months).</li></ul>';
                   }
                 });
               }
@@ -331,7 +331,7 @@
 
                         <tr class="tech-filter-lifespan-row">
                           <td>Filter Lifespan</td>
-                          <td>Up to 5,500 gallons per pair of Carbon Filter Elements</td>
+                          <td>Rated up to 5,500 gallons; replace at 12 months or 5,500 gallons, whichever comes first (typical family use: 12 months).</td>
                         </tr>
                         <tr>
                           <td>Filtration Rate</td>
@@ -370,7 +370,7 @@
                         </tr>
                         <tr class="tech-filter-lifespan-row">
                           <td>Filter Lifespan</td>
-                          <td>Up to 5,500 gallons per pair of Carbon Filter Elements</td>
+                          <td>Rated up to 5,500 gallons; replace at 12 months or 5,500 gallons, whichever comes first (typical family use: 12 months).</td>
                         </tr>
                         <tr>
                           <td>Filtration Rate</td>
@@ -500,7 +500,7 @@
                     </div>
                     <div class="spec-item">
                       <div class="spec-title">Filtration Capacity:</div>
-                      <div class="spec-content">Up to 5,500 gallons per pair.</div>
+                      <div class="spec-content">Rated up to 5,500 gallons; replace at 12 months or 5,500 gallons, whichever comes first (typical family use: 12 months).</div>
                     </div>
                     <div class="spec-item">
                       <div class="spec-title">Flow Rate:</div>
@@ -875,56 +875,6 @@ document.addEventListener('DOMContentLoaded', function() {
           {% endif %}
 
           <style>
-            .product-specs-section {
-              padding: 20px;
-            }
-
-            .product-specs-layout {
-              display: flex;
-              flex-direction: column;
-              gap: 20px;
-            }
-
-            .product-specs-details {
-              flex: 1;
-            }
-
-            .product-specs-image img {
-              max-width: 100%;
-              height: 350px;
-            }
-
-            .product-spec-item {
-              margin-bottom: 20px;
-            }
-
-            .product-spec-title {
-              font-weight: bold;
-              margin-bottom: 5px;
-            }
-
-            .product-spec-text {
-              font-size: 16px;
-              line-height: 1.5;
-            }
-
-            /* Desktop layout */
-            @media (min-width: 768px) {
-              .product-specs-layout {
-                flex-direction: row;
-                align-items: flex-start;
-              }
-
-              .product-specs-details {
-                width: 65%;
-                padding-right: 20px;
-              }
-
-              .product-specs-image {
-                width: 35%;
-              }
-            }
-
             .custom-accessory-specs {
               display: flex;
               flex-wrap: wrap;
@@ -998,8 +948,6 @@ document.addEventListener('DOMContentLoaded', function() {
               }
             }
 
-            /* For This ACCESSORIES specification */
-
             .accessory-spec-wrapper {
               display: flex;
               flex-direction: row;
@@ -1010,79 +958,17 @@ document.addEventListener('DOMContentLoaded', function() {
               flex-wrap: nowrap;
             }
 
-            .accessory-spec-content,
-            .accessory-spec-image {
-              flex: 1 1 50%;
-              max-width: 50%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              min-height: 100%;
-              text-align: left;
-              /* box-sizing: border-box; */
-            }
-
-            .accessory-spec-content table {
-              width: 100%;
-              border-collapse: collapse;
-              font-size: 16px;
-              line-height: 1.5;
-              margin: 0 auto;
-            }
-            .accessory-spec-content td {
-              color: #333;
-              font-size: 24px;
-              border: none; /* Remove all borders */
-              border-bottom: 1px solid #ccc; /* Only bottom */
-            }
-
-            .accessory-spec-content tr:last-child td {
-              border-bottom: none !important; /* Remove bottom border from last row */
-            }
-
-            .accessory-spec-content td {
-              padding: 20px 0px 0px 20px;
-              vertical-align: top;
-              color: #333;
-              font-size: 31px;
-            }
-            .accessory-spec-image img {
-              max-width: 100%;
-              height: auto;
-              max-height: 320px;
-              object-fit: contain;
-              display: block;
-            }
-
             /* ✅ Mobile responsive layout */
             @media screen and (max-width: 768px) {
               .accessory-spec-wrapper {
                 flex-direction: column;
                 gap: 20px;
               }
-
-              .accessory-spec-content,
-              .accessory-spec-image {
-                max-width: 100%;
-                flex: 1 1 100%;
-                justify-content: flex-start;
-                align-items: flex-start;
-              }
-
-              .accessory-spec-content table {
-                font-size: 15px;
-              }
-
-              .accessory-spec-image img {
-                max-height: none;
-              }
             }
 
             .accordion-cont {
               width: 100% !important;
             }
-
-            /* End For This ACCESSORIES specification  */
 
             .accor-flex {
               display: flex;
@@ -1104,53 +990,14 @@ document.addEventListener('DOMContentLoaded', function() {
               height: 350px;
               display: block;
             }
-            .accordion-imag {
-              width: 50%;
-            }
-
-            .accordion-imag img {
-              width: 80%;
-              height: auto;
-              display: block;
-            }
-
-            /* ========== Table Styling ========== */
-            ..accor-cnt table {
-              width: 100%;
-              border-collapse: collapse;
-            }
-
-            .accor-cnt tr:last-child td {
-              border-bottom: none !important;
-            }
-
-            .accor-cnt td {
-              padding: 30px 0;
-              border-bottom: 1px solid #ccc;
-              border-top: none;
-              border-left: none;
-              border-right: none;
-              vertical-align: top;
-              font-size: 25px;
-            }
-
-            /* ========== Responsive: stacked view ========== */
             @media screen and (max-width: 768px) {
               .accor-flex {
                 flex-direction: column;
               }
 
-              .accor-cnt,
-              .accordion-imag {
+              .accor-cnt {
                 width: 100%;
               }
-
-              .accordion-imag {
-                margin-top: 16px;
-              }
-            }
-            .accordion-imag img {
-              max-width: 100%;
             }
           </style>
 
@@ -1426,14 +1273,6 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
 </div>
 
-{% if product.handle != 'gravity-water-filter' %}
-  <style>
-    .variant-description {
-      max-height: 10px !important;
-    }
-  </style>
-{% endif %}
-
 {% schema %}
 {
   "name": "Dropdown Accordion",
@@ -1532,11 +1371,6 @@ document.addEventListener('DOMContentLoaded', function() {
           const id = el.getAttribute('data-variant-id');
           el.style.display = id === currentId ? 'block' : 'none';
         });
-
-        document.querySelectorAll('.accordion-stands').forEach((el) => {
-          const id = el.getAttribute('data-variant-id');
-          el.style.display = id === currentId ? 'block' : 'none';
-        });
       }
     }
 
@@ -1552,7 +1386,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   .tech-accordion {
-    display: flex;
     align-items: stretch;
     border-radius: 12px;
     overflow: hidden;

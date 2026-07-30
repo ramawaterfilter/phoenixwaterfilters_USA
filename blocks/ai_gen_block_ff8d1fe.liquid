@@ -1,28 +1,12 @@
-{% doc %}
-  @prompt
-    create hte swction i need to add the embed code and add the heading and i need to change the width and height everthing manually and  font size for hedaing to \, i need to chang eht text color and paddign aand margin to  and i need  change the text and , remove the padding for the videoas onoy i  need the headibg what i need is in heading i need text alignment and text padding margin thos things i  video i need to give mebed code and manulalyt change the width adn height everthing
-{% enddoc %}
-
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
 
 {% style %}
-  .ai-embed-code-container-{{ ai_gen_id }} {
-    width: 100%;
-    max-width: 100%;
-  }
-
   .ai-embed-code-heading-{{ ai_gen_id }} {
-    margin-top: {{ block.settings.heading_margin_top }}px;
-    margin-bottom: {{ block.settings.heading_margin_bottom }}px;
-    margin-left: {{ block.settings.heading_margin_left }}px;
-    margin-right: {{ block.settings.heading_margin_right }}px;
-    padding-top: {{ block.settings.heading_padding_top }}px;
-    padding-bottom: {{ block.settings.heading_padding_bottom }}px;
-    padding-left: {{ block.settings.heading_padding_left }}px;
-    padding-right: {{ block.settings.heading_padding_right }}px;
+    margin: {{ block.settings.heading_margin_top }}px {{ block.settings.heading_margin_right }}px {{ block.settings.heading_margin_bottom }}px {{ block.settings.heading_margin_left }}px;
+    padding: {{ block.settings.heading_padding_top }}px {{ block.settings.heading_padding_right }}px {{ block.settings.heading_padding_bottom }}px {{ block.settings.heading_padding_left }}px;
     font-size: {{ block.settings.heading_font_size }}px;
     color: {{ block.settings.heading_color }};
-    text-align: {{ block.settings.heading_alignment }};
+    text-align: center;
   }
 
   .ai-embed-code-wrapper-{{ ai_gen_id }} {
@@ -32,30 +16,40 @@
     margin: 0 auto;
   }
 
+  @media screen and (max-width: 749px) {
+    .ai-embed-code-wrapper-{{ ai_gen_id }} {
+      height: auto;
+    }
+  }
+
   .ai-embed-code-wrapper-{{ ai_gen_id }} iframe {
     width: 100%;
     height: 100%;
     border: none;
   }
+
+  .ai-embed-code-placeholder-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f4f4f4;
+    color: #666;
+    font-size: 14px;
+  }
 {% endstyle %}
 
-<div
-  class="ai-embed-code-container-{{ ai_gen_id }}"
-  {{ block.shopify_attributes }}
->
+<div {{ block.shopify_attributes }}>
   {% if block.settings.heading != blank %}
     <h2 class="ai-embed-code-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
   {% endif %}
 
-  {% if block.settings.embed_code != blank %}
-    <div class="ai-embed-code-wrapper-{{ ai_gen_id }}">
+  <div class="ai-embed-code-wrapper-{{ ai_gen_id }}{% if block.settings.embed_code == blank %} ai-embed-code-placeholder-{{ ai_gen_id }}{% endif %}">
+    {% if block.settings.embed_code != blank %}
       {{ block.settings.embed_code }}
-    </div>
-  {% else %}
-    <div class="ai-embed-code-wrapper-{{ ai_gen_id }}" style="background-color: #f4f4f4; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14px;">
+    {% else %}
       Add your embed code in the block settings
-    </div>
-  {% endif %}
+    {% endif %}
+  </div>
 </div>
 
 {% schema %}
@@ -86,26 +80,6 @@
       "id": "heading_color",
       "label": "Text color",
       "default": "#000000"
-    },
-    {
-      "type": "select",
-      "id": "heading_alignment",
-      "label": "Text alignment",
-      "options": [
-        {
-          "value": "left",
-          "label": "Left"
-        },
-        {
-          "value": "center",
-          "label": "Center"
-        },
-        {
-          "value": "right",
-          "label": "Right"
-        }
-      ],
-      "default": "center"
     },
     {
       "type": "header",
