@@ -1,0 +1,291 @@
+
+.free-shipping-bar svg {
+    width: 39px;
+    padding-right: 6px;
+}
+
+/* div#sticky-atc-bar {
+    display: none;
+} */
+.sticky-add-to-cart span.text-muted.small s {
+    font-size: 18px;
+}
+.section-producthero .sticky-add-to-cart form {
+    padding-left: 0px;
+}
+.sticky-add-to-cart span.product-dyn-price.m-0.appstle_subscription_final_price {
+    font-size: 22px;
+    margin: 6px !important;
+}
+.sticky-add-to-cart span.fw-bold {
+    font-size: 22px !important;
+    margin: 6px !important;
+}
+
+.sticky-add-to-cart .align-items-center {
+    justify-content: end !important;
+}
+
+.cart-upsell__item.up {
+    display: flex;
+        justify-content: space-around;
+        gap: 18px
+}
+.cart-upsells.up {
+    padding: 17px 2px 21px 18px;
+    background: #0000000a;
+    color: #153a5b;
+    width: 97%;
+    margin: 0 auto;
+    border-radius: 9px;
+}
+.cart-upsell__img.up {
+    width: 20%;
+}
+.cart-upsell__info {
+    padding: 0 !important;
+}
+p.price-up {
+    margin: 0px;
+}
+p.title-up {
+    margin-bottom: 7px;
+    font-size: 18px;
+    font-weight: bold;
+}
+button.btn.up {
+    margin: 0px;
+}
+p.price-up {
+    margin-bottom: 13px;
+    font-weight: bold;
+    font-size: 20px;
+}
+.stock-alert {
+    /* margin-bottom: 0px; */
+    font-size: 16px;
+    font-weight: 600;
+    color: #d43d2f;
+    /* margin-bottom: 10px; */
+    padding-top: 15px;
+}
+.free-shipping.custom-f.remaining p.remaining {
+    padding-top: 20px;
+}
+h2.performance-heading-sub-b {
+    font-family: Open Sans;
+    font-weight: 700;
+        margin-bottom: 9px;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: 0%;
+    text-align: center;
+    vertical-align: middle;
+}
+h2.performance-heading-sub-bot p {
+    font-family: Open Sans;
+    font-weight: 400;
+    width: 83%;
+    font-size: 14px;
+    margin: 0 auto;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+    vertical-align: middle;
+}
+.free-shipping-bar {
+    text-align: center;
+    padding-top: 15px;
+}
+
+
+
+@media(min-width: 768px){
+h2.performance-heading.iconv {
+    font-family: Open Sans;
+    font-weight: 600;
+    font-size: 52px;
+    letter-spacing: 0%;
+    text-align: center;
+    vertical-align: middle;
+    margin-bottom: 8px;
+}
+h2.performance-heading-sub p {
+    font-family: Open Sans;
+    font-weight: 400;
+    margin: 0 auto;
+    font-size: 18px;
+    width: 70%;
+    line-height: 30px;
+    letter-spacing: 0%;
+    text-align: center;
+    vertical-align: middle;
+}
+.ra-section-title-sub p {
+    font-family: Open Sans;
+    font-weight: 400;
+    width: 70%;
+    font-size: 21.56px;
+    padding-bottom: 28px;
+    margin: 0 auto;
+    letter-spacing: 0%;
+        Line height: 32.2px;
+    text-align: center;
+    vertical-align: middle;
+}
+.text-center-sub p {
+    font-family: Open Sans;
+    font-weight: 400;
+    font-size: 21.56px;
+    line-height: 32.2px;
+    letter-spacing: 0%;
+    text-align: center;
+    vertical-align: middle;
+}
+.performance-heading-link {
+    width: 30%;
+    margin: 0 auto;
+    border: 1px solid #153A5B;
+    padding: 10px;
+    margin-top: 30px;
+    border-radius: 49px;
+}
+.performance-heading-link a {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 19.85px;
+    letter-spacing: 1.5px;
+    text-align: center;
+    vertical-align: middle;
+    text-transform: uppercase;
+}
+span.text-success svg {
+    width: 30px;
+    padding-right: 6px;
+}
+span.text-danger svg {
+    width: 35px;
+}
+span.text-success {
+    color: green;
+    font-weight: bold;
+}
+span.text-danger {
+    color: red;
+    font-weight: bold;
+}
+.free-shipping-bar {
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+    font-weight: bold;
+}
+
+p.fbt-cart-upsell {
+    font-size: 16px;
+    /* margin: 0px; */
+}
+.cart-upsells.up h4 {
+    margin-bottom: 0px;
+}
+}
+
+@media(max-width: 768px){
+h2.performance-heading.iconv {
+    font-family: Open Sans;
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: 0%;
+    text-align: center;
+    vertical-align: middle;
+            margin-bottom: 8px;
+}
+
+span.text-success svg {
+    width: 25px;
+    padding-right: 6px;
+}
+h2.performance-heading-sub p {
+    font-family: Open Sans;
+    font-weight: 400;
+    margin: 0 auto;
+    font-size: 14px;
+    width: 98%;
+    line-height: 26px;
+    letter-spacing: 0%;
+    text-align: center;
+      margin-bottom: 25px;
+}
+.performance-heading-link a {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 19.85px;
+    letter-spacing: 1.5px;
+    text-align: center;
+    vertical-align: middle;
+    text-transform: uppercase;
+}
+.performance-heading-link {
+    width: 90%;
+    margin: 0 auto;
+    border: 1px solid #153A5B;
+    padding: 10px;
+    margin-top: 30px;
+    border-radius: 49px;
+}
+.ra-section-title-sub p {
+    font-family: Open Sans;
+    font-weight: 400;
+    width: 90%;
+    Line height: 32.2px;
+    font-size: 14px;
+    padding-bottom: 28px;
+    margin: 0 auto;
+    letter-spacing: 0%;
+    text-align: center;
+    vertical-align: middle;
+}
+.text-center-sub p {
+    font-family: Open Sans;
+    font-weight: 400;
+    font-size: 18.56px;
+    line-height: 32.2px;
+    letter-spacing: 0%;
+    text-align: center;
+    vertical-align: middle;
+}
+span.text-danger svg {
+    width: 25px;
+}
+span.text-success {
+    color: green;
+    font-weight: bold;
+        font-size: 14px;
+}
+span.text-danger {
+    color: red;
+    font-weight: bold;
+        font-size: 14px;
+}
+.free-shipping-bar {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+    font-weight: bold;
+}
+p.fbt-cart-upsell {
+    font-size: 12px;
+    /* margin: 0px; */
+}
+.cart-upsells.up h4 {
+    margin-bottom: 0px;
+      font-size: 16px;
+}
+}
+
+
+

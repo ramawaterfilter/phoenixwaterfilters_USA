@@ -1,0 +1,12 @@
+{% if section.settings.buttonlink %}
+  <div class="btn-container {{ class }}">
+    {% if section.settings.buttonlink == "#addtocart" %}
+      {% render 'basic-add-to-cart' %}
+    {% else %}
+      <a class="btn btn-primary d-block mb-4" href="{{ section.settings.buttonlink }}">{{ section.settings.buttontext }}</a>
+    {% endif %}
+    {% if section.settings.afterbutton %}
+      <p class="small">{{ section.settings.afterbutton }}</p>
+    {% endif %}
+  </div>
+{% endif %}

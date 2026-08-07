@@ -1,0 +1,431 @@
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ shop.url }}"
+    }
+    {% if collection %}
+    ,
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ collection.title | escape }}",
+      "item": "{{ shop.url }}{{ collection.url }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ product.title | escape }}",
+      "item": "{{ shop.url }}{{ product.url }}"
+    }
+    {% else %}
+    ,
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ product.title | escape }}",
+      "item": "{{ shop.url }}{{ product.url }}"
+    }
+    {% endif %}
+  ]
+}
+</script>
+{% comment %}
+  Other Products
+{% endcomment %}
+
+{% assign current_variant = product.selected_or_first_available_variant %}
+<div class="container">
+  <div class="row justify-content-center lk">
+    <div class="col-11 jkl col-lg-6 pe-5">
+      <div class="position-relative {% if product.images.size <= 0 %}h-100{% endif %}">
+        {% render 'product-badge', product: product %}
+
+        {% if product.images.size > 1 %}
+          <div class="swiper-container swiper product-swiper" data-slidestoshow="1" id="product-slider">
+            <div class="swiper-wrapper">
+              {% for media in product.media %}
+                {% assign thisVariantID = "" %}
+                {% for variant in product.variants %}
+                  {% if variant.featured_image == media.src %}
+                    {% assign thisVariantID = variant.id %}
+                  {% endif %}
+                {% endfor %}
+                {% comment %} Add video check to conditional... maybe? {% endcomment %}
+                {% if media.media_type == "external_video" %}
+                  <div class="swiper-slide" data-variant-id="{{ thisVariantID }}" data-slide-index="{{ forloop.index }}">
+                    <a data-fancybox="gallery" href="{{ media | external_video_url: autoplay: 'true' }}" class="product-image product-image--video d-block">
+                      {{ media.preview_image | image_url: width: 1200 | image_tag }}
+                    </a>
+                  </div>
+                {% elsif media.media_type == "image" %}
+                  <div class="swiper-slide" data-variant-id="{{ thisVariantID }}" data-slide-index="{{ forloop.index }}">
+                    <a data-fancybox="gallery" href="{{ media | image_url: width: 2560 }}" class="product-image d-block">
+                      {{ media | image_url: width: 1200 | image_tag }}
+                    </a>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="swiper-container swiper control {% if product.media.size == 3 %} control-three {% endif %} {% if product.media.size == 5 %}control-five{% endif %}" id="product-slider-nav">
+            <div class="swiper-wrapper {% if product.media.size == 3 or product.media.size == 5 %}wide{% endif %}">
+              {% for media in product.media %}
+                {% if media.media_type == "external_video" %}
+                  <div class="swiper-slide">
+                    {{ media.preview_image | image_url: width: 600 | image_tag }}
+                  </div>
+                {% elsif media.media_type == "image" %}
+                  <div class="swiper-slide">
+                    {{ media | image_url: width: 1200 | image_tag }}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="swiper-nav">
+            <div class="swiper-button-prev swiper-prev"></div>
+            <div class="swiper-button-next swiper-next"></div>
+          </div>
+        {% elsif product.featured_image %}
+          <a data-fancybox="gallery" href="{{ product.featured_image | image_url: width: 2560 }}" class="product-image d-block">
+            {{ product.featured_image | image_url: width: 1200| image_tag }}
+          </a>
+        {% else %}
+          <div class="placeholder">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-11 gg col-lg-6 mt-3 mt-lg-0">
+      {% render 'product-hero-countdown', section: section %}
+      <h1>{{ product.title }}</h1>
+      <div class="product-rating">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when '@app' %}
+              {% render block %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+      {% render 'best-for-tag' %}
+      {% if product.description != blank or product.metafields.custom.product_usps.value.size > 0 %}
+        <div class="product-description">
+          {{ product.description }}
+          {% if product.metafields.custom.product_usps.value.size > 0 %}
+            <ul class="product-description__usps">
+              {% for usp in product.metafields.custom.product_usps.value %}
+                <li>{{ usp }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endif %}
+      {% if settings.enable_minmax_buys %}
+        {% assign min_buy = settings.min_buy_qty %}
+        {% assign max_buy = settings.max_buy_qty %}
+      {% endif %}
+      <form action="/cart/add" method="post" enctype="multipart/form-data" id="add-to-cart" class="mb-5 main-add-to-cart" data-min="{{ min_buy }}" data-max="{{ max_buy }}">
+        {% comment %} This handle is used with the min/max quantity js {% endcomment %}
+        <input type="hidden" name="handle" value="{{ product.handle }}">
+        {% comment %} Subscriptions Support {% endcomment %}
+        {% if product.selling_plan_groups.size > 0 %}
+          <div class="subscriptions d-none">
+            {% for group in product.selling_plan_groups %}
+              <div class="subscriptions__group">
+                {% assign loop1 = forloop.index %}
+                <p class="h4">{{ group.name }}</p>
+                {% for selling_plan in group.selling_plans %}
+                  <label for="plan-{{ forloop.index }}-{{ loop1 }}">
+                    <input type="radio" id="plan-{{ forloop.index }}-{{ loop1 }}" name="selling_plan" value="{{ selling_plan.id }}" {% if forloop.index == 1 %}checked{% endif %} />
+                    {{ selling_plan.name }}
+                  </label>
+                {% endfor %}
+                {% comment %} If last loop {% endcomment %}
+                {% if loop1 == product.selling_plan_groups.size and product.requires_selling_plan != true %}
+                  <label for="plan-none">
+                    <input type="radio" id="plan-none" name="selling_plan" value="" />
+                    {{ 'products.product.no_selling_plan' | t }}
+                  </label>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        
+        {% if product.available and product.variants.size > 1 %}
+          <div id="product-variants">
+            {% assign has_size_option = false %}
+            
+            {% if product.variants.size > 1 %}
+                    
+
+              <select id="product-selectors" name="id" data-productid="{{ product.id }}" data-label="{% if product.options.size == 1 %}{{ product.options[0] }}{% endif %}">
+                {% for variant in product.variants %}
+                  {% if variant.available %}
+
+<!-- add by k for the product id  -->
+
+                
+                    <option {% if variant == current_variant %} selected="selected" {% endif %} value="{{ variant.id }}" data-price="{{ variant.price | money_with_currency }}" name="id" id="variant_{{ variant.id }}">
+                      {{ variant.title }} <span class="small">({{ variant.price | money }} {{ cart.currency.iso_code }})</span>
+                    </option>
+                  {% else %}
+                    <option disabled="disabled" data-price="{{ variant.price | money_with_currency }}" name="id"    id="variant_{{ variant.id }}" value="{{ variant.id }}">{{ variant.title }} - {{ 'products.product.inventory_out_of_stock' | t }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+             
+             
+            {% else %}
+              <input name="id" data-productid="{{ product.id }}" value="{{ product.variants.first.id }}" type="hidden" />
+            {% endif %}
+          </div>
+        {% elsif product.variants.size == 1 and product.available %}
+          <input name="id" data-productid="{{ product.id }}" value="{{ product.variants.first.id }}" type="hidden" />
+        {% endif %}
+         
+
+       
+
+ {% if product.available %}
+          {% comment %} <div class="product-quantity">
+            <div class="qty-container">
+              <label for="Quantity">{{ 'products.product.quantity.label' | t }} &nbsp; </label>
+              <span class="qty-btn decrease js-qty-update">-</span>
+              <input type="number" id="Quantity" name="quantity" data-qtt-id value="{{ min_buy }}" min="{{ min_buy }}" max="{{ max_buy }}">
+              <span class="qty-btn increase js-qty-update">+</span>
+              {% if current_variant.inventory_quantity >= 5 %}
+                <span class="stock-indicator instock">
+                  {{ 'products.product.inventory_in_stock' | t }}
+                </span>
+              {% elsif current_variant.inventory_quantity > 0 %}
+                <span class="stock-indicator lowstock">
+                  {{ 'products.product.inventory_low_stock' | t }}
+                </span>
+              {% elsif current_variant.inventory_management != null %}
+                <span class="stock-indicator outofstock">
+                  {{ 'products.product.inventory_out_of_stock' | t }}
+                </span>
+              {% endif %}
+            </div>
+          </div> 
+        <div class="priceline">
+          <span data-price class="product-dyn-price m-0">
+            {{ product.variants.first.price | money }}
+          </span> {{ shop.currency }}
+          <span data-compare>
+            <s>
+              {% if product.variants.first.compare_at_price %}
+                {{ product.variants.first.compare_at_price | money }}
+              {% endif %}
+            </s>
+          </span>
+        </div>{% endcomment %}
+           {% comment %}  
+          <p style="font-size:18px;text-align: center;margin-bottom: -11px;">Seal the deal! Use coupon <b><i>BIGDEAL20</i></b> to get an extra 20% Off. </p>
+ {% endcomment %}
+            <p class="js-availability-notice product-availability disabled {% if product.variants.size > 1 %} invalid {% endif %}">
+              There are only <strong class="js-availablilty">{{ current_variant.inventory_quantity }}</strong> {{ product.title }}
+              {% if product.variants.size > 1 %}
+                <span class="js-varient">({{ product.variants.first.title.title }})</span>
+              {% endif %}
+              available in stock.
+            </p>
+            {% if current_variant.inventory_quantity > 0 or current_variant.inventory_management == null %}
+              <div class="select-product d-flex flex-row align-items-center mt-5 ">
+                 <span class="appstle_stand_alone_selector" data-product-handle="{{ product.handle }}" data-product-data="" style="display:none;"></span>
+                <button class="btn btn-primary btn-product" type="submit" name="add" id="product-add-to-cart">
+                  {{ 'products.product.add_to_cart' | t }}
+                </button>
+              
+            {% elsif current_variant.inventory_policy == "continue" %}
+              <div class="select-product d-flex flex-row align-items-center mt-5 ">
+                <button class="btn btn-primary btn-product" type="submit" name="add" id="product-add-to-cart">
+                  {{ 'products.product.pre_order' | t }}
+                </button>
+            {% endif %}
+        {% else %}
+          <div class="select-product d-flex flex-row align-items-center mt-5 "> 
+            <input name="id" data-productid="{{ product.id }}" value="{{ product.variants.first.id }}" type="hidden" />
+            <button class="btn btn-primary btn-product" name="add" disabled type="submit">
+              {{ 'products.product.sold_out' | t }}
+            </button>
+        {% endif %}
+         
+   {% comment %} <div class="sale-badge">SALE</div> {% endcomment %}
+        {% comment %} <div id="afterpay-element">
+          
+        </div> {% endcomment %}
+        {% comment %} <div class="trust-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="26" viewBox="0 0 25 26" fill="none">
+                  <path d="M22.5 0.5H2.5C1.96957 0.5 1.46086 0.710714 1.08579 1.08579C0.710714 1.46086 0.5 1.96957 0.5 2.5V9.5C0.5 16.09 3.69 20.0837 6.36625 22.2738C9.24875 24.6313 12.1163 25.4312 12.2413 25.465C12.4131 25.5118 12.5944 25.5118 12.7663 25.465C12.8913 25.4312 15.755 24.6313 18.6413 22.2738C21.31 20.0837 24.5 16.09 24.5 9.5V2.5C24.5 1.96957 24.2893 1.46086 23.9142 1.08579C23.5391 0.710714 23.0304 0.5 22.5 0.5ZM18.21 9.2075L11.21 16.2075C11.1171 16.3005 11.0068 16.3742 10.8854 16.4246C10.764 16.4749 10.6339 16.5008 10.5025 16.5008C10.3711 16.5008 10.241 16.4749 10.1196 16.4246C9.99816 16.3742 9.88787 16.3005 9.795 16.2075L6.795 13.2075C6.60736 13.0199 6.50194 12.7654 6.50194 12.5C6.50194 12.2346 6.60736 11.9801 6.795 11.7925C6.98264 11.6049 7.23714 11.4994 7.5025 11.4994C7.76786 11.4994 8.02236 11.6049 8.21 11.7925L10.5 14.0863L16.7925 7.7925C16.8854 7.69959 16.9957 7.62589 17.1171 7.57561C17.2385 7.52532 17.3686 7.49944 17.5 7.49944C17.6314 7.49944 17.7615 7.52532 17.8829 7.57561C18.0043 7.62589 18.1146 7.69959 18.2075 7.7925C18.3004 7.88541 18.3741 7.99571 18.4244 8.1171C18.4747 8.2385 18.5006 8.36861 18.5006 8.5C18.5006 8.6314 18.4747 8.7615 18.4244 8.8829C18.3741 9.00429 18.3004 9.11459 18.2075 9.2075H18.21Z" fill="#153A5B"/> 
+                  
+                </svg>
+         Try It Risk Free! 100-Day Money Back Guarantee
+         </div>  {% endcomment %}
+          <div class="payment-icons justify-content-center align-items-center">
+            <img src="{{ 'visa.png' | asset_url }}" alt="visa" height="20.42" width="45.15" />
+            <img src="{{ 'mastercard.png' | asset_url }}" height="20.7" width="32.45" alt="mastercard" />
+            <img src="{{ 'paypal.png' | asset_url }}"  alt="paypal"   height="25.41" width="20.99" />
+            <img src="{{ 'amex.png' | asset_url }}" height="20.11" width="54.44"alt="amex" />
+               <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/Shop_Pay_logo.png?v=1761737843" alt="Shop Pay" height="23.11" width="74.44" />
+          </div>
+
+          <div class="below-atc-icons z1">
+            <div>
+              <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/anniversary_1.png?v=1757310802" alt="Award Icon">
+              <span>50 Years Legacy</span>
+            </div>
+            <div>
+              <img src="{{ 'icon-truck.png' | asset_url }}" alt="Truck Icon">
+              <span>Fast & Free Shipping</span>
+            </div>
+             <div>
+              <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/product_warehouse.png" alt="Warehouse">
+              <span>USA Warehouse</span>
+            </div>
+             <div>
+              <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/iso-9001_1.png?v=1757310802" alt="ISO">
+              <span>ISO Certified </span>
+            </div>
+          </div>
+      </form>
+    </div>
+                
+
+  </div>
+</div>
+{% unless product == empty %}
+  {% comment %} Product Script {% endcomment %}
+  <script>
+    window.product = {{ product | json }} || {};
+    {% if product.metafields.custom.product_badge_text.value != blank %}
+      if(typeof product !== "undefined"){
+        product['badge'] = "{{ product.metafields.custom.product_badge_text.value }}";
+      }
+    {% endif %}
+    let metaInfo = product.handle + '?view=metafields';
+    fetch(metaInfo)
+      .then(response => response.json())
+      .then(pageMeta => {
+        window.product = Object.assign(product, pageMeta);
+        
+        if( document.readyState !== 'loading' ) {
+          initProductScript(window.product, 'product-selectors', document);
+        } else {
+          document.addEventListener('DOMContentLoaded', function () {
+            initProductScript(window.product, 'product-selectors', document);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching page meta:', error);
+      });
+  </script>
+{% endunless %}
+
+
+
+
+
+
+
+{% schema %}
+  {
+    "name": "Product Hero",
+    "tag": "section",
+    "class": "section-producthero",
+    "settings": [
+      {
+        "type": "text",
+        "id": "countdown_text",
+        "label": "Countdown Text",
+        "info": "Use the [month] shortcode to output the current month, and the [time] shortcode to output the countdown timer."
+      },
+      {
+        "type": "text",
+        "id": "countdown_time",
+        "label": "Countdown Time",
+        "info": "Date, time and timezone in the format: YYYY-MM-DDTHH:mm:ss+10:00. OR for an evergreen timer, enter the number of minutes followed by the word 'minutes'. e.g. 15 minutes"
+      },
+      {
+        "type": "product_list",
+        "id": "countdown_products",
+        "label": "Show Countdown On Products",
+        "info": "Only show the countdown on these products. Leave blank to show on all."
+      },
+      {
+        "type": "product_list",
+        "id": "product_boost",
+        "label": "Show Subscription",
+        "info": "Promote a subscription product option",
+        "limit": 1
+      }
+    ],
+    "blocks": [
+      {
+        "type": "@app"
+      },
+      {
+        "type": "upsell",
+        "name": "upsell",
+        "settings": [
+          {
+            "type": "product",
+            "id": "product_upsell",
+            "label": "Upsell Product"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product Hero"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["product"]
+    }
+  }
+{% endschema %}
+
+
+        <style>
+       .sale-badge {
+     color: #fff;
+            padding-right: 5px;
+            padding-left: 8px;
+            background-color: #dc2626;
+            display: inline-block;
+            font-weight: bold;
+            position: relative;
+            top: 0%;
+            left: 0%;
+         font-size: 15px;
+   
+}
+
+@media only screen and (max-width: 575px) 
+{
+  .sale-badge {
+  top: 0;
+   left:0;
+}
+}
+.below-atc-icons.z1 {
+    grid-template-columns: repeat(4, 1fr);
+}
+.below-atc-icons.z1>div {
+    padding-right: 10px;
+}
+    </style>

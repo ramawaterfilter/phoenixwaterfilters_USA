@@ -1,0 +1,25 @@
+{% doc %}
+Renders trust icons below the product hero button.
+@example
+{% render 'product-hero-trust-icons' %}
+{% enddoc %}
+
+<div class="below-atc-icons">
+  <div>
+    <img src="{{ 'icon-headset.png' | asset_url }}" alt="Headset Icon" width="48" height="48">
+    <span>Customer Support</span>
+  </div>
+  <div>
+    <img
+      src="https://cdn.shopify.com/s/files/1/2644/2852/files/Universal_fit_v3-02.png?v=1761830204"
+      alt="Universal Fit"
+      width="48"
+      height="48"
+    >
+    <span>Universal Fit</span>
+  </div>
+  <div>
+    <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/product_warehouse.png" alt="Warehouse" width="48" height="48">
+    <span>US-Based Warehouse Shipping</span>
+  </div>
+</div>

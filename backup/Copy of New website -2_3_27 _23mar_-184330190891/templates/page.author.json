@@ -1,0 +1,127 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "copy_image_rUyHJ6": {
+      "type": "copy-image",
+      "disabled": true,
+      "name": "Copy Image",
+      "settings": {
+        "style": "bg-light",
+        "layout": "centered-copy",
+        "vertical_align": "align-items-center",
+        "heading": "Register your product now and activate the 10-year warranty on your stainless steel system.",
+        "content": "",
+        "video_id": "",
+        "large_image": "img-standard",
+        "second_content": "",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "bg_image_style": "contain",
+        "section_randoimg_position": "top"
+      }
+    },
+    "custom_code_section_ERwfnF": {
+      "type": "custom-code-section",
+      "name": "Custom Code Section",
+      "settings": {
+        "custom_html": "<br><br>",
+        "custom_css": "h2 { color: #1f1d36; }",
+        "custom_js": "console.log('Custom section loaded');"
+      }
+    },
+    "hero_T9LtRJ": {
+      "type": "hero",
+      "custom_css": [
+        "{background: white;}",
+        "h1.mb-4 {text-align: center; padding-bottom: 25px; font-size: 42px; color: black;}"
+      ],
+      "name": "Hero",
+      "settings": {
+        "eyebrow": "",
+        "heading": "Monica",
+        "content": "<p>Monica is part of the Phoenix Gravity team, with a strong focus on water filtration systems and customer experience. She works closely on product development and communication, ensuring clarity, reliability, and trust across every stage of the customer journey.</p>",
+        "sideimage": "shopify://shop_images/d59aae73a2b4d6280165d123e625767f191487e8.jpg",
+        "section_video_bg": "",
+        "buttonlink": "",
+        "buttontext": ""
+      }
+    },
+    "custom_blog_Jx3EVe": {
+      "type": "custom-blog",
+      "name": "Recent Articles",
+      "settings": {
+        "blog": "post",
+        "heading": "Recent Articles From Monica",
+        "posts_per_page": 6,
+        "desktop_columns": 3,
+        "tablet_columns": 2,
+        "mobile_columns": 1,
+        "card_gap": 24,
+        "container_width": 1200,
+        "container_padding": 24,
+        "section_padding_top": 24,
+        "section_padding_bottom": 60,
+        "section_bg_color": "#ffffff",
+        "heading_color": "#000000",
+        "heading_font_size": 36,
+        "heading_font_weight": "800",
+        "heading_alignment": "center",
+        "heading_margin_bottom": 40,
+        "card_bg_color": "#ffffff",
+        "card_border_radius": 8,
+        "card_border_width": 1,
+        "card_border_color": "#e5e7eb",
+        "card_padding": 20,
+        "image_aspect_ratio": "16/9",
+        "image_placeholder_color": "#c5c5c5",
+        "show_date": true,
+        "show_last_updated": true,
+        "meta_text_color": "#6b7280",
+        "meta_label_color": "#374151",
+        "meta_font_size": 12,
+        "title_color": "#111827",
+        "title_hover_color": "#153a5b",
+        "title_font_size": 18,
+        "title_font_weight": "700",
+        "title_lines": 3,
+        "show_author": true,
+        "author_color": "#6b7280",
+        "read_more_label": "Read full article",
+        "read_more_color": "#153a5b",
+        "read_more_hover_color": "#1e40af",
+        "read_more_font_size": 13,
+        "read_more_font_weight": "600",
+        "load_more_label": "Load More",
+        "button_bg_color": "#2b2b4e",
+        "button_bg_hover_color": "#1e40af",
+        "button_text_color": "#ffffff",
+        "button_text_hover_color": "#ffffff",
+        "button_border_width": 0,
+        "button_border_color": "#1d4ed8",
+        "button_border_radius": 8,
+        "button_padding_y": 14,
+        "button_padding_x": 36,
+        "button_font_size": 16,
+        "button_font_weight": "600",
+        "button_margin_top": 40
+      }
+    }
+  },
+  "order": [
+    "copy_image_rUyHJ6",
+    "custom_code_section_ERwfnF",
+    "hero_T9LtRJ",
+    "custom_blog_Jx3EVe"
+  ]
+}

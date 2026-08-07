@@ -1,0 +1,1371 @@
+{% doc %}
+  @prompt
+    Create a new custom Shopify section named “UGC Reels + Influencer Stories” with the following behavior and design:
+    
+    1. **Layout & Display:**
+       - Desktop: 5 cards in a row (equal width, grid).
+       - Mobile: horizontal scroll carousel (swipeable) with scroll-snap.
+       - Show pagination dots **only on mobile**.
+       - On mobile, each card takes ~70% of the viewport width.
+    
+    2. **Card Content (for each of the 5 cards):**
+       - Heading (text field) – e.g. “Clear water is the foundation of wellness.”
+       - Influencer name (text) + Instagram icon + optional Instagram profile URL.
+       - Wistia video embed code (merchant pastes embed HTML / iframe).
+       - Desktop thumbnail image (image picker).
+       - Mobile image (image picker) — show this on mobile instead of desktop thumbnail.
+       - Product name (text) + optional product page URL.
+    
+    3. **Video Behavior:**
+       - Default: paused + muted.
+       - When user taps play:
+         - Only that video plays.
+         - All other videos pause.
+         - Play / Pause control toggles.
+         - Mute / Unmute control toggles audio.
+       - Use Wistia’s API to bind play, pause, volume control.
+       - Remove (or hide) default Wistia overlay/control UI to use your custom controls.
+    
+    4. **Active Card Styling:**
+       - When a video is playing (i.e. that card is “active”):
+         - The card’s background changes to **soft green** (#D9F5E4).
+         - The card height should expand if needed.
+         - Influencer name + Instagram line becomes more visible (e.g. fade in or expand).
+       - When paused or stopped:
+         - Card returns to original background.
+         - Remove active-state styling.
+    
+    5. **Mobile Auto-Advance:**
+       - On mobile, when a video ends:
+         - Automatically scroll to the **next card**.
+         - Auto-play the next video.
+       - Update the pagination dots accordingly as it scrolls to the next card.
+    
+    6. **Styling (CSS):**
+       - Rounded corners: 12px.
+       - Soft box-shadow on cards.
+       - Smooth background-color transition when card becomes active.
+       - Pagination dots: inactive = grey c, i need to add the produt image manullly in the side of the product name  and select the block video i need to active the backgound color will achan ge and add the heading above the video , add the custom css and i need everthing will be customisable and i need i add the embed ode the view not show corrrect that error and if i select the one video that will  backroudn chang ethe differen colot aht will be wditable and add the custom css bar to edit evething amnual y, i page the video code but the video not show solve that , it the custoemr selct the video block  the backgroudn color change hwo colr that not work now and and the instagram id add above the the below the video heading that will show only if the video will action othervie its not show that the the video blcok selct htat show the instagram id so that onlck headin will increase and baclrpun d color will chamge , i will paste the embed code but the video not shown in the front end why  solve the issue in it, i add the vkdeo code the video not work, remove the wistai embed code add the video manually, the video is not visible in the block correct the error and remove the video like back to the wistia embed code 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ugc-reels-{{ ai_gen_id }} {
+    width: 100%;
+    padding: {{ block.settings.section_padding_desktop }}px 20px;
+  }
+
+  .ugc-reels-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ugc-reels-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.desktop_columns }}, 1fr);
+    gap: {{ block.settings.card_gap }}px;
+  }
+
+  .ugc-card-{{ ai_gen_id }} {
+    background: {{ block.settings.card_background }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    box-shadow: {{ block.settings.card_shadow }};
+    overflow: hidden;
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .ugc-card-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.active_card_background }} !important;
+    transform: translateY({{ block.settings.active_card_lift }}px);
+    box-shadow: {{ block.settings.active_card_shadow }};
+  }
+
+  .ugc-card-video-heading-{{ ai_gen_id }} {
+    padding: {{ block.settings.video_heading_padding }}px;
+    font-size: {{ block.settings.video_heading_size }}px;
+    font-weight: {{ block.settings.video_heading_weight }};
+    color: {{ block.settings.video_heading_color }};
+    margin: 0;
+    line-height: 1.3;
+    text-align: {{ block.settings.video_heading_align }};
+    transition: all 0.3s ease;
+  }
+
+  .ugc-card-{{ ai_gen_id }}.active .ugc-card-video-heading-{{ ai_gen_id }} {
+    font-size: calc({{ block.settings.video_heading_size }}px * 1.1);
+  }
+
+  .ugc-influencer-info-top-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.influencer_gap }}px;
+    padding: 0 {{ block.settings.video_heading_padding }}px {{ block.settings.video_heading_padding }}px;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .ugc-card-{{ ai_gen_id }}.active .ugc-influencer-info-top-{{ ai_gen_id }} {
+    opacity: 1;
+    max-height: 50px;
+  }
+
+  .ugc-influencer-name-top-{{ ai_gen_id }} {
+    font-size: {{ block.settings.influencer_font_size }}px;
+    color: {{ block.settings.influencer_color }};
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.influencer_gap }}px;
+  }
+
+  .ugc-influencer-name-top-{{ ai_gen_id }}:hover {
+    text-decoration: underline;
+  }
+
+  .ugc-instagram-icon-top-{{ ai_gen_id }} {
+    width: {{ block.settings.instagram_icon_size }}px;
+    height: {{ block.settings.instagram_icon_size }}px;
+    flex-shrink: 0;
+    fill: {{ block.settings.instagram_icon_color }};
+  }
+
+  .ugc-card-video-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: {{ block.settings.video_aspect_ratio }};
+    overflow: hidden;
+    background: {{ block.settings.video_background }};
+  }
+
+  .ugc-wistia-embed-{{ ai_gen_id }} {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .ugc-wistia-embed-{{ ai_gen_id }} iframe,
+  .ugc-wistia-embed-{{ ai_gen_id }} video,
+  .ugc-wistia-embed-{{ ai_gen_id }} .wistia_embed,
+  .ugc-wistia-embed-{{ ai_gen_id }} div {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .ugc-card-content-{{ ai_gen_id }} {
+    padding: {{ block.settings.card_content_padding }}px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.content_gap }}px;
+  }
+
+  .ugc-card-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: {{ block.settings.heading_weight }};
+    line-height: {{ block.settings.heading_line_height }};
+    margin: 0;
+    color: {{ block.settings.heading_color }};
+    text-align: {{ block.settings.heading_align }};
+  }
+
+  .ugc-product-info-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.product_gap }}px;
+    margin-top: auto;
+  }
+
+  .ugc-product-image-{{ ai_gen_id }} {
+    width: {{ block.settings.product_image_size }}px;
+    height: {{ block.settings.product_image_size }}px;
+    flex-shrink: 0;
+    border-radius: {{ block.settings.product_image_radius }}px;
+    overflow: hidden;
+    background: {{ block.settings.product_image_bg }};
+  }
+
+  .ugc-product-image-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ugc-product-link-{{ ai_gen_id }} {
+    font-size: {{ block.settings.product_font_size }}px;
+    color: {{ block.settings.product_color }};
+    text-decoration: none;
+    font-weight: {{ block.settings.product_font_weight }};
+    flex-grow: 1;
+  }
+
+  .ugc-product-link-{{ ai_gen_id }}:hover {
+    text-decoration: underline;
+    color: {{ block.settings.product_hover_color }};
+  }
+
+  .ugc-pagination-{{ ai_gen_id }} {
+    display: none;
+    justify-content: center;
+    gap: {{ block.settings.pagination_gap }}px;
+    margin-top: {{ block.settings.pagination_margin_top }}px;
+  }
+
+  .ugc-dot-{{ ai_gen_id }} {
+    width: {{ block.settings.dot_size }}px;
+    height: {{ block.settings.dot_size }}px;
+    border-radius: {{ block.settings.dot_radius }}px;
+    background: {{ block.settings.dot_color }};
+    transition: background 0.3s ease, width 0.3s ease;
+    cursor: pointer;
+  }
+
+  .ugc-dot-{{ ai_gen_id }}.active {
+    background: {{ block.settings.dot_active_color }};
+    width: {{ block.settings.dot_active_width }}px;
+    border-radius: {{ block.settings.dot_active_radius }}px;
+  }
+
+  {{ block.settings.custom_css }}
+
+  @media screen and (max-width: 768px) {
+    .ugc-reels-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_mobile }}px 0;
+    }
+
+    .ugc-reels-grid-{{ ai_gen_id }} {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: {{ block.settings.mobile_card_gap }}px;
+      padding: 0 20px;
+      scrollbar-width: none;
+    }
+
+    .ugc-reels-grid-{{ ai_gen_id }}::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ugc-card-{{ ai_gen_id }} {
+      flex: 0 0 {{ block.settings.mobile_card_width }}%;
+      scroll-snap-align: center;
+    }
+
+    .ugc-pagination-{{ ai_gen_id }} {
+      display: flex;
+    }
+
+    .ugc-card-video-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.video_heading_size_mobile }}px;
+      padding: {{ block.settings.video_heading_padding_mobile }}px;
+    }
+
+    .ugc-card-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size_mobile }}px;
+    }
+
+    .ugc-card-content-{{ ai_gen_id }} {
+      padding: {{ block.settings.card_content_padding_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ugc-reels-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ugc-reels-container-{{ ai_gen_id }}">
+    <ugc-reels-{{ ai_gen_id }} class="ugc-reels-grid-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        {% liquid
+          assign video_heading_key = 'card_' | append: i | append: '_video_heading'
+          assign heading_key = 'card_' | append: i | append: '_heading'
+          assign influencer_key = 'card_' | append: i | append: '_influencer'
+          assign instagram_key = 'card_' | append: i | append: '_instagram_url'
+          assign wistia_key = 'card_' | append: i | append: '_wistia_embed'
+          assign product_key = 'card_' | append: i | append: '_product_name'
+          assign product_url_key = 'card_' | append: i | append: '_product_url'
+          assign product_img_key = 'card_' | append: i | append: '_product_image'
+
+          assign video_heading = block.settings[video_heading_key]
+          assign heading = block.settings[heading_key]
+          assign influencer = block.settings[influencer_key]
+          assign instagram_url = block.settings[instagram_key]
+          assign wistia_embed = block.settings[wistia_key]
+          assign product_name = block.settings[product_key]
+          assign product_url = block.settings[product_url_key]
+          assign product_image = block.settings[product_img_key]
+        %}
+
+        <div class="ugc-card-{{ ai_gen_id }}" data-card-index="{{ i }}">
+          {% if video_heading != blank %}
+            <h3 class="ugc-card-video-heading-{{ ai_gen_id }}">{{ video_heading }}</h3>
+          {% endif %}
+
+          {% if influencer != blank %}
+            <div class="ugc-influencer-info-top-{{ ai_gen_id }}">
+              {% if instagram_url != blank %}
+                <a href="{{ instagram_url }}" class="ugc-influencer-name-top-{{ ai_gen_id }}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+                  <svg class="ugc-instagram-icon-top-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/>
+                  </svg>
+                  {{ influencer }}
+                </a>
+              {% else %}
+                <span class="ugc-influencer-name-top-{{ ai_gen_id }}">
+                  <svg class="ugc-instagram-icon-top-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/>
+                  </svg>
+                  {{ influencer }}
+                </span>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          <div class="ugc-card-video-wrapper-{{ ai_gen_id }}">
+            {% if wistia_embed != blank %}
+              <div class="ugc-wistia-embed-{{ ai_gen_id }}" data-wistia-container data-card="{{ i }}">
+                {{ wistia_embed }}
+              </div>
+            {% else %}
+              <div style="width: 100%; height: 100%; background: #f4f4f4; display: flex; align-items: center; justify-content: center; color: #999; font-size: 14px;">
+                Add Wistia embed code
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="ugc-card-content-{{ ai_gen_id }}">
+            {% if heading != blank %}
+              <h3 class="ugc-card-heading-{{ ai_gen_id }}">{{ heading }}</h3>
+            {% endif %}
+
+            {% if product_name != blank or product_image != blank %}
+              <div class="ugc-product-info-{{ ai_gen_id }}">
+                {% if product_image != blank %}
+                  <div class="ugc-product-image-{{ ai_gen_id }}">
+                    <img 
+                      src="{{ product_image | image_url: width: 100 }}" 
+                      alt="{{ product_name | escape }}"
+                      loading="lazy"
+                      width="50"
+                      height="50"
+                    >
+                  </div>
+                {% endif %}
+                {% if product_name != blank %}
+                  {% if product_url != blank %}
+                    <a href="{{ product_url }}" class="ugc-product-link-{{ ai_gen_id }}" onclick="event.stopPropagation();">{{ product_name }} →</a>
+                  {% else %}
+                    <span class="ugc-product-link-{{ ai_gen_id }}">{{ product_name }}</span>
+                  {% endif %}
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </ugc-reels-{{ ai_gen_id }}>
+
+    <div class="ugc-pagination-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        <div class="ugc-dot-{{ ai_gen_id }} {% if i == 1 %}active{% endif %}" data-dot-index="{{ i }}"></div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
+
+<script>
+  (function() {
+    class UGCReels{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.cards = [];
+        this.videos = {};
+        this.currentActiveCard = null;
+        this.isMobile = window.innerWidth <= 768;
+        this.scrollTimeout = null;
+        this.wistiaCheckAttempts = 0;
+        this.maxWistiaAttempts = 100;
+      }
+
+      connectedCallback() {
+        this.init();
+      }
+
+      init() {
+        this.cards = Array.from(this.querySelectorAll('.ugc-card-{{ ai_gen_id }}'));
+        this.waitForWistia();
+        this.setupScrollPagination();
+        this.setupResizeListener();
+        this.setupCardClicks();
+      }
+
+      setupCardClicks() {
+        this.cards.forEach((card, index) => {
+          card.addEventListener('click', (e) => {
+            if (!e.target.closest('a')) {
+              this.togglePlay(index);
+            }
+          });
+        });
+      }
+
+      waitForWistia() {
+        if (typeof window.Wistia !== 'undefined') {
+          this.initializeWistiaVideos();
+        } else if (this.wistiaCheckAttempts < this.maxWistiaAttempts) {
+          this.wistiaCheckAttempts++;
+          setTimeout(() => this.waitForWistia(), 100);
+        } else {
+          console.warn('Wistia API did not load');
+        }
+      }
+
+      initializeWistiaVideos() {
+        setTimeout(() => {
+          this.cards.forEach((card, index) => {
+            const wistiaContainer = card.querySelector('[data-wistia-container]');
+            if (!wistiaContainer) return;
+
+            const videoId = this.extractWistiaId(wistiaContainer);
+            if (!videoId) {
+              console.warn('Could not find Wistia video ID for card', index + 1);
+              return;
+            }
+
+            console.log('Found Wistia video ID:', videoId, 'for card', index + 1);
+
+            window._wq = window._wq || [];
+            window._wq.push({
+              id: videoId,
+              onReady: (video) => {
+                console.log('Wistia video ready:', videoId);
+                this.videos[index] = {
+                  player: video,
+                  card: card,
+                  index: index,
+                  videoId: videoId
+                };
+
+                video.bind('play', () => {
+                  console.log('Video playing:', videoId);
+                  this.setActiveCard(index);
+                });
+
+                video.bind('pause', () => {
+                  console.log('Video paused:', videoId);
+                });
+
+                video.bind('end', () => {
+                  console.log('Video ended:', videoId);
+                  if (this.isMobile) {
+                    this.playNextVideo(index);
+                  }
+                });
+              }
+            });
+          });
+        }, 1000);
+      }
+
+      extractWistiaId(container) {
+        const iframe = container.querySelector('iframe');
+        if (iframe && iframe.src) {
+          const match = iframe.src.match(/wistia\.com\/embed\/iframe\/([a-zA-Z0-9]+)/);
+          if (match) return match[1];
+        }
+
+        const asyncDiv = container.querySelector('[class*="wistia_async_"]');
+        if (asyncDiv) {
+          const classList = Array.from(asyncDiv.classList);
+          for (const className of classList) {
+            if (className.startsWith('wistia_async_')) {
+              return className.replace('wistia_async_', '');
+            }
+          }
+        }
+
+        const idDiv = container.querySelector('[id*="wistia_"]');
+        if (idDiv && idDiv.id) {
+          const match = idDiv.id.match(/wistia_([a-zA-Z0-9]+)/);
+          if (match) return match[1];
+        }
+
+        return null;
+      }
+
+      togglePlay(index) {
+        const videoData = this.videos[index];
+        if (!videoData || !videoData.player) {
+          console.warn('Video not ready for card', index + 1);
+          return;
+        }
+
+        const isPlaying = videoData.player.state() === 'playing';
+
+        this.pauseAllVideos();
+
+        if (!isPlaying) {
+          videoData.player.play();
+          videoData.card.classList.add('active');
+        } else {
+          videoData.player.pause();
+          videoData.card.classList.remove('active');
+        }
+      }
+
+      pauseAllVideos() {
+        Object.values(this.videos).forEach((videoData) => {
+          if (videoData && videoData.player) {
+            videoData.player.pause();
+            videoData.card.classList.remove('active');
+          }
+        });
+      }
+
+      setActiveCard(index) {
+        this.cards.forEach((card) => card.classList.remove('active'));
+        if (this.videos[index]) {
+          this.videos[index].card.classList.add('active');
+          this.currentActiveCard = index;
+        }
+      }
+
+      playNextVideo(currentIndex) {
+        const nextIndex = currentIndex + 1;
+        if (nextIndex < this.cards.length && this.videos[nextIndex]) {
+          this.scrollToCard(nextIndex);
+          setTimeout(() => {
+            this.togglePlay(nextIndex);
+          }, 300);
+        }
+      }
+
+      scrollToCard(index) {
+        if (!this.isMobile) return;
+
+        const card = this.cards[index];
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      }
+
+      setupScrollPagination() {
+        if (!this.isMobile) return;
+
+        const dots = document.querySelectorAll('.ugc-dot-{{ ai_gen_id }}');
+
+        this.addEventListener('scroll', () => {
+          clearTimeout(this.scrollTimeout);
+          this.scrollTimeout = setTimeout(() => {
+            this.updateActiveDot();
+          }, 100);
+        });
+
+        dots.forEach((dot, index) => {
+          dot.addEventListener('click', () => {
+            this.scrollToCard(index);
+          });
+        });
+      }
+
+      updateActiveDot() {
+        if (!this.isMobile) return;
+
+        const scrollLeft = this.scrollLeft;
+        const cardWidth = this.cards[0].offsetWidth;
+        const gap = {{ block.settings.mobile_card_gap }};
+        const activeIndex = Math.round(scrollLeft / (cardWidth + gap));
+
+        const dots = document.querySelectorAll('.ugc-dot-{{ ai_gen_id }}');
+        dots.forEach((dot, index) => {
+          if (index === activeIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+
+      setupResizeListener() {
+        window.addEventListener('resize', () => {
+          this.isMobile = window.innerWidth <= 768;
+        });
+      }
+    }
+
+    customElements.define('ugc-reels-{{ ai_gen_id }}', UGCReels{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "UGC influencer stories",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1000,
+      "max": 2000,
+      "step": 100,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "desktop_columns",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "label": "Desktop columns",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card gap",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "section_padding_desktop",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section padding desktop",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_mobile",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Section padding mobile",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "active_card_background",
+      "label": "Active background",
+      "default": "#D9F5E4"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 12
+    },
+    {
+      "type": "text",
+      "id": "card_shadow",
+      "label": "Card shadow",
+      "default": "0 2px 8px rgba(0, 0, 0, 0.1)"
+    },
+    {
+      "type": "text",
+      "id": "active_card_shadow",
+      "label": "Active card shadow",
+      "default": "0 4px 12px rgba(0, 0, 0, 0.15)"
+    },
+    {
+      "type": "range",
+      "id": "active_card_lift",
+      "min": -10,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Active card lift",
+      "default": -4
+    },
+    {
+      "type": "range",
+      "id": "card_content_padding",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Content padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "card_content_padding_mobile",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Content padding mobile",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Content gap",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Video heading"
+    },
+    {
+      "type": "range",
+      "id": "video_heading_size",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "video_heading_size_mobile",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size mobile",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "video_heading_weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "label": "Font weight",
+      "default": 600
+    },
+    {
+      "type": "color",
+      "id": "video_heading_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "video_heading_align",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "video_heading_padding",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "video_heading_padding_mobile",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding mobile",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Video container"
+    },
+    {
+      "type": "select",
+      "id": "video_aspect_ratio",
+      "label": "Aspect ratio",
+      "options": [
+        { "value": "16 / 9", "label": "16:9" },
+        { "value": "9 / 16", "label": "9:16 (Vertical)" },
+        { "value": "4 / 5", "label": "4:5" },
+        { "value": "1 / 1", "label": "1:1 (Square)" }
+      ],
+      "default": "9 / 16"
+    },
+    {
+      "type": "color",
+      "id": "video_background",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Card heading"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size mobile",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "heading_weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "label": "Font weight",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "heading_line_height",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "label": "Line height",
+      "default": 1.4
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "heading_align",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Influencer info"
+    },
+    {
+      "type": "range",
+      "id": "influencer_font_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "influencer_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "influencer_gap",
+      "min": 4,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "instagram_icon_size",
+      "min": 14,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "instagram_icon_color",
+      "label": "Icon color",
+      "default": "#E4405F"
+    },
+    {
+      "type": "header",
+      "content": "Product info"
+    },
+    {
+      "type": "range",
+      "id": "product_image_size",
+      "min": 40,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Image size",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "product_image_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Image radius",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "product_image_bg",
+      "label": "Image background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "range",
+      "id": "product_font_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "product_font_weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "label": "Font weight",
+      "default": 500
+    },
+    {
+      "type": "color",
+      "id": "product_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "product_hover_color",
+      "label": "Hover color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "product_gap",
+      "min": 8,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Mobile settings"
+    },
+    {
+      "type": "range",
+      "id": "mobile_card_width",
+      "min": 60,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "Card width",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "mobile_card_gap",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Card gap",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Pagination dots"
+    },
+    {
+      "type": "range",
+      "id": "dot_size",
+      "min": 6,
+      "max": 12,
+      "step": 1,
+      "unit": "px",
+      "label": "Dot size",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "dot_radius",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Dot radius",
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#cccccc"
+    },
+    {
+      "type": "range",
+      "id": "dot_active_width",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Active dot width",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "dot_active_radius",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Active dot radius",
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "dot_active_color",
+      "label": "Active dot color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "pagination_gap",
+      "min": 4,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "label": "Pagination gap",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "pagination_margin_top",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Pagination margin top",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Custom CSS"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_css",
+      "label": "Custom CSS"
+    },
+    {
+      "type": "header",
+      "content": "Card 1"
+    },
+    {
+      "type": "text",
+      "id": "card_1_video_heading",
+      "label": "Video heading"
+    },
+    {
+      "type": "text",
+      "id": "card_1_heading",
+      "label": "Card heading",
+      "default": "Clear water is wellness"
+    },
+    {
+      "type": "text",
+      "id": "card_1_influencer",
+      "label": "Influencer name",
+      "default": "@wellness_guru"
+    },
+    {
+      "type": "url",
+      "id": "card_1_instagram_url",
+      "label": "Instagram profile URL"
+    },
+    {
+      "type": "html",
+      "id": "card_1_wistia_embed",
+      "label": "Wistia embed code",
+      "info": "Paste complete Wistia embed code here"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_1_product_image",
+      "label": "Product image"
+    },
+    {
+      "type": "text",
+      "id": "card_1_product_name",
+      "label": "Product name",
+      "default": "Phoenix Gravity Filter"
+    },
+    {
+      "type": "url",
+      "id": "card_1_product_url",
+      "label": "Product page URL"
+    },
+    {
+      "type": "header",
+      "content": "Card 2"
+    },
+    {
+      "type": "text",
+      "id": "card_2_video_heading",
+      "label": "Video heading"
+    },
+    {
+      "type": "text",
+      "id": "card_2_heading",
+      "label": "Card heading",
+      "default": "Pure hydration daily"
+    },
+    {
+      "type": "text",
+      "id": "card_2_influencer",
+      "label": "Influencer name",
+      "default": "@healthy_mom"
+    },
+    {
+      "type": "url",
+      "id": "card_2_instagram_url",
+      "label": "Instagram profile URL"
+    },
+    {
+      "type": "html",
+      "id": "card_2_wistia_embed",
+      "label": "Wistia embed code",
+      "info": "Paste complete Wistia embed code here"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_2_product_image",
+      "label": "Product image"
+    },
+    {
+      "type": "text",
+      "id": "card_2_product_name",
+      "label": "Product name",
+      "default": "Phoenix Gravity Filter"
+    },
+    {
+      "type": "url",
+      "id": "card_2_product_url",
+      "label": "Product page URL"
+    },
+    {
+      "type": "header",
+      "content": "Card 3"
+    },
+    {
+      "type": "text",
+      "id": "card_3_video_heading",
+      "label": "Video heading"
+    },
+    {
+      "type": "text",
+      "id": "card_3_heading",
+      "label": "Card heading",
+      "default": "Best clean water choice"
+    },
+    {
+      "type": "text",
+      "id": "card_3_influencer",
+      "label": "Influencer name",
+      "default": "@eco_lifestyle"
+    },
+    {
+      "type": "url",
+      "id": "card_3_instagram_url",
+      "label": "Instagram profile URL"
+    },
+    {
+      "type": "html",
+      "id": "card_3_wistia_embed",
+      "label": "Wistia embed code",
+      "info": "Paste complete Wistia embed code here"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_3_product_image",
+      "label": "Product image"
+    },
+    {
+      "type": "text",
+      "id": "card_3_product_name",
+      "label": "Product name",
+      "default": "Phoenix Gravity Filter"
+    },
+    {
+      "type": "url",
+      "id": "card_3_product_url",
+      "label": "Product page URL"
+    },
+    {
+      "type": "header",
+      "content": "Card 4"
+    },
+    {
+      "type": "text",
+      "id": "card_4_video_heading",
+      "label": "Video heading"
+    },
+    {
+      "type": "text",
+      "id": "card_4_heading",
+      "label": "Card heading",
+      "default": "Tastes amazing and pure"
+    },
+    {
+      "type": "text",
+      "id": "card_4_influencer",
+      "label": "Influencer name",
+      "default": "@fitness_life"
+    },
+    {
+      "type": "url",
+      "id": "card_4_instagram_url",
+      "label": "Instagram profile URL"
+    },
+    {
+      "type": "html",
+      "id": "card_4_wistia_embed",
+      "label": "Wistia embed code",
+      "info": "Paste complete Wistia embed code here"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_4_product_image",
+      "label": "Product image"
+    },
+    {
+      "type": "text",
+      "id": "card_4_product_name",
+      "label": "Product name",
+      "default": "Phoenix Gravity Filter"
+    },
+    {
+      "type": "url",
+      "id": "card_4_product_url",
+      "label": "Product page URL"
+    },
+    {
+      "type": "header",
+      "content": "Card 5"
+    },
+    {
+      "type": "text",
+      "id": "card_5_video_heading",
+      "label": "Video heading"
+    },
+    {
+      "type": "text",
+      "id": "card_5_heading",
+      "label": "Card heading",
+      "default": "No more plastic bottles"
+    },
+    {
+      "type": "text",
+      "id": "card_5_influencer",
+      "label": "Influencer name",
+      "default": "@zero_waste"
+    },
+    {
+      "type": "url",
+      "id": "card_5_instagram_url",
+      "label": "Instagram profile URL"
+    },
+    {
+      "type": "html",
+      "id": "card_5_wistia_embed",
+      "label": "Wistia embed code",
+      "info": "Paste complete Wistia embed code here"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_5_product_image",
+      "label": "Product image"
+    },
+    {
+      "type": "text",
+      "id": "card_5_product_name",
+      "label": "Product name",
+      "default": "Phoenix Gravity Filter"
+    },
+    {
+      "type": "url",
+      "id": "card_5_product_url",
+      "label": "Product page URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "UGC influencer stories"
+    }
+  ]
+}
+{% endschema %}

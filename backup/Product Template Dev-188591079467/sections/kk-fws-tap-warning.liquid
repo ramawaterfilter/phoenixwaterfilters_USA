@@ -1,0 +1,286 @@
+{%- liquid
+  assign warning_image = section.settings.image
+  if warning_image == blank
+    assign warning_image = product.featured_image
+  endif
+-%}
+
+<section
+  class="kk-fws-tap-warning"
+  style="
+    --kk-fws-tap-warning-background: {{ section.settings.background_color }};
+    --kk-fws-tap-warning-heading: {{ section.settings.heading_color }};
+    --kk-fws-tap-warning-text: {{ section.settings.text_color }};
+    --kk-fws-tap-warning-fade: {{ section.settings.fade_color }};
+  "
+>
+  <div class="kk-fws-tap-warning__media">
+    {%- if warning_image != blank -%}
+      {{
+        warning_image
+        | image_url: width: 1600
+        | image_tag:
+          loading: 'lazy',
+          class: 'kk-fws-tap-warning__image',
+          widths: '375, 750, 1006, 1400, 1600',
+          sizes: '(max-width: 749px) 101vw, calc(50vw + 32.3rem)'
+      }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'kk-fws-tap-warning__image kk-fws-tap-warning__image--placeholder' }}
+    {%- endif -%}
+    <span class="kk-fws-tap-warning__fade" aria-hidden="true"></span>
+  </div>
+
+  <div class="kk-fws-tap-warning__container">
+    <div class="kk-fws-tap-warning__content">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="kk-fws-tap-warning__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="kk-fws-tap-warning__body">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'paragraph' and block.settings.text != blank -%}
+              <div class="kk-fws-tap-warning__paragraph" {{ block.shopify_attributes }}>
+                {{ block.settings.text }}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .kk-fws-tap-warning {
+    /* Override the theme global `section { padding: 20px 0 }`; this band sizes
+       from its own content and media layer. */
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    background: var(--kk-fws-tap-warning-background, #ffffff);
+  }
+
+  .kk-fws-tap-warning__media {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(100%, calc(50% + 32.3rem));
+    overflow: hidden;
+  }
+
+  .kk-fws-tap-warning__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: right center;
+  }
+
+  .kk-fws-tap-warning__fade {
+    display: none;
+  }
+
+  .kk-fws-tap-warning__container {
+    position: relative;
+    width: min(100% - 3.2rem, 114rem);
+    min-height: 86.72rem;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+
+  .kk-fws-tap-warning__content {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3rem;
+    word-break: break-word;
+  }
+
+  .kk-fws-tap-warning__heading {
+    margin: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 5.2rem;
+    line-height: 1.1;
+    text-transform: none;
+    color: var(--kk-fws-tap-warning-heading, #153a5b);
+  }
+
+  .kk-fws-tap-warning__body {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 2.2rem;
+    line-height: 1.4;
+    color: var(--kk-fws-tap-warning-text, #26303a);
+  }
+
+  .kk-fws-tap-warning__paragraph + .kk-fws-tap-warning__paragraph {
+    margin-top: 1.4em;
+  }
+
+  .kk-fws-tap-warning__paragraph p {
+    margin: 0;
+  }
+
+  .kk-fws-tap-warning__paragraph p + p {
+    margin-top: 1.4em;
+  }
+
+  .kk-fws-tap-warning__paragraph a {
+    color: inherit;
+  }
+
+  @media (max-width: 989px) {
+    .kk-fws-tap-warning__container {
+      min-height: 70rem;
+    }
+
+    .kk-fws-tap-warning__heading {
+      font-size: 4rem;
+    }
+
+    .kk-fws-tap-warning__body {
+      font-size: 1.8rem;
+    }
+
+    .kk-fws-tap-warning__content {
+      gap: 2.4rem;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .kk-fws-tap-warning__media {
+      top: 0;
+      bottom: auto;
+      left: -0.66%;
+      width: 101.32%;
+      height: 24.9rem;
+    }
+
+    .kk-fws-tap-warning__fade {
+      display: block;
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(
+        to top,
+        var(--kk-fws-tap-warning-fade, #ffffff) 0%,
+        rgba(255, 255, 255, 0) 51%
+      );
+    }
+
+    .kk-fws-tap-warning__container {
+      width: min(100% - 4rem, 54rem);
+      min-height: 0;
+      grid-template-columns: 1fr;
+      padding: 20.5rem 0 4rem;
+    }
+
+    .kk-fws-tap-warning__content {
+      grid-column: 1;
+      gap: 1.8rem;
+    }
+
+    .kk-fws-tap-warning__heading {
+      max-width: 28.7rem;
+      font-size: 2.8rem;
+    }
+
+    .kk-fws-tap-warning__body {
+      font-size: 1.6rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Tap Warning",
+  "tag": "div",
+  "class": "section-kk-fws-tap-warning",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "info": "Tap water lifestyle photo. Falls back to the product's featured image when empty. Photography is uploaded to the Shopify CDN, not committed to the theme."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "WARNING: Drinking Tap Water Makes 7.2 million Americans Sick Every Year!"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text",
+      "default": "#26303a"
+    },
+    {
+      "type": "color",
+      "id": "fade_color",
+      "label": "Mobile image fade",
+      "info": "Colour the image fades into at the bottom on mobile. Match the background.",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "paragraph",
+      "name": "Paragraph",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Every year, millions of Americans fall sick by ingesting harmful chemicals through tap water.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Tap Warning",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>Every year, millions of Americans fall sick by ingesting harmful chemicals through tap water. In Baltimore, they recently detected a parasite in the drinking water… in California’s Coachella Valley, they found water from fast-food soda fountains contained salmonella… and in Iowa, they identified unsafe amounts of nitrate and alachlor.</p>"
+          }
+        },
+        {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>These chemicals have been linked to a range of dangerous side effects - liver and kidney damage, thyroid disease, cancer and even “blue baby syndrome” in infants. Phoenix Gravity Water Filters use a powerful Nano Toxin filter technology to remove 99.9% of contaminants from tap water, making it safe to drink in any city in America!</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

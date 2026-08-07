@@ -1,0 +1,18 @@
+{% doc %}
+Renders inventory availability notice.
+@param {product} product - Product to render.
+@param {variant} current_variant - Currently selected variant.
+@example
+{% render 'product-hero-availability', product: product, current_variant: current_variant %}
+{% enddoc %}
+
+{% if product.available %}
+  <p class="js-availability-notice product-availability disabled {% if product.variants.size > 1 %}invalid{% endif %}">
+    There are only <strong class="js-availablilty">{{ current_variant.inventory_quantity }}</strong>
+    {{ product.title }}
+    {% if product.variants.size > 1 %}
+      <span class="js-varient">({{ current_variant.title }})</span>
+    {% endif %}
+    available in stock.
+  </p>
+{% endif %}

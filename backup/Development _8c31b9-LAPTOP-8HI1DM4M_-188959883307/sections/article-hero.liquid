@@ -1,0 +1,180 @@
+<section class="article-header-top p-0">
+  <div class="container">
+    <div class="row justify-content-center align-items-center">
+      <div class="col-12 text-center">
+        {% if section.settings.top_banner != blank %}
+          <span class="title">
+            {{ section.settings.top_banner }}
+          </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="article-header p-0">
+  <div class="container">
+    <div class="row justify-content-center align-items-center">
+      <div class="col-12 text-center">
+        {% if section.settings.publisher_logo != blank %}
+          {{ section.settings.publisher_logo | image_url: width: 600 | image_tag: class: 'publisher' }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="article-author">
+  {% assign current_url = shop.url | append: page.url %}
+  {% assign page_title = page.title | escape %}
+  {% assign image_src = page.image.src | img_url: '1024x1024' %}
+
+  <div class="background-image-container bg-white"></div>
+  <div class="container">
+    <div class="row justify-content-start align-items-center">
+      {% if section.settings.status == 'trending' %}
+        <div class="col-12 pb-5">
+          <img
+            src="{{ 'icon-trending.svg' | asset_url }}"
+            alt="trending"
+            class="status-icon" />
+        </div>
+      {% endif %}
+
+      {% if section.settings.headline != blank %}
+        <div class="col-11 col-md-10 pe-5 pb-3">
+          <h2>{{ section.settings.headline }}</h2>
+        </div>
+      {% endif %}
+
+      {% if section.settings.redlabel %}
+        <div class="labels">
+          <div class="redlabel">
+            {{ section.settings.redlabel }}
+          </div>
+        </div>
+
+      {% endif %}
+    </div>
+
+    <div class="row d-flex justify-content-start align-items-center mb-5">
+
+      <div class="author d-flex flex-row align-items-center col-12 col-md-8 col-lg-8 col-xl-7 ">
+        {{ section.settings.author_avatar | image_url: width: 300 | image_tag: class: 'avatar' }}
+        <div class="name">By {{ section.settings.author }}&nbsp;
+        </div>
+        <div class="date">
+          | {{ section.settings.date }}</div>
+      </div>
+      <div class="social-share d-flex flex-row align-items-center justify-content-start justify-content-md-end col-12 col-md-4 pe-md-5 col-lg-4 col-xl-3">
+        <span class="share-title">Share:</span>
+        <div id="share"></div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+<script>
+                  function kk_share_buttons() {
+                    var currentUrl = "{{ current_url }}";
+                    var pageTitle = "{{ page_title }}";
+                    var imageSrc = "{{ image_src }}";
+                    
+                    var twitterURL = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(pageTitle) + '&url=' + encodeURIComponent(currentUrl);
+                    var facebookURL = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(currentUrl);
+                    var linkedInURL = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(currentUrl);
+                    var pinterestURL = 'https://pinterest.com/pin/create/button/?url=' + encodeURIComponent(currentUrl) + '&media=' + encodeURIComponent(imageSrc) + '&description=' + encodeURIComponent(pageTitle);
+                    var whatsappURL = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(pageTitle + " " + currentUrl);
+                    
+                    
+                    
+                    var content_social = '<div class="kk-social">' +
+                    '<img src="{{ 'share-facebook.png' | asset_url }}" alt="Facebook">' +
+                    '<img src="{{ 'share-x.png' | asset_url }}" alt="X">' +
+                    '<img src="{{ 'share-whatsapp.png' | asset_url }}" alt="WhatsApp">' +
+                    '<img src="{{ 'share-pinterest.png' | asset_url }}" alt="Pinterest">' +
+                    '</div>';
+                    
+                    return content_social;
+                  }
+                  
+                  // Append the share buttons to the 'share' div
+        let share_panel = document.getElementById('share');
+
+        if(share_panel){
+                  setTimeout(function(){
+                  share_panel.innerHTML = kk_share_buttons()
+                }, 100);
+         }
+</script>
+
+{% schema %}
+  {
+    "name": "Article Hero",
+    "tag": "div",
+    "class": "section-article-hero",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "text",
+        "id": "top_banner",
+        "label": "Top Banner",
+        "default": "Advertorial"
+      },
+      {
+        "type": "image_picker",
+        "id": "publisher_logo",
+        "label": "Publisher Logo"
+      },
+      {
+        "type": "text",
+        "id": "redlabel",
+        "label": "Red Label text",
+        "default": "BREAKING NEWS"
+      }, {
+        "type": "select",
+        "id": "status",
+        "label": "Article Status",
+        "default": "trending",
+        "options": [
+          {
+            "label": "None",
+            "value": "none"
+          }, {
+            "label": "Trending",
+            "value": "trending"
+          }
+        ]
+      }, {
+        "type": "textarea",
+        "id": "headline",
+        "label": "Article Headline"
+      }, {
+        "type": "text",
+        "id": "author",
+        "label": "Author Name"
+      }, {
+        "type": "image_picker",
+        "id": "author_avatar",
+        "label": "Author Avatar"
+      }, {
+        "type": "text",
+        "id": "date",
+        "label": "Posted Text"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Article Hero"
+      }
+    ],
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    }
+  }
+{% endschema %}

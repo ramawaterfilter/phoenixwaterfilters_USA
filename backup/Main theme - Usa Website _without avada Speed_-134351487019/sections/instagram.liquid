@@ -1,0 +1,48 @@
+<div class="container">
+	<div class="row align-items-center justify-content-center">
+		<div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6 text-center">
+			<h2>
+				{{ section.settings.heading }}
+			</h2>
+			
+			{{ section.settings.sub_text }}
+		</div>
+	</div>
+</div>
+
+{% comment %} Use Instafeed App {% endcomment %}
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-12">
+			<div id="insta-feed"></div>
+		</div>
+	</div>
+</div>
+
+{% schema %}
+{
+	"name": "Instagram",
+	"tag":"section",
+	"class":"section-instagram",
+	"settings": [
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Heading"
+		}, 
+		{
+			"type": "richtext",
+			"id": "sub_text",
+			"label": "Sub Text"
+		}
+	],
+	"presets": [
+		{
+			"name": "Instagram"
+		}
+	],
+    "disabled_on": {
+        "groups": ["header"]
+    }
+}
+{% endschema %}

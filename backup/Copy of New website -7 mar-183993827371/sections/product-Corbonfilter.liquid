@@ -1,0 +1,674 @@
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ shop.url }}"
+    }
+    {% if collection %}
+    ,
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ collection.title | escape }}",
+      "item": "{{ shop.url }}{{ collection.url }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ product.title | escape }}",
+      "item": "{{ shop.url }}{{ product.url }}"
+    }
+    {% else %}
+    ,
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ product.title | escape }}",
+      "item": "{{ shop.url }}{{ product.url }}"
+    }
+    {% endif %}
+  ]
+}
+</script>
+{% comment %}
+  Other Products
+{% endcomment %}
+
+{% assign current_variant = product.selected_or_first_available_variant %}
+<div class="container">
+  <div class="row justify-content-center lk">
+    <div class="col-11 jkl col-lg-6 pe-5">
+      <div class="position-relative {% if product.images.size <= 0 %}h-100{% endif %}">
+        {% render 'product-badge', product: product %}
+
+        {% if product.images.size > 1 %}
+          <div class="swiper-container swiper product-swiper" data-slidestoshow="1" id="product-slider">
+            <div class="swiper-wrapper">
+              {% for media in product.media %}
+                {% assign thisVariantID = "" %}
+                {% for variant in product.variants %}
+                  {% if variant.featured_image == media.src %}
+                    {% assign thisVariantID = variant.id %}
+                  {% endif %}
+                {% endfor %}
+                {% comment %} Add video check to conditional... maybe? {% endcomment %}
+                {% if media.media_type == "external_video" %}
+                  <div class="swiper-slide" data-variant-id="{{ thisVariantID }}" data-slide-index="{{ forloop.index }}">
+                    <a data-fancybox="gallery" href="{{ media | external_video_url: autoplay: 'true' }}" class="product-image product-image--video d-block">
+                      {{ media.preview_image | image_url: width: 1200 | image_tag }}
+                    </a>
+                  </div>
+                {% elsif media.media_type == "image" %}
+                  <div class="swiper-slide" data-variant-id="{{ thisVariantID }}" data-slide-index="{{ forloop.index }}">
+                    <a data-fancybox="gallery" href="{{ media | image_url: width: 2560 }}" class="product-image d-block">
+                      {{ media | image_url: width: 1200 | image_tag }}
+                    </a>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="swiper-container swiper control {% if product.media.size == 3 %} control-three {% endif %} {% if product.media.size == 5 %}control-five{% endif %}" id="product-slider-nav">
+            <div class="swiper-wrapper {% if product.media.size == 3 or product.media.size == 5 %}wide{% endif %}">
+              {% for media in product.media %}
+                {% if media.media_type == "external_video" %}
+                  <div class="swiper-slide">
+                    {{ media.preview_image | image_url: width: 600 | image_tag }}
+                  </div>
+                {% elsif media.media_type == "image" %}
+                  <div class="swiper-slide">
+                    {{ media | image_url: width: 1200 | image_tag }}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="swiper-nav">
+            <div class="swiper-button-prev swiper-prev"></div>
+            <div class="swiper-button-next swiper-next"></div>
+          </div>
+        {% elsif product.featured_image %}
+          <a data-fancybox="gallery" href="{{ product.featured_image | image_url: width: 2560 }}" class="product-image d-block">
+            {{ product.featured_image | image_url: width: 1200| image_tag }}
+          </a>
+        {% else %}
+          <div class="placeholder">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-11 gg col-lg-6 mt-3 mt-lg-0">
+      {% render 'product-hero-countdown', section: section %}
+      <h1>{{ product.title }}</h1>
+      <div class="product-rating">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when '@app' %}
+              {% render block %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+      {% render 'best-for-tag' %}
+      {% if product.description != blank or product.metafields.custom.product_usps.value.size > 0 %}
+        <div class="product-description">
+          {{ product.description }}
+          {% if product.metafields.custom.product_usps.value.size > 0 %}
+            <ul class="product-description__usps">
+              {% for usp in product.metafields.custom.product_usps.value %}
+                <li>{{ usp }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endif %}
+
+
+
+
+      
+      {% if settings.enable_minmax_buys %}
+        {% assign min_buy = settings.min_buy_qty %}
+        {% assign max_buy = settings.max_buy_qty %}
+      {% endif %}
+      <form action="/cart/add" method="post" enctype="multipart/form-data" id="add-to-cart" class="mb-5 main-add-to-cart" data-min="{{ min_buy }}" data-max="{{ max_buy }}">
+        {% comment %} This handle is used with the min/max quantity js {% endcomment %}
+        <input type="hidden" name="handle" value="{{ product.handle }}">
+        {% comment %} Subscriptions Support {% endcomment %}
+        {% if product.selling_plan_groups.size > 0 %}
+          <div class="subscriptions d-none">
+            {% for group in product.selling_plan_groups %}
+              <div class="subscriptions__group">
+                {% assign loop1 = forloop.index %}
+                <p class="h4">{{ group.name }}</p>
+                {% for selling_plan in group.selling_plans %}
+                  <label for="plan-{{ forloop.index }}-{{ loop1 }}">
+                    <input type="radio" id="plan-{{ forloop.index }}-{{ loop1 }}" name="selling_plan" value="{{ selling_plan.id }}" {% if forloop.index == 1 %}checked{% endif %} />
+                    {{ selling_plan.name }}
+                  </label>
+                {% endfor %}
+                {% comment %} If last loop {% endcomment %}
+                {% if loop1 == product.selling_plan_groups.size and product.requires_selling_plan != true %}
+                  <label for="plan-none">
+                    <input type="radio" id="plan-none" name="selling_plan" value="" />
+                    {{ 'products.product.no_selling_plan' | t }}
+                  </label>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        
+        {% if product.available and product.variants.size > 1 %}
+          <div id="product-variants">
+            {% assign has_size_option = false %}
+            
+            {% if product.variants.size > 1 %}
+                    
+
+           {% comment %} <select 
+           id="product-selectors" name="id" data-productid="{{ product.id }}" data-label="{% if product.options.size == 1 %}{{ product.options[0] }}{% endif %}">
+                {% for variant in product.variants %}
+                  {% if variant.available %}
+
+<!-- add by k for the product id  -->
+
+                
+                    <option {% if variant == current_variant %} selected="selected" {% endif %} value="{{ variant.id }}" data-price="{{ variant.price | money_with_currency }}" name="id" id="variant_{{ variant.id }}">
+                      {{ variant.title }} <span class="small">({{ variant.price | money }} {{ cart.currency.iso_code }})</span>
+                    </option>
+                  {% else %}
+                    <option disabled="disabled" data-price="{{ variant.price | money_with_currency }}" name="id"    id="variant_{{ variant.id }}" value="{{ variant.id }}">{{ variant.title }} - {{ 'products.product.inventory_out_of_stock' | t }}</option>
+                  {% endif %}
+                {% endfor %} 
+
+                
+              </select>   {% endcomment %}
+            
+            <!-- Variant Image Selector -->
+<div class="variant-image-selector">
+  {% for variant in product.variants %}
+    {% if variant.available %}
+      <div class="variant-image-option {% if variant == current_variant %}active{% endif %}"
+           data-variant-id="{{ variant.id }}"
+           data-price="{{ variant.price | money_with_currency }}">
+        <img src="{{ variant.featured_image | img_url: '200x200' }}" alt="{{ variant.title }}">
+      </div>
+    {% else %}
+      <div class="variant-image-option disabled" title="Out of stock">
+        <img src="{{ variant.featured_image | img_url: '200x200' }}" alt="{{ variant.title }}">
+        <span class="sold-out">Sold Out</span>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<!-- Hidden Select (still needed for Shopify form functionality) -->
+<select id="ProductSelect-{{ section.id }}" name="id" hidden>
+  {% for variant in product.variants %}
+    <option {% if variant == current_variant %} selected="selected" {% endif %}
+      value="{{ variant.id }}">{{ variant.title }}</option>
+  {% endfor %}
+</select>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const variantOptions = document.querySelectorAll('.variant-image-option');
+  const variantSelect = document.querySelector('#ProductSelect-{{ section.id }}') || document.querySelector('select[name="id"]');
+  const mainSwiperEl = document.querySelector('#product-slider');
+
+  if (!variantSelect || !mainSwiperEl) return;
+
+  // Get Swiper instance (wait a bit in case it's not ready yet)
+  let mainSwiper;
+  setTimeout(() => {
+    mainSwiper = mainSwiperEl.swiper;
+  }, 500);
+
+  // Build a variant map
+  const variantMap = {};
+  if (window.product?.variants) {
+    window.product.variants.forEach(v => variantMap[String(v.id)] = v);
+  }
+
+  // Helper: Go to matching Swiper slide
+  function updateMainImage(variant) {
+    if (!variant?.featured_image) return;
+    const slide = document.querySelector(`.swiper-slide[data-variant-id="${variant.id}"]`);
+    if (slide && mainSwiper) {
+      const index = Array.from(slide.parentNode.children).indexOf(slide);
+      mainSwiper.slideTo(index);
+    }
+  }
+
+  // Helper: Update price
+  function updatePrice(variant) {
+    const priceEl = document.querySelector('[data-price].product-dyn-price') || document.querySelector('[data-price]');
+    if (priceEl) priceEl.textContent = (variant.price / 100).toFixed(2);
+
+    const compareEl = document.querySelector('[data-compare] s');
+    if (compareEl) {
+      compareEl.textContent = (variant.compare_at_price > variant.price)
+        ? (variant.compare_at_price / 100).toFixed(2)
+        : '';
+    }
+  }
+
+  // On select change
+  variantSelect.addEventListener('change', function() {
+    const variantId = this.value;
+    const variant = variantMap[variantId];
+    if (!variant) return;
+
+    updateMainImage(variant);
+    updatePrice(variant);
+
+    // Shopify theme triggers
+    this.dispatchEvent(new Event('input', { bubbles: true }));
+    this.dispatchEvent(new Event('change', { bubbles: true }));
+    document.dispatchEvent(new CustomEvent('product:variant-change', { detail: { variant } }));
+    if (typeof initProductScript === 'function') initProductScript(window.product, 'product-selectors', document);
+  });
+
+  // On image option click
+  variantOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      if (option.classList.contains('disabled')) return;
+
+      variantOptions.forEach(o => o.classList.remove('active'));
+      option.classList.add('active');
+
+      const variantId = option.dataset.variantId;
+      const variant = variantMap[variantId];
+      if (!variant) return;
+
+      variantSelect.value = variantId;
+      variantSelect.dispatchEvent(new Event('change', { bubbles: true }));
+
+      updateMainImage(variant);
+      updatePrice(variant);
+    });
+  });
+
+  // On page load → ensure correct image shown
+  const defaultVariant = variantMap[variantSelect.value];
+  if (defaultVariant) updateMainImage(defaultVariant);
+});
+</script>
+
+
+
+
+    <!-- Variant Image Selector -->
+
+
+
+
+
+              
+            {% else %}
+              <input name="id" data-productid="{{ product.id }}" value="{{ product.variants.first.id }}" type="hidden" />
+            {% endif %}
+          </div>
+        {% elsif product.variants.size == 1 and product.available %}
+          <input name="id" data-productid="{{ product.id }}" value="{{ product.variants.first.id }}" type="hidden" />
+        {% endif %}
+         
+
+       
+
+        {% if product.available %}
+          <div class="product-quantity">
+            <div class="qty-container">
+              <label for="Quantity">{{ 'products.product.quantity.label' | t }} &nbsp; </label>
+              <span class="qty-btn decrease js-qty-update">-</span>
+              <input type="number" id="Quantity" name="quantity" data-qtt-id value="{{ min_buy }}" min="{{ min_buy }}" max="{{ max_buy }}">
+              <span class="qty-btn increase js-qty-update">+</span>
+              {% if current_variant.inventory_quantity >= 5 %}
+                <span class="stock-indicator instock">
+                  {{ 'products.product.inventory_in_stock' | t }}
+                </span>
+              {% elsif current_variant.inventory_quantity > 0 %}
+                <span class="stock-indicator lowstock">
+                  {{ 'products.product.inventory_low_stock' | t }}
+                </span>
+              {% elsif current_variant.inventory_management != null %}
+                <span class="stock-indicator outofstock">
+                  {{ 'products.product.inventory_out_of_stock' | t }}
+                </span>
+              {% endif %}
+            </div>
+          </div>
+        <div class="priceline">
+          <span data-price class="product-dyn-price m-0">
+            {{ product.variants.first.price | money }}
+          </span> 
+          {% comment %} {{ shop.currency }} {% endcomment %}
+          <span data-compare>
+            <s>
+              {% if product.variants.first.compare_at_price %}
+                {{ product.variants.first.compare_at_price | money }}
+              {% endif %}
+            </s>
+          </span>
+        </div>
+           {% comment %}  
+          <p style="font-size:18px;text-align: center;margin-bottom: -11px;">Seal the deal! Use coupon <b><i>BIGDEAL20</i></b> to get an extra 20% Off. </p>
+ {% endcomment %}
+            <p class="js-availability-notice product-availability disabled {% if product.variants.size > 1 %} invalid {% endif %}">
+              There are only <strong class="js-availablilty">{{ current_variant.inventory_quantity }}</strong> {{ product.title }}
+              {% if product.variants.size > 1 %}
+                <span class="js-varient">({{ product.variants.first.title.title }})</span>
+              {% endif %}
+              available in stock.
+            </p>
+           
+{% if current_variant.inventory_quantity > 0 or current_variant.inventory_management == null %}
+  <div class="select-product d-flex flex-row align-items-center mt-5 ">
+    <span class="appstle_stand_alone_selector" data-product-handle="{{ product.handle }}" data-product-data="" style="display:none;"></span> 
+    <button class="btn btn-primary btn-product" type="submit" name="add" id="product-add-to-cart">
+      Buy Now
+    </button> 
+      
+{% elsif current_variant.inventory_policy == "continue" %}
+  <div class="select-product d-flex flex-row align-items-center mt-5 ">
+    <button class="btn btn-primary btn-product" type="submit" name="add" id="product-add-to-cart">
+      Buy Now
+    </button>
+{% endif %}
+{% else %}
+  <div class="select-product d-flex flex-row align-items-center mt-5 "> 
+    <input name="id" data-productid="{{ product.id }}" value="{{ product.variants.first.id }}" type="hidden" />
+    <button class="btn btn-primary btn-product" name="add" disabled type="submit">
+      Sold Out
+    </button>
+{% endif %}
+         
+   {% comment %} <div class="sale-badge">SALE</div> {% endcomment %}
+        {% comment %} <div id="afterpay-element">
+          
+        </div> {% endcomment %}
+
+      </form>
+    </div>
+             
+            <div class="payment-icons d-flex justify-content-center align-items-center gap-3">
+             <img src="{{ 'visa.png' | asset_url }}" alt="visa" height="20.42" width="45.15" />
+            <img src="{{ 'mastercard.png' | asset_url }}" height="20.7" width="32.45" alt="mastercard" />
+            <img src="{{ 'paypal.png' | asset_url }}"  alt="paypal"   height="25.41" width="20.99" />
+            <img src="{{ 'amex.png' | asset_url }}" height="20.11" width="54.44"alt="amex" />
+               <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/Shop_Pay_logo.png?v=1761737843" alt="Shop Pay" height="23.11" width="74.44" />
+          </div>
+          <div class="below-atc-icons">
+            {% comment %} <div>
+              <img src="{{ 'icon-truck.png' | asset_url }}" alt="Truck Icon">
+              <span>Free Shipping in the US Mainland</span>
+            </div> {% endcomment %}
+              <div>
+              <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/Free_shipping.png?v=1761290560" alt="free">
+              <span>Free Shipping in the US Mainland </span>
+            </div>
+         <div>
+              <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/nsf-01.png?v=1751276325" alt="NSF">
+              <span>NSF Certified </span>
+            </div>
+            <div>
+              <img src="{{ 'icon-headset.png' | asset_url }}" alt="Headset Icon">
+              <span>Customer Support</span>
+            </div>
+             {% comment %} <div>
+              <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/product_warehouse.png" alt="Warehouse">
+              <span>US-Based Warehouse Shipping </span>
+            </div> {% endcomment %}
+            
+             
+              <div>
+      <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/product_warehouse.png" alt="Warehouse">
+       <span>US-Based Warehouse Shipping </span>
+       </div>
+         <div>
+      <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/Universal_fit_v3-02.png?v=1761830204" alt="Warehouse">
+       <span>Universal Fit</span>
+       </div> 
+           <div>
+      <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/Vector_Smart_Object.png?v=1761828395" alt="eco">
+       <span>Eco Friendly </span>
+       </div>
+          </div>
+
+
+
+
+
+  </div>
+</div>
+                   
+
+
+{% render 'sticky-add-to-cart' %}
+
+{% unless product == empty %}
+  {% comment %} Product Script {% endcomment %}
+  <script>
+    window.product = {{ product | json }} || {};
+    {% if product.metafields.custom.product_badge_text.value != blank %}
+      if(typeof product !== "undefined"){
+        product['badge'] = "{{ product.metafields.custom.product_badge_text.value }}";
+      }
+    {% endif %}
+    let metaInfo = product.handle + '?view=metafields';
+    fetch(metaInfo)
+      .then(response => response.json())
+      .then(pageMeta => {
+        window.product = Object.assign(product, pageMeta);
+        
+        if( document.readyState !== 'loading' ) {
+          initProductScript(window.product, 'product-selectors', document);
+        } else {
+          document.addEventListener('DOMContentLoaded', function () {
+            initProductScript(window.product, 'product-selectors', document);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching page meta:', error);
+      });
+  </script>
+{% endunless %}
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.title | escape }}",
+  "image": ["{{ product.featured_image | img_url: '600x600' }}"],
+  "description": "{{ product.description | strip_html | truncatewords: 50 | escape }}",
+  "sku": "{{ product.selected_or_first_available_variant.sku }}",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "{{ shop.currency }}",
+    "price": {{ product.price | divided_by: 100.0 }},
+    "availability": "https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+    "url": "{{ shop.url }}{{ product.url }}"
+  }
+}
+</script>
+
+
+
+
+{% schema %}
+  {
+    "name": "Product Hero",
+    "tag": "section",
+    "class": "section-producthero",
+    "settings": [
+      {
+        "type": "text",
+        "id": "countdown_text",
+        "label": "Countdown Text",
+        "info": "Use the [month] shortcode to output the current month, and the [time] shortcode to output the countdown timer."
+      },
+      {
+        "type": "text",
+        "id": "countdown_time",
+        "label": "Countdown Time",
+        "info": "Date, time and timezone in the format: YYYY-MM-DDTHH:mm:ss+10:00. OR for an evergreen timer, enter the number of minutes followed by the word 'minutes'. e.g. 15 minutes"
+      },
+      {
+        "type": "product_list",
+        "id": "countdown_products",
+        "label": "Show Countdown On Products",
+        "info": "Only show the countdown on these products. Leave blank to show on all."
+      },
+      {
+        "type": "product_list",
+        "id": "product_boost",
+        "label": "Show Subscription",
+        "info": "Promote a subscription product option",
+        "limit": 1
+      }
+    ],
+    "blocks": [
+      {
+        "type": "@app"
+      },
+      {
+        "type": "upsell",
+        "name": "upsell",
+        "settings": [
+          {
+            "type": "product",
+            "id": "product_upsell",
+            "label": "Upsell Product"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product Hero"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["product"]
+    }
+  }
+{% endschema %}
+
+
+        <style>
+       .sale-badge {
+     color: #fff;
+            padding-right: 5px;
+            padding-left: 8px;
+            background-color: #153a5b;
+            display: inline-block;
+            font-weight: bold;
+            position: relative;
+            top: 0%;
+            left: 0%;
+         font-size: 15px;
+   
+}
+
+@media only screen and (max-width: 575px) 
+{
+  .sale-badge {
+  top: 0;
+   left:0;
+}
+}
+.section-producthero .control .swiper-slide {
+ 
+    padding-bottom: 8% !important;
+ 
+}
+.btn, button, input[type=submit], input[type=button] :hover {
+
+    background:rgb(49, 80, 108);
+    color: #000;
+    font-weight: 700;
+}
+.btn, button, input[type=submit], input[type=button] {
+
+    background: #153A5B;
+    color: #fff;
+    font-weight: 700;
+}
+@media (min-width: 992px) {
+    .selector-wrapper .radio-selector {
+        flex-wrap: wrap;
+        font-size: 2.2rem;
+    }
+}
+label.carbon-filter-elements {
+    padding: 30px 30px !important;
+}
+
+
+@media (max-width: 768px) {
+  .selector-wrapper .radio-selector__option label {
+    font-size: 15px;        
+              
+  }
+  .qty-container {
+    
+    margin: 10px 0px 30px 0px;
+}
+}
+.variant-image-selector {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.variant-image-option {
+  border: 3px solid #ccc;
+  border-radius: 60px;
+  cursor: pointer;
+  padding:5px;
+  overflow: hidden;
+  {% comment %} margin-top:15px; {% endcomment %}
+  transition: all 0.3s ease;
+}
+
+.variant-image-option img {
+  width: 75px;
+  height: 75px;
+  object-fit: cover;
+}
+
+.variant-image-option.active {
+  border-color: #122454;
+}
+
+.variant-image-option.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  position: relative;
+}
+
+.variant-image-option .sold-out {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  background: rgba(255, 0, 0, 0.8);
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+
+
+    </style>
+

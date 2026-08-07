@@ -1,0 +1,112 @@
+{%- style -%}
+	.section-countdown {
+		background: {{ section.settings.bg_color }};
+		color: {{ section.settings.text_color }};
+	}
+	.section-countdown .btn {
+		background: {{ section.settings.cta_bg_color }};
+		color: {{ section.settings.cta_color }};
+	}
+{%- endstyle -%}
+
+<div class="container">
+	<div class="d-flex flex-wrap justify-content-around align-items-center">
+
+		<div class="section-countdown__title">
+			<p>
+				{{ section.settings.title }}
+			<p>
+		</div>
+
+		{% unless section.settings.countdown_date == blank %}
+			<div class="section-countdown__timer">
+				<div class="js-countdown" data-countdown-end="{{ section.settings.countdown_date }}">
+					<div class="js-countdown__block">
+						<span class="js-countdown__time days">00</span>
+						<span class="js-countdown__label">{{ 'general.time.days' | t }}</span>
+					</div>
+					<span class="js-countdown__spacer">:</span>
+					<div class="js-countdown__block">
+						<span class="js-countdown__time hours">00</span>
+						<span class="js-countdown__label">{{ 'general.time.hours' | t }}</span>
+					</div>
+					<span class="js-countdown__spacer">:</span>
+					<div class="js-countdown__block">
+						<span class="js-countdown__time minutes">00</span>
+						<span class="js-countdown__label">{{ 'general.time.minutes' | t }}</span>
+					</div>
+					<span class="js-countdown__spacer">:</span>
+					<div class="js-countdown__block">
+						<span class="js-countdown__time seconds">00</span>
+						<span class="js-countdown__label">{{ 'general.time.seconds' | t }}</span>
+					</div>
+				</div>
+			</div>
+		{% endunless %}
+
+		{% if section.settings.cta_url != blank %}
+			<div class="section-countdown__cta">
+				<a href="{{ section.settings.cta_url }}" class="btn">
+					{{ section.settings.cta_text }}
+				</a>
+			</div>
+		{% endif %}
+
+	</div>
+</div>
+
+{% schema %}
+{
+	"name": "Countdown Bar",
+	"tag": "div",
+	"class": "section-countdown",
+	"settings": [
+		{
+			"type": "text",
+			"id": "title",
+			"label": "Countdown Text"
+		},
+		{
+			"type": "text",
+			"id": "countdown_date",
+			"label": "Countdown Date",
+			"info": "Date, time and timezone in the format: YYYY-MM-DDTHH:mm:ss+10:00."
+		},
+		{
+			"type": "color_background",
+			"id": "bg_color",
+			"label": "Background Color"
+		},
+		{
+			"type": "color",
+			"id": "text_color",
+			"label": "Text Color"
+		},
+		{
+			"type": "text",
+			"id": "cta_text",
+			"label": "CTA Text"
+		},
+		{
+			"type": "text",
+			"id": "cta_url",
+			"label": "CTA URL"
+		},
+		{
+			"type": "color",
+			"id": "cta_bg_color",
+			"label": "CTA Background Color"
+		},
+		{
+			"type": "color",
+			"id": "cta_color",
+			"label": "CTA Text Color"
+		}
+	],
+	"presets": [
+		{
+			"name": "Countdown Bar"
+		}
+	]
+}
+{% endschema %}

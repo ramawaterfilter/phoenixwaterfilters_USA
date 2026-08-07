@@ -1,0 +1,22 @@
+<a href="{{ page.url }}" class="page-tile">
+
+    <div class="page-tile__img mb-5">
+        {% if page.featured_image %}
+            {{ page.featured_image | image_url: width: 1000 | image_tag: class: "mx-auto", loading: "lazy" }}
+        {% else %}
+            {{ 'image' | placeholder_svg_tag: 'placeholder' }}
+        {% endif %}
+    </div>
+
+    <div class="page-tile__meta">
+        <h4>{{ page.title }}</h4>
+        
+        <p>
+            {{ page.excerpt_or_content | truncatewords: 25 | strip_html }}
+        </p>
+
+        <span class="btn text-center">
+            {{ 'page.view' | t }}
+        </span>
+    </div>
+</a>

@@ -1,0 +1,186 @@
+{% assign style_row = 'justify-content-center justify-content-md-start' %}
+{% assign style_col = 'col-11 col-md-8 col-lg-8 col-xl-10' %}
+{% assign style_class = '' %}
+{% assign style_slider = 'testimonial' %}
+{% assign style_paragraph = '' %}
+
+{% if section.settings.layout == 'style-2' %}
+  {% assign style_row = 'justify-content-center' %}
+  {% assign style_col = 'col-11 col-md-10 offset-md-1' %}
+  {% assign style_class = 'alt' %}
+  {% assign style_slider = 'testimonial-alt' %}
+  {% assign style_paragraph = 'col-lg-9 pb-5' %}
+{% endif %}
+<div class="background-image-container {{ style_class }}"></div>
+
+<div class="{{ style_class }} {{ section.settings.custom_class }}" id="{{ section.settings.custom_id }}">
+  <div class="container">
+    <div class="row {{ style_row }}">
+      <div class="{{ style_col }}">
+        {% if section.settings.layout == 'style-1' %}
+          <img
+            src="{{ 'stars.svg' | asset_url }}"
+            class="stars pb-3" alt="Phoenix Gravity Water Filter"
+            loading="lazy" />
+        {% endif %}
+        {% if section.settings.heading %}
+          <h2>{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.paragraph %}
+          <div class="content {{ style_paragraph }}">
+            {{ section.settings.paragraph }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if section.settings.layout == 'style-1' %}
+      <div class="row flex-row justify-content-center justify-content-md-start align-items-center pb-5">
+
+        <div class="col-11 ">
+          {% if section.settings.sub_header != blank %}
+
+            <p class="review-totals mb-0">{{ section.settings.sub_header }}</p>
+
+          {% endif %}
+        </div>
+
+        {% if section.settings.button_url %}
+          <div class="col-11 ">
+            <div class="btn-container">
+              <a class="btn btn-primary d-block mb-4" href="{{ section.settings.button_url }}">
+                {{ section.settings.button_text }}
+              </a>
+
+              {% if section.settings.button_aftertext %}
+                <p class="small">{{ section.settings.button_aftertext }}</p>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="row flex-row justify-space align-items-start">
+
+      <div class="swiper-outer">
+        <div class="swiper-container swiper {{ style_slider }} pb-5">
+          <div class="swiper-wrapper">
+            {% for block in section.blocks %}
+              <div class="swiper-slide">
+                <div class="testimonial-tile bg-white">
+                  <div class="testimonial-quote">
+                    {{ block.settings.quote }}
+                  </div>
+                  {% if block.settings.reviewer != blank %}
+                    <h3 class="testimonial-reviewer">
+                      {{ block.settings.reviewer }}
+                      {% if block.settings.reviewer_subtext != blank %}<br/>
+                        <span>{{ block.settings.reviewer_subtext }}</span>
+                      {% endif% %}
+                    </h3>
+                  {% endif% %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="swiper-scrollbar mt-lg-5"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Testimonial Section",
+    "tag": "section",
+    "class": "section-testimonials",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "select",
+        "id": "layout",
+        "label": "Style",
+        "options": [
+          {
+            "value": "style-1",
+            "label": "Style 1"
+          }, {
+            "value": "style-2",
+            "label": "Style 2"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "Headline"
+      },
+      {
+        "type": "richtext",
+        "id": "paragraph",
+        "label": "Paragraph"
+      }, {
+        "type": "text",
+        "id": "sub_header",
+        "label": "Subheader Text"
+      }, {
+        "type": "text",
+        "id": "button_text",
+        "label": "Button text"
+      }, {
+        "type": "url",
+        "id": "button_url",
+        "label": "Button Url"
+      }, {
+        "type": "text",
+        "id": "button_aftertext",
+        "label": "After Button text"
+      }, {
+        "type": "header",
+        "content": "Custom Code",
+        "info": "Add classes or ID to the section"
+      }, {
+        "type": "text",
+        "id": "custom_id",
+        "label": "Custom ID"
+      }, {
+        "type": "text",
+        "id": "custom_class",
+        "label": "Custom Class"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Testimonial",
+        "settings": [
+
+          {
+            "type": "richtext",
+            "id": "quote",
+            "label": "Quote"
+          }, {
+            "type": "text",
+            "id": "reviewer",
+            "label": "Reviewer Name"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Testimonials"
+      }
+    ],
+    "disabled_on": {
+      "groups": ["header"]
+    }
+  }
+{% endschema %}

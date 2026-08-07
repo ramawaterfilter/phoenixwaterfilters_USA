@@ -1,0 +1,98 @@
+{% assign column_settings = 'col-11 col-lg-5 border-left content-panel' %}
+{% assign row_settings = 'row justify-content-center justify-content-lg-start align-items-center' %}
+{% if section.settings.style == 'style-2' %}
+  {% assign column_settings = 'col-11 col-lg-8 content-panel text-center' %}
+  {% assign row_settings = 'row justify-content-center align-items-center' %}
+{% endif %}
+
+<div class="container {% if section.settings.reducepadding %}padding-offset{% endif %}">
+  <div class="{{ row_settings }} {{ section.settings.style }}">
+    {% if section.settings.heading != blank or section.content != blank %}
+      <div class="{{ column_settings }}">
+        {% if section.settings.heading != blank %}
+          <h2 class="{{ callout_title }}">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.content != blank %}
+          {{ section.settings.content | replace: ' [month]', '<span class="dyn-month"></span>' }}
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.settings.callout_image != blank %}
+      <div class="col-10 col-lg-4 image-panel order-first order-lg-last">
+        <img
+          src="{{ section.settings.callout_image | img_url: '1920x' }}"
+          class="pb-5"
+          {% if section.settings.img_width %}
+          width="{{ section.settings.img_width }}"
+          {% endif %}
+          loading="lazy" />
+      </div>
+    {% endif %}
+  </div>
+
+{% if section.settings.style == 'style-2' %}
+  <div class="row justify-content-center {{ section.settings.style }}">
+    <div class="col-12 divider"></div>
+  </div>
+</div>
+{% endif %}
+
+
+{% schema %}
+  {
+    "name": "Callout",
+    "tag": "section",
+    "class": "section-callout",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "select",
+        "id": "style",
+        "label": "Callout Style",
+        "default": "style-1",
+        "options": [
+          {
+            "label": "Style 1",
+            "value": "style-1"
+          }, {
+            "label": "Style 2",
+            "value": "style-2"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "reducepadding",
+        "label": "Reduce Padding"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "content",
+        "label": "Content"
+      }, {
+        "type": "image_picker",
+        "id": "callout_image",
+        "label": "Image"
+      }
+
+    ],
+    "presets": [
+      {
+        "name": "Callout"
+      }
+    ],
+    "disabled_on": {
+      "groups": ["header"]
+    }
+  }
+{% endschema %}

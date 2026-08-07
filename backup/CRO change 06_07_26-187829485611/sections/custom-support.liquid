@@ -1,0 +1,283 @@
+<section
+  class="custom-support"
+  style="
+    --custom-support-background: {{ section.settings.background_color }};
+    --custom-support-text: {{ section.settings.text_color }};
+    --custom-support-icon: {{ section.settings.icon_color }};
+    --custom-support-height: {{ section.settings.section_height }}px;
+  "
+  aria-label="{{ section.settings.accessibility_label | escape }}"
+>
+  <div class="custom-support__inner">
+    {% for block in section.blocks %}
+      {% liquid
+        assign item_tag = 'div'
+        if block.settings.link != blank
+          assign item_tag = 'a'
+        endif
+      %}
+
+      <{{ item_tag }}
+        class="custom-support__item"
+        {% if block.settings.link != blank %}
+          href="{{ block.settings.link }}"
+        {% endif %}
+        {{ block.shopify_attributes }}
+      >
+        <span class="custom-support__icon" aria-hidden="true">
+          {% if block.settings.icon != blank %}
+            {{
+              block.settings.icon
+              | image_url: width: 96
+              | image_tag:
+                class: 'custom-support__image',
+                loading: 'lazy',
+                widths: '32, 48, 64, 96',
+                sizes: '24px'
+            }}
+          {% else %}
+            {% case block.settings.icon_style %}
+              {% when 'fit' %}
+                <svg viewBox="0 0 24 24" role="presentation">
+                  <rect x="3.5" y="3.5" width="17" height="17" rx="2.5"></rect>
+                  <path d="m9 7-2 2 2 2M7 9h5M15 17l2-2-2-2M17 15h-5"></path>
+                </svg>
+              {% when 'warehouse' %}
+                <svg viewBox="0 0 24 24" role="presentation">
+                  <path d="M3 20V9l4-3v14M7 20V4l5 3v13M12 20V9l4-3v14M16 20V4l5 3v13M2 20h20"></path>
+                  <path d="M9 10h1M9 13h1M14 11h1M18 9h1M18 12h1M18 15h1"></path>
+                </svg>
+              {% else %}
+                <svg viewBox="0 0 24 24" role="presentation">
+                  <path d="M4 13v-2a8 8 0 0 1 16 0v2"></path>
+                  <path d="M5 12h2v7H5a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2ZM19 12h-2v7h2a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2ZM17 19c0 1.1-.9 2-2 2h-3"></path>
+                </svg>
+            {% endcase %}
+          {% endif %}
+        </span>
+
+        {% if block.settings.label != blank %}
+          <span class="custom-support__label">{{ block.settings.label | escape }}</span>
+        {% endif %}
+      </{{ item_tag }}>
+    {% endfor %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .custom-support {
+    width: 100%;
+    min-height: var(--custom-support-height);
+    background: var(--custom-support-background);
+    color: var(--custom-support-text);
+  }
+
+  .custom-support__inner {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+    width: min(100%, 1200px);
+    min-height: var(--custom-support-height);
+    margin: 0 auto;
+  }
+
+  .custom-support__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 10px 8px 11px;
+    color: inherit;
+    text-align: center;
+    text-decoration: none;
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  a.custom-support__item:hover {
+    color: inherit;
+    opacity: 0.82;
+    transform: translateY(-1px);
+  }
+
+  a.custom-support__item:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -4px;
+  }
+
+  .custom-support__icon {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    margin-bottom: 6px;
+    color: var(--custom-support-icon);
+  }
+
+  .custom-support__icon svg,
+  .custom-support__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .custom-support__icon svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .custom-support__image {
+    object-fit: contain;
+  }
+
+  .custom-support__label {
+    display: block;
+    font-family: Inter, Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+  }
+
+  @media (min-width: 750px) {
+    .custom-support__item {
+      padding-inline: 18px;
+    }
+
+    .custom-support__icon {
+      width: 28px;
+      height: 28px;
+      margin-bottom: 8px;
+    }
+
+    .custom-support__label {
+      font-size: 12px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .custom-support__item {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Custom support",
+  "tag": "section",
+  "class": "section-custom-support",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Accessibility label",
+      "default": "Customer benefits"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#071a27"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffcf32"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icons",
+      "default": "#dce6ef"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "label": "Minimum height",
+      "min": 60,
+      "max": 140,
+      "step": 2,
+      "unit": "px",
+      "default": 70
+    }
+  ],
+  "blocks": [
+    {
+      "type": "support_item",
+      "name": "Support item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Custom icon"
+        },
+        {
+          "type": "select",
+          "id": "icon_style",
+          "label": "Fallback icon",
+          "options": [
+            {
+              "value": "support",
+              "label": "Customer support"
+            },
+            {
+              "value": "fit",
+              "label": "Universal fit"
+            },
+            {
+              "value": "warehouse",
+              "label": "Warehouse"
+            }
+          ],
+          "default": "support"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Customer Support"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom support",
+      "blocks": [
+        {
+          "type": "support_item",
+          "settings": {
+            "icon_style": "support",
+            "label": "Customer Support"
+          }
+        },
+        {
+          "type": "support_item",
+          "settings": {
+            "icon_style": "fit",
+            "label": "Universal Fit"
+          }
+        },
+        {
+          "type": "support_item",
+          "settings": {
+            "icon_style": "warehouse",
+            "label": "US Warehouse"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

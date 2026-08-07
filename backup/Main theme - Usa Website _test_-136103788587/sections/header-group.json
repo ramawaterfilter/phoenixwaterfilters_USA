@@ -1,0 +1,72 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "Header",
+  "type": "header",
+  "sections": {
+    "blocks_4CWEM4": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_a4b2ae9_dYRcNk": {
+          "type": "ai_gen_block_a4b2ae9",
+          "settings": {
+            "background_color": "#2b2b4e",
+            "text_color": "#ffffff",
+            "arrow_color": "#ffffff",
+            "font_size": 16,
+            "bar_height_desktop": 45,
+            "bar_height_mobile": 50,
+            "enable_autoplay": true,
+            "autoplay_speed": 2500,
+            "custom_css": "@media (min-width: 786px) {\n.ai-announcement-bar__container-as05pqmhtsvzuehvquaigenblocka4b2ae9dyrcnk {\n    width: 35%;\n   \n}\n}\n\n.ai-announcement-bar__message-as05pqmhtsvzuehvquaigenblocka4b2ae9dyrcnk p:hover {\ncolor: #FFFFFF; \n\n}",
+            "message_1": "<p>🚚 Free Shipping On Orders $99+</p>",
+            "link_url_1": "",
+            "message_2": "<p>✅ NSF 42 & 372 Certified</p>",
+            "link_url_2": "",
+            "message_3": "<p>✨ 60 Years Of Pure Excellence</p>",
+            "link_url_3": "",
+            "message_4": "<p>🎁 Free Shipping In The USA</p>",
+            "link_url_4": "",
+            "message_5": "<p>🔥BLACK FRIDAY SALE  55% OFF</p>",
+            "link_url_5": "https://phoenixwaterfilters.com/products/gravity-water-filter",
+            "message_6": "",
+            "link_url_6": "",
+            "message_7": "",
+            "link_url_7": "",
+            "message_8": "",
+            "link_url_8": "",
+            "message_9": "",
+            "link_url_9": "",
+            "message_10": "",
+            "link_url_10": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_a4b2ae9_dYRcNk"
+      ],
+      "name": "Announcement bar",
+      "settings": {}
+    },
+    "header_bAcYfA": {
+      "type": "header",
+      "custom_css": [],
+      "settings": {
+        "sitelogo": "shopify://shop_images/phoenix-logo.svg",
+        "sitemenu": "main-menu"
+      }
+    }
+  },
+  "order": [
+    "blocks_4CWEM4",
+    "header_bAcYfA"
+  ]
+}

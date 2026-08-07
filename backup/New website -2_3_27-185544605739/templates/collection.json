@@ -1,0 +1,211 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "video_image_q3eEBi": {
+      "type": "video-image",
+      "blocks": {
+        "text_7MbTaW": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "video_id": "",
+            "banner_image": "shopify://shop_images/Christmas_Banner_ver_2.jpg"
+          }
+        },
+        "text_3qPbkc": {
+          "type": "text",
+          "settings": {
+            "video_id": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_7MbTaW",
+        "text_3qPbkc"
+      ],
+      "settings": {
+        "is_posttreat": false
+      }
+    },
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "",
+        "heading": "{{ collection.title }}",
+        "content": "",
+        "sideimage": "shopify://shop_images/view-products.jpg",
+        "section_video_bg": "",
+        "buttonlink": "",
+        "buttontext": ""
+      }
+    },
+    "icon_row_jeBNYY": {
+      "type": "icon-row",
+      "blocks": {
+        "text_KnzdQK": {
+          "type": "text",
+          "settings": {
+            "icon": "shopify://shop_images/icon-smiles.svg",
+            "heading": "800k Happy Customers"
+          }
+        },
+        "text_RpMJ6z": {
+          "type": "text",
+          "settings": {
+            "icon": "shopify://shop_images/icon-bottle_793c42bd-a6bf-4978-8769-878059d83793.svg",
+            "heading": "$1,000s Cheaper Than <br>Bottles & In-Home Systems"
+          }
+        },
+        "text_fMMVyb": {
+          "type": "text",
+          "settings": {
+            "icon": "shopify://shop_images/icon-scales_43cbdd60-fa9d-484a-b138-bd5a62d85515.svg",
+            "heading": "Less than 5 cents Per <br>Gallon"
+          }
+        },
+        "text_zjPmEV": {
+          "type": "text",
+          "settings": {
+            "icon": "shopify://shop_images/icon-plumbing.svg",
+            "heading": "No Plumbing <br>Required"
+          }
+        },
+        "text_JpwVRy": {
+          "type": "text",
+          "settings": {
+            "icon": "shopify://shop_images/icon-experience_da934c37-aaf4-463e-8ff6-378434b3e1c7.svg",
+            "heading": "50+ Years Of Experience"
+          }
+        }
+      },
+      "block_order": [
+        "text_KnzdQK",
+        "text_RpMJ6z",
+        "text_fMMVyb",
+        "text_zjPmEV",
+        "text_JpwVRy"
+      ],
+      "custom_css": [
+        ".swiper-pagination.mt-lg-3.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {display: none;}"
+      ],
+      "settings": {
+        "style": "none",
+        "styles": "compact",
+        "heading": "",
+        "paragraph": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "product-grid": {
+      "type": "product-grid",
+      "custom_css": [
+        ".section-productgrid {padding-top: 0rem !important;}"
+      ],
+      "settings": {}
+    },
+    "gallery_yVRL9J": {
+      "type": "gallery",
+      "blocks": {
+        "gallery_images_block_Tc7FgJ": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-01.jpg"
+          }
+        },
+        "gallery_images_block_KrtwjH": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-02.jpg"
+          }
+        },
+        "gallery_images_block_kki6Mt": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-03.jpg"
+          }
+        },
+        "gallery_images_block_EWekDz": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-04.jpg"
+          }
+        },
+        "gallery_images_block_BwXd4M": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-05.jpg"
+          }
+        },
+        "gallery_images_block_NEb6nU": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-06.jpg"
+          }
+        },
+        "gallery_images_block_BxR7AF": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-07.jpg"
+          }
+        },
+        "gallery_images_block_Xkrq6N": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-08.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "gallery_images_block_Tc7FgJ",
+        "gallery_images_block_KrtwjH",
+        "gallery_images_block_kki6Mt",
+        "gallery_images_block_EWekDz",
+        "gallery_images_block_BwXd4M",
+        "gallery_images_block_NEb6nU",
+        "gallery_images_block_BxR7AF",
+        "gallery_images_block_Xkrq6N"
+      ],
+      "settings": {
+        "gallery_heading": "",
+        "gallery_content": ""
+      }
+    },
+    "read_more_less_agAqci": {
+      "type": "read-more-less",
+      "custom_css": [
+        "button#toggleButton {padding: 0px; margin-top: 32px;}",
+        "p {font-size: 20px;}",
+        "button#toggleButton {text-align: left; font-size: 19px; text-transform: capitalize; color: #153a5c;}",
+        "button#toggleButton:hover {background: transparent;}"
+      ],
+      "name": "Read More Text Section",
+      "settings": {
+        "text_content": "<h2>Why Choose Phoenix Gravity Water Filters?</h2><p><strong>Phoenix Gravity:</strong> The ultimate source for clean, great-tasting drinking water. After a long period of in-house manufacturing, <a href=\"https://phoenixwaterfilters.com/\"><span style=\"text-decoration:underline\">Phoenix Gravity</span></a> is committed to providing its customers with dependable, elegant solutions for their clean drinking water needs. All Phoenix Gravity Water Filter Systems are made of high-quality AISI304 Stainless Steel; BPA free, rust proof and built to last a lifetime. With the coconut shell carbon filters from NSF, <a href=\"https://phoenixwaterfilters.com/products/gravity-water-filter\"><span style=\"text-decoration:underline\">Phoenix Gravity Water Filters</span></a> remove 99.99% of harmful pollutants such as chlorine, lead, PFAS, and heavy metals while retaining the minerals that are important for your body.</p><p>Requires no electricity, plumbing, or complex installation. Simply put your Phoenix Gravity system on the countertop and enjoy pure mineral-balanced water in minutes. Whether you are looking for a fully functional gravity water filter system, replacement filters, fluoride removal, and/or a stylish stand, all of our products are designed to operate together seamlessly.</p><p>With over 800,000 satisfied customers worldwide, a <a href=\"https://phoenixwaterfilters.com/pages/warranty-registration\"><span style=\"text-decoration:underline\">10-year warranty</span></a> for stainless steel housing, and 100 day money back guarantee, you can enjoy complete confidence selecting Phoenix Gravity for your clean drinking water solution. View our entire line of gravity water filter systems and accessories below for the perfect product solution for your home today.</p><h3>What Does a Phoenix Gravity Water Filter System Remove?</h3><p>The safety and condition of the water you consume are extremely important. Tap water in municipal public water systems can contain over three hundred different contaminants that can be detected, which include chlorine, chloramine, lead, fluoride, PFAS chemicals, pesticides, herbicides, micro-plastics, and heavy metals (e.g., arsenic and mercury). The NSF-certified coconut shell activated carbon filter elements on Phoenix Gravity products remove all of the above with a 99.99% removal rate, such that water from our system is not only safe for consumption, but it also tastes better than treated municipal water.</p><p>Unlike reverse osmosis systems that remove all minerals from the water, Phoenix Gravity has filtered out all harmful contaminants and retained the naturally occurring beneficial minerals, such as calcium, magnesium, and potassium, which your body requires for everyday living activities. Therefore, using the Phoenix Gravity countertop gravity-based water filtration system will be the ideal solution for a health-conscious household concerned with drinking water that is pure, yet nutritious.</p><p>In an effort to provide even further protection, POSTreat FluoRid filter media with <a href=\"https://phoenixwaterfilters.com/products/fluoride-reduction-elements\"><span style=\"text-decoration:underline\">POSTreat fluoridation removal element</span></a>/slipstream water filtration system are available to customers who are concerned about fluorides or their levels in the tap water they are drinking. Each of the filter element components has been manufactured to extremely high specifications, including being independently tested and included as a complete home water filtration system designed to be used in conjunction with our removable filter media for a complete solution to tap water quality issues.</p><h3>The Phoenix Gravity Range - Everything You Need for Clean Water at Home</h3><p>The goal of our complete product line is to provide every household with access to clean, filtered drinking water without compromising quality or function. Below is what you’ll find in our selection: </p><p><strong>Complete Gravity Water Filter Systems</strong> - our stainless steel countertop gravity water filters for home use offer sizes ranging from single use up to larger units suitable for kitchens or multiple family use, all are designed based on consumer input. As complete systems, they contain both precision-engineered top and bottom water chambers and stainless steel taps or spigots, but do not include filters. </p><p><strong>Replacement Carbon Filter Elements</strong> - the heart of every Phoenix system is its coconut shell activated carbon filter elements. These highly efficient filter elements will last for over 12,000 litres (about 3,300 gallons) and are easy to replace with new filter elements when the time comes. </p><p><strong>Fluoride Reduction Elements & Refill Media</strong> - for homeowners who want to remove or significantly reduce the amount of fluoride in their tap and well water, we also provide HOMESTREAT <a href=\"https://phoenixwaterfilters.com/products/fluoride-refill-media\"><span style=\"text-decoration:underline\">FluoRid Elements and refill media</span></a> as a means of successfully removing fluoride as part of a two-stage filtration system.</p><p><strong>Premium Stands</strong> - Enhance your water filtering system using a handcrafted, <a href=\"https://phoenixwaterfilters.com/products/wooden-stand-for-gravity-water-filter-system\"><span style=\"text-decoration:underline\">solid wood Teak Stand</span></a> or our modern and <a href=\"https://phoenixwaterfilters.com/products/stainless-steel-stand\"><span style=\"text-decoration:underline\">elegant Stainless Steel Stand</span></a>. Both of these Premium Stands are specifically designed to be used with the Phoenix Gravity Systems to make sure your spigot is at a level that is comfortable to reach.</p><p><strong>Spare Parts & Accessories</strong> - All the replacement parts that you need for your Phoenix Gravity Water Filter are available directly from Phoenix Gravity. Spare parts include <a href=\"https://phoenixwaterfilters.com/products/stainless-steel-spigot\"><span style=\"text-decoration:underline\">stainless steel spigots</span></a> and airlock vent clips, spare knobs, washers, nuts, and <a href=\"https://phoenixwaterfilters.com/products/pp-plug\"><span style=\"text-decoration:underline\">PP plugs</span></a>.</p><h3>Gravity Water Filter vs Other Home Filtration Systems — Which Is Best?</h3><p>Choosing a water filtration system for your family is a very important decision that affects your health. This is an overview comparing the two most popular types of water filtration systems, gravity and reverse osmosis.</p><p><strong>Gravity Water Filter vs Reverse Osmosis:</strong> A reverse osmosis (RO) water filtration system can be an efficient way to cleanse your water; however, it also wastes a lot of water (between 3 and 5 litres are wasted for every litre of filtered water produced), and it completely removes all natural minerals from the water. Most systems require professional installation and ongoing maintenance. A gravity filter requires no installation, no electricity, wastes no water, and retains all of the essential minerals in the water. For the average home, a high-quality countertop gravity filter is a more reasonable and cost-effective solution, as well as a much healthier one.</p><p><strong>Gravity Water Filter vs Pitcher Filters:</strong> Pitcher water filters, such as those made by Brita®, are relatively inexpensive but have many limitations. They have small volumes of filtered water (typically around 3-7 litres), a very slow filter rate, and use basic carbon filters that do not remove all of the contaminants found in water today. In comparison, a Phoenix Gravity stainless steel filter system has much greater filtering capacity than a typical pitcher, has a multi-staged filtering process, and lasts much longer than pitcher filters, making the cost of ownership more affordable over time.</p><p><strong>Gravity Water Filter vs Under-Sink Filters:</strong> Installation of an under-counter system requires plumbing work as well as service personnel for servicing. A countertop gravity water filter sits on your counter, easily assembled without tools, and easily moved from room to room or taken with you when you relocate. </p><p><strong>Gravity Water Filter vs Bottled Water:</strong> The costs associated with bottled water from an environmental and financial perspective are tremendous. The cost of water in a Gravity filter by Phoenix is considerably less than a penny per litre, and drinking water from a Gravity filter instead of bottled water eliminates the use of plastic and reduces your overall carbon footprint while providing cleaner and better-tasting water than you can find in most bottled water and without having to breathe microplastics from bottled water packaging.</p><h3>Who Is a Gravity Water Filter System Best Suited For?</h3><p>A gravity water filter system is a very versatile solution to filter your water at home. Here are some examples of people who would benefit from filtering their water with this type of equipment:</p><ul><li>Families or households that want an ongoing supply of clean, safe drinking water without having to purchase expensive bottled water or have complicated plumbing-based filtration systems.</li><li>Renters who cannot make permanent changes to their kitchen (installation would be temporary).</li><li>Off-grid and rural housing where the quality of mains water is often inconsistent, and where it wouldn’t be feasible to use electric-powered methods of filtering water.</li><li>Health-conscious individuals want to filter out chlorine, lead, PFAS, and fluoride from their daily drinking water, but do not want to strip away any beneficial minerals either. </li><li>Emergency preparedness - regardless of the status of your electricity, a gravity water filter system can be used even during an emergency when you may lose access to power. </li></ul><p>No matter whether you treat your own drinking water by filtering it through a municipal water source or your own well, a Phoenix Gravity countertop filter system will provide you with consistently high-quality filtered drinking water daily.</p><h2>Frequently Asked Questions About Phoenix Gravity Water Filter Systems</h2><h3>1. How does a gravity water filter system work? </h3><p>Using natural gravity, a gravity water filter system uses gravity to pull water from the top of the filter and let it flow through the filter elements, into the bottom of the filter, where the filtered water will be stored and dispensed through a spigot. There is no electricity, plumbing, or water pressure involved with the filtration system, making it one of the simplest and most reliable home water purification systems available.</p><h3>2. What contaminants does a gravity water filter remove? </h3><p>The NSF-certified coconut shell carbon filter elements manufactured by Phoenix Gravity remove 99.99% of contaminants, including chlorine, chloramine, lead, mercury, arsenic, PFAS chemicals, pesticides, herbicides, microplastics, bacteria, cysts, and volatile organic compounds (VOCs). In addition to these contaminants, the POSTreat FluoRid filter elements will also reduce fluoride levels to safe levels. Importantly, beneficial minerals, including calcium, magnesium, etc., are not removed.</p><h3>3. How long do gravity water filter elements last?<strong> </strong></h3><p>The approximate lifespan of each Phoenix Gravity Carbon Filter Cartridge is 12,000 liters (or 12 months) for a family of four, based on average usage. The actual life of a filter cartridge varies greatly according to daily consumption patterns and the quality of the source. Therefore, we recommend replacing your filter cartridges at least once per year or whenever you notice a decrease in flow rate.</p><h3>4. How often should I clean my gravity water filter system? </h3><p>To keep your Phoenix Gravity System functioning properly, we recommend that you clean the upper and lower chambers once per month. To do this, simply remove all liquid from the chambers, wipe them down with a soft cloth or sponge, and rinse thoroughly with clean water. To maintain good flow rates, your carbon filter cartridges should be cleaned every four to six weeks by gently scrubbing them under cold running water. Each filter system comes equipped with detailed instructions regarding cleaning procedures. You can also find similar instructions on our setup page.</p><h3>5. Does a gravity water filter remove fluoride? </h3><p>While standard activated carbon filter cartridges will not eliminate fluoride, we offer specifically designed <a href=\"https://phoenixwaterfilters.com/products/fluoride-reduction-elements\"><span style=\"text-decoration:underline\">POSTreat Fluoride Reduction Elements</span></a> and Fluoride Refill Media to provide full two-stage filtration of fluoride from your drinking water using your existing activated carbon filter cartridges.</p><h3>6. How much filtered water does a Phoenix Gravity system produce per hour? </h3><p>The flow rate of the Phoenix Gravity system is influenced by the number of filter elements that are utilized, the age, and the quality of the water source. On average, under ideal conditions, a set of brand new Phoenix Gravity carbon filter elements will yield between 2 and 4 liters of filtered water per hour. Additional filter elements will increase the flow rate proportionally. </p><h3>7. Is a gravity water filter better than reverse osmosis? </h3><p>For the majority of homes, yes - A Gravity Water Filter system retains the necessary beneficial minerals in their water source, does not require any electricity or plumbing needs, has no wasted water, and will typically be much less expensive than that of a reverse osmosis system. A Reverse Osmosis System will produce water with very little mineral content, and there is a high water loss ratio of between 3-5 liters wasted per liter produced. For those living in a home with a treated municipal water supply, using a top-quality countertop Gravity Water Filter will give you excellent quality water without the additional costs associated with reverse osmosis.</p><h3>8. Can I use a Phoenix Gravity water filter system with well water? </h3><p>Yes. Phoenix Gravity systems can easily be used on treated municipal water, private well water, and rainwater. If the well water being filtered has a high concentration of sediment or has a large amount of iron, we recommend performing an initial \"pre-filtration\" step to help prolong the lifespan of all your filter elements. Please reach out to us for assistance in determining the best solution for your water source.</p>",
+        "read_more_label": "Read More",
+        "read_less_label": "Read Less",
+        "visible_lines": 5,
+        "c1": "#f4f4f4",
+        "w1": 85,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    }
+  },
+  "order": [
+    "video_image_q3eEBi",
+    "hero",
+    "icon_row_jeBNYY",
+    "product-grid",
+    "gallery_yVRL9J",
+    "read_more_less_agAqci"
+  ]
+}

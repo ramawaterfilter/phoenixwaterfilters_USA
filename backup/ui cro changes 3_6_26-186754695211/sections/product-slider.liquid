@@ -1,0 +1,86 @@
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-md-10 col-lg-8">
+			<h2 class="text-center">
+				{{ section.settings.heading }}
+			</h2>
+		</div>
+	</div>
+
+	<div class="row justify-content-center">
+		<div class="col-md-10 col-lg-12">
+			<div
+			class="swiper-container collections-carousel-swiper"
+			data-slidesperview="3"
+			data-spacebetween="30">
+				<div class="swiper-wrapper">
+
+					{% assign products = '' %}
+
+					{% if section.settings.select-products != blank %}
+						{% assign products =  section.settings.select-products %}
+					{% endif %}
+
+					{% if section.settings.select-collection != blank %}
+						{% assign products =  collections[section.settings.select-collection].products | limit: section.settings.slide_limit %}
+					{% endif %}
+
+					{%- for product in products -%}
+
+						<div class="swiper-slide">
+							<div class="swiper-slide__inner">
+								{% render 'product-tile', product: product %}
+							</div>
+						</div>
+
+					{%- endfor -%}
+
+				</div>
+
+				<div class="swiper-pagination"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% schema %}
+{
+	"name": "Product Slider",
+	"tag": "section",
+	"class": "section-product-slider",
+	"presets": [
+		{
+			"name": "Product Slider"
+		}
+	],
+	"settings": [
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Section Heading",
+			"default": "Product Carousel"
+		}, 
+		{
+			"type": "product_list",
+			"id": "select-products",
+			"label": "Select Products Manually",
+			"limit": 12
+		},
+		{
+			"type": "collection",
+			"id": "select-collection",
+			"label": "Show Products From Collection",
+			"info" : "Overrides any manually selected products above."
+		},
+		{
+			"type": "number",
+			"id": "slide_limit",
+			"label": "Slides Limit",
+			"default": 12
+		}
+	],
+    "disabled_on": {
+        "groups": ["header"]
+    }
+}
+{% endschema %}

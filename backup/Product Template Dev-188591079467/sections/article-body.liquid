@@ -1,0 +1,64 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ article.url }}"
+  },
+  "headline": "{{ article.title }}",
+  "description": "{{ article.excerpt | strip_html | escape }}",
+  "image": {
+    "@type": "ImageObject",
+    "url": "{{ article.image | img_url: 'master' }}",
+    "width": 1200,
+    "height": 630
+  },
+  "author": {
+    "@type": "Person",
+    "name": "{{ article.author }}",
+    "url": "https://phoenixwaterfilters.com/pages/author"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Phoenix Water Filters",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://phoenixwaterfilters.com/cdn/shop/files/logo.png",
+      "width": 250,
+      "height": 60
+    }
+  },
+  "datePublished": "{{ article.published_at }}",
+  "dateModified": "{{ article.updated_at }}",
+  "articleSection": "{{ blog.title }}",
+  "keywords": "{{ article.tags | join: ', ' }}",
+  "wordCount": "{{ article.content | strip_html | size }}",
+  "articleBody": "{{ article.content | strip_html | escape }}",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true
+}
+</script>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      {{ article.content }}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Article Body",
+    "tag": "section",
+    "class": "section-article pt-0",
+    "presets": [
+      {
+        "name": "Article Body"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["article"]
+    }
+  }
+{% endschema %}

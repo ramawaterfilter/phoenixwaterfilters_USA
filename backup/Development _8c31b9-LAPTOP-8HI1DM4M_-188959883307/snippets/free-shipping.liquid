@@ -1,0 +1,18 @@
+{% assign free_shipping_threshold = settings.free_shipping_threshold | times: 100 %}
+{% assign amount_left = free_shipping_threshold | minus: cart.total_price %}
+{% assign free_shipping_percentage = free_shipping_threshold | minus: amount_left | times: 100.00 | divided_by: free_shipping_threshold %}
+
+<div class="free-shipping {% if amount_left > 0 %}remaining{% endif %}" data-threshold="{{ settings.free_shipping_threshold | times: 100 }}">
+  <p class="remaining">
+    You are
+    <span data-amount-left>{{ amount_left | money }}</span>
+    away from free standard shipping!
+  </p>
+  <p class="achieved">
+    Congrats! Your order qualifies for free standard shipping!
+  </p>
+
+  <div class="free-shipping__progress">
+    <span style="width: {{ free_shipping_percentage }}%"></span>
+  </div>
+</div>

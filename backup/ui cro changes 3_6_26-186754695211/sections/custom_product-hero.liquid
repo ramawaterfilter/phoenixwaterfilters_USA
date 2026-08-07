@@ -1,0 +1,1423 @@
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "{{ shop.url }}"
+      }
+      {% if collection %}
+      ,
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "{{ collection.title | escape }}",
+        "item": "{{ shop.url }}{{ collection.url }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "{{ product.title | escape }}",
+        "item": "{{ shop.url }}{{ product.url }}"
+      }
+      {% else %}
+      ,
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "{{ product.title | escape }}",
+        "item": "{{ shop.url }}{{ product.url }}"
+      }
+      {% endif %}
+    ]
+  }
+</script>
+{% comment %}
+  Other Products
+{% endcomment %}
+
+{% assign current_variant = product.selected_or_first_available_variant %}
+<div class="container">
+  <div class="row justify-content-center lk">
+    <div class="col-11 jkl col-lg-6 pe-5">
+      {% render 'product-hero-media', product: product %}
+    </div>
+    <div class="col-11 gg col-lg-6 mt-3 mt-lg-0">
+      {% if settings.enable_minmax_buys %}
+        {% assign min_buy = settings.min_buy_qty %}
+        {% assign max_buy = settings.max_buy_qty %}
+      {% endif %}
+      {% liquid
+        assign has_product_hero_blocks = false
+        assign has_variant_picker_block = false
+        for block in section.blocks
+          unless block.type == '@app' or block.type == 'upsell'
+            assign has_product_hero_blocks = true
+          endunless
+          if block.type == 'variant_picker'
+            assign has_variant_picker_block = true
+          endif
+        endfor
+        assign render_variant_picker_select = has_variant_picker_block
+        unless has_product_hero_blocks
+          assign render_variant_picker_select = true
+        endunless
+      %}
+
+      <form
+        action="{{ routes.cart_add_url }}"
+        method="post"
+        enctype="multipart/form-data"
+        id="add-to-cart"
+        class="mb-5 main-add-to-cart"
+        data-min="{{ min_buy }}"
+        data-max="{{ max_buy }}"
+      >
+        <input type="hidden" name="handle" value="{{ product.handle }}">
+        {% unless product.available and product.variants.size > 1 and render_variant_picker_select %}
+          <input name="id" data-productid="{{ product.id }}" value="{{ product.variants.first.id }}" type="hidden">
+        {% endunless %}
+        {% render 'product-hero-subscriptions', product: product %}
+
+        {% if has_product_hero_blocks %}
+          {% for block in section.blocks %}
+            <div class="product-hero-block product-hero-block--{{ block.type | handleize }}" {{ block.shopify_attributes }}>
+              {% case block.type %}
+                {% when 'countdown' %}
+                  {% render 'product-hero-countdown', section: section %}
+                {% when 'product_tag' %}
+                  {% render 'product-hero-product-tag', block: block %}
+                {% when 'title' %}
+                  {% render 'product-hero-title', product: product %}
+                {% when '@app' %}
+                  <div class="product-rating">
+                    {% render block %}
+                  </div>
+                {% when 'best_for_tag' %}
+                  {% render 'best-for-tag' %}
+                {% when 'description' %}
+                  {% render 'product-hero-description', product: product %}
+                {% when 'description_stats' %}
+                  {% render 'product-hero-description-stats', section: section %}
+                {% when 'variant_picker' %}
+                  {% render 'product-hero-variant-picker', product: product, current_variant: current_variant %}
+                {% when 'price' %}
+                  {% render 'product-hero-price', product: product %}
+                {% when 'paypal_message' %}
+                  {% render 'product-hero-paypal-message', product: product %}
+                {% when 'availability' %}
+                  {% render 'product-hero-availability', product: product, current_variant: current_variant %}
+                {% when 'notice_image' %}
+                  {% assign notice_text = block.settings.notice_text %}
+                  {% if notice_text == blank %}
+                    {% assign notice_text = '<p>Due to state-specific regulations, POSTreat Filter Elements are currently unavailable for shipping to California or Iowa. Questions? Call <strong>1 (800) 917-0455</strong>.</p>' %}
+                  {% endif %}
+                  <div class="product-hero-notice-image" style="--notice-background: {{ block.settings.background_color }}; --notice-border-color: {{ block.settings.border_color }}; --notice-text-color: {{ block.settings.text_color }};">
+                    {% if block.settings.notice_image != blank %}
+                      {{
+                        block.settings.notice_image
+                        | image_url: width: 1200
+                        | image_tag:
+                          class: 'product-hero-notice-image__asset',
+                          alt: block.settings.notice_image.alt | default: block.settings.alt_text,
+                          loading: 'lazy'
+                      }}
+                    {% endif %}
+                    <div class="product-hero-notice-image__text">
+                      {{ notice_text }}
+                    </div>
+                  </div>
+                {% when 'add_to_cart' %}
+                  {% render 'product-hero-add-to-cart', product: product, current_variant: current_variant %}
+                {% when 'scroll_button' %}
+                  {% assign scroll_target_id = block.settings.target_id | strip | remove: '#' %}
+                  {% if block.settings.label != blank and scroll_target_id != blank %}
+                    <a
+                      class="btn btn-primary btn-product product-hero-scroll-button"
+                      href="#{{ scroll_target_id | escape }}"
+                      style="--scroll-button-padding-top: {{ block.settings.padding_top }}px; --scroll-button-padding-bottom: {{ block.settings.padding_bottom }}px;"
+                    >
+                      {{ block.settings.label | escape }}
+                    </a>
+                  {% endif %}
+                {% when 'payment_icons' %}
+                  {% render 'product-hero-payment-icons' %}
+                {% when 'trust_icons' %}
+                  {% render 'product-hero-trust-icons' %}
+                {% when 'upsell' %}
+                  {% render 'product-hero-upsell', block: block %}
+              {% endcase %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="product-hero-block product-hero-block--countdown">
+            {% render 'product-hero-countdown', section: section %}
+          </div>
+          <div class="product-hero-block product-hero-block--product-tag">
+            <div
+              class="product-hero-tag"
+              style="--tag-background: #20204a; --tag-color: #ffffff;"
+            >
+              WELLNESS SALE
+            </div>
+          </div>
+          <div class="product-hero-block product-hero-block--title">
+            {% render 'product-hero-title', product: product %}
+          </div>
+          {% for block in section.blocks %}
+            {% if block.type == '@app' %}
+              <div class="product-hero-block product-hero-block--app" {{ block.shopify_attributes }}>
+                <div class="product-rating">
+                  {% render block %}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+          <div class="product-hero-block product-hero-block--best-for-tag">
+            {% render 'best-for-tag' %}
+          </div>
+          <div class="product-hero-block product-hero-block--description">
+            {% render 'product-hero-description', product: product %}
+          </div>
+          <div class="product-hero-block product-hero-block--description-stats">
+            {% render 'product-hero-description-stats', section: section %}
+          </div>
+          <div class="product-hero-block product-hero-block--variant-picker">
+            {% render 'product-hero-variant-picker', product: product, current_variant: current_variant %}
+          </div>
+          <div class="product-hero-block product-hero-block--price">
+            {% render 'product-hero-price', product: product %}
+          </div>
+          <div class="product-hero-block product-hero-block--paypal-message">
+            {% render 'product-hero-paypal-message', product: product %}
+          </div>
+          <div class="product-hero-block product-hero-block--availability">
+            {% render 'product-hero-availability', product: product, current_variant: current_variant %}
+          </div>
+          <div class="product-hero-block product-hero-block--notice-image">
+            <div class="product-hero-notice-image" style="--notice-background: #fffbe9; --notice-border-color: #d7c27a; --notice-text-color: #6f5f2a;">
+              <div class="product-hero-notice-image__asset-wrap">
+                <img
+                  class="product-hero-notice-image__asset"
+                  src="{{ 'postreat-filter-elements-notice.png' | asset_url }}"
+                  alt="Due to state-specific regulations, POSTreat Filter Elements are currently unavailable for shipping to California or Iowa."
+                  width="766"
+                  height="150"
+                  loading="lazy"
+                >
+              </div>
+              <div class="product-hero-notice-image__text">
+                Due to state-specific regulations, POSTreat Filter Elements are currently unavailable for shipping to California or Iowa. Questions? Call 1 (800) 917-0455.
+              </div>
+            </div>
+          </div>
+          <div class="product-hero-block product-hero-block--add-to-cart">
+            {% render 'product-hero-add-to-cart', product: product, current_variant: current_variant %}
+          </div>
+          <div class="product-hero-block product-hero-block--payment-icons">
+            {% render 'product-hero-payment-icons' %}
+          </div>
+          <div class="product-hero-block product-hero-block--trust-icons">
+            {% render 'product-hero-trust-icons' %}
+          </div>
+          {% for block in section.blocks %}
+            {% if block.type == 'upsell' %}
+              <div class="product-hero-block product-hero-block--upsell" {{ block.shopify_attributes }}>
+                {% render 'product-hero-upsell', block: block %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </form>
+    </div>
+  </div>
+</div>
+
+{% render 'sticky-add-to-cart' %}
+
+{% unless product == empty %}
+  {% comment %} Product Script {% endcomment %}
+  <script>
+    window.product = {{ product | json }} || {};
+    {% if product.metafields.custom.product_badge_text.value != blank %}
+      if(typeof product !== "undefined"){
+        product['badge'] = "{{ product.metafields.custom.product_badge_text.value }}";
+      }
+    {% endif %}
+    let metaInfo = product.handle + '?view=metafields';
+    fetch(metaInfo)
+      .then(response => response.json())
+      .then(pageMeta => {
+        window.product = Object.assign(product, pageMeta);
+
+        if( document.readyState !== 'loading' ) {
+          initProductScript(window.product, 'product-selectors', document);
+        } else {
+          document.addEventListener('DOMContentLoaded', function () {
+            initProductScript(window.product, 'product-selectors', document);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching page meta:', error);
+      });
+  </script>
+{% endunless %}
+
+{% schema %}
+{
+  "name": "Product Hero",
+  "tag": "section",
+  "class": "section-producthero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "countdown_text",
+      "label": "Countdown Text",
+      "info": "Use the [month] shortcode to output the current month, and the [time] shortcode to output the countdown timer."
+    },
+    {
+      "type": "text",
+      "id": "countdown_time",
+      "label": "Countdown Time",
+      "info": "Date, time and timezone in the format: YYYY-MM-DDTHH:mm:ss+10:00. OR for an evergreen timer, enter the number of minutes followed by the word 'minutes'. e.g. 15 minutes"
+    },
+    {
+      "type": "product_list",
+      "id": "countdown_products",
+      "label": "Show Countdown On Products",
+      "info": "Only show the countdown on these products. Leave blank to show on all."
+    },
+    {
+      "type": "product_list",
+      "id": "product_boost",
+      "label": "Show Subscription",
+      "info": "Promote a subscription product option",
+      "limit": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description_stats",
+      "label": "Show stats below description",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "description_stats_background",
+      "label": "Stats background",
+      "default": "#173554"
+    },
+    {
+      "type": "color",
+      "id": "description_stats_value_color",
+      "label": "Stats value color",
+      "default": "#4aaee8"
+    },
+    {
+      "type": "color",
+      "id": "description_stats_label_color",
+      "label": "Stats label color",
+      "default": "#b8c3cf"
+    },
+    {
+      "type": "header",
+      "content": "Description stat 1"
+    },
+    {
+      "type": "text",
+      "id": "description_stat_1_value",
+      "label": "Value",
+      "default": "95%+"
+    },
+    {
+      "type": "text",
+      "id": "description_stat_1_label",
+      "label": "Label",
+      "default": "Fluoride Removed"
+    },
+    {
+      "type": "header",
+      "content": "Description stat 2"
+    },
+    {
+      "type": "text",
+      "id": "description_stat_2_value",
+      "label": "Value",
+      "default": "1,100"
+    },
+    {
+      "type": "text",
+      "id": "description_stat_2_label",
+      "label": "Label",
+      "default": "Gallons Per Pair"
+    },
+    {
+      "type": "header",
+      "content": "Description stat 3"
+    },
+    {
+      "type": "text",
+      "id": "description_stat_3_value",
+      "label": "Value",
+      "default": "10yr"
+    },
+    {
+      "type": "text",
+      "id": "description_stat_3_label",
+      "label": "Label",
+      "default": "Steel Casing Warranty"
+    },
+    {
+      "type": "header",
+      "content": "Description stat 4"
+    },
+    {
+      "type": "text",
+      "id": "description_stat_4_value",
+      "label": "Value",
+      "default": "2,400+"
+    },
+    {
+      "type": "text",
+      "id": "description_stat_4_label",
+      "label": "Label",
+      "default": "Customers Protected"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "countdown",
+      "name": "Countdown",
+      "limit": 1
+    },
+    {
+      "type": "product_tag",
+      "name": "Product tag",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "WELLNESS SALE"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background",
+          "default": "#20204a"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 5
+    },
+    {
+      "type": "@app"
+    },
+    {
+      "type": "best_for_tag",
+      "name": "Best for tag",
+      "limit": 1
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1
+    },
+    {
+      "type": "description_stats",
+      "name": "Description stats",
+      "limit": 1
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant picker",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1
+    },
+    {
+      "type": "paypal_message",
+      "name": "PayPal message",
+      "limit": 1
+    },
+    {
+      "type": "availability",
+      "name": "Availability notice",
+      "limit": 1
+    },
+    {
+      "type": "notice_image",
+      "name": "Notice image",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "notice_image",
+          "label": "Notice image"
+        },
+        {
+          "type": "richtext",
+          "id": "notice_text",
+          "label": "Notice text",
+          "default": "<p>Due to state-specific regulations, POSTreat Filter Elements are currently unavailable for shipping to California or Iowa. Questions? Call <strong>1 (800) 917-0455</strong>.</p>"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Image alt text",
+          "default": "Due to state-specific regulations, POSTreat Filter Elements are currently unavailable for shipping to California or Iowa."
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background color",
+          "default": "#fffbe9"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Border color",
+          "default": "#d7c27a"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#6f5f2a"
+        }
+      ]
+    },
+    {
+      "type": "add_to_cart",
+      "name": "Add to cart",
+      "limit": 1
+    },
+    {
+      "type": "scroll_button",
+      "name": "Scroll button",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Button label",
+          "default": "Learn more"
+        },
+        {
+          "type": "text",
+          "id": "target_id",
+          "label": "Target section ID",
+          "info": "Enter the ID of the section to scroll to, without the #. Example: product-details"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Space above button",
+          "min": 0,
+          "max": 80,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Space below button",
+          "min": 0,
+          "max": 80,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        }
+      ]
+    },
+    {
+      "type": "payment_icons",
+      "name": "Payment icons",
+      "limit": 1
+    },
+    {
+      "type": "trust_icons",
+      "name": "Trust icons",
+      "limit": 1
+    },
+    {
+      "type": "upsell",
+      "name": "Upsell",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product_upsell",
+          "label": "Upsell Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Product Hero",
+      "blocks": [
+        {
+          "type": "countdown"
+        },
+        {
+          "type": "product_tag"
+        },
+        {
+          "type": "title"
+        },
+        {
+          "type": "best_for_tag"
+        },
+        {
+          "type": "description"
+        },
+        {
+          "type": "description_stats"
+        },
+        {
+          "type": "variant_picker"
+        },
+        {
+          "type": "price"
+        },
+        {
+          "type": "paypal_message"
+        },
+        {
+          "type": "availability"
+        },
+        {
+          "type": "notice_image"
+        },
+        {
+          "type": "add_to_cart"
+        },
+        {
+          "type": "payment_icons"
+        },
+        {
+          "type": "trust_icons"
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const variantContainer = document.getElementById('product-variants');
+  const select = document.getElementById('product-selectors');
+
+  if (!variantContainer || !select) return;
+
+  const boxes = variantContainer.querySelectorAll('.variant-img-box');
+  const titleEl = document.getElementById('selected-variant-title');
+  const productData = window.product || {{ product | json }};
+
+  function formatVariantMoney(cents) {
+    if (window.Shopify && typeof Shopify.formatMoney === 'function' && window.money_format) {
+      return Shopify.formatMoney(cents, window.money_format);
+    }
+
+    return '$' + (cents / 100).toFixed(2);
+  }
+
+  function updatePriceLine(variant) {
+    const priceEl = document.querySelector('.priceline [data-price]');
+    const compareWrapper = document.querySelector('.priceline [data-compare]');
+    const paypalMessage = document.querySelector('[data-pp-message]');
+    let compareEl = compareWrapper && compareWrapper.querySelector('s');
+
+    if (priceEl) {
+      priceEl.innerHTML = formatVariantMoney(variant.price);
+    }
+
+    if (compareWrapper && !compareEl) {
+      compareWrapper.innerHTML = '<s></s>';
+      compareEl = compareWrapper.querySelector('s');
+    }
+
+    if (compareEl) {
+      if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+        compareEl.innerHTML = formatVariantMoney(variant.compare_at_price);
+        compareEl.style.display = 'inline';
+      } else {
+        compareEl.innerHTML = '';
+        compareEl.style.display = 'none';
+      }
+    }
+
+    if (paypalMessage) {
+      paypalMessage.setAttribute('data-pp-amount', (variant.price / 100).toFixed(2));
+    }
+  }
+
+  function updateProductImage(variantId) {
+    const slides = Array.from(document.querySelectorAll('#product-slider .swiper-slide'));
+    const slideIndex = slides.findIndex(slide => slide.dataset.variantId === String(variantId));
+    const productSlider = document.getElementById('product-slider');
+    const swiper = productSlider && productSlider.swiper;
+
+    if (swiper && slideIndex >= 0) {
+      swiper.slideTo(slideIndex);
+      return;
+    }
+
+    if (slides[slideIndex]) {
+      slides[slideIndex].scrollIntoView({ behavior: 'smooth', inline: 'center' });
+    }
+  }
+
+  function updateActiveBox(variantId) {
+    boxes.forEach(item => {
+      const isActive = item.dataset.id === String(variantId);
+      item.classList.toggle('active', isActive);
+      item.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+  }
+
+  function updateTitle(variant) {
+    if (variant && titleEl) {
+      titleEl.textContent = variant.title;
+    }
+  }
+
+  boxes.forEach(box => {
+    box.addEventListener('click', function () {
+      const variantId = this.dataset.id;
+      const selectedVariant = productData.variants.find(variant => String(variant.id) === String(variantId));
+
+      select.value = variantId;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+
+      if (selectedVariant) {
+        updatePriceLine(selectedVariant);
+        updateTitle(selectedVariant);
+      }
+
+      updateActiveBox(variantId);
+      updateProductImage(variantId);
+    });
+  });
+
+  select.addEventListener('change', function () {
+    const selectedVariant = productData.variants.find(variant => String(variant.id) === String(this.value));
+    if (selectedVariant) {
+      updatePriceLine(selectedVariant);
+      updateTitle(selectedVariant);
+      updateActiveBox(selectedVariant.id);
+      updateProductImage(selectedVariant.id);
+    }
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const sliderEl = document.getElementById('product-slider');
+  const navEl = document.getElementById('product-slider-nav');
+  const mediaEl = sliderEl && sliderEl.closest('.product-hero-media');
+  let attempts = 0;
+  let eventsBound = false;
+
+  if (!sliderEl || !navEl) return;
+
+  function getVisibleThumbCount(total) {
+    const count = window.matchMedia('(max-width: 768px)').matches ? 2 : 4;
+    return Math.min(count, Math.max(total - 1, 1));
+  }
+
+  function updateNavHeight(mainSwiper) {
+    if (!mediaEl) return;
+
+    const activeSlide = mainSwiper.slides && mainSwiper.slides[mainSwiper.activeIndex];
+    const imageFrame = activeSlide && activeSlide.querySelector('.product-image');
+    const height = imageFrame && imageFrame.getBoundingClientRect().height;
+
+    if (height) {
+      mediaEl.style.setProperty('--active-product-image-height', `${height}px`);
+    }
+  }
+
+  function updateVisibleThumbs() {
+    const mainSwiper = sliderEl.swiper;
+    const navSlides = Array.from(navEl.querySelectorAll('.swiper-slide:not(.swiper-slide-duplicate)'));
+
+    if (!navSlides.length) return;
+
+    if (!mainSwiper) {
+      attempts += 1;
+      if (attempts <= 30) {
+        window.setTimeout(updateVisibleThumbs, 100);
+      }
+      return;
+    }
+
+    const activeIndex = typeof mainSwiper.realIndex === 'number' ? mainSwiper.realIndex : mainSwiper.activeIndex || 0;
+    const visibleCount = getVisibleThumbCount(navSlides.length);
+
+    updateNavHeight(mainSwiper);
+
+    if (!eventsBound) {
+      mainSwiper.on('slideChange', updateVisibleThumbs);
+      mainSwiper.on('activeIndexChange', updateVisibleThumbs);
+      window.addEventListener('resize', updateVisibleThumbs);
+      navSlides.forEach((slide, index) => {
+        slide.addEventListener('click', function () {
+          mainSwiper.slideTo(index);
+        });
+      });
+      eventsBound = true;
+    }
+
+    navSlides.forEach(slide => {
+      slide.classList.remove('is-visible-product-thumb');
+    });
+
+    for (let offset = 1; offset <= visibleCount; offset += 1) {
+      const index = (activeIndex + offset) % navSlides.length;
+      navSlides[index].classList.add('is-visible-product-thumb');
+    }
+  }
+
+  updateVisibleThumbs();
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.product-hero-scroll-button').forEach(button => {
+    button.addEventListener('click', function (event) {
+      const targetId = this.getAttribute('href').replace('#', '');
+      const target = targetId && document.getElementById(decodeURIComponent(targetId));
+
+      if (!target) return;
+
+      event.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+});
+</script>
+<style>
+            button#product-add-to-cart,
+  .section-producthero .product-hero-scroll-button {
+      background-color: #153A5B !important;
+      transition: 0.3s ease !important;
+
+  }
+   .btn.btn-product, button.btn-product, input[type=submit].btn-product, input[type=button].btn-product {
+
+      COLOR: WHITE !important;
+  }
+  button#product-add-to-cart:hover,
+  .section-producthero .product-hero-scroll-button:hover {
+      background-color: transparent;
+  }
+         .sale-badge {
+       color: #fff;
+              padding-right: 5px;
+              padding-left: 8px;
+              background-color: #dc2626;
+              display: inline-block;
+              font-weight: bold;
+              position: relative;
+              top: 0%;
+              left: 0%;
+           font-size: 15px;
+
+  }
+
+  @media only screen and (max-width: 575px)
+  {
+    .sale-badge {
+    top: 0;
+     left:0;
+  }
+  }
+
+
+  @media (min-width: 992px) {
+      .selector-wrapper .radio-selector {
+          flex-wrap: wrap;
+          font-size: 2.2rem;
+      }
+  }
+  label.carbon-filter-elements {
+      padding: 30px 30px !important;
+  }
+
+
+  @media (max-width: 768px) {
+    .selector-wrapper .radio-selector__option label {
+      font-size: 15px;
+
+    }
+    .qty-container {
+
+      margin: 10px 0px 30px 0px;
+  }
+  }
+  .variant-image-selector {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .variant-image-option {
+    border: 2px solid #ccc;
+    border-radius: 60px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .variant-image-option img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
+
+  .variant-image-option.active {
+    border-color: #000;
+  }
+
+  .variant-image-option.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    position: relative;
+  }
+
+  .variant-image-option .sold-out {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    background: rgba(255, 0, 0, 0.8);
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+
+  {% comment %} @media (max-width: 786px) {
+  .section-producthero .control .swiper-slide {
+
+      padding-bottom: 5%;
+
+  }
+
+  } {% endcomment %}
+  .section-producthero #product-variants {
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+      text-align: left;
+      position: relative;
+      flex-wrap: wrap;
+
+      /* ✅ FIX */
+      align-items: flex-start;
+  }
+
+  .section-producthero #product-variants .variant-heading {
+    color: #111;
+    font-size: 2.6rem;
+    font-weight: 400;
+    line-height: 1.25;
+  }
+
+  .section-producthero #product-variants .variant-heading #selected-variant-title {
+    font-weight: 400;
+  }
+
+  .section-producthero #product-variants .variant-images {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 1.8rem;
+    width: 100%;
+  }
+
+  .section-producthero #product-variants .variant-img-box {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    align-items: center;
+    width: 12rem;
+    aspect-ratio: 1;
+    padding: .6rem;
+    border: .2rem solid #dedede;
+    border-radius: 1rem;
+    background: #fff;
+    color: #111;
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+    overflow: hidden;
+    box-sizing: border-box;
+    appearance: none;
+    transition: border-color .2s ease;
+  }
+
+  .section-producthero #product-variants .variant-img-box img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: contain;
+  }
+
+.section-producthero #product-variants .variant-img-box span {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+{% if product.handle == '7-inch-stainless-steel-vision-spigot' %}
+.section-producthero #product-variants .variant-img-box {
+  display: flex;
+  min-height: 6rem;
+  aspect-ratio: auto;
+  justify-content: center;
+  padding: 1.2rem 1.6rem;
+}
+{% endif %}
+
+.section-producthero #product-variants .variant-img-box.active {
+  border-color: #111;
+}
+
+  .section-producthero #product-variants .variant-img-box:hover {
+    border-color: #111;
+  }
+
+  @media (max-width: 575px) {
+    .section-producthero #product-variants .variant-heading {
+      font-size: 2.4rem;
+    }
+
+    .section-producthero #product-variants .variant-images {
+      gap: 1.6rem;
+    }
+
+    .section-producthero #product-variants .variant-img-box {
+      width: calc((100% - 3.2rem) / 3);
+      max-width: 12rem;
+    }
+  }
+
+  .section-producthero #product-slider-nav .swiper-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    height: auto !important;
+  }
+
+  .section-producthero #product-slider-nav .swiper-slide,
+  .section-producthero #product-slider-nav .swiper-slide.swiper-slide-thumb-active {
+    display: block !important;
+    order: initial !important;
+    grid-column-start: auto !important;
+    grid-row-start: auto !important;
+    height: auto !important;
+    margin-top: 0 !important;
+    padding-bottom: 0;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .section-producthero #product-slider-nav.control-three .swiper-slide {
+    width: calc((100% - 16px) / 3) !important;
+  }
+
+  .section-producthero #product-slider-nav.control-five .swiper-slide {
+    width: calc((100% - 32px) / 5) !important;
+  }
+
+  .section-producthero #product-slider-nav .swiper-slide img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  @media (min-width: 769px) {
+    .section-producthero #product-slider-nav {
+      overflow: visible;
+    }
+
+    .section-producthero #product-slider-nav .swiper-wrapper {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      width: 100% !important;
+      transform: none !important;
+    }
+
+    .section-producthero #product-slider-nav .swiper-slide,
+    .section-producthero #product-slider-nav.control-three .swiper-slide,
+    .section-producthero #product-slider-nav.control-five .swiper-slide {
+      display: none !important;
+      width: 100% !important;
+      margin: 0 !important;
+    }
+
+    .section-producthero #product-slider-nav .swiper-slide.is-visible-product-thumb {
+      display: block !important;
+    }
+
+    .section-producthero #product-slider-nav .swiper-slide.swiper-slide-thumb-active {
+      display: none !important;
+    }
+  }
+
+  .section-producthero #product-variants .selector-wrapper {
+    display: none !important;
+  }
+
+  .section-producthero .product-description-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+    gap: 1.6rem;
+    width: 100%;
+    max-width: 100%;
+    margin: 2.4rem 0 2.8rem;
+    padding: 2rem 2.2rem;
+    box-sizing: border-box;
+    background: var(--stats-background);
+  }
+
+  .section-producthero .product-description-stats__item {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .section-producthero .product-description-stats__item strong {
+    display: block;
+    max-width: 100%;
+    color: var(--stats-value-color);
+    font-size: clamp(2.8rem, 2vw, 4.8rem);
+    font-weight: 800;
+    line-height: 1;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .section-producthero .product-description-stats__item span {
+    display: block;
+    max-width: 100%;
+    margin-top: .8rem;
+    color: var(--stats-label-color);
+    font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  @media (max-width: 767px) {
+    .section-producthero .product-description-stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.8rem 1.2rem;
+      padding: 1.8rem 1.4rem;
+    }
+
+    .section-producthero .product-description-stats__item strong {
+      font-size: 3.4rem;
+    }
+
+    .section-producthero .product-description-stats__item span {
+      font-size: 1.4rem;
+    }
+  }
+
+  .section-producthero .product-hero-block {
+    width: 100%;
+  }
+
+  .section-producthero .main-add-to-cart {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .section-producthero .product-hero-block--product-tag {
+    margin-bottom: .8rem;
+  }
+
+  .section-producthero .product-hero-tag {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    max-width: 100%;
+    min-height: 3.1rem;
+    padding: .7rem 1.2rem;
+    color: var(--tag-color);
+    background: var(--tag-background);
+    border-radius: .2rem;
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .section-producthero .product-hero-block--payment-icons .payment-icons {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .section-producthero .product-hero-block--trust-icons .below-atc-icons {
+    width: 100%;
+  }
+
+  .section-producthero .product-hero-notice-image {
+    width: 100%;
+    margin: .4rem 0 1.6rem;
+    padding: 1.4rem 1.6rem;
+    background: var(--notice-background);
+    border: .1rem solid var(--notice-border-color);
+    border-radius: .8rem;
+    color: var(--notice-text-color);
+    box-sizing: border-box;
+  }
+
+  .section-producthero .product-hero-notice-image__asset-wrap {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .section-producthero .product-hero-notice-image__asset {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .section-producthero .product-hero-notice-image__text {
+    margin-top: .8rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: center;
+  }
+
+  .section-producthero .product-hero-scroll-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: var(--scroll-button-padding-top) 0 var(--scroll-button-padding-bottom);
+    text-decoration: none;
+  }
+
+  .section-producthero .product-hero-upsell {
+    margin-top: 2rem;
+    border: .1rem solid #dedede;
+    background: #fff;
+  }
+
+  .section-producthero .product-hero-upsell__link {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: 1.4rem;
+    align-items: center;
+    padding: 1.4rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .section-producthero .product-hero-upsell__image {
+    width: 8rem;
+    height: 8rem;
+    object-fit: contain;
+  }
+
+  .section-producthero .product-hero-upsell__content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: .4rem;
+  }
+
+  .section-producthero .product-hero-upsell__eyebrow {
+    color: #153A5B;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .section-producthero .product-hero-upsell__title {
+    color: #111;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .section-producthero .product-hero-upsell__price {
+    color: #111;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  @media (max-width: 575px) {
+    .section-producthero .jkl {
+      padding-right: 15px !important;
+    }
+
+    .section-producthero .product-hero-upsell__link {
+      grid-template-columns: 7rem minmax(0, 1fr);
+      padding: 1.2rem;
+    }
+
+    .section-producthero .product-hero-upsell__image {
+      width: 7rem;
+      height: 7rem;
+    }
+  }
+
+  .section-producthero .product-hero-media {
+    width: 100%;
+    --active-product-image-height: 32rem;
+  }
+
+  .section-producthero #product-slider {
+    width: 100%;
+    margin: 0 0 1.6rem;
+    background: #fff;
+  }
+
+  .section-producthero #product-slider .swiper-slide {
+    height: auto;
+    background: #fff;
+  }
+
+  .section-producthero #product-slider .product-image {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    min-height: 32rem;
+    background: #fff;
+  }
+
+  .section-producthero #product-slider .product-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .section-producthero .product-hero-media .swiper-nav {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .section-producthero .product-hero-media .swiper-prev,
+  .section-producthero .product-hero-media .swiper-next {
+    position: absolute;
+    top: 50% !important;
+    width: 3.2rem;
+    height: 3.2rem;
+    margin-top: 0 !important;
+    transform: translateY(-50%) !important;
+    color: #111;
+    background: rgba(255, 255, 255, .85);
+    border: .1rem solid #eeeeee;
+    border-radius: 0;
+    pointer-events: auto;
+  }
+
+  .section-producthero .product-hero-media .swiper-prev:after,
+  .section-producthero .product-hero-media .swiper-next:after {
+    font-size: 1.4rem;
+  }
+
+  .section-producthero #product-slider-nav {
+    width: 100%;
+    margin-top: 1.6rem;
+    overflow: visible !important;
+  }
+
+  .section-producthero #product-slider-nav .swiper-wrapper {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .4rem;
+    width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+  }
+
+  .section-producthero #product-slider-nav .swiper-slide,
+  .section-producthero #product-slider-nav .swiper-slide.swiper-slide-thumb-active,
+  .section-producthero #product-slider-nav .swiper-slide.is-visible-product-thumb,
+  .section-producthero #product-slider-nav.control-three .swiper-slide,
+  .section-producthero #product-slider-nav.control-five .swiper-slide {
+    position: relative;
+    display: none !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #fff;
+    border: .1rem solid #eeeeee;
+    cursor: pointer;
+  }
+
+  .section-producthero #product-slider-nav .swiper-slide.is-visible-product-thumb {
+    display: block !important;
+  }
+
+  .section-producthero #product-slider-nav .swiper-slide.swiper-slide-thumb-active {
+    border-color: #cfcfcf;
+    display: none !important;
+  }
+
+  .section-producthero #product-slider-nav .swiper-slide img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  @media (max-width: 575px) {
+    .section-producthero #product-slider .product-image {
+      min-height: 27rem;
+    }
+  }
+</style>

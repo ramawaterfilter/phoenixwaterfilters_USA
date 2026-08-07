@@ -1,0 +1,768 @@
+{% doc %}
+  @prompt
+    Design requirements:
+    - Full width, height around 45px on desktop, 50px on mobile.
+    - Background color customizable via color picker (default: #d43d2f).
+    - Text color customizable via color picker (default: #ffffff).
+    - Add padding (6px top and bottom) and ensure text is vertically centered.
+    - Use a clean sans-serif font.
+    - Messages slide automatically every few seconds and can also be changed manually using left/right arrows.
+    - Arrows appear on both sides of the text, centered vertically, and move with the slide.
+    - Arrows should be customizable in color and have a hover opacity effect.
+    - The entire message text can include a clickable link (e.g., clicking opens a product or policy page).
+    - Fully responsive on all devices: 
+      - On mobile, the text stays perfectly centered.
+      - Arrows adjust position and size responsively.
+    
+    Customizer settings:
+    - Background color picker.
+    - Text color picker.
+    - Arrow color picker.
+    - Autoplay toggle.
+    - Autoplay speed (milliseconds).
+    - Number of slides (dynamic blocks).
+    - Each block should have:
+      - “Ad text” (rich text or HTML field supporting <strong> and links),
+      - “Link URL” (optional).
+    
+    Example default content:
+    **Free UK Delivery** on Orders over £25 → link to “/shipping-policy”.
+    
+    Animations:
+    - Smooth fade or slide transition (choose one visually clean option).
+    - Transition duration ~0.4s.
+    
+    Optional:
+    - Allow merchants to control font size and padding via theme settings., i need the custom css bar i need and the button will not in correct place align in center, i need to give more that 5 content in it the slide button not in center , if i give the link in that content i need the underline for the text and the give me the custom css bar, i need the underline if the text given by likn in not not in hover, i need the height will be adjestable also i need the i give the link in the text but the underline style not appean only appear in hover
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-announcement-bar-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+    position: relative;
+    overflow: hidden;
+    height: {{ block.settings.bar_height_desktop }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar-{{ ai_gen_id }} {
+      height: {{ block.settings.bar_height_mobile }}px;
+    }
+  }
+
+  .ai-announcement-bar__container-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 0;
+  }
+
+  .ai-announcement-bar__slides-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 70px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar__slides-{{ ai_gen_id }} {
+      padding: 0 60px;
+    }
+  }
+
+  .ai-announcement-bar__slide-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 140px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar__slide-{{ ai_gen_id }} {
+      width: calc(100% - 120px);
+    }
+  }
+
+  .ai-announcement-bar__slide-{{ ai_gen_id }}.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .ai-announcement-bar__message-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: {{ block.settings.font_size }}px;
+    line-height: 1.4;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar__message-{{ ai_gen_id }} {
+      font-size: {{ block.settings.font_size | times: 0.9 }}px;
+    }
+  }
+
+  .ai-announcement-bar__message-{{ ai_gen_id }}:hover {
+    opacity: 0.9;
+  }
+
+  .ai-announcement-bar__message-{{ ai_gen_id }} p {
+    margin: 0;
+    padding: 0;
+  }
+
+  .ai-announcement-bar__message-{{ ai_gen_id }} p a,
+  .ai-announcement-bar__message-{{ ai_gen_id }} a {
+    color: {{ block.settings.text_color }};
+    text-decoration: none;
+  }
+
+  .ai-announcement-bar__message-{{ ai_gen_id }} p a:hover,
+  .ai-announcement-bar__message-{{ ai_gen_id }} a:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .ai-announcement-bar__arrow-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: {{ block.settings.arrow_color }};
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+  }
+
+  .ai-announcement-bar__arrow-{{ ai_gen_id }}:hover {
+    opacity: 1;
+  }
+
+  .ai-announcement-bar__arrow--left-{{ ai_gen_id }} {
+    left: 15px;
+  }
+
+  .ai-announcement-bar__arrow--right-{{ ai_gen_id }} {
+    right: 15px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar__arrow-{{ ai_gen_id }} {
+      padding: 8px;
+      width: 36px;
+      height: 36px;
+    }
+
+    .ai-announcement-bar__arrow--left-{{ ai_gen_id }} {
+      left: 8px;
+    }
+
+    .ai-announcement-bar__arrow--right-{{ ai_gen_id }} {
+      right: 8px;
+    }
+  }
+
+  .ai-announcement-bar__arrow-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar__arrow-{{ ai_gen_id }} svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .ai-announcement-bar__empty-state-{{ ai_gen_id }} {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+    text-align: center;
+  }
+
+  {{ block.settings.custom_css }}
+{% endstyle %}
+
+<announcement-bar-{{ ai_gen_id }} class="ai-announcement-bar-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-announcement-bar__container-{{ ai_gen_id }}">
+    {% assign total_messages = 0 %}
+    {% if block.settings.message_1 != blank %}
+      {% assign total_messages = total_messages | plus: 1 %}
+    {% endif %}
+    {% if block.settings.message_2 != blank %}
+      {% assign total_messages = total_messages | plus: 1 %}
+    {% endif %}
+    {% if block.settings.message_3 != blank %}
+      {% assign total_messages = total_messages | plus: 1 %}
+    {% endif %}
+    {% if block.settings.message_4 != blank %}
+      {% assign total_messages = total_messages | plus: 1 %}
+    {% endif %}
+    {% if block.settings.message_5 != blank %}
+      {% assign total_messages = total_messages | plus: 1 %}
+    {% endif %}
+    {% if block.settings.message_6 != blank %}
+      {% assign total_messages = total_messages | plus: 1 %}
+    {% endif %}
+    {% if block.settings.message_7 != blank %}
+      {% assign total_messages = total_messages | plus: 1 %}
+    {% endif %}
+    {% if block.settings.message_8 != blank %}
+      {% assign total_messages = total_messages | plus: 1 %}
+    {% endif %}
+    {% if block.settings.message_9 != blank %}
+      {% assign total_messages = total_messages | plus: 1 %}
+    {% endif %}
+    {% if block.settings.message_10 != blank %}
+      {% assign total_messages = total_messages | plus: 1 %}
+    {% endif %}
+
+    {% if total_messages > 1 %}
+      <button
+        class="ai-announcement-bar__arrow-{{ ai_gen_id }} ai-announcement-bar__arrow--left-{{ ai_gen_id }}"
+        aria-label="Previous announcement"
+        data-direction="prev"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+    {% endif %}
+
+    <div class="ai-announcement-bar__slides-{{ ai_gen_id }}">
+      {% if total_messages == 0 %}
+        <div class="ai-announcement-bar__slide-{{ ai_gen_id }} active">
+          <div class="ai-announcement-bar__empty-state-{{ ai_gen_id }}">
+            Add your announcement messages in the block settings
+          </div>
+        </div>
+      {% else %}
+        {% assign slide_index = 0 %}
+        
+        {% if block.settings.message_1 != blank %}
+          <div class="ai-announcement-bar__slide-{{ ai_gen_id }}" data-slide-index="{{ slide_index }}">
+            {% if block.settings.link_url_1 != blank %}
+              <a href="{{ block.settings.link_url_1 }}" class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_1 }}
+              </a>
+            {% else %}
+              <div class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_1 }}
+              </div>
+            {% endif %}
+          </div>
+          {% assign slide_index = slide_index | plus: 1 %}
+        {% endif %}
+
+        {% if block.settings.message_2 != blank %}
+          <div class="ai-announcement-bar__slide-{{ ai_gen_id }}" data-slide-index="{{ slide_index }}">
+            {% if block.settings.link_url_2 != blank %}
+              <a href="{{ block.settings.link_url_2 }}" class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_2 }}
+              </a>
+            {% else %}
+              <div class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_2 }}
+              </div>
+            {% endif %}
+          </div>
+          {% assign slide_index = slide_index | plus: 1 %}
+        {% endif %}
+
+        {% if block.settings.message_3 != blank %}
+          <div class="ai-announcement-bar__slide-{{ ai_gen_id }}" data-slide-index="{{ slide_index }}">
+            {% if block.settings.link_url_3 != blank %}
+              <a href="{{ block.settings.link_url_3 }}" class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_3 }}
+              </a>
+            {% else %}
+              <div class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_3 }}
+              </div>
+            {% endif %}
+          </div>
+          {% assign slide_index = slide_index | plus: 1 %}
+        {% endif %}
+
+        {% if block.settings.message_4 != blank %}
+          <div class="ai-announcement-bar__slide-{{ ai_gen_id }}" data-slide-index="{{ slide_index }}">
+            {% if block.settings.link_url_4 != blank %}
+              <a href="{{ block.settings.link_url_4 }}" class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_4 }}
+              </a>
+            {% else %}
+              <div class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_4 }}
+              </div>
+            {% endif %}
+          </div>
+          {% assign slide_index = slide_index | plus: 1 %}
+        {% endif %}
+
+        {% if block.settings.message_5 != blank %}
+          <div class="ai-announcement-bar__slide-{{ ai_gen_id }}" data-slide-index="{{ slide_index }}">
+            {% if block.settings.link_url_5 != blank %}
+              <a href="{{ block.settings.link_url_5 }}" class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_5 }}
+              </a>
+            {% else %}
+              <div class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_5 }}
+              </div>
+            {% endif %}
+          </div>
+          {% assign slide_index = slide_index | plus: 1 %}
+        {% endif %}
+
+        {% if block.settings.message_6 != blank %}
+          <div class="ai-announcement-bar__slide-{{ ai_gen_id }}" data-slide-index="{{ slide_index }}">
+            {% if block.settings.link_url_6 != blank %}
+              <a href="{{ block.settings.link_url_6 }}" class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_6 }}
+              </a>
+            {% else %}
+              <div class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_6 }}
+              </div>
+            {% endif %}
+          </div>
+          {% assign slide_index = slide_index | plus: 1 %}
+        {% endif %}
+
+        {% if block.settings.message_7 != blank %}
+          <div class="ai-announcement-bar__slide-{{ ai_gen_id }}" data-slide-index="{{ slide_index }}">
+            {% if block.settings.link_url_7 != blank %}
+              <a href="{{ block.settings.link_url_7 }}" class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_7 }}
+              </a>
+            {% else %}
+              <div class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_7 }}
+              </div>
+            {% endif %}
+          </div>
+          {% assign slide_index = slide_index | plus: 1 %}
+        {% endif %}
+
+        {% if block.settings.message_8 != blank %}
+          <div class="ai-announcement-bar__slide-{{ ai_gen_id }}" data-slide-index="{{ slide_index }}">
+            {% if block.settings.link_url_8 != blank %}
+              <a href="{{ block.settings.link_url_8 }}" class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_8 }}
+              </a>
+            {% else %}
+              <div class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_8 }}
+              </div>
+            {% endif %}
+          </div>
+          {% assign slide_index = slide_index | plus: 1 %}
+        {% endif %}
+
+        {% if block.settings.message_9 != blank %}
+          <div class="ai-announcement-bar__slide-{{ ai_gen_id }}" data-slide-index="{{ slide_index }}">
+            {% if block.settings.link_url_9 != blank %}
+              <a href="{{ block.settings.link_url_9 }}" class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_9 }}
+              </a>
+            {% else %}
+              <div class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_9 }}
+              </div>
+            {% endif %}
+          </div>
+          {% assign slide_index = slide_index | plus: 1 %}
+        {% endif %}
+
+        {% if block.settings.message_10 != blank %}
+          <div class="ai-announcement-bar__slide-{{ ai_gen_id }}" data-slide-index="{{ slide_index }}">
+            {% if block.settings.link_url_10 != blank %}
+              <a href="{{ block.settings.link_url_10 }}" class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_10 }}
+              </a>
+            {% else %}
+              <div class="ai-announcement-bar__message-{{ ai_gen_id }}">
+                {{ block.settings.message_10 }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    {% if total_messages > 1 %}
+      <button
+        class="ai-announcement-bar__arrow-{{ ai_gen_id }} ai-announcement-bar__arrow--right-{{ ai_gen_id }}"
+        aria-label="Next announcement"
+        data-direction="next"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    {% endif %}
+  </div>
+</announcement-bar-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AnnouncementBar{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentIndex = 0;
+        this.autoplayInterval = null;
+      }
+
+      connectedCallback() {
+        this.slides = this.querySelectorAll('.ai-announcement-bar__slide-{{ ai_gen_id }}');
+        this.arrows = this.querySelectorAll('.ai-announcement-bar__arrow-{{ ai_gen_id }}');
+        this.autoplayEnabled = {{ block.settings.enable_autoplay | json }};
+        this.autoplaySpeed = {{ block.settings.autoplay_speed }};
+
+        if (this.slides.length === 0) return;
+
+        this.showSlide(0);
+        this.setupEventListeners();
+
+        if (this.autoplayEnabled && this.slides.length > 1) {
+          this.startAutoplay();
+        }
+      }
+
+      setupEventListeners() {
+        this.arrows.forEach(arrow => {
+          arrow.addEventListener('click', (e) => {
+            const direction = e.currentTarget.getAttribute('data-direction');
+            if (direction === 'next') {
+              this.nextSlide();
+            } else {
+              this.prevSlide();
+            }
+            if (this.autoplayEnabled) {
+              this.resetAutoplay();
+            }
+          });
+        });
+      }
+
+      showSlide(index) {
+        this.slides.forEach((slide, i) => {
+          if (i === index) {
+            slide.classList.add('active');
+          } else {
+            slide.classList.remove('active');
+          }
+        });
+        this.currentIndex = index;
+      }
+
+      nextSlide() {
+        const nextIndex = (this.currentIndex + 1) % this.slides.length;
+        this.showSlide(nextIndex);
+      }
+
+      prevSlide() {
+        const prevIndex = (this.currentIndex - 1 + this.slides.length) % this.slides.length;
+        this.showSlide(prevIndex);
+      }
+
+      startAutoplay() {
+        this.autoplayInterval = setInterval(() => {
+          this.nextSlide();
+        }, this.autoplaySpeed);
+      }
+
+      stopAutoplay() {
+        if (this.autoplayInterval) {
+          clearInterval(this.autoplayInterval);
+          this.autoplayInterval = null;
+        }
+      }
+
+      resetAutoplay() {
+        this.stopAutoplay();
+        this.startAutoplay();
+      }
+
+      disconnectedCallback() {
+        this.stopAutoplay();
+      }
+    }
+
+    customElements.define('announcement-bar-{{ ai_gen_id }}', AnnouncementBar{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#d43d2f"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "bar_height_desktop",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Bar height (desktop)",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "bar_height_mobile",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Bar height (mobile)",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Autoplay"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2000,
+      "max": 9000,
+      "step": 500,
+      "unit": "ms",
+      "label": "Autoplay speed",
+      "default": 5000
+    },
+    {
+      "type": "header",
+      "content": "Custom CSS"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_css",
+      "label": "Custom CSS",
+      "info": "Add your custom CSS here to override default styles"
+    },
+    {
+      "type": "header",
+      "content": "Message 1"
+    },
+    {
+      "type": "richtext",
+      "id": "message_1",
+      "label": "Message",
+      "default": "<p><strong>Free UK Delivery</strong> on Orders over £25</p>"
+    },
+    {
+      "type": "url",
+      "id": "link_url_1",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Message 2"
+    },
+    {
+      "type": "richtext",
+      "id": "message_2",
+      "label": "Message",
+      "default": "<p><strong>Shop Now</strong> and Save 20%</p>"
+    },
+    {
+      "type": "url",
+      "id": "link_url_2",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Message 3"
+    },
+    {
+      "type": "richtext",
+      "id": "message_3",
+      "label": "Message",
+      "default": "<p><strong>Limited Time Offer</strong> - Don't Miss Out!</p>"
+    },
+    {
+      "type": "url",
+      "id": "link_url_3",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Message 4"
+    },
+    {
+      "type": "richtext",
+      "id": "message_4",
+      "label": "Message"
+    },
+    {
+      "type": "url",
+      "id": "link_url_4",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Message 5"
+    },
+    {
+      "type": "richtext",
+      "id": "message_5",
+      "label": "Message"
+    },
+    {
+      "type": "url",
+      "id": "link_url_5",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Message 6"
+    },
+    {
+      "type": "richtext",
+      "id": "message_6",
+      "label": "Message"
+    },
+    {
+      "type": "url",
+      "id": "link_url_6",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Message 7"
+    },
+    {
+      "type": "richtext",
+      "id": "message_7",
+      "label": "Message"
+    },
+    {
+      "type": "url",
+      "id": "link_url_7",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Message 8"
+    },
+    {
+      "type": "richtext",
+      "id": "message_8",
+      "label": "Message"
+    },
+    {
+      "type": "url",
+      "id": "link_url_8",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Message 9"
+    },
+    {
+      "type": "richtext",
+      "id": "message_9",
+      "label": "Message"
+    },
+    {
+      "type": "url",
+      "id": "link_url_9",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Message 10"
+    },
+    {
+      "type": "richtext",
+      "id": "message_10",
+      "label": "Message"
+    },
+    {
+      "type": "url",
+      "id": "link_url_10",
+      "label": "Link URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement bar"
+    }
+  ]
+}
+{% endschema %}

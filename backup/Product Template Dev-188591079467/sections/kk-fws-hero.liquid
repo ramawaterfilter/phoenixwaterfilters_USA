@@ -1,0 +1,599 @@
+{%- liquid
+  assign hero_image = section.settings.image
+  if hero_image == blank
+    assign hero_image = product.featured_image
+  endif
+-%}
+
+<section
+  class="kk-fws-hero"
+  style="
+    --kk-fws-hero-background: {{ section.settings.background_color }};
+    --kk-fws-hero-eyebrow-background: {{ section.settings.eyebrow_background_color }};
+    --kk-fws-hero-heading: {{ section.settings.heading_color }};
+    --kk-fws-hero-text: {{ section.settings.text_color }};
+    --kk-fws-hero-button-background: {{ section.settings.button_background_color }};
+    --kk-fws-hero-button-text: {{ section.settings.button_text_color }};
+    --kk-fws-hero-line: {{ section.settings.line_color }};
+  "
+>
+  <div class="kk-fws-hero__container">
+    <div class="kk-fws-hero__media">
+      {%- if hero_image != blank -%}
+        {{
+          hero_image
+          | image_url: width: 1100
+          | image_tag:
+            loading: 'eager',
+            fetchpriority: 'high',
+            class: 'kk-fws-hero__image',
+            widths: '375, 548, 750, 1100',
+            sizes: '(max-width: 749px) calc(100vw - 4rem), 548px'
+        }}
+      {%- else -%}
+        {{ 'product-apparel-1' | placeholder_svg_tag: 'kk-fws-hero__image kk-fws-hero__image--placeholder' }}
+      {%- endif -%}
+    </div>
+
+    <div class="kk-fws-hero__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="kk-fws-hero__eyebrow">
+          {{- section.settings.eyebrow | replace: '[month]', '<span class="dyn-month"></span>' -}}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h1 class="kk-fws-hero__heading">{{ section.settings.heading }}</h1>
+      {%- endif -%}
+
+      {%- if section.settings.subheading != blank -%}
+        <p class="kk-fws-hero__subheading">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <div class="kk-fws-hero__cta">
+          <a
+            class="kk-fws-hero__button"
+            href="{{ section.settings.button_link | default: '#' }}"
+          >
+            {{ section.settings.button_label }}
+          </a>
+
+          {%- assign micro_blocks = section.blocks | where: 'type', 'micro_trust' -%}
+          {%- if micro_blocks.size > 0 -%}
+            <ul class="kk-fws-hero__micro-list">
+              {%- for block in micro_blocks -%}
+                <li class="kk-fws-hero__micro" {{ block.shopify_attributes }}>
+                  {%- render 'kk-fws-hero-icon', block: block, size: 'micro' -%}
+                  <span class="kk-fws-hero__micro-text">{{ block.settings.text }}</span>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- assign badge_blocks = section.blocks | where: 'type', 'badge' -%}
+      {%- if badge_blocks.size > 0 -%}
+        <hr class="kk-fws-hero__divider">
+
+        <ul class="kk-fws-hero__badge-list">
+          {%- for block in badge_blocks -%}
+            <li class="kk-fws-hero__badge" {{ block.shopify_attributes }}>
+              {%- render 'kk-fws-hero-icon', block: block, size: 'badge' -%}
+              <span class="kk-fws-hero__badge-text">
+                <span class="kk-fws-hero__badge-text-primary">{{ block.settings.text }}</span>
+                {%- if block.settings.text_secondary != blank -%}
+                  <span class="kk-fws-hero__badge-text-secondary">{{ block.settings.text_secondary }}</span>
+                {%- endif -%}
+              </span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .kk-fws-hero {
+    background: var(--kk-fws-hero-background, #ffffff);
+    padding: 4rem 0;
+  }
+
+  .kk-fws-hero__container {
+    width: min(100% - 3.2rem, 114rem);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 548fr 600px;
+    column-gap: 4.3rem;
+    align-items: start;
+  }
+
+  .kk-fws-hero__media {
+    overflow: hidden;
+  }
+
+  .kk-fws-hero__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 548 / 663;
+    object-fit: cover;
+  }
+
+  .kk-fws-hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.6rem;
+  }
+
+  .kk-fws-hero__eyebrow {
+    margin: 0;
+    padding: 0.8rem 0.9rem;
+    background: var(--kk-fws-hero-eyebrow-background, #f8f5f3);
+    border-radius: 0.3rem;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: normal;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-hero-text, #26303a);
+  }
+
+  .kk-fws-hero__heading {
+    margin: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 6rem;
+    line-height: 1.105;
+    color: var(--kk-fws-hero-heading, #153a5b);
+    text-transform: none;
+  }
+
+  .kk-fws-hero__subheading {
+    margin: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 2.2rem;
+    line-height: 1.4;
+    color: var(--kk-fws-hero-text, #26303a);
+  }
+
+  .kk-fws-hero__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.8rem;
+    width: 100%;
+  }
+
+  .kk-fws-hero__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 6.542rem;
+    padding: 1.2rem 4.4rem;
+    box-sizing: border-box;
+    background: var(--kk-fws-hero-button-background, #153a5b);
+    border-radius: 23.027rem;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 2.4rem;
+    line-height: 1.14;
+    letter-spacing: 0.138rem;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--kk-fws-hero-button-text, #ffffff);
+    transition: opacity 0.2s ease;
+  }
+
+  .kk-fws-hero__button:hover,
+  .kk-fws-hero__button:focus-visible {
+    opacity: 0.9;
+    color: var(--kk-fws-hero-button-text, #ffffff);
+  }
+
+  .kk-fws-hero__micro-list {
+    display: flex;
+    align-items: center;
+    gap: 2.763rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-hero__micro {
+    display: flex;
+    align-items: center;
+    gap: 0.921rem;
+  }
+
+  .kk-fws-hero__micro-text {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: var(--kk-fws-hero-text, #26303a);
+  }
+
+  .kk-fws-hero__icon {
+    display: block;
+    flex-shrink: 0;
+    object-fit: contain;
+  }
+
+  .kk-fws-hero__icon--micro {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .kk-fws-hero__icon--badge {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .kk-fws-hero__divider {
+    width: 100%;
+    height: 0;
+    margin: 0;
+    border: 0;
+    border-top: 1px solid var(--kk-fws-hero-line, #e6e6e6);
+  }
+
+  .kk-fws-hero__badge-list {
+    display: flex;
+    align-items: center;
+    gap: 3.065rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-hero__badge {
+    display: flex;
+    align-items: center;
+    gap: 1.255rem;
+  }
+
+  .kk-fws-hero__badge-text {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.6938rem;
+    line-height: 1.2;
+    color: var(--kk-fws-hero-text, #26303a);
+    white-space: nowrap;
+  }
+
+  .kk-fws-hero__badge-text-primary {
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+  }
+
+  .kk-fws-hero__badge-text-secondary {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+  }
+
+  @media (max-width: 989px) {
+    .kk-fws-hero__heading {
+      font-size: 4.4rem;
+    }
+
+    .kk-fws-hero__button {
+      font-size: 1.9rem;
+      letter-spacing: 0.1rem;
+    }
+
+    .kk-fws-hero__micro-list {
+      gap: 1.6rem;
+    }
+
+    .kk-fws-hero__badge-list {
+      gap: 1.6rem;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .kk-fws-hero {
+      padding: 2rem 0 4rem;
+    }
+
+    .kk-fws-hero__container {
+      width: min(100% - 4rem, 54rem);
+      grid-template-columns: 1fr;
+      row-gap: 2.4rem;
+    }
+
+    .kk-fws-hero__image {
+      aspect-ratio: 335 / 300;
+    }
+
+    .kk-fws-hero__content {
+      gap: 1.8rem;
+    }
+
+    .kk-fws-hero__eyebrow {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 1.2rem 1.6rem;
+      font-size: 1.2rem;
+      line-height: 1.2;
+      letter-spacing: 0.12rem;
+    }
+
+    .kk-fws-hero__heading {
+      font-size: 3.2rem;
+      line-height: 1.1;
+    }
+
+    .kk-fws-hero__subheading {
+      font-size: 1.6rem;
+    }
+
+    .kk-fws-hero__cta {
+      gap: 1.2rem;
+    }
+
+    .kk-fws-hero__button {
+      min-height: 0;
+      padding: 1.2rem 2rem;
+      font-size: 1.7rem;
+      line-height: 1.14;
+      letter-spacing: 0.1rem;
+    }
+
+    .kk-fws-hero__micro-list {
+      justify-content: space-between;
+      gap: 1.2rem;
+      width: 100%;
+    }
+
+    .kk-fws-hero__micro {
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .kk-fws-hero__micro-text {
+      font-size: 1.4rem;
+      line-height: 1.3;
+    }
+
+    .kk-fws-hero__icon--micro {
+      width: 2.4rem;
+      height: 2.4rem;
+    }
+
+    .kk-fws-hero__icon--badge {
+      width: 3.2rem;
+      height: 3.2rem;
+    }
+
+    .kk-fws-hero__badge-list {
+      display: grid;
+      grid-template-columns: repeat(2, auto);
+      justify-content: space-between;
+      align-items: start;
+      gap: 1.2rem 1.6rem;
+    }
+
+    .kk-fws-hero__badge {
+      gap: 1.2rem;
+    }
+
+    .kk-fws-hero__badge-text {
+      flex-direction: row;
+      gap: 0.4rem;
+      font-size: 1.6rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Hero",
+  "tag": "div",
+  "class": "section-kk-fws-hero",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero image",
+      "info": "Falls back to the product's featured image when empty."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Limited [month] offer for American families:"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get An NSF Certified Water Filter Tower Shipped Direct To You - Completely FREE!"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Join over 12,219+ American families who've already made the switch to clean, fresh and delicious water. Get your FREE water filter tower today, just cover shipping!"
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Claim my free Water filter TOWER"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Point this at the on-page offer section, e.g. #kk-fws-offer."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_background_color",
+      "label": "Eyebrow background",
+      "default": "#f8f5f3"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text",
+      "default": "#26303a"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Button background",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Divider",
+      "default": "#e6e6e6"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "micro_trust",
+      "name": "Micro trust item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "shipping", "label": "Shipping" },
+            { "value": "trial", "label": "Trial" },
+            { "value": "cancel", "label": "Cancel any time" },
+            { "value": "nsf", "label": "NSF certified" },
+            { "value": "reviews", "label": "Reviews" },
+            { "value": "warranty", "label": "Warranty" }
+          ],
+          "default": "shipping"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon",
+          "info": "Overrides the icon selected above."
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Pay only shipping today"
+        }
+      ]
+    },
+    {
+      "type": "badge",
+      "name": "Badge",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "shipping", "label": "Shipping" },
+            { "value": "trial", "label": "Trial" },
+            { "value": "cancel", "label": "Cancel any time" },
+            { "value": "nsf", "label": "NSF certified" },
+            { "value": "reviews", "label": "Reviews" },
+            { "value": "warranty", "label": "Warranty" }
+          ],
+          "default": "nsf"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon",
+          "info": "Overrides the icon selected above."
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "First line",
+          "default": "NSF"
+        },
+        {
+          "type": "text",
+          "id": "text_secondary",
+          "label": "Second line",
+          "default": "Certified"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Hero",
+      "blocks": [
+        {
+          "type": "micro_trust",
+          "settings": { "icon": "shipping", "text": "Pay only shipping today" }
+        },
+        {
+          "type": "micro_trust",
+          "settings": { "icon": "trial", "text": "100-day trial" }
+        },
+        {
+          "type": "micro_trust",
+          "settings": { "icon": "cancel", "text": "Cancel any time" }
+        },
+        {
+          "type": "badge",
+          "settings": { "icon": "nsf", "text": "NSF", "text_secondary": "Certified" }
+        },
+        {
+          "type": "badge",
+          "settings": { "icon": "reviews", "text": "1,092", "text_secondary": "Reviews" }
+        },
+        {
+          "type": "badge",
+          "settings": { "icon": "trial", "text": "100-day", "text_secondary": "Trial" }
+        },
+        {
+          "type": "badge",
+          "settings": { "icon": "warranty", "text": "10-Year", "text_secondary": "Warranty" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

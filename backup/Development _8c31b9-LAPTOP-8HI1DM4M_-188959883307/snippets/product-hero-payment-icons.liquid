@@ -1,0 +1,18 @@
+{% doc %}
+Renders payment icons below the product hero button.
+@example
+{% render 'product-hero-payment-icons' %}
+{% enddoc %}
+
+<div class="payment-icons d-flex justify-content-center align-items-center gap-3">
+  <img src="{{ 'visa.png' | asset_url }}" alt="visa" height="20.42" width="45.15">
+  <img src="{{ 'mastercard.png' | asset_url }}" height="20.7" width="32.45" alt="mastercard">
+  <img src="{{ 'paypal.png' | asset_url }}" alt="paypal" height="25.41" width="20.99">
+  <img src="{{ 'amex.png' | asset_url }}" height="20.11" width="54.44" alt="amex">
+  <img
+    src="https://cdn.shopify.com/s/files/1/2644/2852/files/Shop_Pay_logo.png?v=1761737843"
+    alt="Shop Pay"
+    height="23.11"
+    width="74.44"
+  >
+</div>

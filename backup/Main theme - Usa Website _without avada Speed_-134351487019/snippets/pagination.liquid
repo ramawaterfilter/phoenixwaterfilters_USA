@@ -1,0 +1,22 @@
+<div class="pagination">
+    {{ 'page.text' | t }}
+    
+    <span class="current-page">
+        <input type="text" name="pagenumber" max="{{ paginate.pages }}" min="0" value="{{ paginate.current_page }}"/>
+    </span> 
+    of {{ paginate.pages }}
+
+    <div class="pagination__nav">
+        <a {% if paginate.previous.url %} href="{{ paginate.previous.url }}" {% else %}class="disabled"{% endif %}>
+            <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5.86279 0.33789L0.862793 6.33789L5.86279 12.3379" fill="black"  stroke="white"/>
+            </svg>
+        </a>
+        
+        <a {% if paginate.next.url %} href="{{ paginate.next.url }}" {% else %}class="disabled"{% endif %}>
+            <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.862794 12.3379L5.86279 6.33789L0.862794 0.337891" fill="black" stroke="white"/>
+            </svg>
+        </a>
+    </div>
+</div>

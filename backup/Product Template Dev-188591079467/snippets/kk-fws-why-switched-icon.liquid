@@ -1,0 +1,34 @@
+{%- comment -%}
+  Renders one feature icon for the KK FWS "Why switched" section.
+
+  Accepts:
+  - block: {Object} Block with an `icon` select setting and an optional `custom_icon` image.
+
+  Usage:
+  {% render 'kk-fws-why-switched-icon', block: block %}
+{%- endcomment -%}
+
+{%- liquid
+  assign icon_key = block.settings.icon | default: 'contaminants'
+  assign icon_class = 'kk-fws-why-switched__icon kk-fws-why-switched__icon--' | append: icon_key
+-%}
+
+<span class="kk-fws-why-switched__icon-box">
+  {%- if block.settings.custom_icon != blank -%}
+    {{
+      block.settings.custom_icon
+      | image_url: width: 150
+      | image_tag: class: 'kk-fws-why-switched__icon', loading: 'lazy', alt: ''
+    }}
+  {%- else -%}
+    {%- assign icon_asset = 'kk-fws-icon-' | append: icon_key | append: '.svg' -%}
+    <img
+      class="{{ icon_class }}"
+      src="{{ icon_asset | asset_url }}"
+      alt=""
+      width="75"
+      height="75"
+      loading="lazy"
+    >
+  {%- endif -%}
+</span>

@@ -1,0 +1,206 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "Footer",
+  "type": "footer",
+  "sections": {
+    "176336069933f0b77c": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_ad4b482_c6rcLB": {
+          "type": "ai_gen_block_ad4b482",
+          "settings": {
+            "container_max_width": 1400,
+            "desktop_columns": 5,
+            "card_gap": 20,
+            "section_padding_desktop": 40,
+            "section_padding_mobile": 30,
+            "card_background": "#ffffff",
+            "active_card_background": "#d9f5e4",
+            "card_border_radius": 12,
+            "card_shadow": "0 2px 8px rgba(0, 0, 0, 0.1)",
+            "active_card_shadow": "0 4px 12px rgba(0, 0, 0, 0.15)",
+            "active_card_lift": -4,
+            "card_content_padding": 16,
+            "card_content_padding_mobile": 16,
+            "content_gap": 12,
+            "video_heading_size": 18,
+            "video_heading_size_mobile": 16,
+            "video_heading_weight": 600,
+            "video_heading_color": "#000000",
+            "video_heading_align": "left",
+            "video_heading_padding": 16,
+            "video_heading_padding_mobile": 12,
+            "video_aspect_ratio": "9 / 16",
+            "video_background": "#000000",
+            "heading_size": 16,
+            "heading_size_mobile": 14,
+            "heading_weight": 600,
+            "heading_line_height": 1.4,
+            "heading_color": "#000000",
+            "heading_align": "left",
+            "influencer_font_size": 14,
+            "influencer_color": "#333333",
+            "influencer_gap": 8,
+            "instagram_icon_size": 18,
+            "instagram_icon_color": "#e4405f",
+            "product_image_size": 50,
+            "product_image_radius": 8,
+            "product_image_bg": "#f4f4f4",
+            "product_font_size": 14,
+            "product_font_weight": 500,
+            "product_color": "#000000",
+            "product_hover_color": "#000000",
+            "product_gap": 12,
+            "mobile_card_width": 70,
+            "mobile_card_gap": 16,
+            "dot_size": 8,
+            "dot_radius": 4,
+            "dot_color": "#cccccc",
+            "dot_active_width": 24,
+            "dot_active_radius": 4,
+            "dot_active_color": "#000000",
+            "pagination_gap": 8,
+            "pagination_margin_top": 20,
+            "custom_css": "",
+            "card_1_video_heading": "fdfdfdf",
+            "card_1_heading": "Clear water is wellness",
+            "card_1_influencer": "@wellness_guru",
+            "card_1_instagram_url": "https://www.instagram.com/phoenixgravitywaterfilters/?igsh=MXM1NG02Yzg0Yml1cg%3D%3D#",
+            "card_1_wistia_embed": "<script src=\"https://fast.wistia.com/player.js\" async=\"\"></script><script src=\"https://fast.wistia.com/embed/5acadf4z92.js\" async=\"\" type=\"module\"></script><style>wistia-player[media-id='5acadf4z92']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/5acadf4z92/swatch'); display: block; filter: blur(5px); padding-top:177.78%; }</style> <wistia-player media-id=\"5acadf4z92\" aspect=\"0.5625\"></wistia-player>",
+            "card_1_product_name": "Phoenix Gravity Filter",
+            "card_1_product_url": "",
+            "card_2_video_heading": "",
+            "card_2_heading": "Pure hydration daily",
+            "card_2_influencer": "@healthy_mom",
+            "card_2_instagram_url": "",
+            "card_2_wistia_embed": "<script src=\"https://fast.wistia.com/player.js\" async=\"\"></script><script src=\"https://fast.wistia.com/embed/5acadf4z92.js\" async=\"\" type=\"module\"></script><style>wistia-player[media-id='5acadf4z92']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/5acadf4z92/swatch'); display: block; filter: blur(5px); padding-top:177.78%; }</style> <wistia-player media-id=\"5acadf4z92\" aspect=\"0.5625\"></wistia-player>",
+            "card_2_product_name": "Phoenix Gravity Filter",
+            "card_2_product_url": "",
+            "card_3_video_heading": "",
+            "card_3_heading": "Best clean water choice",
+            "card_3_influencer": "@eco_lifestyle",
+            "card_3_instagram_url": "",
+            "card_3_wistia_embed": "<script src=\"https://fast.wistia.com/player.js\" async=\"\"></script><script src=\"https://fast.wistia.com/embed/5acadf4z92.js\" async=\"\" type=\"module\"></script><style>wistia-player[media-id='5acadf4z92']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/5acadf4z92/swatch'); display: block; filter: blur(5px); padding-top:177.78%; }</style> <wistia-player media-id=\"5acadf4z92\" aspect=\"0.5625\"></wistia-player>",
+            "card_3_product_name": "Phoenix Gravity Filter",
+            "card_3_product_url": "",
+            "card_4_video_heading": "",
+            "card_4_heading": "Tastes amazing and pure",
+            "card_4_influencer": "@fitness_life",
+            "card_4_instagram_url": "",
+            "card_4_wistia_embed": "<script src=\"https://fast.wistia.com/player.js\" async=\"\"></script><script src=\"https://fast.wistia.com/embed/5acadf4z92.js\" async=\"\" type=\"module\"></script><style>wistia-player[media-id='5acadf4z92']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/5acadf4z92/swatch'); display: block; filter: blur(5px); padding-top:177.78%; }</style> <wistia-player media-id=\"5acadf4z92\" aspect=\"0.5625\"></wistia-player>",
+            "card_4_product_name": "Phoenix Gravity Filter",
+            "card_4_product_url": "",
+            "card_5_video_heading": "",
+            "card_5_heading": "No more plastic bottles",
+            "card_5_influencer": "@zero_waste",
+            "card_5_instagram_url": "",
+            "card_5_wistia_embed": "<script src=\"https://fast.wistia.com/player.js\" async=\"\"></script><script src=\"https://fast.wistia.com/embed/5acadf4z92.js\" async=\"\" type=\"module\"></script><style>wistia-player[media-id='5acadf4z92']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/5acadf4z92/swatch'); display: block; filter: blur(5px); padding-top:177.78%; }</style> <wistia-player media-id=\"5acadf4z92\" aspect=\"0.5625\"></wistia-player>",
+            "card_5_product_name": "Phoenix Gravity Filter",
+            "card_5_product_url": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_ad4b482_c6rcLB"
+      ],
+      "disabled": true,
+      "settings": {}
+    },
+    "1763356709e0585561": {
+      "type": "_blocks",
+      "settings": {}
+    },
+    "17633564828b75b1f5": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_905424f_JgBDB4": {
+          "type": "ai_gen_block_905424f",
+          "disabled": true,
+          "settings": {
+            "heading": "Choose Your Region",
+            "subheading": "Select your country to continue shopping in your local store.",
+            "heading_size": 48,
+            "subheading_size": 18,
+            "heading_color": "#1a1a1a",
+            "subheading_color": "#4a4a4a",
+            "bg_gradient_start": "#f8f9fa",
+            "bg_gradient_end": "#e9ecef",
+            "card_bg_color": "#ffffff",
+            "card_border_color": "#e0e0e0",
+            "card_hover_border_color": "#cccccc",
+            "card_border_radius": 16,
+            "country_name_size": 24,
+            "country_name_color": "#1a1a1a",
+            "currency_text_size": 16,
+            "currency_text_color": "#6a6a6a",
+            "arrow_bg_color": "#b1afaf",
+            "arrow_hover_bg_color": "#e2e2e2",
+            "arrow_color": "#1a1a1a",
+            "badge_text": "Recommended",
+            "badge_bg_color": "#000000",
+            "badge_text_color": "#ffffff",
+            "country_1_name": "United States",
+            "country_1_flag": "shopify://shop_images/download.png",
+            "country_1_currency": "Shop in USD",
+            "country_1_url": "",
+            "country_1_show_badge": false,
+            "country_2_name": "United Kingdom",
+            "country_2_currency": "Shop in GBP",
+            "country_2_url": "",
+            "country_2_show_badge": false,
+            "country_3_name": "France",
+            "country_3_currency": "Shop in EUR",
+            "country_3_url": "",
+            "country_3_show_badge": false,
+            "country_4_name": "Turkey",
+            "country_4_currency": "Shop in TRY",
+            "country_4_url": "",
+            "country_4_show_badge": false
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_905424f_JgBDB4"
+      ],
+      "settings": {}
+    },
+    "817ca831-c432-47df-b994-812f7b308112": {
+      "type": "footer",
+      "custom_css": [
+        "img {width: 100px !important;}"
+      ],
+      "settings": {
+        "footer-logo": "shopify://shop_images/Logo_with_Register_Mark.png",
+        "col1_text": "<h3>Phoenix Gravity</h3><p></p><p><strong>Warehouse Address:-</strong> Save Rack LLC3135 Drane Field Rd, Unit 21 Lakeland, FL 33811</p><p>The Simplest, Safest And Most Affordable Way To Enjoy Pure Drinking Water That’s 99% Free From Contaminants.</p>",
+        "col2_text": "<p><strong>Home</strong></p><ul><li><a href=\"/collections/all-products\" title=\"All Products\">Shop All</a></li><li><a href=\"/pages/service-areas\" title=\"/pages/service-areas\">Service areas</a></li><li><a href=\"/products/gravity-water-filter\" title=\"Phoenix Gravity Water Filter\">The complete system</a></li><li><a href=\"/pages/how-it-works\" title=\"How It Works\">How It Works</a></li><li><a href=\"/pages/set-up-your-filter\" title=\"Set up your filter\">How to Set Up</a></li><li><a href=\"/blogs/post\" title=\"News\">Blog</a></li><li><a href=\"/pages/warranty-registration\" title=\"Warranty Registration\">Warranty Registration</a></li><li><a href=\"https://af.uppromote.com/phoenix-water-filters/register\" title=\"Become an ambassador\">Become an ambassador</a></li></ul><p></p>",
+        "col3_text": "<p><strong>Helpful Links</strong></p><ul><li><a href=\"/pages/about-us\" title=\"About Us\">About Us</a></li><li><a href=\"/pages/contact-us\" title=\"Contact Us\">Contact Us</a></li><li><a href=\"/pages/faqs\" title=\"FAQs\">FAQs</a></li><li><a href=\"/policies/shipping-policy\" title=\"Shipping Policy\">Shipping Policy</a></li><li><a href=\"/policies/privacy-policy\" title=\"Privacy Policy\">Privacy Policy</a></li><li><a href=\"/policies/refund-policy\" title=\"Refund Policy\">Return Policy</a></li><li><a href=\"/policies/terms-of-service\" title=\"Terms of Service\">Warranty Policy</a></li></ul><p></p>",
+        "socials_title": "",
+        "socials_fb": "https://www.facebook.com/PhoenixGravity",
+        "socials_tw": "",
+        "socials_ig": "https://www.instagram.com/phoenixgravitywaterfilters?igsh=MXM1NG02Yzg0Yml1cg==",
+        "socials_yt": "https://www.youtube.com/@PhoenixWaterFiltersUSA",
+        "contact_title": "Got a question? Let’s chat",
+        "phone": "1 (800) 917-0455",
+        "email": "hello@phoenixwaterfilters.com",
+        "terms": "<p><strong>Terms and conditions:</strong> Applicable for purchase of Phoenix gravity systems only. Customers must bear the return shipping cost to Phoenix gravity warehouses in the USA.</p>",
+        "disclaimer": "<p>Copyright © Phoenix Gravity [dyn-year] | All Rights Reserved</p>"
+      }
+    }
+  },
+  "order": [
+    "176336069933f0b77c",
+    "1763356709e0585561",
+    "17633564828b75b1f5",
+    "817ca831-c432-47df-b994-812f7b308112"
+  ]
+}

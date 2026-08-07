@@ -1,0 +1,158 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-9 text-center  {% if template == 'article' %}article-header{% endif %}">
+      {% if section.settings.show_breadcrumbs %}
+        {% render 'breadcrumbs' %}
+      {% elsif section.settings.show_back %}
+
+        <a href="{{ section.settings.show_back_url }}" class="backto">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="29"
+            height="9"
+            viewBox="0 0 29 9"
+            fill="none">
+            <path d="M27.6841 5.1C28.0155 5.1 28.2841 4.83137 28.2841 4.5C28.2841 4.16863 28.0155 3.9 27.6841 3.9V5.1ZM0.759818 4.07574C0.525503 4.31005 0.525503 4.68995 0.759818 4.92426L4.57819 8.74264C4.81251 8.97696 5.19241 8.97696 5.42672 8.74264C5.66104 8.50833 5.66104 8.12843 5.42672 7.89411L2.03261 4.5L5.42672 1.10589C5.66104 0.871573 5.66104 0.491674 5.42672 0.257359C5.19241 0.0230446 4.81251 0.0230446 4.57819 0.257359L0.759818 4.07574ZM27.6841 3.9H1.18408V5.1H27.6841V3.9Z" fill="#153A5B" />
+          </svg>
+          {{ section.settings.show_back_text }}</a>
+      {% endif %}
+
+      <h1>
+        {% if section.settings.pagetitle != blank %}
+          {{ section.settings.pagetitle }}
+        {% elsif template.name == 'blog' %}
+          {{ 'blogs.article.blog' | t }}
+        {% else %}
+          {{ page_title }}
+        {% endif %}
+      </h1>
+
+
+
+{% comment %} ////////////////published date, last updated date, author name/////////// {% endcomment %}
+
+
+{% if template == 'article' %}
+  <div class="article-meta d-flex justify-content-center gap-3 flex-wrap">
+    
+   
+
+    <!-- Published Date -->
+    <span class="meta-date">
+      Published: {{ article.published_at | date: "%B %d, %Y" }}
+    </span>
+
+    <!-- Last Updated Date -->
+    <span class="meta-updated">
+      Updated: {{ article.updated_at | date: "%B %d, %Y" }}
+    </span>
+
+
+
+     <!-- Author (Clickable) -->
+    <span class="meta-author">
+      By <a href="/pages/author">
+        {{ article.author }}
+      </a>
+    </span>
+  </div>
+{% endif %}
+
+
+
+
+
+
+
+
+
+      
+      {% if template == 'article' %}
+        <div class="blog-image hh col-md-11 px-md-3">
+          {% if article.image.src %}
+            {{ article.image.src | image_url: width: 1500 | image_tag: loading: "lazy" }}
+          {% else %}
+            {{ 'image' | placeholder_svg_tag }}
+          {% endif %}
+        </div>
+      {% endif %}
+
+    {% comment %} {% if template == 'article' %}
+        {% capture author %}<strong>{{ article.author }}</strong>{% endcapture %}
+        {% capture date %}<time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'month_day_year' }}</time>{% endcapture %}
+        <div class="article-meta">
+        {{ article.author }} | {{ article.published_at | date: "%B %d %Y" }}
+        </div>
+        {% endif %}
+        
+        {% if template == 'collection' and collection.description != blank %}
+        <div class="page-description">
+        <p>{{ collection.description }}</p>
+        </div>
+        {% endif %} {% endcomment %}
+    </div>
+  </div>
+</div>
+
+
+<style>
+  .article-meta {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 10px;
+}
+
+.article-meta span {
+  position: relative;
+}
+
+.article-meta span:not(:last-child)::after {
+  content: "|";
+  margin: 0 8px;
+  color: #ccc;
+}
+</style>
+
+
+{% schema %}
+  {
+    "name": "Page Title",
+    "tag": "section",
+    "class": "section-pagetitle",
+    "settings": [
+      {
+        "type": "text",
+        "id": "pagetitle",
+        "label": "Custom Page Title"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_breadcrumbs",
+        "label": "Show Breadcrumbs"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_back",
+        "label": "Show Back Button"
+      },
+      {
+        "type": "text",
+        "id": "show_back_text",
+        "label": "Back Button Text"
+      }, {
+        "type": "url",
+        "id": "show_back_url",
+        "label": "Back Button URL"
+      },
+      
+    ],
+    "presets": [
+      {
+        "name": "Page Title"
+      }
+    ],
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    }
+  }
+{% endschema %}

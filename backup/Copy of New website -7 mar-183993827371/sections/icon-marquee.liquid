@@ -1,0 +1,155 @@
+
+<section class="icon-marquee-section">
+    <div class="container">
+        <!-- Section Heading -->
+        {% if section.settings.heading != blank %}
+        <h2 class="section-heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        <div class="swiper-container icon-marquee-swiper">
+            <div class="swiper-wrapper">
+                {% for block in section.blocks %}
+                <div class="swiper-slide d-flex justify-content-center align-items-center marquee-item">
+                    <div class="image">
+                        {% if block.settings.icon %}
+                            <img src="{{ block.settings.icon | image_url }}" alt="{{ block.settings.label }}"
+                                class="marquee-icon" />
+                        {% else %}
+                            <img src="{{ 'icon-marquee-1.png' | asset_url }}" alt="">
+                        {% endif %}
+                    </div>
+
+                    <p class="marquee-label">
+                    {% if block.settings.label != blank %}
+                        {{ block.settings.label }}
+                    {% else %}
+                        label
+                    {% endif %}
+                    </p>
+
+                    <p class="marquee-sub-label">
+                    {% if block.settings.sub_label != blank %}
+                        {{ block.settings.sub_label }}
+                    {% else %}
+                        
+                    </p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+ <div class="content_text">
+  <p class="content_p">Still not convinced? Check out our third-party lab test reports, verified results with full transparency.</p>
+  <a href="https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_gravity_contaminants_lab_report_USA_Aug2024.pdf?v=1724757203" class="button_text">Lab Reports</a>
+</div>
+    
+
+
+
+
+
+      
+
+      
+    </div>
+</section>
+
+<!-- Schema -->
+{% schema %}
+{
+    "name": "icon-marquee",
+    "settings": [
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Section Heading",
+            "default": "Featured Icons"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "marquee_item",
+            "name": "Marquee Item",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "icon",
+                    "label": "Icon"
+                },
+                {
+                    "type": "text",
+                    "id": "label",
+                    "label": "Label",
+                    "default": "Icon Label"
+                },
+                {
+                    "type": "text",
+                    "id": "sub_label",
+                    "label": "Sub-label",
+                    "info": "Leave blank if no sub-label"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Default",
+            "category": "Sections"
+        }
+    ]
+}
+{% endschema %}
+
+<style>
+  .content_text {
+    display: flex; /* Flexbox to align horizontally */
+    align-items: center; /* Vertically center text and button */
+    justify-content: center; /* Center horizontally */
+    gap: 20px; /* Space between text and button */
+    text-align: center;
+    flex-wrap: wrap; /* Optional: wraps on smaller screens */
+    padding: 20px;
+    margin-top:20px;
+  }
+  
+  .content_p {
+    margin: 0; /* Remove bottom margin to align nicely */
+  }
+
+  .button_text {
+  background: #153a5b;
+    border: none;
+    color: #fff;
+   
+    border-radius:50rem;;
+    text-decoration: none;
+   text-transform: uppercase;
+    white-space: nowrap; /* Prevent button text wrapping */
+    display: inline-block;
+    font-size: 1.25rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 147.465%;
+    letter-spacing: .15rem;
+    max-width: 100%;
+        padding: 1.25rem 2rem;
+    font-family: SF Pro Display, sans-serif;
+  }
+
+ .button_text:hover {
+    background: rgba(21, 58, 91, .8)!important;
+   color: #fff!important;
+   text-decoration: none;
+   
+  }
+</style>
+
+
+
+
+
+
+
+
+

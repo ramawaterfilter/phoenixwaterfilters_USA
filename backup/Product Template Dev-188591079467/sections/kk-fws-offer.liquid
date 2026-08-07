@@ -1,0 +1,1744 @@
+{%- comment -%}
+  KK FWS Offer — PHASE 1.
+
+  Built, and matched to the real Figma nodes (desktop `7420:1104` heading, `7420:1106`
+  gallery, `7423:1590` size cards, `7422:145` CTA + trust row; mobile `7511:207`):
+  section shell, eyebrow/heading/subheading, the tower size picker (real radio inputs
+  posting a resolved variant id) and the gallery — 1:1 slides, square edge-flush arrows,
+  a four-across thumbnail strip, and video media as click-to-play posters.
+
+  Stubbed (PHASE 2, do not build here): protection-plan picker, payment-method picker,
+  live order summary, the product accordion (mobile `7511:363`, desktop `7423:203`+) and
+  the `selling_plan` wiring. The mobile node specifies all of it — including prices — but
+  it is blocked on the campaign product and its Appstle selling plans existing, and on the
+  billing-cadence copy conflict (see KK-FWS-CONVENTIONS.md §10).
+
+  This section owns the `#kk-fws-offer` anchor. Five CTAs across the campaign page
+  (offer bar, hero, header "Build Your System", comparison CTA, cards CTA) point at it.
+  Do not remove the id, and do not change the root `<section>` element to a `<div>` —
+  the theme's slider initialiser (`src/js/sliders.js`) calls
+  `el.closest("section, aside").querySelector(...)` with no null check, so a missing
+  `<section>` ancestor throws and breaks every slider on the page.
+{%- endcomment -%}
+
+{%- liquid
+  assign size_option_name = section.settings.size_option_name | default: 'Size'
+  assign filter_option_name = section.settings.filter_option_name | default: 'Filter Type'
+  assign stand_option_name = section.settings.stand_option_name | default: 'Stand'
+
+  assign pinned_filter = section.settings.filter_option_value
+  assign pinned_stand = section.settings.stand_option_value
+
+  comment
+    Locate each option by name so the section survives a different campaign product
+    with the options in a different order.
+  endcomment
+  assign size_index = -1
+  assign filter_index = -1
+  assign stand_index = -1
+
+  for option_name in product.options
+    if option_name == size_option_name
+      assign size_index = forloop.index0
+    elsif option_name == filter_option_name
+      assign filter_index = forloop.index0
+    elsif option_name == stand_option_name
+      assign stand_index = forloop.index0
+    endif
+  endfor
+
+  if size_index == -1
+    assign size_index = 0
+  endif
+
+  comment
+    Distinct size values, in variant order. Derived from the variants rather than
+    `options_with_values` so the values are always plain strings.
+  endcomment
+  assign size_seen = '~~'
+  for variant in product.variants
+    assign size_value = variant.options[size_index]
+    assign size_token = size_value | append: '~~'
+    unless size_seen contains size_token
+      assign size_seen = size_seen | append: size_token
+    endunless
+  endfor
+  assign size_list = size_seen | remove_first: '~~' | split: '~~'
+
+  comment
+    Resolve Size -> variant by pinning the other two options. One row per size,
+    encoded as "size~~variant_id~~available" ('0' variant id means unresolvable).
+  endcomment
+  assign resolved = ''
+  for size_value in size_list
+    assign row_id = '0'
+    assign row_available = '0'
+
+    for variant in product.variants
+      assign is_match = true
+
+      unless variant.options[size_index] == size_value
+        assign is_match = false
+      endunless
+
+      if is_match and filter_index >= 0 and pinned_filter != blank
+        unless variant.options[filter_index] == pinned_filter
+          assign is_match = false
+        endunless
+      endif
+
+      if is_match and stand_index >= 0 and pinned_stand != blank
+        unless variant.options[stand_index] == pinned_stand
+          assign is_match = false
+        endunless
+      endif
+
+      if is_match
+        assign row_id = variant.id
+        if variant.available
+          assign row_available = '1'
+        endif
+        break
+      endif
+    endfor
+
+    assign resolved = resolved | append: size_value | append: '~~' | append: row_id | append: '~~' | append: row_available | append: '||'
+  endfor
+  assign resolved_rows = resolved | split: '||'
+
+  comment
+    How many sizes are actually orderable, and which one starts selected.
+  endcomment
+  assign selectable_count = 0
+  assign first_selectable = ''
+  for row in resolved_rows
+    assign parts = row | split: '~~'
+    if parts[1] != '0' and parts[2] == '1'
+      assign selectable_count = selectable_count | plus: 1
+      if first_selectable == ''
+        assign first_selectable = parts[0]
+      endif
+    endif
+  endfor
+
+  assign preferred_size = ''
+  if product.selected_variant != blank
+    assign preferred_size = product.selected_variant.options[size_index]
+  endif
+
+  assign default_size = first_selectable
+  if preferred_size != blank
+    for row in resolved_rows
+      assign parts = row | split: '~~'
+      if parts[0] == preferred_size and parts[1] != '0' and parts[2] == '1'
+        assign default_size = preferred_size
+        break
+      endif
+    endfor
+  endif
+
+  comment
+    Gallery media. The campaign product's media are NOT associated per variant
+    (only one image is attached to any variant, and it is the same image for all of
+    them), so `variant.featured_media` cannot drive the gallery. Per-size media is
+    therefore author-controlled: each "Size details" block may name the product media
+    positions for that size. When no block names any, every size shares one media set
+    and the sync is a no-op — which is the truth for the current product data.
+  endcomment
+  assign media_limit = section.settings.media_limit
+  assign default_positions_raw = ''
+  assign default_count = 0
+  for media in product.media
+    if media.media_type == 'image' or media.media_type == 'video' or media.media_type == 'external_video'
+      if media_limit > 0 and default_count >= media_limit
+        break
+      endif
+      assign default_positions_raw = default_positions_raw | append: media.position | append: ','
+      assign default_count = default_count | plus: 1
+    endif
+  endfor
+  assign default_positions = default_positions_raw | split: ','
+
+  assign media_varies = false
+  for block in section.blocks
+    if block.type == 'size_details' and block.settings.media_positions != blank
+      assign media_varies = true
+      break
+    endif
+  endfor
+
+  comment
+    Flatten every (size, media position) pair the gallery will render into one list, so
+    the slides and the thumbnail strip are generated from a single source of truth and
+    cannot drift out of index alignment. Encoded as "size~~position".
+  endcomment
+  assign slide_pairs = ''
+  for row in resolved_rows
+    assign parts = row | split: '~~'
+    assign size_value = parts[0]
+
+    assign positions = default_positions
+
+    if media_varies
+      for block in section.blocks
+        if block.type == 'size_details' and block.settings.size_value == size_value and block.settings.media_positions != blank
+          assign positions = block.settings.media_positions | replace: ' ', '' | split: ','
+          break
+        endif
+      endfor
+    endif
+
+    for position in positions
+      assign media_index = position | plus: 0 | minus: 1
+      assign media = product.media[media_index]
+      if media != blank
+        if media.media_type == 'image' or media.media_type == 'video' or media.media_type == 'external_video'
+          assign slide_pairs = slide_pairs | append: size_value | append: '~~' | append: position | append: '||'
+        endif
+      endif
+    endfor
+
+    unless media_varies
+      break
+    endunless
+  endfor
+  assign slide_list = slide_pairs | split: '||'
+-%}
+
+<section
+  id="kk-fws-offer"
+  class="kk-fws-offer"
+  style="
+    --kk-fws-offer-background: {{ section.settings.background_color }};
+    --kk-fws-offer-heading: {{ section.settings.heading_color }};
+    --kk-fws-offer-text: {{ section.settings.text_color }};
+    --kk-fws-offer-card-background: {{ section.settings.card_background_color }};
+    --kk-fws-offer-card-border: {{ section.settings.card_border_color }};
+    --kk-fws-offer-card-selected-background: {{ section.settings.card_selected_background_color }};
+    --kk-fws-offer-card-selected-border: {{ section.settings.card_selected_border_color }};
+    --kk-fws-offer-button-background: {{ section.settings.button_background_color }};
+    --kk-fws-offer-button-text: {{ section.settings.button_text_color }};
+    --kk-fws-offer-line: {{ section.settings.line_color }};
+    --kk-fws-offer-eyebrow-background: {{ section.settings.eyebrow_background_color }};
+    --kk-fws-offer-nav-background: {{ section.settings.nav_background_color }};
+    --kk-fws-offer-thumb-border: {{ section.settings.thumb_border_color }};
+    --kk-fws-offer-badge-background: {{ section.settings.badge_background_color }};
+    --kk-fws-offer-badge-text: {{ section.settings.badge_text_color }};
+  "
+>
+  <div class="kk-fws-offer__container">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="kk-fws-offer__eyebrow">
+        {{- section.settings.eyebrow | replace: '[month]', '<span class="dyn-month"></span>' -}}
+      </p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="kk-fws-offer__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="kk-fws-offer__subheading">
+        {{- section.settings.subheading | replace: '[month]', '<span class="dyn-month"></span>' -}}
+      </p>
+    {%- endif -%}
+
+    {%- if product == blank -%}
+      <p class="kk-fws-offer__notice">
+        This section needs a product. Preview it on a product template.
+      </p>
+    {%- else -%}
+      <div class="kk-fws-offer__layout">
+        <div class="kk-fws-offer__media">
+          <div
+            id="product-slider"
+            class="swiper-container swiper kk-fws-offer__slider"
+            data-slidestoshow="1"
+            aria-label="{{ product.title | escape }} media gallery"
+          >
+            <div class="swiper-wrapper">
+              {%- for pair in slide_list -%}
+                {%- liquid
+                  assign slide_parts = pair | split: '~~'
+                  assign size_value = slide_parts[0]
+                  assign media_index = slide_parts[1] | plus: 0 | minus: 1
+                  assign media = product.media[media_index]
+                  assign media_alt = media.alt | default: product.title
+                -%}
+                <div
+                  class="swiper-slide kk-fws-offer__slide"
+                  {% if media_varies %}data-kk-fws-size="{{ size_value | escape }}"{% endif %}
+                >
+                  {%- if media.media_type == 'image' -%}
+                    {{
+                      media.preview_image
+                      | image_url: width: 1140
+                      | image_tag:
+                        class: 'kk-fws-offer__slide-image',
+                        loading: 'lazy',
+                        widths: '375, 570, 750, 1140',
+                        sizes: '(max-width: 749px) calc(100vw - 4rem), 569px',
+                        alt: media_alt
+                    }}
+                  {%- else -%}
+                    {%- comment -%}
+                      Video media render as their poster with a play affordance. The player is
+                      only injected on click (see the gallery script) so a gallery of videos
+                      does not load several players up front.
+                    {%- endcomment -%}
+                    <div
+                      class="kk-fws-offer__video"
+                      data-kk-fws-video
+                      {% if media.media_type == 'external_video' %}
+                        data-kk-fws-video-embed="{{ media | external_video_url: autoplay: 'true' | escape }}"
+                      {% else %}
+                        data-kk-fws-video-src="{{ media.sources.last.url | escape }}"
+                      {% endif %}
+                    >
+                      {{
+                        media.preview_image
+                        | image_url: width: 1140
+                        | image_tag:
+                          class: 'kk-fws-offer__slide-image',
+                          loading: 'lazy',
+                          widths: '375, 570, 750, 1140',
+                          sizes: '(max-width: 749px) calc(100vw - 4rem), 569px',
+                          alt: media_alt
+                      }}
+                      <button class="kk-fws-offer__play" type="button">
+                        <span class="sr-only">Play video</span>
+                      </button>
+                    </div>
+                  {%- endif -%}
+                </div>
+              {%- else -%}
+                <div class="swiper-slide kk-fws-offer__slide">
+                  {{ 'product-1' | placeholder_svg_tag: 'kk-fws-offer__slide-image' }}
+                </div>
+              {%- endfor -%}
+            </div>
+
+            <button
+              class="swiper-prev kk-fws-offer__nav kk-fws-offer__nav--prev"
+              type="button"
+              aria-label="Previous image"
+            >
+              <img
+                class="kk-fws-offer__nav-icon"
+                src="{{ 'kk-fws-icon-chevron.svg' | asset_url }}"
+                alt=""
+                width="12"
+                height="21"
+                aria-hidden="true"
+              >
+            </button>
+            <button
+              class="swiper-next kk-fws-offer__nav kk-fws-offer__nav--next"
+              type="button"
+              aria-label="Next image"
+            >
+              <img
+                class="kk-fws-offer__nav-icon"
+                src="{{ 'kk-fws-icon-chevron.svg' | asset_url }}"
+                alt=""
+                width="12"
+                height="21"
+                aria-hidden="true"
+              >
+            </button>
+          </div>
+
+          {%- comment -%}
+            The thumbnail strip is a plain grid, NOT a `.control` Swiper. The theme's
+            `.control` branch in src/js/sliders.js forces a 2-column, 2-row grid at >=768px
+            (and `control-five` a 2x3), none of which is the design's single 4-across row.
+            Driving `window.sliders['product-slider'].slideTo()` directly is both simpler
+            and exact. The class must not be `control`, or initSlider would adopt it.
+          {%- endcomment -%}
+          {%- if slide_list.size > 1 -%}
+            <div class="kk-fws-offer__thumbs" data-kk-fws-thumbs role="tablist" aria-label="Gallery thumbnails">
+              {%- for pair in slide_list -%}
+                {%- liquid
+                  assign slide_parts = pair | split: '~~'
+                  assign size_value = slide_parts[0]
+                  assign media_index = slide_parts[1] | plus: 0 | minus: 1
+                  assign media = product.media[media_index]
+                -%}
+                <button
+                  class="kk-fws-offer__thumb"
+                  type="button"
+                  role="tab"
+                  data-kk-fws-thumb="{{ forloop.index0 }}"
+                  {% if media_varies %}data-kk-fws-size="{{ size_value | escape }}"{% endif %}
+                  aria-label="Show image {{ forloop.index }}"
+                  aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                >
+                  {{
+                    media.preview_image
+                    | image_url: width: 300
+                    | image_tag:
+                      class: 'kk-fws-offer__thumb-image',
+                      loading: 'lazy',
+                      widths: '150, 300',
+                      sizes: '135px',
+                      alt: ''
+                  }}
+                  {%- unless media.media_type == 'image' -%}
+                    <span class="kk-fws-offer__thumb-play" aria-hidden="true"></span>
+                  {%- endunless -%}
+                </button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="kk-fws-offer__panel">
+          {%- if selectable_count == 0 -%}
+            <p class="kk-fws-offer__notice">
+              {{ section.settings.unavailable_text }}
+            </p>
+          {%- else -%}
+            {%- form 'product', product, id: 'kk-fws-offer-form', class: 'kk-fws-offer__form', novalidate: 'novalidate' -%}
+              <fieldset class="kk-fws-offer__sizes">
+                {%- if section.settings.size_legend != blank -%}
+                  <legend class="kk-fws-offer__legend">{{ section.settings.size_legend }}</legend>
+                {%- endif -%}
+
+                <div class="kk-fws-offer__size-list">
+                  {%- for row in resolved_rows -%}
+                    {%- liquid
+                      assign parts = row | split: '~~'
+                      assign size_value = parts[0]
+                      assign variant_id = parts[1]
+                      assign is_available = false
+                      if parts[2] == '1'
+                        assign is_available = true
+                      endif
+
+                      assign size_label = size_value
+                      assign size_description = ''
+                      assign size_badge = ''
+
+                      for block in section.blocks
+                        if block.type == 'size_details' and block.settings.size_value == size_value
+                          if block.settings.label != blank
+                            assign size_label = block.settings.label
+                          endif
+                          assign size_description = block.settings.description
+                          assign size_badge = block.settings.badge
+                          break
+                        endif
+                      endfor
+                    -%}
+
+                    <label class="kk-fws-offer__size">
+                      <input
+                        class="kk-fws-offer__size-input"
+                        type="radio"
+                        name="id"
+                        value="{{ variant_id }}"
+                        data-kk-fws-size="{{ size_value | escape }}"
+                        {% if size_value == default_size %}checked{% endif %}
+                        {% unless variant_id != '0' and is_available %}disabled{% endunless %}
+                      >
+                      <span class="kk-fws-offer__size-card">
+                        <img
+                          class="kk-fws-offer__size-tick"
+                          src="{{ 'kk-fws-icon-size-selected.svg' | asset_url }}"
+                          alt=""
+                          width="23"
+                          height="23"
+                          aria-hidden="true"
+                          loading="lazy"
+                        >
+                        <span class="kk-fws-offer__size-text">
+                          <span class="kk-fws-offer__size-name">{{ size_label }}</span>
+                          {%- if size_description != blank -%}
+                            <span class="kk-fws-offer__size-description">{{ size_description }}</span>
+                          {%- endif -%}
+                        </span>
+                        {%- if size_badge != blank -%}
+                          <span class="kk-fws-offer__size-badge">{{ size_badge }}</span>
+                        {%- endif -%}
+                        {%- unless variant_id != '0' and is_available -%}
+                          <span class="kk-fws-offer__size-unavailable">
+                            {{ section.settings.sold_out_text }}
+                          </span>
+                        {%- endunless -%}
+                      </span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+
+              {%- comment -%}
+                PHASE 2 PLACEHOLDER — protection-plan picker, payment-method picker and
+                live order summary go here. Do not build them until the plan/cadence data
+                model is resolved. `selling_plan` is deliberately absent from this form.
+              {%- endcomment -%}
+              {%- if section.settings.show_phase_2_placeholder -%}
+                <div class="kk-fws-offer__placeholder" data-kk-fws-placeholder="phase-2">
+                  <p class="kk-fws-offer__placeholder-title">{{ section.settings.placeholder_title }}</p>
+                  {%- if section.settings.placeholder_body != blank -%}
+                    <p class="kk-fws-offer__placeholder-body">{{ section.settings.placeholder_body }}</p>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+
+              <button class="kk-fws-offer__button" type="submit" name="add">
+                {{- section.settings.button_label -}}
+              </button>
+
+              {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+              {%- if trust_blocks.size > 0 -%}
+                <ul class="kk-fws-offer__trust-list">
+                  {%- for block in trust_blocks -%}
+                    <li class="kk-fws-offer__trust" {{ block.shopify_attributes }}>
+                      {%- render 'kk-fws-offer-icon', block: block -%}
+                      <span class="kk-fws-offer__trust-text">{{ block.settings.text }}</span>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            {%- endform -%}
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{%- comment -%}
+  Phase 1 adds the product as a ONE-TIME purchase.
+
+  The Appstle subscription app injects its own `selling_plan` radios into every product form
+  on the page and pre-checks the subscription option. Without this, the form silently posts
+  selling_plan=<12-month replacement plan> and enrols the customer in a subscription nobody
+  chose. Confirmed in the browser, not theoretical.
+
+  Disabled rather than removed: a disabled control is never submitted, and leaving the node
+  in place avoids tripping Appstle's own scripts. Re-runs on mutation because the app injects
+  asynchronously and can re-inject.
+
+  This block is deliberately OUTSIDE the `media_varies` conditional below — it must run on
+  every render, not only when the gallery sync happens to be emitted.
+
+  PHASE 2: remove this once the real plan picker exists. The campaign offer IS a subscription,
+  so the plan should then be chosen deliberately rather than defaulted by an app.
+{%- endcomment -%}
+<script>
+  (function () {
+    var root = document.getElementById('kk-fws-offer');
+    var form = root && root.querySelector('form[action*="/cart/add"]');
+
+    if (!form) {
+      return;
+    }
+
+    function neutraliseSellingPlan() {
+      var planInputs = form.querySelectorAll('[name="selling_plan"]');
+
+      for (var i = 0; i < planInputs.length; i++) {
+        planInputs[i].checked = false;
+        planInputs[i].disabled = true;
+      }
+    }
+
+    neutraliseSellingPlan();
+    document.addEventListener('DOMContentLoaded', neutraliseSellingPlan);
+    window.addEventListener('load', neutraliseSellingPlan);
+
+    if (window.MutationObserver) {
+      new MutationObserver(neutraliseSellingPlan).observe(form, {
+        childList: true,
+        subtree: true,
+      });
+    }
+  })();
+</script>
+
+{%- comment -%}
+  Gallery behaviour: thumbnail strip, video slides, and (when the author has given each
+  size its own media positions) keeping the visible slides inside the selected size's group.
+
+  Swiper is an ES module inside assets/main.js and is NOT a global, so this cannot construct
+  or configure the instance. The theme's initialiser registers it at
+  window.sliders['product-slider']; everything here drives that public instance.
+{%- endcomment -%}
+<script>
+  (function () {
+    var root = document.getElementById('kk-fws-offer');
+
+    if (!root) {
+      return;
+    }
+
+    var slider = root.querySelector('.kk-fws-offer__slider');
+
+    if (!slider) {
+      return;
+    }
+
+    var slides = [].slice.call(slider.querySelectorAll('.swiper-wrapper > .swiper-slide'));
+    var thumbs = [].slice.call(root.querySelectorAll('[data-kk-fws-thumb]'));
+    var groupsEnabled = {% if media_varies %}true{% else %}false{% endif %};
+
+    var reduced =
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // The theme initialises its sliders on DOM ready; this script runs inline, so the
+    // instance may not exist yet. Poll briefly rather than racing it.
+    function whenReady(callback) {
+      var attempts = 0;
+
+      (function poll() {
+        var instance = window.sliders ? window.sliders[slider.id] : null;
+
+        if (instance && typeof instance.slideTo === 'function') {
+          callback(instance);
+          return;
+        }
+
+        if (++attempts > 60) {
+          return;
+        }
+
+        window.setTimeout(poll, 100);
+      })();
+    }
+
+    function currentSize() {
+      var checked = root.querySelector('.kk-fws-offer__size-input:checked');
+      return checked ? checked.getAttribute('data-kk-fws-size') : null;
+    }
+
+    // Inclusive [first, last] slide indices belonging to the selected size. Without
+    // grouping every slide is in range.
+    function groupBounds() {
+      if (!groupsEnabled) {
+        return [0, slides.length - 1];
+      }
+
+      var size = currentSize();
+      var first = -1;
+      var last = -1;
+
+      for (var i = 0; i < slides.length; i++) {
+        if (slides[i].getAttribute('data-kk-fws-size') === size) {
+          if (first < 0) {
+            first = i;
+          }
+          last = i;
+        }
+      }
+
+      return first < 0 ? [0, slides.length - 1] : [first, last];
+    }
+
+    function syncThumbs(activeIndex) {
+      var bounds = groupBounds();
+
+      for (var i = 0; i < thumbs.length; i++) {
+        var index = parseInt(thumbs[i].getAttribute('data-kk-fws-thumb'), 10);
+        var inGroup = index >= bounds[0] && index <= bounds[1];
+
+        thumbs[i].hidden = !inGroup;
+        thumbs[i].setAttribute('aria-selected', index === activeIndex ? 'true' : 'false');
+        thumbs[i].classList.toggle('is-active', index === activeIndex);
+      }
+    }
+
+    whenReady(function (instance) {
+      syncThumbs(instance.activeIndex);
+
+      for (var i = 0; i < thumbs.length; i++) {
+        thumbs[i].addEventListener('click', function (event) {
+          var index = parseInt(event.currentTarget.getAttribute('data-kk-fws-thumb'), 10);
+          instance.slideTo(index, reduced ? 0 : 400);
+        });
+      }
+
+      instance.on('slideChange', function () {
+        // Slides for every size live in one wrapper (hiding them fights Swiper's layout),
+        // so a swipe can run past the selected size's images into the next size's. Snap
+        // back to the nearest in-group slide instead of letting the two sets bleed.
+        var bounds = groupBounds();
+        var index = instance.activeIndex;
+
+        if (index < bounds[0]) {
+          instance.slideTo(bounds[0], 0);
+          return;
+        }
+
+        if (index > bounds[1]) {
+          instance.slideTo(bounds[1], 0);
+          return;
+        }
+
+        syncThumbs(index);
+      });
+
+      if (groupsEnabled) {
+        var inputs = root.querySelectorAll('.kk-fws-offer__size-input');
+
+        for (var j = 0; j < inputs.length; j++) {
+          inputs[j].addEventListener('change', function (event) {
+            if (!event.target.checked) {
+              return;
+            }
+
+            instance.slideTo(groupBounds()[0], reduced ? 0 : 400);
+            syncThumbs(groupBounds()[0]);
+          });
+        }
+      }
+    });
+
+    // Video slides render as a poster; the player is only built when asked for.
+    root.addEventListener('click', function (event) {
+      var trigger = event.target.closest ? event.target.closest('.kk-fws-offer__play') : null;
+
+      if (!trigger) {
+        return;
+      }
+
+      var holder = trigger.closest('[data-kk-fws-video]');
+
+      if (!holder || holder.querySelector('video, iframe')) {
+        return;
+      }
+
+      var embed = holder.getAttribute('data-kk-fws-video-embed');
+      var src = holder.getAttribute('data-kk-fws-video-src');
+      var player;
+
+      if (embed) {
+        player = document.createElement('iframe');
+        player.setAttribute('src', embed);
+        player.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+        player.setAttribute('allowfullscreen', 'allowfullscreen');
+        player.setAttribute('title', 'Product video');
+      } else if (src) {
+        player = document.createElement('video');
+        player.setAttribute('src', src);
+        player.setAttribute('controls', 'controls');
+        player.setAttribute('playsinline', 'playsinline');
+        player.setAttribute('autoplay', 'autoplay');
+      } else {
+        return;
+      }
+
+      player.className = 'kk-fws-offer__video-player';
+      holder.appendChild(player);
+      trigger.hidden = true;
+    });
+  })();
+</script>
+
+{% stylesheet %}
+  .kk-fws-offer {
+    background: var(--kk-fws-offer-background, #ffffff);
+    padding: 10rem 0;
+  }
+
+  .kk-fws-offer__container {
+    width: min(100% - 3.2rem, 114rem);
+    margin: 0 auto;
+  }
+
+  .kk-fws-offer__eyebrow {
+    display: table;
+    margin: 0 auto;
+    padding: 0.8rem 2.16rem;
+    border-radius: 0.3rem;
+    background: var(--kk-fws-offer-eyebrow-background, #f8f5f3);
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: normal;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  .kk-fws-offer__heading {
+    max-width: 55.3rem;
+    margin: 2rem auto 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 5.2rem;
+    line-height: 1.1;
+    text-align: center;
+    text-transform: none;
+    color: var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__subheading {
+    max-width: 70rem;
+    margin: 2rem auto 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 2.2rem;
+    line-height: 1.4;
+    text-align: center;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  /* PHASE 1: hide the Appstle subscription widget inside this section.
+     The app injects its own "Purchase Options" UI (Subscribe / One Time Purchase, with
+     its own prices and a 55%-off badge) into every product form. Those numbers are the
+     evergreen PDP's, not the campaign's, and they contradict item 5's offer two sections
+     above. Its inputs are also disabled by the script at the foot of this file, so leaving
+     the widget visible would show controls that look selectable but do nothing.
+     Hiding is NOT sufficient alone - a hidden input still submits, which is why the script
+     disables them too. Both are required.
+     Scoped to this section; the widget still works everywhere else on the site.
+     PHASE 2: remove this and the script when the real plan picker lands. */
+  .kk-fws-offer [class*='appstle'],
+  .kk-fws-offer [id*='appstle'] {
+    display: none !important;
+  }
+
+  .kk-fws-offer__layout {
+    display: grid;
+    /* minmax(0, 1fr) not 1fr: a grid item defaults to min-width:auto, so the Swiper
+       track (a flex row of square slides) can force its column far wider than 1fr.
+       Without this the media column measured 27018px wide in the browser. */
+    /* 569px gallery + 541px panel + 30.9px gutter = the 1140px campaign container. */
+    grid-template-columns: minmax(0, 569fr) minmax(0, 541fr);
+    column-gap: 3.1rem;
+    align-items: start;
+    margin-top: 4rem;
+  }
+
+  .kk-fws-offer__media {
+    position: relative;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .kk-fws-offer__slider {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .kk-fws-offer__slide {
+    display: flex;
+    max-width: 100%;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    background: var(--kk-fws-offer-nav-background, #f5f3f1);
+  }
+
+  .kk-fws-offer__slide-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  /* Square nav buttons flush to the image edges, vertically centred — Figma 7420:1080/1084.
+     Deliberately NOT `.swiper-button-prev/next`: those classes pull in Swiper's own 27x44
+     styling and its ::after icon font. The theme wires navigation off `.swiper-prev` /
+     `.swiper-next`, which is all Swiper actually needs. */
+  /* Scoped with the section root for specificity, not for readability: Swiper sets the
+     `disabled` attribute on <button> nav elements at the ends of a non-looping slider, and
+     the theme's `button[disabled]` rule in main.css (0,1,1) would otherwise beat a single
+     class and strip the fill and border off whichever arrow is currently at the end. */
+  .kk-fws-offer .kk-fws-offer__nav {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.687rem;
+    height: 4.687rem;
+    margin: 0;
+    padding: 0;
+    transform: translateY(-50%);
+    border: 0;
+    border-radius: 0;
+    background: var(--kk-fws-offer-nav-background, #f5f3f1);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .kk-fws-offer .kk-fws-offer__nav--prev {
+    left: 0;
+  }
+
+  .kk-fws-offer .kk-fws-offer__nav--next {
+    right: 0;
+  }
+
+  .kk-fws-offer__nav-icon {
+    display: block;
+    width: 2.0603rem;
+    height: 1.2232rem;
+  }
+
+  .kk-fws-offer .kk-fws-offer__nav--prev .kk-fws-offer__nav-icon {
+    transform: rotate(-90deg);
+  }
+
+  .kk-fws-offer .kk-fws-offer__nav--next .kk-fws-offer__nav-icon {
+    transform: rotate(90deg);
+  }
+
+  .kk-fws-offer .kk-fws-offer__nav.swiper-button-disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .kk-fws-offer .kk-fws-offer__nav.swiper-button-lock {
+    display: none;
+  }
+
+  .kk-fws-offer__video {
+    position: relative;
+    width: 100%;
+  }
+
+  .kk-fws-offer .kk-fws-offer__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 7.2rem;
+    height: 7.2rem;
+    margin: 0;
+    padding: 0;
+    transform: translate(-50%, -50%);
+    border: 0;
+    border-radius: 50%;
+    background: var(--kk-fws-offer-nav-background, #f5f3f1);
+    cursor: pointer;
+  }
+
+  .kk-fws-offer .kk-fws-offer__play::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 54%;
+    width: 0;
+    height: 0;
+    transform: translate(-50%, -50%);
+    border-top: 1.2rem solid transparent;
+    border-bottom: 1.2rem solid transparent;
+    border-left: 2rem solid var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__video-player {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 0;
+    object-fit: cover;
+  }
+
+  /* Four-across thumbnail row — Figma 7420:1105 (desktop) / 7511:222 (mobile). */
+  .kk-fws-offer__thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.0852rem;
+    margin-top: 1.0852rem;
+  }
+
+  .kk-fws-offer .kk-fws-offer__thumb {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--kk-fws-offer-thumb-border, #efefef);
+    border-radius: 0;
+    background: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  .kk-fws-offer .kk-fws-offer__thumb[hidden] {
+    display: none;
+  }
+
+  .kk-fws-offer .kk-fws-offer__thumb.is-active {
+    border-color: var(--kk-fws-offer-card-selected-border, #153a5b);
+  }
+
+  .kk-fws-offer .kk-fws-offer__thumb:focus-visible {
+    outline: 2px solid var(--kk-fws-offer-card-selected-border, #153a5b);
+    outline-offset: 2px;
+  }
+
+  .kk-fws-offer__thumb-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  .kk-fws-offer__thumb-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2.4rem;
+    height: 2.4rem;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--kk-fws-offer-nav-background, #f5f3f1);
+  }
+
+  .kk-fws-offer__thumb-play::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 55%;
+    width: 0;
+    height: 0;
+    transform: translate(-50%, -50%);
+    border-top: 0.5rem solid transparent;
+    border-bottom: 0.5rem solid transparent;
+    border-left: 0.8rem solid var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 2.6rem;
+  }
+
+  .kk-fws-offer__form {
+    display: flex;
+    flex-direction: column;
+    gap: 2.6rem;
+    margin: 0;
+  }
+
+  .kk-fws-offer__sizes {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .kk-fws-offer__legend {
+    margin: 0 0 1.6rem;
+    padding: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: normal;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  .kk-fws-offer__size-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.9rem;
+  }
+
+  .kk-fws-offer__size {
+    display: block;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .kk-fws-offer__size-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .kk-fws-offer__size-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4053rem;
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 11.0873rem;
+    padding: 1.6rem 1.2rem;
+    /* Transparent rather than absent so selecting a card does not resize it. */
+    border: 0.2215rem solid transparent;
+    border-radius: 0.8106rem;
+    background: var(--kk-fws-offer-card-background, #f5f3f1);
+    text-align: center;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .kk-fws-offer__size-input:checked + .kk-fws-offer__size-card {
+    border-color: var(--kk-fws-offer-card-selected-border, #153a5b);
+    background: var(--kk-fws-offer-card-selected-background, #ffffff);
+  }
+
+  .kk-fws-offer__size-text {
+    display: block;
+  }
+
+  /* Tick badge straddles the card's top-right corner (Figma 7423:1593). */
+  .kk-fws-offer__size-tick {
+    position: absolute;
+    /* Absolute offsets resolve against the padding box, so the card's border has to be
+       added back to land the tick on the border-box corner as Figma has it. */
+    top: calc(-1.13rem - 0.2215rem);
+    right: calc(-1.13rem - 0.2215rem);
+    display: none;
+    width: 2.2594rem;
+    height: 2.2594rem;
+  }
+
+  .kk-fws-offer__size-input:checked + .kk-fws-offer__size-card .kk-fws-offer__size-tick {
+    display: block;
+  }
+
+  .kk-fws-offer__size-input:focus-visible + .kk-fws-offer__size-card {
+    outline: 2px solid var(--kk-fws-offer-card-selected-border, #153a5b);
+    outline-offset: 2px;
+  }
+
+  .kk-fws-offer__size-input:disabled + .kk-fws-offer__size-card {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .kk-fws-offer__size-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.443rem 0.8861rem;
+    border-radius: 0.5538rem;
+    background: var(--kk-fws-offer-badge-background, #153a5b);
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    color: var(--kk-fws-offer-badge-text, #ffffff);
+  }
+
+  .kk-fws-offer__size-name {
+    display: block;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1.8rem;
+    color: var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__size-description {
+    display: block;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.8rem;
+    color: var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__size-unavailable {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  .kk-fws-offer__placeholder {
+    box-sizing: border-box;
+    padding: 3.2rem 2.4rem;
+    border: 1px dashed var(--kk-fws-offer-line, #e6e6e6);
+    border-radius: 0.8rem;
+    background: var(--kk-fws-offer-card-background, #ffffff);
+  }
+
+  .kk-fws-offer__placeholder-title {
+    margin: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-offer-text, #26303a);
+    opacity: 0.7;
+  }
+
+  .kk-fws-offer__placeholder-body {
+    margin: 0.8rem 0 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: var(--kk-fws-offer-text, #26303a);
+    opacity: 0.7;
+  }
+
+  .kk-fws-offer__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 6.542rem;
+    padding: 1.2rem 4.4rem;
+    box-sizing: border-box;
+    border: 0;
+    background: var(--kk-fws-offer-button-background, #153a5b);
+    border-radius: 23.027rem;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 2.4rem;
+    line-height: 1.14;
+    letter-spacing: 0.138rem;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--kk-fws-offer-button-text, #ffffff);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .kk-fws-offer__button:hover,
+  .kk-fws-offer__button:focus-visible {
+    opacity: 0.9;
+    color: var(--kk-fws-offer-button-text, #ffffff);
+  }
+
+  .kk-fws-offer__trust-list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.763rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-offer__trust {
+    display: flex;
+    align-items: center;
+    gap: 0.921rem;
+  }
+
+  .kk-fws-offer__trust-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    object-fit: contain;
+  }
+
+  .kk-fws-offer__trust-text {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  .kk-fws-offer__notice {
+    margin: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.8rem;
+    line-height: 1.4;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kk-fws-offer__size-card,
+    .kk-fws-offer__button,
+    .kk-fws-offer__nav,
+    .kk-fws-offer__thumb {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 989px) {
+    .kk-fws-offer {
+      padding: 6rem 0;
+    }
+
+    .kk-fws-offer__heading {
+      font-size: 4rem;
+    }
+
+    .kk-fws-offer__subheading {
+      font-size: 1.8rem;
+    }
+
+    .kk-fws-offer__layout {
+      grid-template-columns: 1fr;
+      row-gap: 3.2rem;
+    }
+
+    .kk-fws-offer .kk-fws-offer__nav {
+      width: 3.6rem;
+      height: 3.6rem;
+    }
+
+    .kk-fws-offer__nav-icon {
+      width: 1.6rem;
+      height: 0.95rem;
+    }
+
+    .kk-fws-offer__button {
+      font-size: 1.9rem;
+      letter-spacing: 0.1rem;
+    }
+
+    .kk-fws-offer__trust-list {
+      gap: 1.6rem;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .kk-fws-offer {
+      padding: 4rem 0;
+    }
+
+    .kk-fws-offer__container {
+      width: min(100% - 4rem, 54rem);
+    }
+
+    .kk-fws-offer__eyebrow {
+      padding: 0.6rem 1.6rem;
+      font-size: 1.2rem;
+      letter-spacing: 0.12rem;
+    }
+
+    .kk-fws-offer__heading {
+      max-width: none;
+      margin-top: 1.6rem;
+      font-size: 2.8rem;
+    }
+
+    .kk-fws-offer__subheading {
+      max-width: none;
+      margin-top: 1.2rem;
+      font-size: 1.6rem;
+    }
+
+    .kk-fws-offer .kk-fws-offer__nav {
+      width: 2.7595rem;
+      height: 2.7595rem;
+    }
+
+    .kk-fws-offer__nav-icon {
+      width: 1.213rem;
+      height: 0.7202rem;
+    }
+
+    .kk-fws-offer__thumbs {
+      gap: 0.6389rem;
+      margin-top: 0.8rem;
+    }
+
+    .kk-fws-offer .kk-fws-offer__play {
+      width: 5.2rem;
+      height: 5.2rem;
+    }
+
+    .kk-fws-offer .kk-fws-offer__play::after {
+      border-top-width: 0.9rem;
+      border-bottom-width: 0.9rem;
+      border-left-width: 1.5rem;
+    }
+
+    .kk-fws-offer__layout {
+      margin-top: 2.4rem;
+      row-gap: 2.4rem;
+    }
+
+    .kk-fws-offer__panel,
+    .kk-fws-offer__form {
+      gap: 1.8rem;
+    }
+
+    .kk-fws-offer__size-list {
+      gap: 1.2rem;
+    }
+
+    .kk-fws-offer__size-card {
+      min-height: 9rem;
+      padding: 1.2rem 0.6rem;
+      border-width: 0.2rem;
+    }
+
+    .kk-fws-offer__size-name {
+      font-size: 1.6rem;
+      line-height: 1.8rem;
+    }
+
+    .kk-fws-offer__size-description {
+      font-size: 1.4rem;
+      line-height: 1.8rem;
+    }
+
+    .kk-fws-offer__size-badge {
+      padding: 0.4rem 0.8rem;
+      font-size: 1.2rem;
+    }
+
+    .kk-fws-offer__size-tick {
+      top: calc(-0.9rem - 0.2rem);
+      right: calc(-0.9rem - 0.2rem);
+      width: 1.8rem;
+      height: 1.8rem;
+    }
+
+    .kk-fws-offer__placeholder {
+      padding: 2rem 1.6rem;
+    }
+
+    .kk-fws-offer__button {
+      min-height: 0;
+      padding: 1.2rem 2rem;
+      font-size: 1.7rem;
+      line-height: 1.14;
+      letter-spacing: 0.1rem;
+    }
+
+    .kk-fws-offer__trust-list {
+      flex-wrap: wrap;
+      gap: 1.2rem;
+    }
+
+    .kk-fws-offer__trust-text {
+      font-size: 1.4rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Offer",
+  "tag": "div",
+  "class": "section-kk-fws-offer",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "BUILD YOUR own system in minutes"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Prefer to Customize? Configure Your System."
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Pick your size, your protection, and how you pay. Your price updates live - and the free-system offer still applies on every subscription."
+    },
+    {
+      "type": "header",
+      "content": "Size picker"
+    },
+    {
+      "type": "text",
+      "id": "size_legend",
+      "label": "Size picker label",
+      "default": "Choose your tower size"
+    },
+    {
+      "type": "text",
+      "id": "size_option_name",
+      "label": "Size option name",
+      "default": "Size",
+      "info": "Must match the product option name exactly. Falls back to the first option."
+    },
+    {
+      "type": "text",
+      "id": "sold_out_text",
+      "label": "Unavailable size text",
+      "default": "Sold out"
+    },
+    {
+      "type": "text",
+      "id": "unavailable_text",
+      "label": "No orderable size text",
+      "default": "This configuration is not available right now.",
+      "info": "Shown instead of the form when no size resolves to an available variant."
+    },
+    {
+      "type": "header",
+      "content": "Pinned options",
+      "info": "The design exposes Size only. These two options are pinned to a fixed value and combined with the selected size to resolve the variant."
+    },
+    {
+      "type": "text",
+      "id": "filter_option_name",
+      "label": "Filter type option name",
+      "default": "Filter Type"
+    },
+    {
+      "type": "text",
+      "id": "filter_option_value",
+      "label": "Filter type value",
+      "default": "2 Carbon Filter Elements"
+    },
+    {
+      "type": "text",
+      "id": "stand_option_name",
+      "label": "Stand option name",
+      "default": "Stand"
+    },
+    {
+      "type": "text",
+      "id": "stand_option_value",
+      "label": "Stand value",
+      "default": "No Stand"
+    },
+    {
+      "type": "header",
+      "content": "Gallery"
+    },
+    {
+      "type": "range",
+      "id": "media_limit",
+      "label": "Maximum images per size",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "default": 4,
+      "info": "The design shows a four-across thumbnail row. 0 shows every product image and the row wraps. Only applies when a size has no media positions of its own."
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "send me my free TOWER",
+      "info": "Plain text only — the theme's ajax cart replaces the button text while adding."
+    },
+    {
+      "type": "header",
+      "content": "Phase 2 placeholder"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phase_2_placeholder",
+      "label": "Show phase 2 placeholder",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "placeholder_title",
+      "label": "Placeholder title",
+      "default": "TODO — phase 2"
+    },
+    {
+      "type": "textarea",
+      "id": "placeholder_body",
+      "label": "Placeholder body",
+      "default": "Protection plan picker, payment method picker and live order summary. Blocked on the plan data model and the $99/month vs $99 per 6 months cadence conflict."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Headings",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text",
+      "default": "#26303a"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_background_color",
+      "label": "Eyebrow pill background",
+      "default": "#f8f5f3"
+    },
+    {
+      "type": "color",
+      "id": "nav_background_color",
+      "label": "Gallery arrow background",
+      "default": "#f5f3f1"
+    },
+    {
+      "type": "color",
+      "id": "thumb_border_color",
+      "label": "Gallery thumbnail border",
+      "default": "#efefef"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Size card background",
+      "default": "#f5f3f1"
+    },
+    {
+      "type": "color",
+      "id": "badge_background_color",
+      "label": "Size badge background",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Size badge text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Size card border",
+      "default": "#e7e7e7"
+    },
+    {
+      "type": "color",
+      "id": "card_selected_background_color",
+      "label": "Selected size background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_selected_border_color",
+      "label": "Selected size border",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Button background",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Divider",
+      "default": "#e6e6e6"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "size_details",
+      "name": "Size details",
+      "settings": [
+        {
+          "type": "text",
+          "id": "size_value",
+          "label": "Size option value",
+          "default": "1.5 Gallon",
+          "info": "Must match the product's Size option value exactly."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Display label",
+          "info": "Defaults to the option value."
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Capacity line",
+          "info": "Second line inside the card, e.g. \"1-2 People\"."
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "info": "Price delta pill, e.g. \"Free\" or \"+ $30\". Authored copy — it is not derived from the variant's real price."
+        },
+        {
+          "type": "text",
+          "id": "media_positions",
+          "label": "Media positions",
+          "info": "Comma-separated product media positions to show for this size, e.g. 1,4,7. Leave blank to share the default images. The gallery only syncs to the selected size once at least one size names its own positions."
+        }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "shipping", "label": "Shipping" },
+            { "value": "trial", "label": "Trial" },
+            { "value": "cancel", "label": "Cancel any time" },
+            { "value": "nsf", "label": "NSF certified" },
+            { "value": "reviews", "label": "Reviews" },
+            { "value": "warranty", "label": "Warranty" }
+          ],
+          "default": "shipping"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon",
+          "info": "Overrides the icon selected above."
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Pay only shipping today"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Offer",
+      "blocks": [
+        {
+          "type": "size_details",
+          "settings": { "size_value": "1.5 Gallon", "description": "1-2 People", "badge": "Free" }
+        },
+        {
+          "type": "size_details",
+          "settings": { "size_value": "2.25 Gallon", "description": "2-3 People", "badge": "+ $30" }
+        },
+        {
+          "type": "size_details",
+          "settings": { "size_value": "3.25 Gallon", "description": "3-4 People", "badge": "+ $60" }
+        },
+        { "type": "trust", "settings": { "icon": "shipping", "text": "Pay only shipping today" } },
+        { "type": "trust", "settings": { "icon": "trial", "text": "100-day trial" } },
+        { "type": "trust", "settings": { "icon": "cancel", "text": "Cancel any time" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

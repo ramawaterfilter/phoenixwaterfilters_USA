@@ -1,0 +1,393 @@
+<div class="{{ section.settings.custom_class }} layout-{{ section.settings.layout }}" id="{{ section.settings.custom_id }}">
+
+  {% assign col_one_class = 'col-md-10 col-lg-6' %}
+  {% assign col_two_class = 'col-11 col-md-10 col-lg-6 copy-col' %}
+  {% assign animation_class = 'view-animation fade-up' %}
+  {% assign row_settings = 'justify-content-center justify-content-md-start' %}
+  {% assign h2_setting = 'col-lg-11' %}
+  {% assign li_width = 'd-flex align-items-start py-2 me-3' %}
+  
+  {% if section.settings.layout == 'copy' %}
+  {% assign col_one_class = 'col-11 col-md-10 col-lg-10' %}
+    {% assign col_two_class = 'copy-col col-11 col-md-10 col-lg-10 ' %}
+    {% assign animation_class = 'view-animation' %}
+     {% assign row_settings = 'justify-content-center' %}
+     {% assign h2_setting = 'col-10 col-md-12 text-lg-start' %}
+  {% endif %}
+
+  {% if section.settings.layout == 'copy-image-copy' %}
+    {% assign col_two_class = 'copy-col col-11 col-md-10 col-lg-10' %}
+    {% assign animation_class = 'view-animation fade-left my-5' %}
+      {% assign row_settings = 'justify-content-center' %}
+  {% endif %}
+
+  {% if section.settings.layout == 'copy-image' %}
+    {% assign col_one_class = 'col-md-10 col-lg-6 order-1 order-lg-2' %}
+    {% assign col_two_class = 'col-11 col-md-10 col-lg-6 order-2 order-lg-1 copy-col' %}
+    {% assign animation_class = 'view-animation fade-left' %}
+  {% endif %}
+
+  {% if section.settings.layout == 'centered-copy' %}
+    {% assign col_one_class = 'col-10 col-lg-12 order-2 ' %}
+    {% assign col_two_class = 'col-11 col-lg-8 order-1 copy-col' %}
+    {% assign animation_class = 'view-animation fade-left' %}
+    {% assign row_settings = 'justify-content-center' %}
+    {% assign animation_class = 'view-animation fade-up' %}
+    {% assign h2_setting = 'col-10 text-center mb-5' %}
+  {% endif %}
+
+  {% if section.settings.large_image == 'img-lrg' and section.settings.layout == 'copy-image' %} 
+    {% assign col_one_class = 'col-12 col-lg-4 order-1 order-lg-2 mt-5 mt-lg-0 mo-pad' %}
+    {% assign col_two_class = 'col-11 col-lg-8 order-2 order-lg-1 copy-col' %}
+    {% assign animation_class = 'view-animation fade-left' %}
+    {% assign row_settings = 'justify-content-center justify-content-md-start' %}
+    {% assign animation_class = 'view-animation fade-up img-lrg' %}
+    {% assign li_width = 'd-flex align-items-start py-2 me-lg-3 max-li-width' %}
+  {% endif %}
+
+  <div
+    class="background-image-container {% if section.settings.section_randoimg != blank %}overflow{% endif %} {{ section.settings.style }} {{ section.settings.bg_image_style }}"
+     >
+
+    {% if section.settings.section_randoimg != blank %}
+      {% if section.settings.section_randoimg_position == 'top' %}
+        {{ section.settings.section_randoimg | image_url: width: 600 | image_tag: class: "view-animation float-right float-img top" }}
+      {% endif %}
+    {% endif %}
+
+    {% if section.settings.section_bgimg != blank   %} 
+     {{ section.settings.section_bgimg | image_url: width: 1920 | image_tag: class: "d-none d-lg-block"  }}
+  {% elsif section.settings.section_bgimg != blank %} 
+    {% endif %}
+  </div>
+
+
+  <div class="container">
+    <div class="row {{ section.settings.vertical_align }} {{ row_settings }}">
+
+      <div class="{{ col_one_class }}">
+        {% assign img_classes = 'img-fluid
+         d-block mx-auto mb-5 mb-lg-0 rounded' %}
+
+        {% if section.settings.layout == 'image-copy' %}
+          {% assign img_classes = 'img-fluid d-block mx-auto mb-5 mb-lg-0 rounded' %}
+        {% elsif section.settings.layout == 'copy' and section.settings.layout != blank %}
+          {% assign img_classes = 'img-fluid d-block mb-5 max-width-image rounded' %}
+        {% elsif section.settings.layout == 'copy-image-copy' and section.settings.layout != blank %}
+          {% assign img_classes = 'img-fluid d-block mx-auto rounded mt-5' %}
+        {% endif %}
+
+        {% if section.settings.layout != 'copy-image-copy' %}
+          
+          {% if section.settings.video_id != blank %}
+             <div class="video-preview-container view-animation fade-up" data-wistia-vid-id="{{ section.settings.video_id }}"></div>
+            {% comment %} <div class="video-preview-container ">    
+                <script src="https://fast.wistia.com/embed/medias/{{ section.settings.video_id }}.jsonp" async></script></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_embed wistia_async_{{ section.settings.video_id }} seo=true videoFoam=true" style="height:100%;position:relative;width:100%"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/{{ section.settings.video_id }}/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;"   loading="lazy"/>
+                </div></div></div></div>
+              </div> {% endcomment %}
+          {% endif %}
+
+          {% if section.settings.column_img != blank %} 
+            <img
+              src="{{ section.settings.column_img | image_url: width: 1920 }}"
+              class="{{ img_classes }} {{ animation_class }}" alt="Phoenix Gravity Water Filter"
+              {% if section.settings.img_width %}
+              width="{{ section.settings.img_width }}"
+              {% endif %}
+              loading="lazy" />
+
+              {% elsif section.settings.section_bgimg != blank and section.settings.layout == 'image-copy' %} 
+
+                 <img
+              src="{{ section.settings.section_bgimg | image_url: width: 1920 }}"
+              class="{{ img_classes }} {{ animation_class }} d-lg-none" alt="Phoenix Gravity Water Filter"
+              {% if section.settings.img_width %}
+              width="{{ section.settings.img_width }}"
+              {% endif %}
+              loading="lazy" />
+
+          {% else %}
+            {% if section.settings.layout != 'copy' %}
+               
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      </div>
+
+      <div class="{{ col_two_class }}{% if section.settings.large_image == 'img-lrg' %} mo-pad {% endif %}">
+
+        {% if section.settings.heading != '' %}
+          <h2 class="{{ h2_setting }}">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.content != blank %}
+          {{ section.settings.content | replace: '[month]', '<span class="dyn-month"></span>' }}
+        {% endif %}
+
+        {% if section.settings.layout == 'copy-image-copy' %}
+          {% if section.settings.video_id != blank %}
+            <div class="video-preview-container my-5">    
+                <script src="https://fast.wistia.com/embed/medias/{{ section.settings.video_id }}.jsonp" async></script></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_embed wistia_async_{{ section.settings.video_id }} seo=true videoFoam=true" style="height:100%;position:relative;width:100%"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/{{ section.settings.video_id }}/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;" />
+                </div></div></div></div>
+              </div>
+          {% endif %}
+
+          {% if section.settings.column_img != blank %}
+            <img
+              src="{{ section.settings.column_img | image_url: width: 1920 }}"
+              class="{{ img_classes }} {{ animation_class }}" alt="Phoenix Gravity Water Filter"
+              {% if section.settings.img_width > 0 %}
+              width="{{ section.settings.img_width }}"
+              {% endif %}
+              loading="lazy" />
+
+          {% else %}
+
+          {% endif %}
+
+          {% if section.settings.second_content != blank %}
+            {{ section.settings.second_content }}
+          {% endif %}
+        {% endif %}
+
+        {% if section.blocks != blank %}
+           {% if section.settings.section_randoimg != blank and section.settings.section_randoimg_position == 'bottom' %}
+            <div class="d-flex flex-row justify-content-between flex-wrap">
+           {% endif %}
+
+          <ul class="features d-flex flex-wrap px-0 pt-5{% if section.settings.section_randoimg != blank and section.settings.section_randoimg_position == 'bottom' %}col-12 col-lg-8{% endif %}">
+              {% for block in section.blocks %}
+                <li class="{{ li_width  }}">
+                  {% if block.settings.feature_icon != blank %}
+                    {{ block.settings.feature_icon | image_url: width: 200 | image_tag: class: "img-fluid feature-icon  me-3", loading: "lazy" }}
+                  {% else %}
+                    
+                      <img src="{{ 'icon-features-tick.svg' | asset_url }}" class="img-fluid feature-icon  me-3" alt="Phoenix Gravity Water Filter" loading="lazy" />
+                    
+                  {% endif %}
+
+                  <p>{{ block.settings.feature_text }}</p>
+                </li>
+              {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if section.settings.section_randoimg != blank and section.settings.section_randoimg_position == 'bottom' %}
+          <div class="col-10 col-lg-3 text-center">
+          {{ section.settings.section_randoimg | image_url: width: 600 | image_tag: class: "view-animation float-bottom" }}
+          </div>
+        </div>
+      {% endif %}
+
+
+{% if section.settings.buttonlink != blank %}
+        <div class="row">
+          <div class="col-12">
+            {% render 'button' %}
+          </div>
+        </div>
+{% endif  %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Copy + Image",
+    "tag": "section",
+    "class": "section-copy-image trigger-observer",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "select",
+        "id": "style",
+        "label": "Background",
+        "default": "bg-white",
+        "options": [
+          {
+            "label": "White",
+            "value": "bg-white"
+          }, {
+            "label": "Light",
+            "value": "bg-light"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "layout",
+        "label": "Layout",
+        "options": [
+          {
+            "value": "centered-copy",
+            "label": "Single Column, Copy First"
+          },
+          {
+            "value": "image-copy",
+            "label": "2 Columns, Image first"
+          },
+          {
+            "value": "copy-image",
+            "label": "2 Columns, Copy first"
+          },
+          {
+            "value": "copy",
+            "label": "Copy"
+          }, {
+            "value": "copy-image-copy",
+            "label": "Copy, Image, Copy"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "vertical_align",
+        "label": "Vertical Alignment",
+        "default": "align-items-center",
+        "options": [
+          {
+            "value": "align-items-start",
+            "label": "Align Top"
+          }, {
+            "value": "align-items-center",
+            "label": "Align Center"
+          }, {
+            "value": "align-items-end",
+            "label": "Align Bottom"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading"
+      }, {
+        "type": "richtext",
+        "id": "content",
+        "label": "Content"
+      }, {
+        "type": "image_picker",
+        "id": "column_img",
+        "label": "Image"
+      }, {
+        "type": "text",
+        "id": "video_id",
+        "label": "Wisita Video ID"
+      }, {
+
+        "type": "number",
+        "id": "img_width",
+        "label": "Image Width (px)"
+      }, {
+        "type": "select",
+        "id": "large_image", 
+        "label": "Increase Image Size",
+        "default": "img-standard",
+        "options": [
+          {
+            "value": "img-lrg",
+            "label": "On"
+          }, {
+            "value": "img-standard",
+            "label": "Off"
+          }
+        ]
+      }, {
+        "type": "richtext",
+        "id": "second_content",
+        "label": "Content Below Image",
+        "info": "Second Content block for Copy Image Copy layout"
+      }, {
+        "type": "url",
+        "id": "buttonlink",
+        "label": "Button Link"
+      }, {
+        "type": "text",
+        "id": "buttontext",
+        "label": "Button Text"
+      }, {
+        "type": "text",
+        "id": "afterbutton",
+        "label": "After Button Text"
+      }, {
+        "type": "header",
+        "content": "Custom Code",
+        "info": "Add classes/ID to the section"
+      }, {
+        "type": "text",
+        "id": "custom_id",
+        "label": "Custom ID"
+      }, {
+        "type": "text",
+        "id": "custom_class",
+        "label": "Custom Class"
+      }, {
+        "type": "image_picker",
+        "id": "section_bgimg",
+        "label": "Background Image"
+      },{
+        "type": "select",
+        "id": "bg_image_style",
+        "label": "BG Image Style",
+        "default": "contain",
+        "options": [
+          {
+            "label": "Contain",
+            "value": "contain"
+          }, {
+            "label": "Cover",
+            "value": "cover"
+          }
+        ]
+      },  {
+        "type": "select",
+        "id": "section_randoimg_position",
+        "label": "Float Position",
+        "default": "top",
+        "options": [
+          {
+            "label": "top",
+            "value": "top"
+          }, {
+            "label": "bottom",
+            "value": "bottom"
+          }
+        ]
+      }, {
+        "type": "image_picker",
+        "id": "section_randoimg",
+        "label": "Floating Image"
+      } 
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Features",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "feature_icon",
+            "label": "Icon"
+          }, {
+            "type": "text",
+            "id": "feature_text",
+            "label": "Text"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Copy Image"
+      }
+    ],
+    "disabled_on": {
+      "groups": ["header"]
+    }
+  }
+{% endschema %}

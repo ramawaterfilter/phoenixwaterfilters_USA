@@ -1,0 +1,210 @@
+<section
+  class="custom-health-alert"
+  style="
+    --health-alert-background: {{ section.settings.background_color }};
+    --health-alert-text: {{ section.settings.text_color }};
+    --health-alert-accent: {{ section.settings.accent_color }};
+    --health-alert-max-width: {{ section.settings.max_width }}rem;
+  "
+>
+  <div class="custom-health-alert__inner">
+    {% if section.settings.eyebrow != blank %}
+      <p class="custom-health-alert__eyebrow">
+        <span class="custom-health-alert__warning-icon" aria-hidden="true">
+          <svg viewBox="0 0 16 16" focusable="false">
+            <path d="M8 2 14.5 13H1.5L8 2Z" fill="currentColor"/>
+            <path d="M8 6v3.4" fill="none" stroke="var(--health-alert-background)" stroke-width="1.4" stroke-linecap="round"/>
+            <circle cx="8" cy="11.2" r=".75" fill="var(--health-alert-background)"/>
+          </svg>
+        </span>
+        {{ section.settings.eyebrow | escape }}
+      </p>
+    {% endif %}
+
+    {% if section.settings.heading != blank %}
+      <h2 class="custom-health-alert__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% if section.settings.body != blank %}
+      <div class="custom-health-alert__body rte">
+        {{ section.settings.body }}
+      </div>
+    {% endif %}
+
+    {% if section.settings.footer_text != blank %}
+      <div class="custom-health-alert__footer rte">
+        {{ section.settings.footer_text }}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .custom-health-alert {
+    background: var(--health-alert-background);
+    color: var(--health-alert-text);
+    padding: 1.8rem 1.8rem 2.6rem;
+    text-align: center;
+  }
+
+  .custom-health-alert__inner {
+    max-width: var(--health-alert-max-width);
+    margin: 0 auto;
+  }
+
+  .custom-health-alert__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 0 0 1.2rem;
+    color: var(--health-alert-accent);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .24rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .custom-health-alert__warning-icon {
+    display: inline-flex;
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  .custom-health-alert__warning-icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .custom-health-alert__heading {
+    max-width: 60rem;
+    margin: 0 auto;
+    color: var(--health-alert-text);
+    font-family: Georgia Pro Bold, Georgia, serif;
+    font-size: 1.95rem;
+    font-weight: 700;
+    letter-spacing: -.05rem;
+    line-height: 1.18;
+  }
+
+  .custom-health-alert__heading strong {
+    color: var(--health-alert-accent);
+  }
+
+  .custom-health-alert__body,
+  .custom-health-alert__footer {
+    max-width: 60rem;
+    margin: 1.6rem auto 0;
+    color: var(--health-alert-text);
+    font-family: Value Sans, sans-serif;
+    font-size: 1.25rem;
+    line-height: 1.58;
+  }
+
+  .custom-health-alert__footer {
+    margin-top: 1.8rem;
+  }
+
+  .custom-health-alert__body > :first-child,
+  .custom-health-alert__footer > :first-child {
+    margin-top: 0;
+  }
+
+  .custom-health-alert__body > :last-child,
+  .custom-health-alert__footer > :last-child {
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 750px) {
+    .custom-health-alert {
+      padding: 3.2rem 2rem 4rem;
+    }
+
+    .custom-health-alert__eyebrow {
+      margin-bottom: 1.4rem;
+      font-size: 1.1rem;
+      letter-spacing: .28rem;
+    }
+
+    .custom-health-alert__heading {
+      font-size: 2.4rem;
+    }
+
+    .custom-health-alert__body,
+    .custom-health-alert__footer {
+      font-size: 1.55rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Custom health alert",
+  "tag": "section",
+  "class": "section-custom-health-alert",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Public health alert"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Tap Water Makes <strong>7.2 Million Americans</strong> Sick Every Year"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text",
+      "default": "<p>Every year, millions of Americans fall ill from harmful chemicals in tap water &mdash; including parasites, salmonella, nitrates, and alachlor. These contaminants are linked to liver and kidney damage, thyroid disease, and cancer.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "footer_text",
+      "label": "Footer text",
+      "default": "<p>Phoenix Gravity Water Filters use advanced Nano adsorption filtration to remove 99.9% of contaminants.</p>"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Content width",
+      "min": 42,
+      "max": 90,
+      "step": 2,
+      "unit": "rem",
+      "default": 64
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#071c2b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#f2b64b"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom health alert"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

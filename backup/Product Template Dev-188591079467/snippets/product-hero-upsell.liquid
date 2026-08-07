@@ -1,0 +1,26 @@
+{% doc %}
+Renders an upsell product card.
+@param {block} block - Upsell block with product_upsell setting.
+@example
+{% render 'product-hero-upsell', block: block %}
+{% enddoc %}
+
+{% assign upsell_product = block.settings.product_upsell %}
+{% if upsell_product != blank %}
+  <div class="product-hero-upsell">
+    <a class="product-hero-upsell__link" href="{{ upsell_product.url }}">
+      {% if upsell_product.featured_image != blank %}
+        {{
+          upsell_product.featured_image
+          | image_url: width: 240
+          | image_tag: class: 'product-hero-upsell__image', loading: 'lazy'
+        }}
+      {% endif %}
+      <div class="product-hero-upsell__content">
+        <span class="product-hero-upsell__eyebrow">You may also like</span>
+        <span class="product-hero-upsell__title">{{ upsell_product.title }}</span>
+        <span class="product-hero-upsell__price">{{ upsell_product.price | money }}</span>
+      </div>
+    </a>
+  </div>
+{% endif %}

@@ -1,0 +1,615 @@
+{% comment %}
+  ============================================================
+  STICKY ATC - MOBILE ONLY - PRODUCT PAGE BOTTOM
+  File: sections/sticky-atc-mobile.liquid
+  v2.0 — Clean bar, no subscription options, direct ATC
+  ============================================================
+{% endcomment %}
+
+{% if section.settings.enable_section %}
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<div id="sticky-atc-bar" class="sticky-atc-bar" aria-label="Sticky Add to Cart">
+  <div class="sticky-atc-inner">
+
+    <!-- Price -->
+    <div class="sticky-atc-price-wrap">
+      {% if current_variant.compare_at_price > current_variant.price %}
+        <span class="sticky-price-compare" id="sticky-price-compare">{{ current_variant.compare_at_price | money }}</span>
+      {% else %}
+        <span class="sticky-price-compare" id="sticky-price-compare" style="display:none;"></span>
+      {% endif %}
+      <span class="sticky-price-current" id="sticky-price-current">{{ current_variant.price | money }}</span>
+    </div>
+
+    <!-- ATC Button — Direct fetch, completely independent of main form -->
+    <button
+      type="button"
+      id="sticky-atc-btn"
+      class="sticky-atc-button"
+      data-variant-id="{{ current_variant.id }}"
+      {% unless current_variant.available %}disabled{% endunless %}
+    >
+      <span class="btn-text">
+        {% if current_variant.available %}
+          {{ section.settings.button_text | default: 'Add to Cart' }}
+        {% else %}
+          {{ section.settings.sold_out_text | default: 'Sold Out' }}
+        {% endif %}
+      </span>
+
+      <span class="btn-loading" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+        </svg>
+      </span>
+
+      <span class="btn-success" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        {{ section.settings.added_text | default: 'Added!' }}
+      </span>
+    </button>
+
+  </div>
+</div>
+
+{% endif %}
+
+
+<style>
+/* =============================================
+   STICKY ATC BAR — MOBILE ONLY
+   ============================================= */
+.sticky-atc-section{
+padding:0px;
+}
+.sticky-atc-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999;
+  background-color: {{ section.settings.bg_color }};
+  padding-top: {{ section.settings.padding_top }}px;
+  padding-bottom: calc({{ section.settings.padding_bottom }}px + env(safe-area-inset-bottom));
+  padding-left: 16px;
+  padding-right: 16px;
+  box-shadow: 0 -2px 16px rgba(0,0,0,0.13);
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
+  border-top: 1px solid rgba(0,0,0,0.07);
+}
+
+@media (max-width: {{ section.settings.mobile_breakpoint }}px) {
+  .sticky-atc-bar { display: block; }
+}
+
+.sticky-atc-bar.is-visible {
+  transform: translateY(0);
+}
+
+.sticky-atc-inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* ── Price ── */
+.sticky-atc-price-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex-shrink: 0;
+  width:30%;
+}
+
+.sticky-price-current {
+  font-size: {{ section.settings.price_font_size }}px;
+  color: {{ section.settings.price_color }};
+  font-weight: 700;
+  line-height: 1.2;
+  font-family: inherit;
+}
+
+.sticky-price-compare {
+  font-size: calc({{ section.settings.price_font_size }}px - 3px);
+  color: {{ section.settings.compare_price_color }};
+  text-decoration: line-through;
+  font-weight: 400;
+  line-height: 1;
+  font-family: inherit;
+}
+
+/* ── Button ── */
+.sticky-atc-button {
+  width: 40%;
+  margin:0px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background-color: {{ section.settings.button_bg_color }};
+  color: {{ section.settings.button_text_color }};
+  border: none;
+  border-radius: {{ section.settings.button_border_radius }}px;
+  padding: {{ section.settings.button_padding_v }}px {{ section.settings.button_padding_h }}px;
+  font-size: {{ section.settings.button_font_size }}px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  transition: background-color 0.18s ease, transform 0.1s ease, opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 48px;
+  text-transform: {{ section.settings.button_text_transform }};
+}
+
+.sticky-atc-button:active:not(:disabled) { transform: scale(0.97); }
+.sticky-atc-button:disabled { opacity: 0.5; cursor: not-allowed; }
+.sticky-atc-button:hover:not(:disabled) { background-color: {{ section.settings.button_hover_bg_color }}; }
+
+/* Button states */
+.sticky-atc-button .btn-loading,
+.sticky-atc-button .btn-success {
+  display: none;
+  align-items: center;
+  gap: 6px;
+}
+
+.sticky-atc-button.state-loading .btn-text    { display: none; }
+.sticky-atc-button.state-loading .btn-loading { display: inline-flex; }
+
+.sticky-atc-button.state-success .btn-text    { display: none; }
+.sticky-atc-button.state-success .btn-success { display: inline-flex; }
+.sticky-atc-button.state-success {
+  background-color: {{ section.settings.button_success_bg_color }};
+  color: {{ section.settings.button_success_text_color }};
+}
+
+@keyframes atc-spin { to { transform: rotate(360deg); } }
+.btn-loading svg { animation: atc-spin 0.7s linear infinite; }
+</style>
+
+
+<script>
+(function () {
+  'use strict';
+
+  var bar     = document.getElementById('sticky-atc-bar');
+  var btn     = document.getElementById('sticky-atc-btn');
+  var priceEl = document.getElementById('sticky-price-current');
+  var compareEl = document.getElementById('sticky-price-compare');
+
+  if (!bar || !btn) return;
+
+  /* ── 1. Show / hide on scroll ─────────────────────────────── */
+  function findMainATC() {
+    return (
+      document.querySelector('.product-form__submit') ||
+      document.querySelector('button[name="add"]') ||
+      document.querySelector('#AddToCart') ||
+      document.querySelector('#add') ||
+      document.querySelector('[data-add-to-cart]') ||
+      null
+    );
+  }
+
+  function checkVisibility() {
+    var mainBtn = findMainATC();
+    if (!mainBtn) { bar.classList.add('is-visible'); return; }
+    var rect = mainBtn.getBoundingClientRect();
+    var hidden = rect.bottom < 0 || rect.top > window.innerHeight;
+    bar.classList.toggle('is-visible', hidden);
+  }
+
+  window.addEventListener('scroll', checkVisibility, { passive: true });
+  window.addEventListener('resize', checkVisibility, { passive: true });
+  setTimeout(checkVisibility, 400);
+
+  /* ── 2. Variant sync ────────────────────────────────────────── */
+  var productData = null;
+
+  fetch(window.location.pathname + '.js')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      productData = data;
+      // Set initial variant
+      var initId = btn.dataset.variantId;
+      if (initId) syncVariant(initId);
+    });
+
+  function syncVariant(variantId) {
+    if (!productData) return;
+    var variant = productData.variants.find(function(v) {
+      return String(v.id) === String(variantId);
+    });
+    if (!variant) return;
+
+    // Update button's variant
+    btn.dataset.variantId = variant.id;
+
+    // Price
+    if (priceEl) priceEl.textContent = formatMoney(variant.price);
+
+    if (compareEl) {
+      if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+        compareEl.textContent = formatMoney(variant.compare_at_price);
+        compareEl.style.display = '';
+      } else {
+        compareEl.style.display = 'none';
+      }
+    }
+
+    // Button availability
+    var btnText = btn.querySelector('.btn-text');
+    if (variant.available) {
+      btn.disabled = false;
+      if (btnText) btnText.textContent = {{ section.settings.button_text | default: 'Add to Cart' | json }};
+    } else {
+      btn.disabled = true;
+      if (btnText) btnText.textContent = {{ section.settings.sold_out_text | default: 'Sold Out' | json }};
+    }
+  }
+
+  // Watch main form for variant ID changes
+  document.addEventListener('change', function(e) {
+    var target = e.target;
+    if (!target) return;
+    var inMainForm = target.closest('form[action*="/cart/add"]');
+    if (inMainForm && (target.name === 'id' || target.tagName === 'SELECT' || target.type === 'radio')) {
+      var idInput = inMainForm.querySelector('input[name="id"]');
+      if (idInput && idInput.value) syncVariant(idInput.value);
+    }
+  });
+
+  // Theme events
+  ['variant:changed','variantChange','product:variant-changed','theme:variant:changed'].forEach(function(evt) {
+    document.addEventListener(evt, function(e) {
+      var v = (e.detail && (e.detail.variant || e.detail.selectedVariant || e.detail));
+      if (v && v.id) syncVariant(v.id);
+    });
+  });
+
+  /* ── 3. Add to Cart — direct fetch, bypasses subscription form ─ */
+  btn.addEventListener('click', function() {
+    if (btn.disabled) return;
+    var variantId = parseInt(btn.dataset.variantId, 10);
+    if (!variantId) return;
+
+    btn.classList.remove('state-success');
+    btn.classList.add('state-loading');
+    btn.disabled = true;
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ id: variantId, quantity: 1 })
+    })
+    .then(function(res) {
+      if (!res.ok) return res.json().then(function(e) { throw e; });
+      return res.json();
+    })
+    .then(function(lineItem) {
+      btn.classList.remove('state-loading');
+      btn.classList.add('state-success');
+      btn.disabled = false;
+
+      // 1. Refresh cart count in header
+      refreshCartCount();
+
+      // 2. Try to open cart drawer — works with most themes
+      openCartDrawer(lineItem);
+
+      // 3. Reset button after 2.5s
+      setTimeout(function() { btn.classList.remove('state-success'); }, 2500);
+    })
+    .catch(function(err) {
+      btn.classList.remove('state-loading');
+      btn.disabled = false;
+      var msg = (err && (err.description || err.message)) || 'Could not add to cart. Please try again.';
+      alert(msg);
+    });
+  });
+
+  /* ── 4. Open Cart Drawer (multi-theme compatible) ──────────── */
+  function openCartDrawer(lineItem) {
+    // First update cart count, then try drawer methods
+    fetch('/cart.js')
+      .then(function(r) { return r.json(); })
+      .then(function(cart) {
+
+        // ── Method 1: Dispatch standard cart events (Dawn, Refresh, Impulse, etc.) ──
+        document.dispatchEvent(new CustomEvent('cart:updated', { bubbles: true, detail: { cart: cart } }));
+        document.dispatchEvent(new CustomEvent('cart:open',    { bubbles: true }));
+        document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true, detail: { cart: cart } }));
+
+        // ── Method 2: Dawn theme — uses global cart object ──
+        if (window.cart && typeof window.cart.open === 'function') {
+          window.cart.open();
+          return;
+        }
+
+        // ── Method 3: Shopify Section Rendering API — re-render cart drawer ──
+        var cartDrawerSection = document.querySelector('cart-drawer, #cart-drawer, [id*="CartDrawer"], .cart-drawer');
+        if (cartDrawerSection) {
+
+          // Trigger open on cart-drawer custom element (Dawn/Refresh)
+          if (cartDrawerSection.tagName && cartDrawerSection.tagName.toLowerCase() === 'cart-drawer') {
+            cartDrawerSection.classList.add('is-open', 'active', 'open');
+            var overlay = document.querySelector('.cart-drawer__overlay, .drawer__overlay, .js-drawer-overlay');
+            if (overlay) overlay.style.display = 'block';
+          }
+
+          // Try open() method if exists on element
+          if (typeof cartDrawerSection.open === 'function') {
+            cartDrawerSection.open(lineItem);
+            return;
+          }
+          if (typeof cartDrawerSection.show === 'function') {
+            cartDrawerSection.show();
+            return;
+          }
+
+          // Toggle class-based drawers
+          cartDrawerSection.classList.add('is-open', 'open', 'active', 'cart-drawer--open');
+        }
+
+        // ── Method 4: Click the cart icon/button to trigger theme's own handler ──
+        var cartTriggers = [
+          '[data-drawer-trigger="cart"]',
+          '[data-open-drawer="cart"]',
+          '.js-drawer-open-cart',
+          '.cart-toggle',
+          '[aria-controls="cart-drawer"]',
+          '[aria-controls="CartDrawer"]',
+          '[href="#cart-drawer"]',
+          '.header__icon--cart',
+          '.site-header__cart',
+          '#cart-icon-bubble'
+        ];
+        for (var i = 0; i < cartTriggers.length; i++) {
+          var trigger = document.querySelector(cartTriggers[i]);
+          if (trigger) {
+            trigger.click();
+            return;
+          }
+        }
+
+        // ── Method 5: Broadcast channel (some headless/custom themes) ──
+        if (window.BroadcastChannel) {
+          try {
+            var bc = new BroadcastChannel('cart');
+            bc.postMessage({ type: 'cart:open', cart: cart });
+            bc.close();
+          } catch(e) {}
+        }
+
+        // ── Method 6: Fallback — reload page so cart updates are visible ──
+        // Only runs if NO drawer was found/opened
+        var hasDrawer = !!document.querySelector(
+          'cart-drawer, #cart-drawer, .cart-drawer, [id*="CartDrawer"], .CartDrawer'
+        );
+        if (!hasDrawer) {
+          window.location.reload();
+        }
+      });
+  }
+
+  /* ── 5. Cart count refresh ─────────────────────────────────── */
+  function refreshCartCount() {
+    fetch('/cart.js').then(function(r) { return r.json(); }).then(function(cart) {
+      var sels = '[data-cart-count],[data-cart-item-count],.cart-count,.cart__count,#CartCount,#cart-count,.header__cart-count,.cart-bubble,.cart-item-count';
+      document.querySelectorAll(sels).forEach(function(el) {
+        el.textContent = cart.item_count;
+        if (cart.item_count > 0) el.removeAttribute('hidden');
+      });
+    });
+  }
+
+  /* ── 5. Money format ───────────────────────────────────────── */
+  function formatMoney(cents) {
+    var fmt = (window.Shopify && window.Shopify.money_format) ? window.Shopify.money_format : '${{amount}}';
+    var dollars = (cents / 100).toFixed(2).replace(/\.00$/, '');
+    var formatted = dollars.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return fmt.replace(/\{\{\s*amount[_a-z]*\s*\}\}/g, formatted);
+  }
+
+}());
+</script>
+
+
+{% schema %}
+{
+  "name": "Sticky ATC Mobile",
+  "tag": "section",
+  "class": "sticky-atc-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "⚙️ General"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_section",
+      "label": "Enable Sticky ATC Bar",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "mobile_breakpoint",
+      "label": "Show on screens smaller than (px)",
+      "min": 480,
+      "max": 1024,
+      "step": 8,
+      "default": 768
+    },
+    {
+      "type": "header",
+      "content": "🎨 Bar Background & Spacing"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Bar Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top (px)",
+      "min": 4,
+      "max": 28,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom (px)",
+      "min": 4,
+      "max": 28,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "💰 Price Display"
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "compare_price_color",
+      "label": "Compare At Price Color",
+      "default": "#aaaaaa"
+    },
+    {
+      "type": "range",
+      "id": "price_font_size",
+      "label": "Price Font Size (px)",
+      "min": 13,
+      "max": 24,
+      "step": 1,
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "🛒 Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Add to Cart"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_text",
+      "label": "Sold Out Text",
+      "default": "Sold Out"
+    },
+    {
+      "type": "text",
+      "id": "added_text",
+      "label": "Added! Text",
+      "default": "Added!"
+    },
+    {
+      "type": "select",
+      "id": "button_text_transform",
+      "label": "Button Text Case",
+      "options": [
+        { "value": "none",       "label": "Normal" },
+        { "value": "uppercase",  "label": "UPPERCASE" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Button Hover Background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_success_bg_color",
+      "label": "Success Background Color",
+      "default": "#16a34a"
+    },
+    {
+      "type": "color",
+      "id": "button_success_text_color",
+      "label": "Success Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Button Font Size (px)",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Button Border Radius (px)",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "button_padding_v",
+      "label": "Button Vertical Padding (px)",
+      "min": 8,
+      "max": 20,
+      "step": 1,
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "button_padding_h",
+      "label": "Button Horizontal Padding (px)",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sticky ATC Mobile",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

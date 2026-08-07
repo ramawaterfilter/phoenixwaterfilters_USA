@@ -1,0 +1,173 @@
+{% assign columns = 'col-12' %}
+
+
+{% if section.settings.show_form %}
+  {% assign columns = 'col-12 col-lg-6' %}
+{% endif %}
+
+
+{% if section.settings.banner_text != blank %}
+  <div class="container-fluid bg-primary banner">
+    <div class="row justify-content-center align-items-center">
+      <div class="col-12 text-light text-center">
+        <h2 class="text-light">{{ section.settings.banner_text }}</h2>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center align-items-start">
+
+    {% if section.settings.show_map %}
+      <div class="{{ columns }}  ">
+
+        {% if section.settings.map_image %}
+          <div class="section-map__img px-md-5">
+            {{ section.settings.map_image | image_url: width: 1920 | image_tag }}
+          </div>
+        {% endif %}
+
+        <div class="d-flex justify-content-between align-items-start section-map__columns mb-5">
+          {% if section.settings.col1_content != blank %}
+            <div class="section-map__column">
+              {% if section.settings.col1_icon != blank %}
+                <div class="ico-bg">
+                  {{ section.settings.col1_icon | image_url: width: 300 | image_tag }}
+                </div>
+              {% endif %}
+              <div class="wrap">
+                {% if section.settings.col1_heading != blank %}
+                  <p class="title">{{ section.settings.col1_heading }}</p>
+                {% endif %}
+                {% if section.settings.col1_content != blank %}
+                  {{ section.settings.col1_content }}
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+
+          {% if section.settings.col2_content != blank %}
+            <div class="section-map__column">
+              {% if section.settings.col2_icon != blank %}
+                <div class="ico-bg">
+                  {{ section.settings.col2_icon | image_url: width: 300 | image_tag }}
+                </div>
+              {% endif %}
+              <div class="wrap">
+                {% if section.settings.col2_heading != blank %}
+                  <p class="title">
+                    {{ section.settings.col2_heading }}
+                  </p>
+                {% endif %}
+                {% if section.settings.col2_content != blank %}
+                  {{ section.settings.col2_content }}
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+    {% endif %}
+
+
+    {% if section.settings.show_form %}
+      <div class="col-12 col-lg-6 form-column {% unless section.settings.show_map %} text-center {% endunless %}">
+        {% if section.settings.form_title %}
+          <h3>{{ section.settings.form_title }}</h3>
+          {% if section.settings.form_content != blank %}
+            {{ section.settings.form_content }}
+          {% endif %}
+        {% endif %}
+        {% if section.settings.klavyio_id != blank %}
+          <div class="{{ section.settings.klavyio_id }}"></div>
+        {% endif %}
+
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+
+<div
+  style="margin:0 auto;"
+  class="pxFormGenerator"
+  id="VUawBZf5wnv6O1H0kATVDw"></div>
+{% schema %}
+  {
+    "name": "Contact Map",
+    "tag": "section",
+    "class": "section-map pt-0",
+    "settings": [
+      {
+        "type": "text",
+        "id": "banner_text",
+        "label": "Banner Title"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_form",
+        "label": "Show Form Section",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "form_title",
+        "label": "Form Title"
+      },
+      {
+        "type": "text",
+        "id": "klavyio_id",
+        "label": "Klavyio Form ID"
+      }, {
+        "type": "richtext",
+        "id": "form_content",
+        "label": "Form Content"
+      }, {
+        "type": "checkbox",
+        "id": "show_map",
+        "label": "Show Map Section",
+        "default": true
+      }, {
+        "type": "image_picker",
+        "id": "map_image",
+        "label": "Map Image"
+      }, {
+        "type": "text",
+        "id": "col1_heading",
+        "label": "Col 1 Heading",
+        "default": "Hours:"
+      }, {
+        "type": "image_picker",
+        "id": "col1_icon",
+        "label": "Col 1 Icon"
+      }, {
+        "type": "richtext",
+        "id": "col1_content",
+        "label": "Col 1 Content"
+      }, {
+        "type": "text",
+        "id": "col2_heading",
+        "label": "Col 2 Heading",
+        "default": "Address:"
+      }, {
+        "type": "image_picker",
+        "id": "col2_icon",
+        "label": "Col 2 Icon"
+      }, {
+        "type": "richtext",
+        "id": "col2_content",
+        "label": "Col 2 Content"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Contact Map & Form"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["page"]
+    }
+  }
+{% endschema %}

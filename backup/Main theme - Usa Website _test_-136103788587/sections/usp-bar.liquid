@@ -1,0 +1,53 @@
+<div class="container">
+	<div class="swiper-container swiper mobile marquee-bar-swiper" id="usp-bar">
+		<div class="swiper-wrapper d-flex flex-md-wrap flex-lg-nowrap justify-content-md-between">
+			{% for block in section.blocks %}
+				<div class="usp swiper-slide">
+					{% if block.settings.image %}
+						<div class="usp__image">
+							{{ block.settings.image | image_url: width: 100 | image_tag }}
+						</div>
+					{% endif %}
+	
+					<div class="usp__text">
+						{{ block.settings.text }}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+
+{% schema %}
+	{
+		"name": "USP Bar",
+		"tag": "section",
+		"class": "section-usp-bar",
+		"blocks": [
+			{
+				"name": "USP",
+				"type": "usp",
+				"settings": [
+					{
+						"type": "image_picker",
+						"id": "image",
+						"label": "USP Image"
+					},
+					{
+						"type": "text",
+						"id": "text",
+						"label": "USP Text"
+					}
+				]
+			}
+		],
+		"presets": [
+			{
+				"name": "USP Bar"
+			}
+		],
+	    "disabled_on": {
+	        "groups": ["header"]
+	    }
+	}
+{% endschema %}

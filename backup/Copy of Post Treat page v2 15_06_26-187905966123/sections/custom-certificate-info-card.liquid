@@ -1,0 +1,809 @@
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign section_conditional_visibility = false
+  if section.settings.visibility == 'variant_ids' and section.settings.variant_ids != blank
+    assign section_conditional_visibility = true
+  endif
+%}
+<variant-visibility-scope current-variant-id="{{ current_variant.id }}">
+<section
+  class="custom-certificate-info-card custom-certificate-info-card--mobile-{{ section.settings.mobile_layout }}"
+  data-variant-visibility-item
+  {% if section_conditional_visibility %}data-variant-visibility-ids="{{ section.settings.variant_ids | escape }}"{% endif %}
+  {% if section_conditional_visibility %}
+    hidden
+  {% endif %}
+  style="
+    --certificate-background: {{ section.settings.background_color }};
+    --certificate-text: {{ section.settings.text_color }};
+    --certificate-muted: {{ section.settings.muted_text_color }};
+    --certificate-line: {{ section.settings.line_color }};
+    --certificate-icon-background: {{ section.settings.icon_background_color }};
+    --certificate-accent: {{ section.settings.accent_color }};
+    --certificate-step-count: {{ section.blocks.size | at_least: 1 }};
+  "
+>
+  <div class="custom-certificate-info-card__container">
+    {% if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.description != blank %}
+      <div class="custom-certificate-info-card__header">
+        {% if section.settings.eyebrow != blank %}
+          <p class="custom-certificate-info-card__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="custom-certificate-info-card__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.description != blank %}
+          <div class="custom-certificate-info-card__header-description rte">
+            {{ section.settings.description }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      {% liquid
+        assign has_markers = false
+        for block in section.blocks
+          if block.settings.icon != blank or block.settings.badge_text != blank or block.settings.step_label != blank
+            assign has_markers = true
+            break
+          endif
+        endfor
+      %}
+
+      <ol class="custom-certificate-info-card__steps{% if has_markers %} custom-certificate-info-card__steps--has-icons{% endif %}" role="list" data-variant-visibility-group>
+        {% for block in section.blocks %}
+          {% liquid
+            assign step_number = forloop.index | prepend: '0' | slice: -2, 2
+            assign step_label = block.settings.step_label
+            assign badge_text = block.settings.badge_text | default: step_label | default: step_number
+            assign block_conditional_visibility = false
+            if block.settings.visibility == 'variant_ids' and block.settings.variant_ids != blank
+              assign block_conditional_visibility = true
+            endif
+          %}
+
+          <li
+            class="custom-certificate-info-card__step{% if block.settings.icon != blank %} custom-certificate-info-card__step--has-icon{% else %} custom-certificate-info-card__step--no-icon{% endif %}"
+            data-variant-visibility-item
+            {% if block_conditional_visibility %}data-variant-visibility-ids="{{ block.settings.variant_ids | escape }}"{% endif %}
+            {% if block_conditional_visibility %}
+              hidden
+            {% endif %}
+            {{ block.shopify_attributes }}
+          >
+            {% if badge_text != blank %}
+              <span class="custom-certificate-info-card__mobile-number" aria-hidden="true">{{ badge_text | escape }}</span>
+            {% endif %}
+
+            {% if block.settings.icon != blank %}
+              <div class="custom-certificate-info-card__icon-wrap">
+                <div class="custom-certificate-info-card__icon">
+                  {{
+                    block.settings.icon
+                    | image_url: width: 220
+                    | image_tag:
+                      class: 'custom-certificate-info-card__icon-image',
+                      loading: 'lazy',
+                      widths: '90, 140, 180, 220',
+                      sizes: '(max-width: 749px) 72px, 104px',
+                      alt: block.settings.icon_alt
+                  }}
+                </div>
+              </div>
+            {% elsif badge_text != blank %}
+              <div class="custom-certificate-info-card__icon-wrap custom-certificate-info-card__desktop-badge" aria-hidden="true">
+                <div class="custom-certificate-info-card__icon">
+                  <span class="custom-certificate-info-card__icon-text">{{ badge_text | escape }}</span>
+                </div>
+              </div>
+            {% endif %}
+
+            <div class="custom-certificate-info-card__content">
+              {% if step_label != blank %}
+                <p class="custom-certificate-info-card__step-label">{{ step_label | escape }}</p>
+              {% endif %}
+
+              {% if block.settings.heading != blank %}
+                <h3 class="custom-certificate-info-card__step-heading">{{ block.settings.heading }}</h3>
+              {% endif %}
+
+              {% if block.settings.description != blank %}
+                <div class="custom-certificate-info-card__description rte">
+                  {{ block.settings.description }}
+                </div>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ol>
+    {% endif %}
+  </div>
+</section>
+</variant-visibility-scope>
+
+{% stylesheet %}
+  .custom-certificate-info-card {
+    overflow: hidden;
+    background: var(--certificate-background);
+    color: var(--certificate-text);
+    padding: 1rem 0 4rem;
+  }
+
+  .custom-certificate-info-card__container {
+    width: min(100% - 3.2rem, 1280px);
+    margin: 0 auto;
+  }
+
+  .custom-certificate-info-card__header {
+    max-width: 94rem;
+    margin: 0 auto 8.8rem;
+    text-align: center;
+  }
+
+  .custom-certificate-info-card__eyebrow {
+    margin: 0 0 2.4rem;
+    color: var(--certificate-text);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: .42rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .custom-certificate-info-card__heading {
+    margin: 0;
+    color: var(--certificate-text);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: clamp(3.8rem, 4.2vw, 5rem);
+    font-weight: 700;
+    letter-spacing: -.22rem;
+    line-height: 1.1;
+  }
+
+  .custom-certificate-info-card__header-description {
+    max-width: 73rem;
+    margin: 2.4rem auto 0;
+    color: var(--certificate-muted);
+    font-family: Value Sans, sans-serif;
+    font-size: 2rem;
+    line-height: 1.6;
+  }
+
+  .custom-certificate-info-card__header-description > :last-child {
+    margin-bottom: 0;
+  }
+
+  .custom-certificate-info-card__steps {
+    --certificate-step-gap: 3rem;
+
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--certificate-step-count), minmax(0, 1fr));
+    gap: var(--certificate-step-gap);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 750px) {
+    .custom-certificate-info-card__steps--has-icons .custom-certificate-info-card__step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      top: 6.5rem;
+      left: calc(50% + 7.2rem);
+      width: calc(100% + var(--certificate-step-gap) - 14.4rem);
+      height: 1.4rem;
+      background:
+        linear-gradient(45deg, transparent 40%, var(--certificate-line) 42% 58%, transparent 60%) right .1rem top .1rem / .9rem .8rem no-repeat,
+        linear-gradient(135deg, transparent 40%, var(--certificate-line) 42% 58%, transparent 60%) right .1rem bottom .1rem / .9rem .8rem no-repeat,
+        repeating-linear-gradient(to right, var(--certificate-line) 0 .35rem, transparent .35rem .85rem) left center / calc(100% - .7rem) .3rem no-repeat;
+      pointer-events: none;
+    }
+  }
+
+  .custom-certificate-info-card__step {
+    position: relative;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .custom-certificate-info-card__mobile-number {
+    display: none;
+  }
+
+  .custom-certificate-info-card__icon-wrap {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    width: 14.4rem;
+    height: 14.4rem;
+    margin: 0 auto 3.7rem;
+    place-items: center;
+    border: .2rem solid #dfe5ef;
+    border-radius: 50%;
+    background: var(--certificate-background);
+  }
+
+  .custom-certificate-info-card__icon {
+    display: grid;
+    width: 10.8rem;
+    height: 10.8rem;
+    place-items: center;
+    overflow: hidden;
+    border: .2rem solid var(--certificate-accent);
+    border-radius: 50%;
+    background: var(--certificate-icon-background);
+  }
+
+  .custom-certificate-info-card__icon-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .custom-certificate-info-card__icon-text {
+    color: var(--certificate-accent);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 3.2rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .custom-certificate-info-card__step-label {
+    margin: 0 0 2rem;
+    color: var(--certificate-text);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: .22rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .custom-certificate-info-card__step-heading {
+    max-width: 27rem;
+    margin: 0 auto;
+    color: var(--certificate-text);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: -.08rem;
+    line-height: 1.18;
+  }
+
+  .custom-certificate-info-card__description {
+    max-width: 27rem;
+    margin: 1.8rem auto 0;
+    color: var(--certificate-muted);
+    font-family: Value Sans, sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.65;
+  }
+
+  .custom-certificate-info-card__description > :last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 989px) and (min-width: 750px) {
+    .custom-certificate-info-card__steps {
+      --certificate-step-gap: 2rem;
+    }
+
+    .custom-certificate-info-card__step-heading {
+      font-size: 2.3rem;
+    }
+
+    .custom-certificate-info-card__description {
+      font-size: 1.4rem;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .custom-certificate-info-card {
+      padding: 1.4rem 0 2.2rem;
+      background: #fff;
+    }
+
+    .custom-certificate-info-card__container {
+      width: min(100% - 3rem, 54rem);
+    }
+
+    .custom-certificate-info-card__header {
+      margin: 0 0 1.8rem;
+      text-align: left;
+    }
+
+    .custom-certificate-info-card__eyebrow {
+      margin-bottom: .8rem;
+      color: #006d6d;
+      font-size: .9rem;
+      letter-spacing: .24rem;
+    }
+
+    .custom-certificate-info-card__heading {
+      font-family: Georgia Pro Bold, Georgia, serif;
+      font-size: 2rem;
+      letter-spacing: -.04rem;
+      line-height: 1.15;
+    }
+
+    .custom-certificate-info-card__header-description {
+      max-width: none;
+      margin: 1rem 0 0;
+      font-size: 1.35rem;
+      line-height: 1.5;
+    }
+
+    .custom-certificate-info-card__steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .custom-certificate-info-card__steps::before {
+      content: none;
+    }
+
+    .custom-certificate-info-card__step--no-icon .custom-certificate-info-card__content {
+      grid-column: 2 / -1;
+    }
+
+    .custom-certificate-info-card__step--no-icon .custom-certificate-info-card__mobile-number + .custom-certificate-info-card__content {
+      grid-column: 2 / -1;
+    }
+
+    .custom-certificate-info-card__step--no-icon .custom-certificate-info-card__content:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .custom-certificate-info-card--mobile-circle_grid {
+      padding: 2.8rem 0;
+      background: var(--certificate-background);
+    }
+
+    .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__header {
+      margin-bottom: 2.4rem;
+      text-align: center;
+    }
+
+    .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__steps {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2.4rem 2rem;
+    }
+
+    .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__steps::before {
+      content: none;
+    }
+
+    .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__step {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      padding: 0;
+      align-items: center;
+      gap: 0;
+      border-radius: 0;
+      background: transparent;
+      text-align: center;
+    }
+
+    .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__mobile-number {
+      display: grid;
+      width: 4.6rem;
+      height: 4.6rem;
+      margin: 0 auto 1.2rem;
+      place-items: center;
+      border: .15rem solid color-mix(in srgb, var(--certificate-muted) 65%, transparent);
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--certificate-accent) 18%, transparent);
+      color: var(--certificate-accent);
+      font-size: 1.5rem;
+      letter-spacing: 0;
+    }
+
+    .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__step:first-child .custom-certificate-info-card__mobile-number {
+      width: 5.6rem;
+      height: 5.6rem;
+      border: .5rem solid color-mix(in srgb, var(--certificate-accent) 35%, transparent);
+      background: var(--certificate-accent);
+      color: var(--certificate-icon-background);
+    }
+
+    .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__icon-wrap {
+      display: none;
+    }
+
+    .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__content,
+    .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__step--no-icon .custom-certificate-info-card__content {
+      grid-column: auto;
+      min-width: 0;
+      padding: 0;
+    }
+
+    .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__step-label {
+      display: block;
+      margin: 0 0 .8rem;
+      color: var(--certificate-accent);
+      font-size: 1.1rem;
+      letter-spacing: .08rem;
+      line-height: 1.25;
+    }
+
+    .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__step-heading {
+      max-width: none;
+      margin: 0 0 .8rem;
+      font-size: 1.35rem;
+      line-height: 1.25;
+    }
+
+    .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__description {
+      max-width: 14.5rem;
+      margin: 0 auto;
+      font-size: 1.15rem;
+      line-height: 1.5;
+    }
+
+    .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__description p {
+      margin-top: 0;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .custom-certificate-info-card__step {
+      display: grid;
+      grid-template-columns: 4.8rem 3.8rem minmax(0, 1fr);
+      align-items: start;
+      gap: .9rem;
+      min-height: 8.6rem;
+      padding: 1.7rem 1.5rem;
+      border-radius: .8rem;
+      background: #f3f4f7;
+      text-align: left;
+    }
+
+    .custom-certificate-info-card__step:last-child {
+      padding-bottom: 1.7rem;
+    }
+
+    .custom-certificate-info-card__mobile-number {
+      display: grid;
+      width: 3.5rem;
+      height: 3.5rem;
+      place-items: center;
+      border-radius: 50%;
+      background: #061a2b;
+      color: #f0b74f;
+      font-family: Value Sans Bold, sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: .05rem;
+      line-height: 1;
+    }
+
+    .custom-certificate-info-card__icon-wrap {
+      width: 3.4rem;
+      height: 3.4rem;
+      margin: 0;
+      border: 0;
+      background: transparent;
+    }
+
+    .custom-certificate-info-card__icon {
+      width: 3.2rem;
+      height: 3.2rem;
+      border-width: .15rem;
+    }
+
+    .custom-certificate-info-card__icon-text {
+      font-size: 1.8rem;
+    }
+
+    .custom-certificate-info-card__content {
+      min-width: 0;
+      padding: 0;
+    }
+
+    .custom-certificate-info-card__step-label {
+      display: none;
+    }
+
+    .custom-certificate-info-card__step-heading {
+      max-width: none;
+      margin: 0;
+      font-size: 1.4rem;
+      letter-spacing: 0;
+      line-height: 1.25;
+    }
+
+    .custom-certificate-info-card__description {
+      max-width: none;
+      margin: .4rem 0 0;
+      font-size: 1.2rem;
+      line-height: 1.45;
+    }
+
+    .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__steps {
+      gap: 1.6rem;
+      overflow: visible;
+    }
+
+    .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__step {
+      --certificate-mobile-icon-size: min(36vw, 12rem);
+
+      grid-template-columns: var(--certificate-mobile-icon-size) minmax(0, 1fr);
+      align-items: center;
+      gap: 1.6rem;
+      min-height: 18rem;
+      padding: 1.8rem 1.5rem;
+      border-radius: 1.1rem;
+    }
+
+    .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__mobile-number {
+      position: absolute;
+      z-index: 2;
+      top: 1rem;
+      left: -.8rem;
+      width: 3.8rem;
+      height: 3.8rem;
+      font-size: 1.4rem;
+    }
+
+    .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__icon-wrap {
+      width: var(--certificate-mobile-icon-size);
+      height: var(--certificate-mobile-icon-size);
+      /* border: .6rem solid #d3cacc;
+      background: #d3cacc; */
+    }
+
+    .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__icon {
+      width: calc(var(--certificate-mobile-icon-size) - .8rem);
+      height: calc(var(--certificate-mobile-icon-size) - .8rem);
+      border-width: .1rem;
+    }
+
+    .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__content,
+    .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__step--no-icon .custom-certificate-info-card__content,
+    .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__step--no-icon .custom-certificate-info-card__mobile-number + .custom-certificate-info-card__content {
+      grid-column: 2;
+    }
+
+    .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__step-heading {
+      font-size: clamp(1.5rem, 4.2vw, 1.9rem);
+      line-height: 1.25;
+    }
+
+    .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__description {
+      margin-top: .7rem;
+      font-size: clamp(1.35rem, 3.7vw, 1.6rem);
+      line-height: 1.5;
+    }
+
+    .custom-certificate-info-card--mobile-card_list .custom-certificate-info-card__description p {
+      margin-top: 0;
+    }
+  }
+{% endstylesheet %}
+
+<script src="{{ 'variant-visibility.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Certificate info card",
+  "tag": "section",
+  "class": "section-custom-certificate-info-card",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "The science behind it"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How POSTreat™ Filters Your Water"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>POSTreat™ works as a second-stage post-filter, attached beneath your primary carbon filter elements in the lower chamber — no plumbing, no electricity, no specialist tools.</p>"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f5f8fd"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#071733"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Description color",
+      "default": "#697895"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Timeline line color",
+      "default": "#d3d7e2"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Icon border color",
+      "default": "#193d65"
+    },
+    {
+      "type": "color",
+      "id": "icon_background_color",
+      "label": "Icon background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "options": [
+        {
+          "value": "card_list",
+          "label": "Card list"
+        },
+        {
+          "value": "circle_grid",
+          "label": "Circle grid"
+        }
+      ],
+      "default": "card_list"
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "label": "Section visibility",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always"
+        },
+        {
+          "value": "variant_ids",
+          "label": "Selected variant IDs"
+        }
+      ],
+      "default": "always"
+    },
+    {
+      "type": "textarea",
+      "id": "variant_ids",
+      "label": "Section variant IDs",
+      "info": "Comma-separated variant IDs that should display this section"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "step_label",
+          "label": "Label",
+          "default": "Step 01"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Circle text",
+          "default": "01"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon image"
+        },
+        {
+          "type": "text",
+          "id": "icon_alt",
+          "label": "Icon alt text"
+        },
+        {
+          "type": "select",
+          "id": "visibility",
+          "label": "Visibility",
+          "options": [
+            {
+              "value": "always",
+              "label": "Always"
+            },
+            {
+              "value": "variant_ids",
+              "label": "Selected variant IDs"
+            }
+          ],
+          "default": "always"
+        },
+        {
+          "type": "textarea",
+          "id": "variant_ids",
+          "label": "Variant IDs",
+          "info": "Comma-separated variant IDs that should display this step"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Fill Upper Chamber"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Pour tap water into the upper stainless steel chamber.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Certificate info card",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "step_label": "Step 01",
+            "badge_text": "01",
+            "heading": "Fill Upper Chamber",
+            "description": "<p>Pour tap water into the upper stainless steel chamber.</p>"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "step_label": "Step 02",
+            "badge_text": "02",
+            "heading": "Carbon Filtration",
+            "description": "<p>Coconut-shell carbon elements remove 99.9% of chlorine, heavy metals, microplastics & PFAS.</p>"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "step_label": "Step 03",
+            "badge_text": "03",
+            "heading": "POSTreat™ Stage",
+            "description": "<p>Water passes through FluoRid media inside AISI 304 steel casings, capturing fluoride efficiently.</p>"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "step_label": "Step 04",
+            "badge_text": "04",
+            "heading": "Pure Water Collected",
+            "description": "<p>Clean, mineral-rich water collects in the lower chamber - ready to drink.</p>"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

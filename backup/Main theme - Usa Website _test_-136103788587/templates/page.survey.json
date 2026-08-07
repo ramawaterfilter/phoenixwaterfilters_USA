@@ -1,0 +1,31 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "b74c754b-5cda-41d7-924f-0d9b99a91ca1": {
+      "type": "map",
+      "settings": {
+        "banner_text": "",
+        "show_form": true,
+        "form_title": "Snag a 15% discount off your next product order",
+        "klavyio_id": "klaviyo-form-Y22L4i",
+        "form_content": "<p>Complete the survey below to receive your code.</p>",
+        "show_map": false,
+        "col1_heading": "",
+        "col1_content": "",
+        "col2_heading": "",
+        "col2_content": ""
+      }
+    }
+  },
+  "order": [
+    "b74c754b-5cda-41d7-924f-0d9b99a91ca1"
+  ]
+}

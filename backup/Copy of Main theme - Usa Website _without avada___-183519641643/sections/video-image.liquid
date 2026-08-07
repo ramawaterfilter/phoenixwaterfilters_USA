@@ -1,0 +1,103 @@
+{% if product.metafields.custom.hide_posttreat_filter_hero and section.settings.is_posttreat %}
+{% else %}
+
+  <!-- <div class="swiper-container full-width-swiper ">
+    <div class="swiper-wrapper">
+      {% for block in section.blocks %}
+        {% if block.settings.video_id != blank %}
+          <div class="video-preview-container view-animation fade-up" data-wistia-vid-id="{{ block.settings.video_id }}"></div>
+        {% comment %} <div class="video-preview-container swiper-slide video">
+                
+                                      <script src="https://fast.wistia.com/embed/medias/{{ block.settings.video_id }}.jsonp" async></script></script><div class="wistia_responsive_padding" style="position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_embed wistia_async_{{ block.settings.video_id }} seo=true videoFoam=true" style="height:100%;position:relative;width:100%"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/{{ block.settings.video_id }}/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;"   loading="lazy"/></div></div></div>
+                              </div> {% endcomment %}
+        {% elsif block.settings.banner_image != blank and block.settings.video_id == blank %}
+          <div class="swiper-slide image">
+            {{ block.settings.banner_image | image_url: width: 1920 | image_tag }}
+          </div>
+        {% else %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div> -->
+
+ <div class="swiper-container full-width-swiper">
+  <div class="swiper-wrapper">
+    {% for block in section.blocks %}
+      {% if block.settings.video_id != blank %}
+        <div class="swiper-slide video">
+          <a href="https://phoenixwaterfilters.com/products/gravity-water-filter" >
+            <div class="video-preview-container view-animation fade-up" data-wistia-vid-id="{{ block.settings.video_id }}">
+              <script src="https://fast.wistia.com/embed/medias/{{ block.settings.video_id }}.jsonp" async></script>
+              <div class="wistia_responsive_padding" style="position:relative;">
+                <div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;">
+                  <div class="wistia_embed wistia_async_{{ block.settings.video_id }} seo=true videoFoam=true" style="height:100%;position:relative;width:100%">
+                    <div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;">
+                      <img src="https://fast.wistia.com/embed/medias/{{ block.settings.video_id }}/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;" loading="lazy"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+      {% elsif block.settings.banner_image != blank and block.settings.video_id == blank %}
+        <div class="swiper-slide image">
+          <a href="https://phoenixwaterfilters.com/products/gravity-water-filter" >
+            {{ block.settings.banner_image | image_url: width: 1920 | image_tag }}
+          </a>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+  <div class="swiper-pagination"></div>
+
+
+  {% comment %} /// 
+           {% endcomment %}
+
+
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Image / Video ",
+    "tag": "section",
+    "class": "section-video-image p-0 trigger-observer",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "is_posttreat",
+        "label": "PostTreat Hero Image?"
+      }
+
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Image / Video",
+        "settings": [
+          {
+            "type": "text",
+            "id": "video_id",
+            "label": "Wistia Video ID"
+          }, {
+            "type": "image_picker",
+            "id": "banner_image",
+            "label": "Large Image"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Image / Video"
+      }
+    ],
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    }
+  }
+{% endschema %}

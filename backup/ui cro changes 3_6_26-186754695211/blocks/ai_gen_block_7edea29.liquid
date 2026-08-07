@@ -1,0 +1,290 @@
+{% doc %}
+  @prompt
+     need to create the section to show the  3 flag indisde add the domain name and that clickable if custmer click that flag flag will i will add manually and give me the iamge place and 3 county and clic that link that go to respaonve website 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-country-selector-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding: {{ block.settings.section_padding }}px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-country-selector__container-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: {{ block.settings.flag_spacing }}px;
+    flex-wrap: wrap;
+  }
+
+  .ai-country-selector__item-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .ai-country-selector__item-{{ ai_gen_id }}:hover {
+    transform: translateY(-5px);
+    opacity: 0.8;
+  }
+
+  .ai-country-selector__flag-wrapper-{{ ai_gen_id }} {
+    width: {{ block.settings.flag_size }}px;
+    height: {{ block.settings.flag_size }}px;
+    border-radius: {{ block.settings.flag_border_radius }}px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .ai-country-selector__item-{{ ai_gen_id }}:hover .ai-country-selector__flag-wrapper-{{ ai_gen_id }} {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-country-selector__flag-wrapper-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-country-selector__flag-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-country-selector__flag-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-country-selector__country-name-{{ ai_gen_id }} {
+    font-size: {{ block.settings.country_name_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    text-align: center;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-country-selector__flag-wrapper-{{ ai_gen_id }} {
+      width: {{ block.settings.flag_size | times: 0.8 }}px;
+      height: {{ block.settings.flag_size | times: 0.8 }}px;
+    }
+
+    .ai-country-selector__country-name-{{ ai_gen_id }} {
+      font-size: {{ block.settings.country_name_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-country-selector-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-country-selector__container-{{ ai_gen_id }}">
+    {% for i in (1..3) %}
+      {% liquid
+        assign country_name_key = 'country_' | append: i | append: '_name'
+        assign country_url_key = 'country_' | append: i | append: '_url'
+        assign country_flag_key = 'country_' | append: i | append: '_flag'
+
+        assign country_name = block.settings[country_name_key]
+        assign country_url = block.settings[country_url_key]
+        assign country_flag = block.settings[country_flag_key]
+      %}
+
+      <a
+        href="{{ country_url }}"
+        class="ai-country-selector__item-{{ ai_gen_id }}"
+        {% if country_url == blank %}onclick="return false;" style="cursor: default;"{% endif %}
+      >
+        <div class="ai-country-selector__flag-wrapper-{{ ai_gen_id }}">
+          {% if country_flag %}
+            <img
+              src="{{ country_flag | image_url: width: 400 }}"
+              alt="{{ country_name | escape }}"
+              loading="lazy"
+              width="400"
+              height="400"
+            >
+          {% else %}
+            <div class="ai-country-selector__flag-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+        {% if country_name != blank %}
+          <div class="ai-country-selector__country-name-{{ ai_gen_id }}">
+            {{ country_name }}
+          </div>
+        {% endif %}
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Country selector",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Country 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "country_1_flag",
+      "label": "Flag image"
+    },
+    {
+      "type": "text",
+      "id": "country_1_name",
+      "label": "Country name",
+      "default": "United States"
+    },
+    {
+      "type": "url",
+      "id": "country_1_url",
+      "label": "Website URL"
+    },
+    {
+      "type": "header",
+      "content": "Country 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "country_2_flag",
+      "label": "Flag image"
+    },
+    {
+      "type": "text",
+      "id": "country_2_name",
+      "label": "Country name",
+      "default": "Canada"
+    },
+    {
+      "type": "url",
+      "id": "country_2_url",
+      "label": "Website URL"
+    },
+    {
+      "type": "header",
+      "content": "Country 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "country_3_flag",
+      "label": "Flag image"
+    },
+    {
+      "type": "text",
+      "id": "country_3_name",
+      "label": "Country name",
+      "default": "United Kingdom"
+    },
+    {
+      "type": "url",
+      "id": "country_3_url",
+      "label": "Website URL"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "flag_spacing",
+      "label": "Space between flags",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Flag style"
+    },
+    {
+      "type": "range",
+      "id": "flag_size",
+      "label": "Flag size",
+      "min": 60,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "flag_border_radius",
+      "label": "Flag border radius",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "country_name_size",
+      "label": "Country name size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Country selector"
+    }
+  ]
+}
+{% endschema %}

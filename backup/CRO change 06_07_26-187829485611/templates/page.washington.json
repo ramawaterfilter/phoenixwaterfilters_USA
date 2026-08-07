@@ -1,0 +1,668 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "custom_scroll_bar_axWVcM": {
+      "type": "custom-scroll-bar",
+      "blocks": {
+        "item_Uw3H8M": {
+          "type": "item",
+          "settings": {
+            "icon_image": "shopify://shop_images/5b7c44f131c141c0649c41c25ce72b11895b8750.png",
+            "icon_emoji": "★",
+            "text": "50+ Years of Pure Excellence",
+            "link": ""
+          }
+        },
+        "item_YBnt78": {
+          "type": "item",
+          "settings": {
+            "icon_image": "shopify://shop_images/c2258a78cc081770486b07d4ec6d6975e18a39b1.png",
+            "icon_emoji": "★",
+            "text": "Free Shipping on Orders $99+",
+            "link": ""
+          }
+        },
+        "item_aVGyBD": {
+          "type": "item",
+          "settings": {
+            "icon_image": "shopify://shop_images/76cf3079be9b7bf460b8fe249308fa0638c09279.png",
+            "icon_emoji": "★",
+            "text": "NSF Certified",
+            "link": ""
+          }
+        },
+        "item_V9jzFJ": {
+          "type": "item",
+          "settings": {
+            "icon_image": "shopify://shop_images/w.png",
+            "icon_emoji": "★",
+            "text": "Questions? Call Us at 1 (800) 917-0455",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "item_Uw3H8M",
+        "item_YBnt78",
+        "item_aVGyBD",
+        "item_V9jzFJ"
+      ],
+      "disabled": true,
+      "custom_css": [
+        ".section-announcement-bar {padding: 0px;}"
+      ],
+      "name": "Announcement Bar custom",
+      "settings": {
+        "bg_color": "#4c4861",
+        "text_color": "#ceccdc",
+        "separator_color": "rgba(0,0,0,0)",
+        "separator_style": "none",
+        "font_size": 14,
+        "font_weight": "400",
+        "icon_size": 14,
+        "icon_gap": 8,
+        "icon_invert": false,
+        "bar_height": 44,
+        "padding_v": 0,
+        "padding_h": 0,
+        "border_radius": 0,
+        "item_gap": 40,
+        "enable_scroll": true,
+        "speed": 60,
+        "direction": "left",
+        "pause_on_hover": true
+      }
+    },
+    "custom_banner_q9URyk": {
+      "type": "custom-banner",
+      "name": "Custom Banner",
+      "settings": {
+        "section_id": "banner-one",
+        "banner_width": "full",
+        "bg_image_desktop": "shopify://shop_images/Gemini_Generated_Image_eqsmj5eqsmj5eqsm_1.png",
+        "bg_image_mobile": "shopify://shop_images/Gemini_Generated_Image_eqsmj5eqsmj5eqsm_1_0bf8e3b9-4594-471a-97d7-3c78fa272490.png",
+        "banner_height_desktop": "adapt",
+        "height_desktop_small": 300,
+        "height_desktop_medium": 500,
+        "height_desktop_large": 700,
+        "banner_height_mobile": "medium",
+        "height_mobile_small": 300,
+        "height_mobile_medium": 500,
+        "height_mobile_large": 700,
+        "bg_color": "#000000",
+        "heading": "Your Washington Home Deserves Water You Can Actually Trust",
+        "text": "<p>TTHMs, HAA5, PFAS, lead, and nitrates are hiding in Washington tap water. Discover the best water filter in Washington - like Phoenix Gravity water filtration systems - that deliver clean, mineral‑rich drinking water without plumbing, pipes, or compromises.</p>",
+        "text_color": "#ffffff",
+        "button_label": "Find the Right Filter for You →",
+        "button_link": "shopify://products/gravity-water-filter",
+        "button_bg": "#1e3a5f",
+        "button_text_color": "#ffffff"
+      }
+    },
+    "custom_banner_4BWUJD": {
+      "type": "custom-banner",
+      "custom_css": [
+        "@media (max-width: 768px) {p, li {font-size: 12px; } ul {padding: 0px; } .banner-content {top: 10% !important; }}"
+      ],
+      "name": "Custom Banner Advanced",
+      "settings": {
+        "section_id": "banner-two",
+        "banner_width": "full",
+        "bg_image_desktop": "shopify://shop_images/Background_1.png",
+        "bg_image_mobile": "shopify://shop_images/Background_1.png",
+        "banner_height_desktop": "adapt",
+        "height_desktop_small": 300,
+        "height_desktop_medium": 500,
+        "height_desktop_large": 700,
+        "banner_height_mobile": "large",
+        "height_mobile_small": 300,
+        "height_mobile_medium": 500,
+        "height_mobile_large": 790,
+        "bg_color": "#000000",
+        "heading": "Washington Water Contamination Issues",
+        "text": "<p>Washington's drinking water quality report reveals a scary statistic. There are over 37 specific chemicals that have been detected while 13 of those chemicals have been found to be above safe levels established by independent tests. There is currently no way for everyday citizens to track the presence of these chemicals in a normal glass of water. Washington had one of the worst lead contamination situations in the country in 2004 and only a small percentage of those lead pipes have been replaced.<br/><br/>There are more than 41,000 lead service lines still to be replaced. Washington Water Contamination is not an issue of the past - it is a matter of Public Health that demands action greater than mere Compliance Paper work.<br/></p>",
+        "text_color": "#1e3a5f",
+        "button_label": "",
+        "button_link": "",
+        "button_bg": "#1e3a5f",
+        "button_text_color": "#ffffff"
+      }
+    },
+    "icon_links_8D9bRP": {
+      "type": "icon-links",
+      "blocks": {
+        "icon_link_xWgEdd": {
+          "type": "icon_link",
+          "settings": {
+            "label": "",
+            "link": "",
+            "heading2": "Atrazine",
+            "heading3": "<p>Silently disrupts hormonal balance</p>"
+          }
+        },
+        "icon_link_Njz8MA": {
+          "type": "icon_link",
+          "settings": {
+            "label": "",
+            "link": "",
+            "heading2": "TTHMs",
+            "heading3": "<p>Accumulates in the bloodstream</p>"
+          }
+        },
+        "icon_link_yBUPtk": {
+          "type": "icon_link",
+          "settings": {
+            "label": "",
+            "link": "",
+            "heading2": "Chloramine",
+            "heading3": "<p>Worsens lead pipe leaching</p>"
+          }
+        },
+        "icon_link_pwTYdQ": {
+          "type": "icon_link",
+          "settings": {
+            "label": "",
+            "link": "",
+            "heading2": "Fluoride",
+            "heading3": "<p>Harmful at excessive levels</p>"
+          }
+        },
+        "icon_link_Dra78G": {
+          "type": "icon_link",
+          "settings": {
+            "label": "",
+            "link": "",
+            "heading2": "Lead",
+            "heading3": "<p>Toxic metal from pipes</p>"
+          }
+        }
+      },
+      "block_order": [
+        "icon_link_xWgEdd",
+        "icon_link_Njz8MA",
+        "icon_link_yBUPtk",
+        "icon_link_pwTYdQ",
+        "icon_link_Dra78G"
+      ],
+      "custom_css": [
+        "section.performance-section {padding-top: 60px; padding-bottom: 40px;}",
+        ".icon-item {flex: 1 1 150px; max-width: 230px; background: #f5f5f5; height: 230px; display: flex; align-items: center; flex-direction: column; justify-content: center;}",
+        ".icon-grid {gap: 9px;}",
+        "span {text-decoration: none !important; font-weight: 500;}",
+        ".icon-item {max-width: 174px; height: 150px;}"
+      ],
+      "name": "Icon Links Grid",
+      "settings": {
+        "heading": "Contaminants Found In Washington Water",
+        "heading1": "<p>Washington's tap water and well water carry a mix of chemical, industrial, and agricultural contaminants - many invisible, odorless, and undetectable without testing.</p>",
+        "l1": "",
+        "a1": ""
+      }
+    },
+    "icon_links_WiFXUN": {
+      "type": "icon-links",
+      "blocks": {
+        "icon_link_erhn4n": {
+          "type": "icon_link",
+          "settings": {
+            "icon": "shopify://shop_images/s.svg",
+            "label": "",
+            "link": "/",
+            "heading2": "800k Happy Customers",
+            "heading3": ""
+          }
+        },
+        "icon_link_8X3ibH": {
+          "type": "icon_link",
+          "settings": {
+            "icon": "shopify://shop_images/1.svg",
+            "label": "",
+            "link": "#",
+            "heading2": "$1,000s Cheaper Than Bottles & In-Home Systems",
+            "heading3": ""
+          }
+        },
+        "icon_link_MiXgdT": {
+          "type": "icon_link",
+          "settings": {
+            "icon": "shopify://shop_images/l.svg",
+            "label": "",
+            "link": "#",
+            "heading2": "Less than 5 cents Per Gallon",
+            "heading3": ""
+          }
+        },
+        "icon_link_4HUKNa": {
+          "type": "icon_link",
+          "settings": {
+            "icon": "shopify://shop_images/n.svg",
+            "label": "",
+            "link": "#",
+            "heading2": "No Plumbing Required",
+            "heading3": ""
+          }
+        },
+        "icon_link_GwQeVG": {
+          "type": "icon_link",
+          "settings": {
+            "icon": "shopify://shop_images/Vector.svg",
+            "label": "",
+            "link": "#",
+            "heading2": "50+ Years Of Experience",
+            "heading3": ""
+          }
+        }
+      },
+      "block_order": [
+        "icon_link_erhn4n",
+        "icon_link_8X3ibH",
+        "icon_link_MiXgdT",
+        "icon_link_4HUKNa",
+        "icon_link_GwQeVG"
+      ],
+      "custom_css": [
+        ".icon-circle {background-color: transparent;}",
+        ".icon-circle img {max-width: 51%; height: auto;}",
+        ".icon-circle {margin-bottom: 0px;}",
+        ".container {border-top: 1px solid #153a5b; padding-top: 40px; margin-top: 34px;}"
+      ],
+      "name": "Icon Links Grid",
+      "settings": {
+        "heading": "What Makes Phoenix Gravity Water Filters the Gold Standard for Washington Homes? ",
+        "heading1": "<p>The best home water filtration in Washington doesn't just meet the standard - it raises it. Here's what sets Phoenix apart:</p>",
+        "l1": "View Lab Report",
+        "a1": "https://api.pure-filters.com/media/cms/page/fichiers/phoenix-report.pdf"
+      }
+    },
+    "features_KdN6Kd": {
+      "type": "features",
+      "blocks": {
+        "feature_col_2_KBpXf6": {
+          "type": "feature_col_2",
+          "settings": {
+            "title": "Step 2 : Fill  Fill with tap water",
+            "icon": "shopify://shop_images/Container.svg"
+          }
+        },
+        "feature_col_1_NjRcYV": {
+          "type": "feature_col_1",
+          "settings": {
+            "title": "Step 1 : Assemble <br>Assemble in 5 minutes",
+            "icon": "shopify://shop_images/Experience_icon_showing_Phoenix_s_commitment_to_quality_water_solutions.svg"
+          }
+        },
+        "feature_col_2_CmjNgm": {
+          "type": "feature_col_2",
+          "settings": {
+            "title": "Step 4 : Enjoy <br>Enjoy pure water",
+            "icon": "shopify://shop_images/icon-bottle.svg_fill.svg"
+          }
+        },
+        "feature_col_1_Uc4VgH": {
+          "type": "feature_col_1",
+          "settings": {
+            "title": "Step 3 : Filter <br>Let gravity filter",
+            "icon": "shopify://shop_images/Water_drop_icon_symbolizing_purity_and_effective_filtration_with_Phoenix_Gravity_systems.svg"
+          }
+        }
+      },
+      "block_order": [
+        "feature_col_2_KBpXf6",
+        "feature_col_1_NjRcYV",
+        "feature_col_2_CmjNgm",
+        "feature_col_1_Uc4VgH"
+      ],
+      "custom_css": [
+        "@media (min-width: 768px) {{padding-top: 150px; }}",
+        "p.title {font-family: Inter; font-weight: 400; font-size: 18px !important; text-align: center;}"
+      ],
+      "name": "Features",
+      "settings": {
+        "heading": "",
+        "content": "",
+        "section_video_bg": "gshkwot1gv",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "testimonials_meWhBQ": {
+      "type": "testimonials",
+      "blocks": {
+        "text_XBWURm": {
+          "type": "text",
+          "settings": {
+            "quote": "<p>I’m really happy that I made this choice after looking into purifying and distilling my water, I looked into electric ones and natural steam ones and found that both would cost a lot of time and energy waste by needing to purifying the water up to 4hrs at a time. I learned that the materials used in both options was of poor quality! </p>",
+            "reviewer": "Victoria"
+          }
+        },
+        "text_CqGqrH": {
+          "type": "text",
+          "settings": {
+            "quote": "<p>We were looking for a solid filter that would be easy to maintain, easy to build, long lasting, and effective. Meets the mark on all accounts!</p>",
+            "reviewer": "Andrew Narduzzi"
+          }
+        },
+        "text_W6wdrJ": {
+          "type": "text",
+          "settings": {
+            "quote": "<p>Bought one from Amazon and I must say I had the other well named one from another company and Phoenix is better, the other company is terribly bad at customer services and rude and don’t care if you have a problem like when I ordered things that didn’t come and they literally said I was wrong and I got my things but I didn’t and called me a thief….very rude and unprofessional.</p>",
+            "reviewer": "David"
+          }
+        }
+      },
+      "block_order": [
+        "text_XBWURm",
+        "text_CqGqrH",
+        "text_W6wdrJ"
+      ],
+      "custom_css": [
+        ".row.justify-content-center {justify-content: center !important;}",
+        "p.review-totals.mb-0 {text-align: center;}",
+        ".col-11 {text-align: center;}",
+        ".btn-container {min-width: 100%; align-items: center;}",
+        "@media (min-width: 768px) {.container {max-width: 98%; margin-right: 0px; padding-right: 0px; } h2 {width: 70%; margin: 0 auto; padding-bottom: 9px; }}",
+        ".section-testimonials {padding-top: 50px; padding-bottom: 11px;}"
+      ],
+      "name": "Testimonials",
+      "settings": {
+        "layout": "style-1",
+        "heading": "Americans Have Trusted OurWater Filters For Over 50+ Years",
+        "paragraph": "",
+        "sub_header": "Based On 7,495 global reviews",
+        "button_text": "View All Reviews",
+        "button_url": "shopify://pages/reviews",
+        "button_aftertext": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "custom_blog_cexMLA": {
+      "type": "custom-blog",
+      "custom_css": [
+        "a {font-family: Open Sans; font-size: 18.4px; line-height: 30px; color: #153a5b; letter-spacing: 0.25px; text-transform: uppercase;}",
+        ".ra-card-footer {display: none;}",
+        "@media (min-width: 768px) {h2 {width: 60%; margin: 0 auto; letter-spacing: 0px; } .ra-grid {max-width: 98% !important; }}"
+      ],
+      "name": "Recent Articles",
+      "settings": {
+        "blog": "post",
+        "heading": "Water Filter Guides for Miami Homes & FAQS",
+        "heading1": "<p>Learn about Miami water contamination issues, tap water safety, and how to choose the right gravity  filter for your Miami home - plus answers to the questions we hear most.</p>",
+        "posts_per_page": 3,
+        "desktop_columns": 3,
+        "tablet_columns": 2,
+        "mobile_columns": 1,
+        "card_gap": 24,
+        "container_width": 1200,
+        "container_padding": 24,
+        "section_padding_top": 32,
+        "section_padding_bottom": 28,
+        "section_bg_color": "#ffffff",
+        "heading_color": "#153a5b",
+        "heading_font_size": 52,
+        "heading_font_weight": "600",
+        "heading_alignment": "center",
+        "heading_margin_bottom": 40,
+        "card_bg_color": "#ffffff",
+        "card_border_radius": 0,
+        "card_border_width": 0,
+        "card_border_color": "#ffffff",
+        "card_padding": 20,
+        "image_aspect_ratio": "1/1",
+        "image_placeholder_color": "#c5c5c5",
+        "show_date": true,
+        "show_last_updated": false,
+        "meta_text_color": "#6b7280",
+        "meta_label_color": "#374151",
+        "meta_font_size": 12,
+        "title_color": "#111827",
+        "title_hover_color": "#1d4ed8",
+        "title_font_size": 18,
+        "title_font_weight": "700",
+        "title_lines": 3,
+        "show_author": false,
+        "author_color": "#6b7280",
+        "read_more_label": "Read full article",
+        "read_more_color": "#1d4ed8",
+        "read_more_hover_color": "#1e40af",
+        "read_more_font_size": 13,
+        "read_more_font_weight": "600",
+        "load_more_label": "View More Blogs",
+        "button_bg_color": "#ffffff",
+        "button_bg_hover_color": "#04113a",
+        "button_text_color": "#2b2b4e",
+        "button_text_hover_color": "#ffffff",
+        "button_border_width": 1,
+        "button_border_color": "#2b2b4e",
+        "button_border_radius": 40,
+        "button_padding_y": 16,
+        "button_padding_x": 80,
+        "button_font_size": 14,
+        "button_font_weight": "400",
+        "button_margin_top": 20
+      }
+    },
+    "accordion_X9KDBB": {
+      "type": "accordion",
+      "blocks": {
+        "text_8HeDjV": {
+          "type": "text",
+          "settings": {
+            "question": "Is Miami's water quality safe?",
+            "answer": "<p>The water quality in Miami is at or above the minimum federal level required by law; however, Miami's water may contain pollutants such as microplastics, lead, and disinfection byproducts. Due to local conditions and old infrastructure, additional filtration is often suggested.</p>"
+          }
+        },
+        "text_QbTBtT": {
+          "type": "text",
+          "settings": {
+            "question": "What contaminants does Phoenix Gravity remove from Miami tap water?",
+            "answer": "<p>Phoenix Gravity Water Filters eliminate 99.9% of all local pollutants, such as lead, microplastics, PFASs, and byproducts of disinfection (TTHMs/ HAA5). It also provides efficient filtration for industrial runoff or the nitrates of the Miami water quality report.</p>"
+          }
+        },
+        "text_XbcVQV": {
+          "type": "text",
+          "settings": {
+            "question": "Does Phoenix Gravity ship to Miami and South Florida?",
+            "answer": "<p>Of course! Phoenix Gravity provides free shipping to Miami and all of South Florida. We ship out quickly, so you will have great-tasting, clean drinking water ASAP.</p>"
+          }
+        },
+        "text_NXHddK": {
+          "type": "text",
+          "settings": {
+            "question": "What warranty and guarantee come with the Phoenix Gravity filter?",
+            "answer": "<p>Phoenix Gravity Filter is covered by a 10-year warranty, and if, for any reason, you decide you don't like the water, you can return it within 100 days.</p>"
+          }
+        },
+        "text_yUeHba": {
+          "type": "text",
+          "settings": {
+            "question": "How often do I need to replace the Carbon filter elements?",
+            "answer": "<p>One pair of Phoenix Gravity Carbon filter elements is good for up to 5,500 gallons of water. So for most homes in Miami, you will be enjoying many years of fresh water at a price of less than 5 cents per gallon.</p>"
+          }
+        },
+        "text_fE9Y4D": {
+          "type": "text",
+          "settings": {
+            "question": "Do I need a plumber or any installation for Phoenix Gravity Filters?",
+            "answer": "<p>There is no need for a plumber because of the tool-free gravity design of the system; there is no installation required and no power needed. The system offers the easiest solution to keep your Miami tap water safe from lead and microplastics and provide you with clean drinking water.</p>"
+          }
+        },
+        "text_XzRedf": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "question": "Why is chloramine used in New York water?",
+            "answer": "<p>The main reason chloramines are added to NY water is because they provide protection for the water by serving as a disinfectant while being transported through pipes to customers. Chloramines can leave a particular flavor in the water therefore, they may need to be filtered to improve their quality. </p>"
+          }
+        },
+        "text_bVMT6E": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "question": "What is chromium 6 in New York water and should I worry?",
+            "answer": "<p>Chromium (VI) is a toxic heavy metal that is found in trace amounts in NY water and is associated with industrial pollution. The greatest worry is for long-term exposure; therefore, any kind of effective filtration is very important. </p>"
+          }
+        }
+      },
+      "block_order": [
+        "text_8HeDjV",
+        "text_QbTBtT",
+        "text_XbcVQV",
+        "text_NXHddK",
+        "text_yUeHba",
+        "text_fE9Y4D",
+        "text_XzRedf",
+        "text_bVMT6E"
+      ],
+      "custom_css": [
+        "{background: #f5f5f5; padding-top: 40px !important; padding-bottom: 30px !important;}",
+        "@media (min-width: 768px) {.container {width: 57%; }}"
+      ],
+      "name": "Dropdown Accordion",
+      "settings": {
+        "heading": "Frequently Asked Questions About Miami Water",
+        "content": "",
+        "show_shipping": false,
+        "accordion_styles": "full-width",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "product_slider_bL3VzA": {
+      "type": "product-slider",
+      "custom_css": [
+        "@media (min-width: 768px) {h2.text-center {font-family: Open Sans; font-weight: 600; font-size: 52px; letter-spacing: 0%; padding-top: 30px; padding-bottom: 12px; } .container {max-width: 98% !important; }}",
+        " {padding-top: 50px;}",
+        "span {text-decoration: none !important; font-weight: 500;}",
+        "p {padding-bottom: 26px;}"
+      ],
+      "name": "Product Slider",
+      "settings": {
+        "heading": "Water Filter Guides for Miami Homes & FAQS",
+        "select-products": [
+          "carbon-filter-element",
+          "gravity-water-filter",
+          "fluoride-refill-media",
+          "wooden-stand-for-gravity-water-filter-system",
+          "pp-plug",
+          "fluoride-reduction-elements",
+          "knob",
+          "stainless-steel-spigot"
+        ],
+        "select-collection": "",
+        "slide_limit": 6
+      }
+    },
+    "custom_inquery_form_RWiLyd": {
+      "type": "custom-inquery-form",
+      "name": "Contact Form",
+      "settings": {
+        "icon1": "shopify://shop_images/Background_1.svg",
+        "icon2": "shopify://shop_images/Background_2.svg",
+        "layout": "equal",
+        "vertical_align": "center",
+        "max_width": 1200,
+        "column_gap": 64,
+        "section_padding_vertical": 72,
+        "section_padding_horizontal": 40,
+        "bg_color": "#ffffff",
+        "primary_color": "#1a2e4a",
+        "accent_color": "#1a3a5c",
+        "text_color": "#4a5568",
+        "input_bg": "#ffffff",
+        "input_border_color": "#cbd5e0",
+        "info_box_bg": "#f5f3f1",
+        "font_family": "inherit",
+        "body_font_size": 15,
+        "show_header": true,
+        "header_title": "Questions? We'd love to hear from you.",
+        "header_bg_color": "#1a3a5c",
+        "header_text_color": "#ffffff",
+        "header_text_align": "center",
+        "header_font_weight": "600",
+        "header_letter_spacing": 0,
+        "header_padding_vertical": 28,
+        "tagline": "Have a question? Share it with us, we'll respond within 24 hours.",
+        "tagline_font_size": 32,
+        "tagline_font_weight": "600",
+        "tagline_margin_bottom": 24,
+        "description": "",
+        "show_contact_box": true,
+        "contact_box_direction": "row",
+        "info_box_radius": 10,
+        "info_box_padding": 20,
+        "info_box_margin_top": 60,
+        "phone_label": "Phone Number",
+        "phone_number": "1 (800) 917-0455",
+        "email_label": "Email Address",
+        "email_address": "hello@yourstore.com",
+        "show_name_field": true,
+        "split_name_fields": false,
+        "name_placeholder": "Full Name",
+        "first_name_placeholder": "First Name",
+        "last_name_placeholder": "Last Name",
+        "name_required": true,
+        "show_email_field": true,
+        "email_placeholder": "Email Address",
+        "email_required": true,
+        "show_phone_field": true,
+        "phone_placeholder": "Phone Number",
+        "phone_required": false,
+        "show_subject_field": false,
+        "subject_as_dropdown": false,
+        "subject_placeholder": "Subject",
+        "subject_options": "General Inquiry, Order Support, Returns, Wholesale",
+        "show_message_field": true,
+        "message_placeholder": "Your Message",
+        "message_required": false,
+        "textarea_resize": "both",
+        "textarea_height": 45,
+        "input_font_size": 14,
+        "input_padding_v": 12,
+        "input_padding_h": 16,
+        "input_border_width": 1,
+        "input_radius": 6,
+        "input_gap": 4,
+        "button_label": "Submit",
+        "button_text_color": "#ffffff",
+        "button_font_size": 15,
+        "button_font_weight": "600",
+        "button_text_transform": "none",
+        "button_letter_spacing": 0.5,
+        "button_padding_v": 16,
+        "button_padding_h": 24,
+        "button_radius": 6,
+        "button_width": "100%",
+        "show_success_message": true,
+        "success_message": "Thank you! We'll be in touch within 24 hours.",
+        "show_divider": false,
+        "divider_color": "#f5f3f1",
+        "divider_width": 1
+      }
+    }
+  },
+  "order": [
+    "custom_scroll_bar_axWVcM",
+    "custom_banner_q9URyk",
+    "custom_banner_4BWUJD",
+    "icon_links_8D9bRP",
+    "icon_links_WiFXUN",
+    "features_KdN6Kd",
+    "testimonials_meWhBQ",
+    "custom_blog_cexMLA",
+    "accordion_X9KDBB",
+    "product_slider_bL3VzA",
+    "custom_inquery_form_RWiLyd"
+  ]
+}

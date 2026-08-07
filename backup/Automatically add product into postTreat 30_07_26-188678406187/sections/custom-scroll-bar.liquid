@@ -1,0 +1,428 @@
+{% comment %}
+  Announcement Bar — Scrolling Marquee Section
+  File: sections/announcement-bar.liquid
+  Features: image_picker icon upload + emoji fallback, full schema customisation
+{% endcomment %}
+
+{%- assign s = section.settings -%}
+
+<style>
+  #ann-bar-{{ section.id }} {
+    background: {{ s.bg_color }};
+    padding: {{ s.padding_v }}px {{ s.padding_h }}px;
+    border-radius: {{ s.border_radius }}px;
+    overflow: hidden;
+    height: {{ s.bar_height }}px;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  #ann-bar-{{ section.id }} .ann-track {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    will-change: transform;
+    animation: ann-scroll-{{ section.id }} {{ s.speed }}s linear infinite;
+    {% if s.direction == 'right' %}
+      animation-direction: reverse;
+    {% endif %}
+  }
+
+  {% if s.pause_on_hover %}
+  #ann-bar-{{ section.id }}:hover .ann-track {
+    animation-play-state: paused;
+  }
+  {% endif %}
+
+  {% unless s.enable_scroll %}
+  #ann-bar-{{ section.id }} .ann-track {
+    animation: none !important;
+    justify-content: center;
+    width: 100%;
+  }
+  {% endunless %}
+
+  @keyframes ann-scroll-{{ section.id }} {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  #ann-bar-{{ section.id }} .ann-item {
+    display: inline-flex;
+    align-items: center;
+    gap: {{ s.icon_gap }}px;
+    margin: 0 {{ s.item_gap }}px;
+    font-size: {{ s.font_size }}px;
+    font-weight: {{ s.font_weight }};
+    color: {{ s.text_color }};
+    text-decoration: none;
+    cursor: default;
+  }
+
+  #ann-bar-{{ section.id }} a.ann-item {
+    cursor: pointer;
+  }
+
+  #ann-bar-{{ section.id }} .ann-item:hover {
+    opacity: 0.82;
+  }
+
+  #ann-bar-{{ section.id }} .ann-icon-img {
+    width: {{ s.icon_size }}px;
+    height: {{ s.icon_size }}px;
+    object-fit: contain;
+    display: inline-block;
+    flex-shrink: 0;
+    {% if s.icon_invert %}
+      filter: brightness(0) invert(1);
+    {% endif %}
+  }
+
+  #ann-bar-{{ section.id }} .ann-icon-emoji {
+    font-size: {{ s.icon_size }}px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  #ann-bar-{{ section.id }} .ann-sep {
+    display: inline-block;
+    color: {{ s.separator_color }};
+    font-size: {{ s.font_size }}px;
+    margin: 0 {{ s.item_gap | divided_by: 2 }}px;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+</style>
+
+{%- unless section.blocks == blank -%}
+<div id="ann-bar-{{ section.id }}" role="marquee" aria-label="Announcements">
+  <div class="ann-track">
+
+    {%- comment -%} Repeat 4× for seamless infinite loop {%- endcomment -%}
+    {%- for _pass in (1..4) -%}
+      {%- for block in section.blocks -%}
+        {%- assign bs = block.settings -%}
+
+        {%- if bs.link != blank -%}
+          <a href="{{ bs.link }}" class="ann-item" {{ block.shopify_attributes }}>
+        {%- else -%}
+          <span class="ann-item" {{ block.shopify_attributes }}>
+        {%- endif -%}
+
+          {%- comment -%}
+            Icon priority:
+            1. Uploaded image  (image_picker → bs.icon_image)
+            2. Emoji / text    (text field  → bs.icon_emoji)
+            3. Nothing
+          {%- endcomment -%}
+
+          {%- if bs.icon_image != blank -%}
+            {{
+              bs.icon_image
+              | image_url: width: 80
+              | image_tag:
+                class: 'ann-icon-img',
+                alt: bs.text,
+                loading: 'lazy',
+                width: s.icon_size,
+                height: s.icon_size
+            }}
+          {%- elsif bs.icon_emoji != blank -%}
+            <span class="ann-icon-emoji" aria-hidden="true">{{ bs.icon_emoji }}</span>
+          {%- endif -%}
+
+          <span class="ann-text">{{ bs.text | escape }}</span>
+
+        {%- if bs.link != blank -%}</a>{%- else -%}</span>{%- endif -%}
+
+        {%- unless forloop.last -%}
+          {%- case s.separator_style -%}
+            {%- when 'bar'  -%}<span class="ann-sep" aria-hidden="true">|</span>
+            {%- when 'dot'  -%}<span class="ann-sep" aria-hidden="true">•</span>
+            {%- when 'star' -%}<span class="ann-sep" aria-hidden="true">★</span>
+            {%- when 'dash' -%}<span class="ann-sep" aria-hidden="true">—</span>
+          {%- endcase -%}
+        {%- endunless -%}
+
+      {%- endfor -%}
+
+      {%- if s.separator_style != 'none' -%}
+        {%- case s.separator_style -%}
+          {%- when 'bar'  -%}<span class="ann-sep" aria-hidden="true">|</span>
+          {%- when 'dot'  -%}<span class="ann-sep" aria-hidden="true">•</span>
+          {%- when 'star' -%}<span class="ann-sep" aria-hidden="true">★</span>
+          {%- when 'dash' -%}<span class="ann-sep" aria-hidden="true">—</span>
+        {%- endcase -%}
+      {%- endif -%}
+
+    {%- endfor -%}
+
+  </div>
+</div>
+{%- endunless -%}
+
+
+{% schema %}
+{
+  "name": "Announcement Bar custom",
+  "tag": "section",
+  "class": "section-announcement-bar",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "🎨 Appearance"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background colour",
+      "default": "#1a1a2e"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text colour",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator colour",
+      "default": "#888888"
+    },
+    {
+      "type": "select",
+      "id": "separator_style",
+      "label": "Separator style",
+      "default": "star",
+      "options": [
+        { "value": "bar",  "label": "Bar  ( | )" },
+        { "value": "dot",  "label": "Dot  ( • )" },
+        { "value": "star", "label": "Star ( ★ )" },
+        { "value": "dash", "label": "Dash ( — )" },
+        { "value": "none", "label": "None" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "🔤 Typography"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size (px)",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font weight",
+      "default": "400",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "🖼️ Icon Settings"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size (px)",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "icon_gap",
+      "label": "Icon ↔ text gap (px)",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "default": 7
+    },
+    {
+      "type": "checkbox",
+      "id": "icon_invert",
+      "label": "Invert uploaded icon colour (white on dark bg)",
+      "info": "Turns dark SVG/PNG icons white — useful on dark backgrounds.",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "📐 Spacing"
+    },
+    {
+      "type": "range",
+      "id": "bar_height",
+      "label": "Bar height (px)",
+      "min": 28,
+      "max": 80,
+      "step": 2,
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "padding_v",
+      "label": "Padding vertical (px)",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_h",
+      "label": "Padding horizontal (px)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius (px)",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "label": "Gap between items (px)",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Scroll Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_scroll",
+      "label": "Enable scrolling",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll speed (lower = faster)",
+      "info": "Animation duration in seconds. Lower value = faster scroll.",
+      "min": 5,
+      "max": 120,
+      "step": 5,
+      "default": 30
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Scroll direction",
+      "default": "left",
+      "options": [
+        { "value": "left",  "label": "← Left (default)" },
+        { "value": "right", "label": "→ Right" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Announcement Item",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "header",
+          "content": "🖼️ Icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Upload icon image",
+          "info": "SVG, PNG or WebP with transparent background recommended. If uploaded, this overrides the emoji below."
+        },
+        {
+          "type": "text",
+          "id": "icon_emoji",
+          "label": "Or use emoji (if no image uploaded)",
+          "info": "Paste any emoji: ★ ✔ 🚚 📞 🛡 🎁 🏷 ℹ",
+          "default": "★"
+        },
+        {
+          "type": "header",
+          "content": "✏️ Content"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Announcement text",
+          "default": "Your announcement here"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Bar custom",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "icon_emoji": "★",
+            "text": "50+ Years of Pure Excellence"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon_emoji": "🚚",
+            "text": "Free Shipping on Orders $99+"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon_emoji": "✔",
+            "text": "NSF Certified"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon_emoji": "📞",
+            "text": "Questions? Call Us at 1 (800) 917-0455"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

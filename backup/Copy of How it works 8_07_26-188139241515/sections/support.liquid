@@ -1,0 +1,96 @@
+{% schema %}
+{
+  "name": "Support Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Banner Heading",
+      "default": "Register your product now and activate the 10-year warranty on your stainless steel system."
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link",
+      "default": "/"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Lab Reports"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Support Section",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="container-fluid bg-primary banner">
+  <div class="row justify-content-center align-items-center">
+    <div class="col-12 text-light text-center" style="margin-top: 100px;">
+      <h2 class="text-light_form">
+        {{ section.settings.heading }}
+      </h2>
+      <p style="font-size:18px">(Product purchases from this store do not need registration they are automatically registered.)
+ </p>
+      <a href="{{ section.settings.button_link }}" class="button_text_1">
+        {{ section.settings.button_text }}
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<style>
+
+
+  h2.text-light_form {
+     font-size: 55px;
+  color: #fff;
+  width: 50%;
+  text-align: center;
+  margin: 0 auto 10px auto; /* centers the element horizontally and keeps the bottom margin */
+  display: block;
+}
+  .button_text_1 {
+    background: #fff;
+        margin-bottom: 100px;
+    border: none;
+    color: #153a5b;
+    border-radius: 50rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: inline-block;
+    font-size: 1.25rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 147.465%;
+    letter-spacing: .15rem;
+    max-width: 100%;
+    padding: 1.25rem 2rem;
+    font-family: SF Pro Display, sans-serif;
+    margin-top: 1rem;
+  }
+
+  .button_text_1:hover {
+    background:rgb(86 117 145) !important;
+    color: #fff !important;
+    text-decoration: none;
+  }
+
+  .text-light_form {
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 768px) {
+  h2.text-light_form {
+    font-size: 30px;        width: 100%;
+  
+  }
+}
+</style>

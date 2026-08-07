@@ -1,0 +1,19 @@
+{% doc %}
+Renders the product hero description and USP metafields.
+@param {product} product - Product to render.
+@example
+{% render 'product-hero-description', product: product %}
+{% enddoc %}
+
+{% if product.description != blank or product.metafields.custom.product_usps.value.size > 0 %}
+  <div class="product-description">
+    {{ product.description }}
+    {% if product.metafields.custom.product_usps.value.size > 0 %}
+      <ul class="product-description__usps">
+        {% for usp in product.metafields.custom.product_usps.value %}
+          <li>{{ usp }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+{% endif %}

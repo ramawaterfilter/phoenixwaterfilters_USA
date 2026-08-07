@@ -1,0 +1,708 @@
+<style>
+  .us-water-badge {
+    display: inline-flex;
+    align-items: left;
+    justify-content: center;
+    gap: 12px;
+
+    padding: 10px 18px;
+
+    background: #fff;
+    border: 2px solid #2D5CC7;
+    border-radius: 999px;
+
+    width: fit-content;
+    max-width: 100%;
+
+    box-sizing: border-box;
+margin-bottom: 20px;
+}
+
+.us-water-badge__flag {
+    width: 34px;
+    height: auto;
+    flex-shrink: 0;
+    display: block;
+}
+
+.us-water-badge__text {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2f2f2f;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .us-water-badge {
+        gap: 10px;
+        padding: 9px 16px;
+    }
+
+    .us-water-badge__flag {
+        width: 30px;
+    }
+
+    .us-water-badge__text {
+        font-size: 15px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+        .us-water-badge {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 14px;
+        gap: 15px;
+    }
+
+    .us-water-badge__flag {
+        width: 26px;
+    }
+
+       .us-water-badge__text {
+        font-size: 12px;
+        white-space: normal;
+        text-align: left;
+        line-height: 1.3;
+    }
+}
+</style>
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-11 col-lg-6">
+      <div class="position-relative {% if product.images.size <= 0 %}h-100{% endif %}">
+        {% render 'product-badge', product: product %}
+
+        {% if product.images.size > 1 %}
+          <div
+            class="swiper-container swiper"
+            data-slidestoshow="1"
+            id="product-slider"
+          >
+            <div class="swiper-wrapper">
+              {% for media in product.media %}
+                {% assign thisVariantID = '' %}
+
+                {% for variant in product.variants %}
+                  {% if variant.featured_image == media.src %}
+                    {% assign thisVariantID = variant.id %}
+                  {% endif %}
+                {% endfor %}
+
+                {% if media.media_type == 'image' %}
+                  <div
+                    class="swiper-slide"
+                    data-variant-id="{{ thisVariantID }}"
+                    data-slide-index="{{ forloop.index }}"
+                  >
+                    <a
+                      data-fancybox="gallery"
+                      href="{{ media | image_url: width: 2560 }}"
+                      class="product-image d-block"
+                    >
+                      {{ media | image_url: width: 1200 | image_tag }}
+                    </a>
+                  </div>
+                {% elsif media.media_type == 'external_video' %}
+                  <div
+                    class="swiper-slide"
+                    data-variant-id="{{ thisVariantID }}"
+                    data-slide-index="{{ forloop.index }}"
+                  >
+                    <a
+                      data-fancybox="gallery"
+                      href="{{ media | external_video_url: autoplay: 'true' }}"
+                      class="product-image product-image--video d-block"
+                    >
+                      {{ media.preview_image | image_url: width: 1200 | image_tag }}
+                    </a>
+                  </div>
+                {% elsif media.media_type == 'video' %}
+                  <div class="swiper-slide">
+                    <a
+                      data-fancybox="gallery"
+                      aria-label="Play product video"
+                      href="{{ media.sources[1].url }}"
+                      class="product-image--video"
+                    >
+                      {{ media.preview_image | image_url: width: 1200 | image_tag }}
+                    </a>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+          <div
+            class="swiper-container swiper control {% if product.media.size == 3 %} control-three {% endif %} {% if product.media.size == 5 %}control-five {% else %}product-thumbnails{% endif %}"
+            id="product-slider-nav"
+          >
+            <div class="swiper-wrapper thumbs-wrapper {% if product.media.size == 3 or product.media.size == 5 %}wide{% endif %}">
+              {% for media in product.media %}
+                {% if media.media_type == 'external_video' %}
+                  <div class="swiper-slide thumb-slide">
+                    {{ media.preview_image | image_url: width: 600 | image_tag }}
+                  </div>
+                {% elsif media.media_type == 'image' %}
+                  <div class="swiper-slide thumb-slide">
+                    {{ media | image_url: width: 1200 | image_tag }}
+                  </div>
+                {% elsif media.media_type == 'video' %}
+                  <div class="swiper-slide thumb-slide">
+                    {{ media.preview_image | image_url: width: 600 | image_tag }}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="swiper-nav">
+            <div class="swiper-button-prev swiper-prev"></div>
+            <div class="swiper-button-next swiper-next"></div>
+          </div>
+
+        {% elsif product.featured_image %}
+          <a
+            data-fancybox="gallery"
+            href="{{ product.featured_image | image_url: width: 2560 }}"
+            class="product-image d-block"
+          >
+            {{ product.featured_image | image_url: width: 1200 | image_tag }}
+          </a>
+        {% else %}
+          <div class="placeholder">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-11 col-lg-6 mt-3 mt-lg-0">
+      {% render 'product-hero-countdown', section: section %}
+      <h1 class="product__title">{{ product.title }}</h1>
+      <div
+        style="{{ jm_style }}"
+        class="jdgm-widget jdgm-preview-badge"
+        data-id="{{ product.id }}"
+        data-auto-install="false"
+      >
+        {{ product.metafields.judgeme.badge }}
+      </div>
+      <div class="us-water-badge">
+    <img
+        src="https://cdn.shopify.com/s/files/1/2644/2852/files/united-states-flag-icon.svg?v=1783937607"
+        alt="United States Flag"
+        class="us-water-badge__flag"
+    >
+
+    <span class="us-water-badge__text">
+        Specially Formulated for U.S. Tap Water
+    </span>
+</div>
+      <div class="product-rating">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when '@app' %}
+              {% render block %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+
+      {% if product.description != blank or product.metafields.custom.product_usps.value.size > 0 %}
+        <div class="product-description">
+          {{ product.description }}
+
+          {% if product.metafields.custom.product_usps.value.size > 0 %}
+            <ul class="product-description__usps">
+              {% for usp in product.metafields.custom.product_usps.value %}
+                <li>{{ usp }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if settings.enable_minmax_buys %}
+        {% assign min_buy = settings.min_buy_qty %}
+        {% assign max_buy = settings.max_buy_qty %}
+      {% endif %}
+
+      {% if min_buy == null %}
+        {% assign min_buy = 1 %}
+      {% endif %}
+
+      {% if product.available and product.variants.size > 1 %}
+        <div id="product-variants" class="d-flex flex-column justify-content-start align-items-start">
+          {% for option in product.options_with_values %}
+            <div
+              class="step step-{{ option.name | downcase | replace: ' ', '-' }} mb-3"
+              style="justify-content: space-between; width: 100%;"
+            >
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div class="step-number">{{ forloop.index }}</div>
+                <div class="step-title">
+                  Select {{ option.name }}
+                  -
+                  {% for value in option.values %}
+                    <span class="{{ value }}" style="display:{% if forloop.first %}unset;{% else %} none;{% endif %}">
+                      {% if option.name == 'Size' %}
+                        {% capture size_for_key %}size_for_{{ forloop.index }}{% endcapture %}
+                        {{ settings[size_for_key] }}
+                      {% else %}
+                        {{ value }}
+                      {% endif %}
+                    </span>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="{{ option.name | downcase | replace: ' ', '-' }}-options"
+              class="info-field-container d-flex flex-row radio-selectors mb-3"
+            >
+              {% for value in option.values %}
+                {% assign variant_match = false %}
+                {% for variant in product.variants %}
+                  {% for option_index in (0..product.options.size) %}
+                    {% assign variant_option_name = product.options[option_index] %}
+                    {% assign variant_option_value = variant.options[option_index] %}
+                    {% if variant_option_name == option.name and variant_option_value == value %}
+                      {% assign variant_match = variant %}
+                    {% endif %}
+                  {% endfor %}
+                {% endfor %}
+
+                <div class="radio-option d-flex">
+                  <input
+                    type="radio"
+                    data-variant-id="{{ variant_match.id }}"
+                    id="{{ option.name | downcase | append: '-' | append: value }}"
+                    name="{{ option.name | downcase }}"
+                    value="{{ value }}"
+                    {% if forloop.first %}
+                      checked
+                    {% endif %}
+                    aria-labelledby="label"
+                  >
+
+                  {% if option.name == 'Filter Type' %}
+                    {% capture filter_image_key %}filter_image_{{ forloop.index }}{% endcapture %}
+
+                    <div class="details product-image">
+                      <img
+                        src="{{ settings[filter_image_key]  | image_url: width: 180 }}"
+                        alt="size {{ forloop.index }}"
+                        class="size-icon"
+                      >
+                    </div>
+
+                  {% elsif option.name == 'Size' %}
+                    {% capture size_icon_key %}size_icon_{{ forloop.index }}{% endcapture %}
+                    {% capture size_content_key %}size_content_{{ forloop.index }}{% endcapture %}
+                    {% capture size_for_key %}size_for_{{ forloop.index }}{% endcapture %}
+
+                    <div class="details h-100">
+                      <div class="product-icon">
+                        <img
+                          src="{{ settings[size_icon_key]  | image_url: width: 40 }}"
+                          alt="size {{ forloop.index }}"
+                          class="size-icon"
+                        >
+                      </div>
+                      <p>
+                        <strong>{{ settings[size_for_key] }}</strong>
+                      </p>
+                      {{ settings[size_content_key] }}
+                    </div>
+
+                  {% else %}
+                    {% capture stand_key %}stand_{{ forloop.index }}{% endcapture %}
+
+                    <div class="details product-image stand">
+                      <img
+                        src="{{ settings[stand_key]  | image_url: width: 180 }}"
+                        alt="size {{ forloop.index }}"
+                        class="size-icon"
+                      >
+                    </div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form
+        action="/cart/add"
+        method="post"
+        enctype="multipart/form-data"
+        id="add-to-cart"
+        data-min="{{ min_buy }}"
+        data-max="{{ max_buy }}"
+      >
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when '@app' %}
+              {% render block %}
+          {% endcase %}
+        {% endfor %}
+
+        <input
+          type="hidden"
+          name="handle"
+          value="{{ product.handle }}"
+        >
+
+        <div id="variants" class="info-field-container d-flex flex-column justify-content-start align-items-center">
+          <div class="selector-wrap sr-only">
+            <select
+              id="product-selectors"
+              name="id"
+              data-productid="{{ product.id }}"
+              data-label="{% if product.options.size == 1 %}{{ product.options[0] }}{% endif %}"
+            >
+              {% for variant in product.variants %}
+                {% if variant.available %}
+                  <option
+                    {% if variant == current_variant %}
+                      selected="selected"
+                    {% endif %}
+                    value="{{ variant.id }}"
+                    data-price="{{ variant.price | money_with_currency }}"
+                    name="id"
+                    id="variant_{{ variant.id }}"
+                  >
+                    {{ variant.title }}
+                  </option>
+                {% else %}
+                  <option disabled="disabled">
+                    {{ variant.title }} - {{ 'products.product.inventory_out_of_stock' | t }}
+                  </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+            <style>
+              #product-selectors {
+                display: block !important;
+              }
+            </style>
+          </div>
+        </div>
+        <div class="nice_price_wrapper">
+        <div class="priceline my-5">
+          <span data-price class="product-dyn-price m-0">
+            {{ current_variant.price | money }}
+          </span>
+          <div class="product-compare-wrap d-inline-block">
+            <span data-compare>
+              <s>
+                {% if current_variant.compare_at_price > current_variant.price %}
+                  {{ current_variant.compare_at_price | money }}
+                {% endif %}
+              </s>
+            </span>
+          </div>
+        </div>
+        </div>
+
+
+        {% if product.available %}
+          <div class="product-quantity mb-5" style="display: none;">
+            <div class="qty-container">
+              <label for="Quantity">{{ 'products.product.quantity.label' | t }} &nbsp; </label>
+              <span class="qty-btn decrease js-qty-update">-</span>
+              <input
+                type="number"
+                id="Quantity"
+                name="quantity"
+                data-qtt-id
+                value="{{ min_buy }}"
+                min="{{ min_buy }}"
+                max="{{ max_buy }}"
+              >
+              <span class="qty-btn increase js-qty-update">+</span>
+            </div>
+          </div>
+          <p class="js-availability-notice product-availability disabled {% if product.variants.size > 1 %} invalid {% endif %}">
+            There are only <strong class="js-availablilty">{{ current_variant.inventory_quantity }}</strong>
+            {{ product.title }}
+            {% if product.variants.size > 1 %}
+              <span class="js-varient">({{ product.variants.first.title.title }})</span>
+            {% endif %}
+            available in stock.
+          </p>
+
+        {% else %}
+          <div class="select-product d-flex flex-row align-items-center mt-5 ">
+            <input name="id" data-productid="{{ product.id }}" value="{{ product.variants.first.id }}" type="hidden">
+            <button class="btn btn-large btn-primary btn-product" name="add" disabled type="submit">
+              {{ 'products.product.sold_out' | t }}
+            </button>
+        {% endif %}
+
+        {% if product.available %}
+          {% if current_variant.inventory_quantity > 0 or current_variant.inventory_management == null %}
+            <button
+              class="btn btn-large btn-secondary btn-product d-flex flex-row justify-content-center align-items-center carty"
+              type="submit"
+              name="add"
+              id="product-add-to-cart"
+            >
+              {{ 'products.product.add_to_cart' | t }} &nbsp;
+            </button>
+
+          {% elsif current_variant.inventory_policy == 'continue' %}
+            <button
+              class="btn btn-large btn-primary  btn-product"
+              type="submit"
+              name="add"
+              id="product-add-to-cart"
+            >
+              {{ 'products.product.pre_order' | t }}
+            </button>
+          {% endif %}
+          <div class="payment-icons d-flex justify-content-center align-items-center gap-3">
+            <img src="{{ 'visa.png' | asset_url }}" alt="visa" height="20.42" width="45.15">
+            <img src="{{ 'mastercard.png' | asset_url }}" height="20.7" width="32.45" alt="mastercard">
+            <img src="{{ 'paypal.png' | asset_url }}" alt="paypal" height="25.41" width="20.99">
+            <img src="{{ 'amex.png' | asset_url }}" height="20.11" width="54.44" alt="amex">
+            <img
+              src="https://cdn.shopify.com/s/files/1/2644/2852/files/Shop_Pay_logo.png?v=1761737843"
+              alt="Shop Pay"
+              height="23.11"
+              width="74.44"
+            >
+          </div>
+          <i data-govx-id></i>
+          <div class="below-atc-icons">
+            <div>
+              <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/Free_shipping.png?v=1761290560" alt="free">
+              <span>Free Shipping in the US Mainland </span>
+            </div>
+            <div>
+              <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/nsf-01_3_1.png?v=1775558599" alt="NSF">
+              <span>NSF Certified </span>
+            </div>
+            <div>
+              <img src="{{ 'icon-headset.png' | asset_url }}" alt="Headset Icon">
+              <span>Customer Support</span>
+            </div>
+            <div id="cert-badge" style="display: none;">
+              <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/nsf-01.png?v=1751276325" alt="NSF">
+              <span>NSF Certified</span>
+            </div>
+            <div>
+              <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/product_warehouse.png" alt="Warehouse">
+              <span>US-Based Warehouse Shipping </span>
+            </div>
+
+            <div>
+              <img
+                src="https://cdn.shopify.com/s/files/1/2644/2852/files/Ultra_filter_icon_2.png?v=1776338764"
+                alt="filtration"
+              >
+              <span>Ultra Fast Filtration</span>
+            </div>
+            <div>
+              <img
+                src="https://cdn.shopify.com/s/files/1/2644/2852/files/Universal_fit_v3-02.png?v=1761830204"
+                alt="Warehouse"
+              >
+              <span>Universal Fit</span>
+            </div>
+          </div>
+
+        {% else %}
+          <input
+            name="id"
+            data-productid="{{ product.id }}"
+            value="{{ product.variants.first.id }}"
+            type="hidden"
+          >
+
+          <button
+            class="btn btn-primary  btn-product"
+            name="add"
+            disabled
+            type="submit"
+          >
+            {{ 'products.product.sold_out' | t }}
+          </button>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+</div>
+
+{% render 'sticky-add-to-cart' %}
+
+{% unless product == empty %}
+  <script>
+	    window.product = {{ product | json }} || {};
+		{% if product.metafields.custom.product_badge_text.value != blank %}
+			if(typeof product !== "undefined"){
+				product['badge'] = "{{ product.metafields.custom.product_badge_text.value }}";
+			}
+		{% endif %}
+
+		let metaInfo = product.handle + '?view=metafields'
+		fetch(metaInfo)
+			.then(response => response.json())
+			.then(pageMeta => {
+				window.product = Object.assign(product, pageMeta);
+
+				if( document.readyState !== 'loading' ) {
+					initProductScript(window.product, 'product-selectors', document);
+				} else {
+					document.addEventListener('DOMContentLoaded', function () {
+						initProductScript(window.product, 'product-selectors', document);
+					});
+				}
+
+			})
+			.catch(error => {
+				console.error('Error fetching page meta:', error);
+			});
+  const selectElement = document.querySelector("#product-selectors");
+
+  document.addEventListener('DOMContentLoaded', function() {
+    function setupRadioSync(primarySelector, secondarySelector) {
+      const primaryRadioButtons = document.querySelectorAll(primarySelector);
+      const updateSecondaryRadios = (selectedValue) => {
+        const secondaryRadioButtons = document.querySelectorAll(secondarySelector);
+        secondaryRadioButtons.forEach(radio => {
+          if (radio.value === selectedValue) {
+            if (!radio.checked) {
+              radio.checked = true;
+              radio.dispatchEvent(new Event('change', { 'bubbles': true }));
+              selectElement.dispatchEvent(new Event('change', { 'bubbles': true }));
+            }
+          } else {
+            if (radio.checked) {
+              radio.checked = false;
+              radio.dispatchEvent(new Event('change', { 'bubbles': true }));
+              selectElement.dispatchEvent(new Event('change', { 'bubbles': true }));
+            }
+          }
+        });
+      };
+      primaryRadioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+          if (radio.checked) {
+            updateSecondaryRadios(radio.value);
+          }
+        });
+      });
+    }
+    setupRadioSync('#filter-type-options input[type="radio"]', '.radio-selector__option input[name="filter-type-radio"]');
+    setupRadioSync('#size-options input[type="radio"]', '.radio-selector__option input[name="size-radio"]');
+    setupRadioSync('#stand-options input[type="radio"]', '.radio-selector__option input[name="stand-radio"]');
+  });
+document.addEventListener('DOMContentLoaded', function() {
+    function handleOptionChange(containerId, stepClass) {
+      const container = document.getElementById(containerId);
+      if (container) {
+        container.addEventListener('change', function(event) {
+          if (event.target.type === 'radio' && event.target.name.split(" ").join("-") === stepClass.toLowerCase()) {
+            const spans = document.querySelectorAll(`.step.step-${stepClass} span`);
+            spans.forEach(span => {
+              span.style.display = 'none';
+            });
+            const optionValue = event.target.value;
+            const escapedOptionValue = optionValue.replace(/([\.\s])/g, "\\$1");
+            const selector = `.step.step-${stepClass} span[class="${escapedOptionValue}"]`;
+            const selectedSpan = document.querySelector(selector);
+            if (selectedSpan) {
+              selectedSpan.style.display = 'unset';  
+            }
+          }
+        });
+      }
+    }
+   handleOptionChange('stand-options', 'stand');
+    handleOptionChange('size-options', 'size');
+    handleOptionChange('filter-type-options', 'filter-type');
+  });
+  document.addEventListener("DOMContentLoaded", function () {
+    const productTitle = document.querySelector('.product__title')?.innerText?.trim();
+
+    if (productTitle === "Phoenix Gravity Carbon filter Elements") {
+      document.getElementById("cert-badge").style.display = "block";
+    } else {
+      document.getElementById("cert-badge").style.display = "none";
+    }
+  });
+  </script>
+{% endunless %}
+
+{% schema %}
+{
+  "name": "Product Hero OG Alt",
+  "tag": "section",
+  "class": "section-producthero og",
+  "settings": [
+    {
+      "type": "text",
+      "id": "countdown_text",
+      "label": "Countdown Text",
+      "info": "Use the [month] shortcode to output the current month, and the [time] shortcode to output the countdown timer."
+    },
+    {
+      "type": "text",
+      "id": "countdown_time",
+      "label": "Countdown Time",
+      "info": "Date, time and timezone in the format: YYYY-MM-DDTHH:mm:ss+10:00. OR for an evergreen timer, enter the number of minutes followed by the word 'minutes'. e.g. 15 minutes"
+    },
+    {
+      "type": "product_list",
+      "id": "countdown_products",
+      "label": "Show Countdown On Products",
+      "info": "Only show the countdown on these products. Leave blank to show on all."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Hero Alt"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}
+
+<style>
+  @media (max-width: 768px) {
+    .col-11 {
+      margin-top: 8px !important;
+    }
+  }
+  .nice_price_wrapper{
+    display: flex;
+    margin-top: -30px;
+  }
+  @media (max-width: 768px) {
+    .nice_price_wrapper{
+      margin-top: 0px;
+    }
+  }
+  .priceline{
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: nowrap;
+    margin-bottom: 0px !important;
+  }
+</style>

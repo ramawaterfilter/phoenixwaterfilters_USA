@@ -1,0 +1,26 @@
+<div class="container klop">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      {{ article.content }}
+      <div class="custom-cta-article">
+      {{ article.metafields.custom.add_cta | metafield_tag }}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Article Body",
+    "tag": "section",
+    "class": "section-article pt-0",
+    "presets": [
+      {
+        "name": "Article Body"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["article"]
+    }
+  }
+{% endschema %}

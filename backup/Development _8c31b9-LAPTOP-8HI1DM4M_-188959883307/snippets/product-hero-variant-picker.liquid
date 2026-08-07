@@ -1,0 +1,94 @@
+{% doc %}
+Renders variant image buttons and the hidden variant select for product JavaScript.
+@param {product} product - Product to render variants for.
+@param {variant} current_variant - Currently selected variant.
+@example
+{% render 'product-hero-variant-picker', product: product, current_variant: current_variant %}
+{% enddoc %}
+
+{% if product.available and product.variants.size > 1 %}
+  <div id="product-variants">
+    <div class="variant-heading">
+      {{ product.options[0] }} :
+      <span id="selected-variant-title">{{ current_variant.title }}</span>
+      {% if product.handle == 'gravity-water-filter' and settings.enable_size_guide %}
+        <a href="#size-guide" class="size-guide-link" data-size-guide-trigger>SIZE GUIDE</a>
+      {% endif %}
+    </div>
+
+    <div class="variant-images">
+      {% for variant in product.variants %}
+        {% assign variant_image = '' %}
+        {% assign variant_title = variant.title | strip %}
+        {% assign hide_variant_card = false %}
+
+        {% if product.handle == '7-inch-stainless-steel-vision-spigot' %}
+          {% if variant_title == '1.5 Gallon' or variant_title == '2.25 Gallon' %}
+            {% assign hide_variant_card = true %}
+          {% endif %}
+        {% endif %}
+
+        {% case product.handle %}
+          {% when 'wooden-stand-for-gravity-water-filter-system' %}
+            {% case variant.title | strip %}
+              {% when '1.5 Gallon' %}
+                {% assign variant_image = 'https://cdn.shopify.com/s/files/1/2644/2852/files/01_7.jpg?v=1776065128' %}
+              {% when '2.25 Gallon' %}
+                {% assign variant_image = 'https://cdn.shopify.com/s/files/1/2644/2852/files/02_6.jpg?v=1776065128' %}
+              {% when '3.25 Gallon' %}
+                {% assign variant_image = 'https://cdn.shopify.com/s/files/1/2644/2852/files/03_5.jpg?v=1776065128' %}
+            {% endcase %}
+          {% when 'stainless-steel-stand' %}
+            {% case variant.title | strip %}
+              {% when '1.5 Gallon' %}
+                {% assign variant_image = 'https://cdn.shopify.com/s/files/1/2644/2852/files/01.jpg?v=1779787273' %}
+              {% when '2.25 Gallon' %}
+                {% assign variant_image = 'https://cdn.shopify.com/s/files/1/2644/2852/files/02.jpg?v=1779787273' %}
+              {% when '3.25 Gallon' %}
+                {% assign variant_image = 'https://cdn.shopify.com/s/files/1/2644/2852/files/03.jpg?v=1779787273' %}
+            {% endcase %}
+        {% endcase %}
+
+        {% if variant_image == '' and variant.featured_image != blank %}
+          {% assign variant_image = variant.featured_image | image_url: width: 240 %}
+        {% endif %}
+
+        {% if variant_image == '' and product.featured_image != blank %}
+          {% assign variant_image = product.featured_image | image_url: width: 240 %}
+        {% endif %}
+
+        {% unless hide_variant_card %}
+          {% if variant_image != '' %}
+            <button
+              type="button"
+              class="variant-img-box {% if variant.id == current_variant.id %}active{% endif %}"
+              data-id="{{ variant.id }}"
+              data-title="{{ variant.title | escape }}"
+              aria-pressed="{% if variant.id == current_variant.id %}true{% else %}false{% endif %}"
+            >
+              {% unless product.handle == '7-inch-stainless-steel-vision-spigot' %}
+                <img src="{{ variant_image }}" alt="{{ variant.title | escape }}" width="96" height="96">
+              {% endunless %}
+              <span>{{ variant.title }}</span>
+            </button>
+          {% endif %}
+        {% endunless %}
+      {% endfor %}
+    </div>
+
+    <select id="product-selectors" name="id" data-productid="{{ product.id }}" style="display:none !important;">
+      {% for variant in product.variants %}
+        <option
+          value="{{ variant.id }}"
+          {% if variant == current_variant %}
+            selected
+          {% endif %}
+        >
+          {{ variant.title }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+{% elsif product.variants.size == 1 and product.available %}
+  <input name="id" data-productid="{{ product.id }}" value="{{ product.variants.first.id }}" type="hidden">
+{% endif %}

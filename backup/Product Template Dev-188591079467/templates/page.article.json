@@ -1,0 +1,600 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "article_hero_D8NRHF": {
+      "type": "article-hero",
+      "settings": {
+        "top_banner": "Advertorial",
+        "publisher_logo": "shopify://shop_images/southern-logo_52f941cc-47b7-4bdc-bb5d-e98b66337aea.svg",
+        "redlabel": "BREAKING NEWS",
+        "status": "trending",
+        "headline": "7.2 Million Americans Fall Sick From Waterborne Diseases Each Year… What You Must Do RIGHT NOW To Protect Yourself",
+        "author": "Emma Nelson",
+        "author_avatar": "shopify://shop_images/emma-nelson.jpg",
+        "date": "1 Week ago"
+      }
+    },
+    "article_copy_7JqgaB": {
+      "type": "article-copy",
+      "settings": {
+        "top_image": "shopify://shop_images/waterbourne-disease-crisis.jpg",
+        "heading": "",
+        "content": "<p><strong>7.2 million Americans fall sick every year by drinking tap water contaminated with harmful toxins, heavy metals, and pesticides - many are completely unaware they are at risk.</strong><br/><br/>Water experts say common solutions such as bottled water, water filter jugs, and reverse osmosis water systems are plagued by problems, and in some cases could make drinking water WORSE by contaminating it with hidden bacteria.<br/><br/>Scientific lab tests from leading water authorities prove this new ‘miracle filter’ eliminates 99.9% of chemicals, heavy metals, chlorine and parasites from drinking water - as well as bad tastes and odors - using activated carbon derived from a secret natural plant.</p><p> </p>",
+        "bottom_image": "shopify://shop_images/census-data.jpg",
+        "video_id": "",
+        "features_heading": "",
+        "feature_cols": "fill",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "show_divider": "hide"
+      }
+    },
+    "article_copy_Pb683e": {
+      "type": "article-copy",
+      "settings": {
+        "heading": "Updated 2 days ago",
+        "content": "<p>In Baltimore, they found a parasite in the drinking water that could be making people sick.<br/><br/>In California’s Coachella Valley, they found water from fast-food soda fountains had bacteria including E. coli and salmonella.<br/><br/>And in Iowa, they found unsafe amounts of nitrate and an herbicide called alachlor in the water – which have been linked to cancers, thyroid disease, liver, kidneys, eye and spleen damage, and even “blue baby syndrome” in infants.<br/><br/>These are just a handful of alarming recent stories driving the urgency for authorities to act on America’s water crisis.<br/><br/></p>",
+        "bottom_image": "shopify://shop_images/water-pollution.jpg",
+        "video_id": "",
+        "features_heading": "",
+        "feature_cols": "fill",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "show_divider": "hide"
+      }
+    },
+    "article_copy_TzEGfX": {
+      "type": "article-copy",
+      "settings": {
+        "heading": "Are Outdated Water Pollution Rules Putting Your Family’s Health At Risk?",
+        "content": "<p>Water quality standards are regulated by the Environmental Protection Agency (EPA), which sets limits on safe levels of germs and chemicals in our water supply.<br/><br/>However, many water experts say these limits are dangerously outdated. <br/>A coalition of 13 green groups is currently suing the EPA, arguing they have breached federal law and failed to update these safe limits in line with new standards.<br/><br/>Under federal law, the EPA needs to update limits on pollution every five years. Yet the pollution control standards in the lawsuit haven’t been updated for an average of 34 years!<br/><br/>Experts say this lack of change has allowed dirty industries to pollute rivers and bays for years and put the health of American families at serious risk.</p>",
+        "video_id": "",
+        "features_heading": "",
+        "feature_cols": "fill",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "show_divider": "hide"
+      }
+    },
+    "article_copy_nhqmR6": {
+      "type": "article-copy",
+      "blocks": {
+        "text_eakxTC": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Fertilizers, pesticides, or herbicides on the nearby land"
+          }
+        },
+        "text_j99X3L": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Industrial or manufacturing operations"
+          }
+        },
+        "text_Vp9qxB": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Sewage overflows"
+          }
+        },
+        "text_XNYnDR": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Stormwater"
+          }
+        },
+        "text_zF7Lxc": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Rocks and soil that contain high levels of chemicals and minerals"
+          }
+        }
+      },
+      "block_order": [
+        "text_eakxTC",
+        "text_j99X3L",
+        "text_Vp9qxB",
+        "text_XNYnDR",
+        "text_zF7Lxc"
+      ],
+      "settings": {
+        "heading": "How Does Your Drinking Water Get Contaminated?",
+        "content": "<p>Germs and chemicals get into your drinking water at the water’s source, or in the distribution system after the water has already been treated. These can come from:</p>",
+        "video_id": "",
+        "features_heading": "",
+        "feature_cols": "two-cols",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "show_divider": "hide"
+      }
+    },
+    "article_copy_xMzVtx": {
+      "type": "article-copy",
+      "blocks": {
+        "text_38GCYQ": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Lead"
+          }
+        },
+        "text_WhxnDf": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Nitrate"
+          }
+        },
+        "text_BcKBND": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Copper"
+          }
+        },
+        "text_Yfkgbk": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Arsenic"
+          }
+        },
+        "text_NhgcgN": {
+          "type": "text",
+          "settings": {
+            "feature_text": "E. coli"
+          }
+        },
+        "text_EAb6EW": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Giardia"
+          }
+        },
+        "text_agcKLy": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Salmonella"
+          }
+        },
+        "text_p44zer": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Hepatitis A"
+          }
+        },
+        "text_qb9V6J": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Campylobacter"
+          }
+        },
+        "text_tz8cqT": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Norovirus"
+          }
+        }
+      },
+      "block_order": [
+        "text_38GCYQ",
+        "text_WhxnDf",
+        "text_BcKBND",
+        "text_Yfkgbk",
+        "text_NhgcgN",
+        "text_EAb6EW",
+        "text_agcKLy",
+        "text_p44zer",
+        "text_qb9V6J",
+        "text_tz8cqT"
+      ],
+      "settings": {
+        "top_image": "shopify://shop_images/workers-inspect-water-pipes.jpg",
+        "heading": "",
+        "content": "<p>The specific types of bacteria and chemicals that could be lurking in your water supply include:</p>",
+        "video_id": "",
+        "features_heading": "",
+        "feature_cols": "max-content",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "show_divider": "hide"
+      }
+    },
+    "article_copy_8eafVy": {
+      "type": "article-copy",
+      "settings": {
+        "heading": "Infants And Children Among Millions Of Americans At Risk Of Hidden Mystery Illnesses",
+        "content": "<p>Water contamination affects much more than just the taste or smell of your water. Scientists at the Centers for Disease Control and Prevention (CDC) found more than 7 million cases of 17 different waterborne illnesses occur each year – including bacterial, parasitic, and viral infections.<br/><br/>Infants, young children, pregnant women, older adults and people with weakened immune systems are considered more likely to get sick.<br/><br/>Unfortunately, because these contaminants are impossible to see, people may fall ill without realizing their drinking water is the cause. This can mean you face a series of doctors’ appointments and tests trying to uncover the mystery illness.</p>",
+        "video_id": "",
+        "features_heading": "",
+        "feature_cols": "fill",
+        "buttonlink": "shopify://products/lifestyle-plan",
+        "buttontext": "See If The Deal Is Still Available",
+        "afterbutton": "",
+        "show_divider": "hide"
+      }
+    },
+    "article_copy_czGXXP": {
+      "type": "article-copy",
+      "settings": {
+        "heading": "A Clean Water Solution Is No Longer A Luxury – <br>It’s A Necessity",
+        "content": "",
+        "video_id": "",
+        "features_heading": "",
+        "feature_cols": "fill",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "show_divider": "hide"
+      }
+    },
+    "article_copy_eaThTR": {
+      "type": "article-copy",
+      "settings": {
+        "top_image": "shopify://shop_images/water-comparrison.jpg",
+        "heading": "",
+        "content": "<p>Like with most things in life, prevention of waterborne health problems is better (and cheaper) than the cure. Sadly, many common clean water solutions are expensive, high maintenance, and come with potential health issues of their own.</p>",
+        "video_id": "",
+        "features_heading": "",
+        "feature_cols": "fill",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "show_divider": "hide"
+      }
+    },
+    "article_copy_f4LWaD": {
+      "type": "article-copy",
+      "blocks": {
+        "text_BPYDR7": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Constant trips to the supermarket"
+          }
+        },
+        "text_rRmVer": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Wastes storage space in your kitchen, garage, fridge, or spare room"
+          }
+        },
+        "text_pkhaFB": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Wastes tons of plastic each year and is bad for the environment"
+          }
+        },
+        "text_6qWhXd": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Can't sit in hot warehouses for months and may contain harmful chemicals called phthalates. These have been linked to a host of reproductive, immune, and neurological disorders (including ADHD, fertility issues, asthma, liver disease in kids, and an increased risk of breast cancer)"
+          }
+        }
+      },
+      "block_order": [
+        "text_BPYDR7",
+        "text_rRmVer",
+        "text_pkhaFB",
+        "text_6qWhXd"
+      ],
+      "settings": {
+        "heading": "Bottled Water",
+        "content": "<p><strong>The cost:</strong> $1,350 a year on average</p>",
+        "video_id": "",
+        "features_heading": "The problems:",
+        "feature_cols": "fill",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "show_divider": "show",
+        "section_randoimg": "shopify://shop_images/bottled-water.jpg"
+      }
+    },
+    "article_copy_LbYG6Q": {
+      "type": "article-copy",
+      "blocks": {
+        "text_ryhBh3": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Made from low-quality materials, prone to break"
+          }
+        },
+        "text_CFfYcU": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Wastes space in your fridge"
+          }
+        },
+        "text_T3iVUD": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Need to replace the filter every 2-4 weeks, which is time-consuming and expensive"
+          }
+        },
+        "text_GXetDN": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Bacteria can grow inside the filter itself, doing more harm than good"
+          }
+        },
+        "text_CUWkbf": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "feature_text": "Filters are usually >5 microns in size and use granular carbon which do not filter physical contaminants at all"
+          }
+        },
+        "text_cMmaKY": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Nitrates, dissolved minerals, and bacteria and viruses can still pass through the filter and make you sick"
+          }
+        }
+      },
+      "block_order": [
+        "text_ryhBh3",
+        "text_CFfYcU",
+        "text_T3iVUD",
+        "text_GXetDN",
+        "text_CUWkbf",
+        "text_cMmaKY"
+      ],
+      "settings": {
+        "heading": "Ineffective Water Pitcher Filters",
+        "content": "<p><strong>The cost:</strong> $50-$200+</p>",
+        "video_id": "",
+        "features_heading": "The problems:",
+        "feature_cols": "fill",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "show_divider": "show",
+        "section_randoimg": "shopify://shop_images/water-jug-filters.png"
+      }
+    },
+    "article_copy_cRcVMC": {
+      "type": "article-copy",
+      "blocks": {
+        "text_TVWhAy": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Requires professional installation"
+          }
+        },
+        "text_ynMYzn": {
+          "type": "text",
+          "settings": {
+            "feature_text": "High annual maintenance costs and plumbing repairs"
+          }
+        },
+        "text_cjQV63": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Permanent, not portable, making them a terrible choice for renters"
+          }
+        },
+        "text_rqgV9w": {
+          "type": "text",
+          "settings": {
+            "feature_text": "High energy consumption and electricity costs"
+          }
+        },
+        "text_RKkkzg": {
+          "type": "text",
+          "settings": {
+            "feature_text": "High energy consumption and electricity costs"
+          }
+        },
+        "text_aKE6mF": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Wastes water at roughly the same or more as pure water"
+          }
+        },
+        "text_zEgRTH": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Removes all Pesticides and PFAS, water becomes more acidic"
+          }
+        }
+      },
+      "block_order": [
+        "text_TVWhAy",
+        "text_ynMYzn",
+        "text_cjQV63",
+        "text_rqgV9w",
+        "text_RKkkzg",
+        "text_aKE6mF",
+        "text_zEgRTH"
+      ],
+      "settings": {
+        "heading": "Whole-House Reverse Osmosis Systems",
+        "content": "<p><strong>The cost: </strong>$750 – $7,500, depending on the size of your home</p>",
+        "video_id": "",
+        "features_heading": "The problems:",
+        "feature_cols": "fill",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "show_divider": "show",
+        "section_randoimg": "shopify://shop_images/reverse-osmosis-system.png"
+      }
+    },
+    "article_copy_X6Gfct": {
+      "type": "article-copy",
+      "blocks": {
+        "text_MEUGfy": {
+          "type": "text",
+          "settings": {
+            "feature_text": "99.9% of toxins and heavy metals"
+          }
+        },
+        "text_MiChKn": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Parasites > 99.99%"
+          }
+        },
+        "text_neN4Tz": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Pesticides & PFAS > 99%"
+          }
+        },
+        "text_TnTHa8": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Chlorine > 99%"
+          }
+        },
+        "text_Xx6V9L": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Chemicals > 99%"
+          }
+        }
+      },
+      "block_order": [
+        "text_MEUGfy",
+        "text_MiChKn",
+        "text_neN4Tz",
+        "text_TnTHa8",
+        "text_Xx6V9L"
+      ],
+      "settings": {
+        "heading": "",
+        "content": "<p>Because contaminated water is a serious problem for millions of Americans, many people are desperate for a more affordable and effective solution for improving water quality at home.</p><h2>Is This New Gravity Water Filter The Safest, Most Cost-Effective Solution For Clean Drinking Water?</h2><p>A new water filtration system, the Phoenix Gravity Water Filter, provides families with the best of all worlds – cost, efficiency, ease of use, and portability. It’s simple, easy to install, and only takes 2 minutes to set up at home by yourself.<br/><br/>The system filters up to 2.25 gallons of water per hour – up to twice as fast as a reverse osmosis filtration system. It’s made from lightweight, rust-resistant, and durable 304 stainless steel backed by a 10-year warranty.</p><h2>How does the Phoenix Water Filter work?</h2><p>The secret to its revolutionary success is the ‘Nano Toxin’ filter inside. Crafted using the finest granular activated carbon from natural coconut husks, the filter costs a fraction of a reverse osmosis system, but still removes:</p><p></p><p></p>",
+        "video_id": "",
+        "features_heading": "",
+        "feature_cols": "max-content",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "show_divider": "hide"
+      }
+    },
+    "article_copy_HtxxUn": {
+      "type": "article-copy",
+      "settings": {
+        "heading": "",
+        "content": "<p>Plus, unlike water jug filters, it prevents bacteria from growing inside the filter itself. The result is a fast, easy, and cost-effective solution for delicious drinking water – without contaminants, bad tastes or odors.</p>",
+        "video_id": "xcf0ojhbr2",
+        "features_heading": "",
+        "feature_cols": "fill",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "show_divider": "hide"
+      }
+    },
+    "article_copy_iGArYU": {
+      "type": "article-copy",
+      "settings": {
+        "heading": "At Just Less than 5 cents Per Gallon, How Is Such A High-Quality System So Cheap?",
+        "content": "<p>With 50 years of experience in the industry, Phoenix makes all products in its own state-of-the-art facilities. The filters themselves last up to 50% longer than leading brands and can purify 6 months’ worth of water for a family of four before replacement.<br/><br/>This brings the overall cost down and makes it the ultimate affordable solution for families who don’t want to sacrifice the quality of their water. The Gravity Water Filter costs around Less than 5 cents per gallon, saving your family $1,000+ each year when you make the switch from bottled water.</p>",
+        "video_id": "",
+        "features_heading": "",
+        "feature_cols": "fill",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "show_divider": "show"
+      }
+    },
+    "article_callout_LzqN74": {
+      "type": "article-callout",
+      "settings": {
+        "style": "style-1",
+        "reducepadding": false,
+        "heading": "I’m Interested… But How Can I Be 100% Sure It Works?",
+        "content": "<p>The Gravity Water Filter has been scientifically lab-tested by the leading third-party authorities. Results prove the filter eliminates more than 99.9% of lead, chlorine, viruses, and other harmful contaminants lurking in your everyday drinking water. Phoenix even released its test results to the public for complete transparency.</p>",
+        "callout_image": "shopify://shop_images/water-filter-in-home.jpg"
+      }
+    },
+    "testimonials_bDrtPF": {
+      "type": "testimonials",
+      "blocks": {
+        "text_4KnhGK": {
+          "type": "text",
+          "settings": {
+            "quote": "<p>I’m really happy that I made this choice after looking into purifying and distilling my water, I looked into electric ones and natural steam ones and found that both would cost a lot of time and energy waist by needing to purifying the water up to 4hrs at a time. I learned that the materials used in both options was of poor quality! </p>",
+            "reviewer": "Victoria"
+          }
+        },
+        "text_jc6xKK": {
+          "type": "text",
+          "settings": {
+            "quote": "<p>We were looking for a solid filter that would be easy to maintain, easy to build, long lasting, and effective. Meets the mark on all accounts!</p>",
+            "reviewer": "Andrew Narduzzi"
+          }
+        },
+        "text_tnweQN": {
+          "type": "text",
+          "settings": {
+            "quote": "<p>Bought one from Amazon and I must say I had the other well named one from another company and Phoenix is better, the other company is terribly bad at customer services and rude and don’t care if you have a problem like when I ordered things that didn’t come and they literally said I was wrong and I got my things but I didn’t and called me a thief….very rude and unprofessional.</p>",
+            "reviewer": "David"
+          }
+        }
+      },
+      "block_order": [
+        "text_4KnhGK",
+        "text_jc6xKK",
+        "text_tnweQN"
+      ],
+      "settings": {
+        "layout": "style-2",
+        "heading": "Try It Risk-Free For 100 Days For A Limited Time",
+        "paragraph": "<p>To make it a complete no-brainer, Phoenix lets you trial their Gravity Water Filter at home for 100 days. If you aren't fully satisfied with the purity of your water during that time, you can send it back for a full refund. The system has generated a substantial amount of buzz online and has already amassed 1298 5-star reviews.</p>",
+        "sub_header": "",
+        "button_text": "",
+        "button_url": "",
+        "button_aftertext": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "article_copy_nLaCYA": {
+      "type": "article-copy",
+      "settings": {
+        "heading": "Phoenix’s Website Is Currently Running A $200 Off Deal (While Stocks Last)",
+        "content": "<p>Right now, on their official website, Phoenix is offering a unique deal to try the Gravity Water Filter at a significant discount – over 50% off the regular retail price - but only while supplies last<br/><br/>It comes complete with the stainless steel housing unit, 2 carbon filter cartridges, a drip-free stainless steel tap, and 2 fluoride filter cartridges too. It's everything you need to supply a family of four with 12 months’ worth of delicious, clean drinking water.<br/><br/>To discover how you can qualify for this deal – including all the details you need to know about the Phoenix Gravity Water Filter – you can click the link below.</p>",
+        "video_id": "",
+        "features_heading": "",
+        "feature_cols": "fill",
+        "buttonlink": "shopify://products/lifestyle-plan",
+        "buttontext": "See If The Deal Is Still Available",
+        "afterbutton": "",
+        "show_divider": "show"
+      }
+    }
+  },
+  "order": [
+    "article_hero_D8NRHF",
+    "article_copy_7JqgaB",
+    "article_copy_Pb683e",
+    "article_copy_TzEGfX",
+    "article_copy_nhqmR6",
+    "article_copy_xMzVtx",
+    "article_copy_8eafVy",
+    "article_copy_czGXXP",
+    "article_copy_eaThTR",
+    "article_copy_f4LWaD",
+    "article_copy_LbYG6Q",
+    "article_copy_cRcVMC",
+    "article_copy_X6Gfct",
+    "article_copy_HtxxUn",
+    "article_copy_iGArYU",
+    "article_callout_LzqN74",
+    "testimonials_bDrtPF",
+    "article_copy_nLaCYA"
+  ]
+}

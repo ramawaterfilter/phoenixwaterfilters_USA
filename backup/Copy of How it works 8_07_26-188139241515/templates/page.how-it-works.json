@@ -1,0 +1,676 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero_fGiC9Y": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "",
+        "heading": "How it works",
+        "content": "",
+        "sideimage": "shopify://shop_images/about-phoenix-water-filters.jpg",
+        "section_video_bg": "",
+        "buttonlink": "",
+        "buttontext": ""
+      }
+    },
+    "cards_7Hbppn": {
+      "type": "cards",
+      "blocks": {
+        "text_VtREUj": {
+          "type": "text",
+          "settings": {
+            "heading": "PFAS",
+            "copy": "<p>Can enter water via sewage systems and animal waste and cause disease.</p>",
+            "icon": "shopify://shop_images/icon-virus.png",
+            "video_id": ""
+          }
+        },
+        "text_qtcF6P": {
+          "type": "text",
+          "settings": {
+            "heading": "Chlorine",
+            "copy": "<p>Impacts the taste and smell of your drinking water.</p>",
+            "icon": "shopify://shop_images/icon-chlorine.png",
+            "video_id": ""
+          }
+        },
+        "text_6w8KE6": {
+          "type": "text",
+          "settings": {
+            "heading": "Chemical Contaminants",
+            "copy": "<p>Can contaminate water via septic systems and sewers.</p>",
+            "icon": "shopify://shop_images/Chemical_Reduction.png",
+            "video_id": ""
+          }
+        },
+        "text_UACReW": {
+          "type": "text",
+          "settings": {
+            "heading": "Heavy Metals",
+            "copy": "<p>Heavy Metals</p>",
+            "icon": "shopify://shop_images/icon-metals.png",
+            "video_id": ""
+          }
+        },
+        "text_C84ri6": {
+          "type": "text",
+          "settings": {
+            "heading": "Toxins",
+            "copy": "<p>Can contaminate water through animal waste.</p>",
+            "icon": "shopify://shop_images/Coconut-2.png",
+            "video_id": ""
+          }
+        },
+        "text_FadN6B": {
+          "type": "text",
+          "settings": {
+            "heading": "",
+            "copy": "<p>And Much, Much More...</p>",
+            "icon": "shopify://shop_images/icon-more.svg",
+            "video_id": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_VtREUj",
+        "text_qtcF6P",
+        "text_6w8KE6",
+        "text_UACReW",
+        "text_C84ri6",
+        "text_FadN6B"
+      ],
+      "custom_css": [
+        ".col-lg-10 {width: 100%;}"
+      ],
+      "settings": {
+        "style": "white-cards",
+        "heading": "We reduce up to 99.99% of chlorine, PFAS/PFOA-PFOS, heavy metals such as lead, and other chemical contaminants.",
+        "paragraph": "",
+        "section_bgimg": "shopify://shop_images/filter-background-white.jpg",
+        "buttontext": "",
+        "buttonlink": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "social_proof_PwDbfY": {
+      "type": "social-proof",
+      "blocks": {
+        "logo_xLT3gG": {
+          "type": "logo",
+          "settings": {
+            "title": "PFOA PFOS LAB TEST REPORT",
+            "logo": "shopify://shop_images/water_quality_2.png",
+            "link": "https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_gravity_contaminants_lab_report_USA_Aug2024.pdf?v=1724757203"
+          }
+        },
+        "logo_heMkkt": {
+          "type": "logo",
+          "settings": {
+            "title": "PHARMACEUTICALS TEST REPORT",
+            "logo": "shopify://shop_images/pharma.png",
+            "link": "https://cdn.shopify.com/s/files/1/2644/2852/files/20231120-Atom-Lab-Phoenix_Carbon-Filte_-Pharmaceuticals-VOCs.pdf?v=1713508930"
+          }
+        },
+        "logo_qAPXHa": {
+          "type": "logo",
+          "settings": {
+            "title": "HEAVY METALS TEST REPORT",
+            "logo": "shopify://shop_images/heavy_metal.png",
+            "link": "https://cdn.shopify.com/s/files/1/2644/2852/files/20231120_Atom_Lab_-_Phoenix_Carbon_Filter_-_Heavy_Metals.pdf?v=1713736816"
+          }
+        }
+      },
+      "block_order": [
+        "logo_xLT3gG",
+        "logo_heMkkt",
+        "logo_qAPXHa"
+      ],
+      "settings": {
+        "intro": "Our Water Has Been Tested By Reputable 3rd Parties And Passed With Flying Colors"
+      }
+    },
+    "copy_image_AB77Kd": {
+      "type": "copy-image",
+      "blocks": {
+        "text_bnxaCj": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Helps to strengthen bones and teeth."
+          }
+        },
+        "text_x6W8xH": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Improves sleep and can help strengthen muscles."
+          }
+        },
+        "text_rTtpJh": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Can regulate nerve signals and improve heart health."
+          }
+        },
+        "text_e6mY63": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Helps to regulate and nourish cells."
+          }
+        },
+        "text_QUBRbN": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Can balance water and minerals"
+          }
+        }
+      },
+      "block_order": [
+        "text_bnxaCj",
+        "text_x6W8xH",
+        "text_rTtpJh",
+        "text_e6mY63",
+        "text_QUBRbN"
+      ],
+      "settings": {
+        "style": "bg-light",
+        "layout": "copy-image",
+        "vertical_align": "align-items-center",
+        "heading": "Protect Important Nutrients",
+        "content": "",
+        "column_img": "shopify://shop_images/carbon-filter-cutout.png",
+        "video_id": "",
+        "large_image": "img-lrg",
+        "second_content": "",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "bg_image_style": "contain",
+        "section_randoimg_position": "top"
+      }
+    },
+    "video_image_z6EFiC": {
+      "type": "video-image",
+      "blocks": {
+        "text_qkjNqr": {
+          "type": "text",
+          "settings": {
+            "video_id": "",
+            "link": "",
+            "banner_image": "shopify://shop_images/water-filter-eCom1.png"
+          }
+        },
+        "text_Ma3Bkr": {
+          "type": "text",
+          "settings": {
+            "video_id": "",
+            "link": "",
+            "banner_image": "shopify://shop_images/water-filter-eCom2.jpg"
+          }
+        },
+        "text_JjdxYr": {
+          "type": "text",
+          "settings": {
+            "video_id": "",
+            "link": "",
+            "banner_image": "shopify://shop_images/water-filter-eCom3.png"
+          }
+        },
+        "text_aGrLwH": {
+          "type": "text",
+          "settings": {
+            "video_id": "",
+            "link": "",
+            "banner_image": "shopify://shop_images/water-filter-eCom4.png"
+          }
+        },
+        "text_M3h7LY": {
+          "type": "text",
+          "settings": {
+            "video_id": "",
+            "link": "",
+            "banner_image": "shopify://shop_images/water-filter-eCom_5.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "text_qkjNqr",
+        "text_Ma3Bkr",
+        "text_JjdxYr",
+        "text_aGrLwH",
+        "text_M3h7LY"
+      ],
+      "settings": {
+        "is_posttreat": false
+      }
+    },
+    "features_Y97Ek8": {
+      "type": "features",
+      "blocks": {
+        "feature_col_1_c7bhHT": {
+          "type": "feature_col_1",
+          "settings": {
+            "title": "It’s exposed to contaminants including heavy metals, toxins, chemical waste, micro plastics, + more",
+            "icon": "shopify://shop_images/icon-tick-badge.svg"
+          }
+        },
+        "feature_col_1_meK6Ah": {
+          "type": "feature_col_1",
+          "settings": {
+            "title": "Fresh, nutrient-rich water funnels from streams into public water systems.",
+            "icon": "shopify://shop_images/icon-tick-badge.svg"
+          }
+        },
+        "feature_col_1_NaFLiP": {
+          "type": "feature_col_1",
+          "settings": {
+            "title": "You and your loved ones enjoy fresh, nutrient-rich water with ease - just as nature intended",
+            "icon": "shopify://shop_images/icon-tick-badge.svg"
+          }
+        },
+        "feature_col_2_YNrhCw": {
+          "type": "feature_col_2",
+          "settings": {
+            "title": "The dense, porous wall removes 99.99% of contaminants - without altering your water’s oxygen or mineral content",
+            "icon": "shopify://shop_images/icon-tick-badge.svg"
+          }
+        },
+        "feature_col_2_V6pQER": {
+          "type": "feature_col_2",
+          "settings": {
+            "title": "The Phoenix Gravity Filter purifies tap water through activated carbon elements made from the highest quality coconut shells",
+            "icon": "shopify://shop_images/icon-tick-badge.svg"
+          }
+        }
+      },
+      "block_order": [
+        "feature_col_1_c7bhHT",
+        "feature_col_1_meK6Ah",
+        "feature_col_1_NaFLiP",
+        "feature_col_2_YNrhCw",
+        "feature_col_2_V6pQER"
+      ],
+      "settings": {
+        "heading": "Reduces contaminants found in tap water",
+        "content": "",
+        "section_video_bg": "gshkwot1gv",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "copy_image_Pc9rJF": {
+      "type": "copy-image",
+      "blocks": {
+        "text_KyYxFR": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Slows down ageing process by aiding cell regeneration"
+          }
+        },
+        "text_YaE8Fz": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Promotes better sleep by optimising temperature regulation"
+          }
+        },
+        "text_YWgkHJ": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Improves skin, hair and nails by flushing toxins"
+          }
+        },
+        "text_7PefBb": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Enhances cognitive function by carrying important nutrients to your brain"
+          }
+        },
+        "text_WXzK3y": {
+          "type": "text",
+          "settings": {
+            "feature_text": "Reduces illness by improving blood flow"
+          }
+        }
+      },
+      "block_order": [
+        "text_KyYxFR",
+        "text_YaE8Fz",
+        "text_YWgkHJ",
+        "text_7PefBb",
+        "text_WXzK3y"
+      ],
+      "settings": {
+        "style": "bg-light",
+        "layout": "image-copy",
+        "vertical_align": "align-items-center",
+        "heading": "Leaving you with healthier hydration",
+        "content": "",
+        "video_id": "",
+        "large_image": "img-lrg",
+        "second_content": "",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "section_bgimg": "shopify://shop_images/healthy-hydration-bg.jpg",
+        "bg_image_style": "cover",
+        "section_randoimg_position": "top"
+      }
+    },
+    "copy_image_MHx7p9": {
+      "type": "copy-image",
+      "settings": {
+        "style": "bg-white",
+        "layout": "centered-copy",
+        "vertical_align": "align-items-center",
+        "heading": "Go one step further for fluoride removal:",
+        "content": "<p>Our additional POSTreat filter removes more than 95% of fluoride for highly targeted filtration.<br/><br/>Works in tandem with Phoenix Gravity Filters made of AISI 304 Stainless Steel.<br/><br/>Designed for maximum reuse, the first on the market with refillable environmentally-friendly materials.</p>",
+        "column_img": "shopify://shop_images/POSTreat_Comparison_2.webp",
+        "video_id": "",
+        "large_image": "img-standard",
+        "second_content": "",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "bg_image_style": "contain",
+        "section_randoimg_position": "top"
+      }
+    },
+    "comparison_table_mkdPyD": {
+      "type": "comparison-table",
+      "blocks": {
+        "12071b99-c9cf-44f0-8f90-f17e668827de": {
+          "type": "text",
+          "settings": {
+            "feature": "Affordable",
+            "column_1": "yes",
+            "column_2": "no",
+            "column_3": "no",
+            "column_4": "yes"
+          }
+        },
+        "ff105aa8-88b6-413f-8760-39ae19b9c412": {
+          "type": "text",
+          "settings": {
+            "feature": "Portable",
+            "column_1": "yes",
+            "column_2": "no",
+            "column_3": "yes",
+            "column_4": "yes"
+          }
+        },
+        "64a5c03c-787f-4ebc-8ed9-74874085b166": {
+          "type": "text",
+          "settings": {
+            "feature": "AISI 304 Stainless Steel",
+            "column_1": "yes",
+            "column_2": "yes",
+            "column_3": "no",
+            "column_4": "no"
+          }
+        },
+        "d350ab4a-9aaf-49d4-9384-374210afd2e5": {
+          "type": "text",
+          "settings": {
+            "feature": "100-day Risk-Free Trial",
+            "column_1": "yes",
+            "column_2": "no",
+            "column_3": "no",
+            "column_4": "no"
+          }
+        },
+        "30fa03b0-29b6-4d12-afa4-2c65ba827c48": {
+          "type": "text",
+          "settings": {
+            "feature": "Easy To Maintain",
+            "column_1": "yes",
+            "column_2": "yes",
+            "column_3": "no",
+            "column_4": "no"
+          }
+        },
+        "text_VbAUDk": {
+          "type": "text",
+          "settings": {
+            "feature": "Large Capacity",
+            "column_1": "yes",
+            "column_2": "yes",
+            "column_3": "no",
+            "column_4": "no"
+          }
+        },
+        "text_U7Yanr": {
+          "type": "text",
+          "settings": {
+            "feature": "No Plumbing Required",
+            "column_1": "yes",
+            "column_2": "no",
+            "column_3": "yes",
+            "column_4": "yes"
+          }
+        }
+      },
+      "block_order": [
+        "12071b99-c9cf-44f0-8f90-f17e668827de",
+        "ff105aa8-88b6-413f-8760-39ae19b9c412",
+        "64a5c03c-787f-4ebc-8ed9-74874085b166",
+        "d350ab4a-9aaf-49d4-9384-374210afd2e5",
+        "30fa03b0-29b6-4d12-afa4-2c65ba827c48",
+        "text_VbAUDk",
+        "text_U7Yanr"
+      ],
+      "settings": {
+        "heading": "The Most Convenient And Affordable Way To Enjoy Pure, Clean Drinking In Your Home",
+        "number_of_comparisons": "3",
+        "style": "style-2",
+        "feature_header": "Features",
+        "company_name": "Phoenix Water Filter",
+        "comparison_1": "In-Home System",
+        "comparison_2": "Bottled Water",
+        "comparison_3": "Pitchers",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "cards_YrPxAE": {
+      "type": "cards",
+      "blocks": {
+        "text_M4tjUK": {
+          "type": "text",
+          "settings": {
+            "heading": "AISI 304 Stainless Steel",
+            "copy": "<p>Naturally BPA-free and rust-resistant for locked-in freshness. Our premium AISI 304 Grade Stainless Steel comes with a 1 year warranty.</p>",
+            "image": "shopify://shop_images/stainless-steel.jpg",
+            "video_id": ""
+          }
+        },
+        "text_X8yFGH": {
+          "type": "text",
+          "settings": {
+            "heading": "Highest-grade activated coconut carbon",
+            "copy": "<p>We use CTC60 premium coconut carbon for our Smart Carbon Elements. We form it into a highly dense porous carbon block. This enables us to continue removing 99.99% of contaminants for at least 6 months.</p>",
+            "image": "shopify://shop_images/activated-coconut-carbon.jpg",
+            "video_id": ""
+          }
+        },
+        "text_PNXwbf": {
+          "type": "text",
+          "settings": {
+            "heading": "20 x more powerful",
+            "copy": "<p> Making them 20 x more effective than typical jug filters and those using granular carbon.</p>",
+            "image": "shopify://shop_images/2x-power.jpg",
+            "video_id": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_M4tjUK",
+        "text_X8yFGH",
+        "text_PNXwbf"
+      ],
+      "settings": {
+        "style": "white-cards",
+        "heading": "",
+        "paragraph": "",
+        "buttontext": "",
+        "buttonlink": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "custom_html_reBzBb": {
+      "type": "custom-html",
+      "custom_css": [
+        "/* Ensure the wistia player fills its container */wistia-player {display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background-color: transparent; object-fit: cover; border: none;}"
+      ],
+      "name": "Custom Embed Video",
+      "settings": {
+        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/jr37r9792m.js\" async type=\"module\"></script><style>wistia-player[media-id='jr37r9792m']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/jr37r9792m/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"jr37r9792m\" aspect=\"1.7777777777777777\"></wistia-player>",
+        "visibility": "always",
+        "variant_ids": ""
+      }
+    },
+    "video_image_Bj4fB9": {
+      "type": "video-image",
+      "blocks": {
+        "text_yUqCJV": {
+          "type": "text",
+          "settings": {
+            "video_id": "jr37r9792m",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_yUqCJV"
+      ],
+      "disabled": true,
+      "settings": {
+        "is_posttreat": false
+      }
+    },
+    "copy_image_BpTWcm": {
+      "type": "copy-image",
+      "settings": {
+        "style": "bg-white",
+        "layout": "copy",
+        "vertical_align": "align-items-center",
+        "heading": "100-Day Free Trial",
+        "content": "<p>Worried the Phoenix Gravity Water Filter is too good to be true? Don’t believe it will really remove as many contaminants as we promise?<br/><br/>We stand behind our product 100% – so you can try our filter in your own home for 100 days risk-free. If you aren't fully satisfied with the purity of your water, send it back within 100 days for a full refund, no questions asked!<br/><br/>*T&Cs apply</p>",
+        "column_img": "shopify://shop_images/phoenix-guarantee.v1.png",
+        "video_id": "",
+        "large_image": "img-standard",
+        "second_content": "",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "bg_image_style": "contain",
+        "section_randoimg_position": "top"
+      }
+    },
+    "icon_row_L44bJz": {
+      "type": "icon-row",
+      "blocks": {
+        "text_icRMWG": {
+          "type": "text",
+          "settings": {
+            "icon": "shopify://shop_images/icon-recycle.svg",
+            "heading": "Environmental Monitoring Service"
+          }
+        },
+        "text_b4xeL9": {
+          "type": "text",
+          "settings": {
+            "icon": "shopify://shop_images/icon-flask.svg",
+            "heading": "CVR labs limited"
+          }
+        },
+        "text_m3FWEB": {
+          "type": "text",
+          "settings": {
+            "icon": "shopify://shop_images/icon-quality.svg",
+            "heading": "Water Quality Association"
+          }
+        },
+        "text_d9GUy7": {
+          "type": "text",
+          "settings": {
+            "icon": "shopify://shop_images/icon-removal.svg",
+            "heading": "Contaminants Removed"
+          }
+        }
+      },
+      "block_order": [
+        "text_icRMWG",
+        "text_b4xeL9",
+        "text_m3FWEB",
+        "text_d9GUy7"
+      ],
+      "settings": {
+        "style": "none",
+        "styles": "standard",
+        "heading": "We take our performance seriously.",
+        "paragraph": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "wisita_videos_QkwJdq": {
+      "type": "wisita-videos",
+      "blocks": {
+        "video_x7j9ni": {
+          "type": "video",
+          "settings": {
+            "title": "",
+            "wistia_id": "jr37r9792m"
+          }
+        }
+      },
+      "block_order": [
+        "video_x7j9ni"
+      ],
+      "disabled": true,
+      "name": "Wistia Video Grid",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero_fGiC9Y",
+    "cards_7Hbppn",
+    "social_proof_PwDbfY",
+    "copy_image_AB77Kd",
+    "video_image_z6EFiC",
+    "features_Y97Ek8",
+    "copy_image_Pc9rJF",
+    "copy_image_MHx7p9",
+    "comparison_table_mkdPyD",
+    "cards_YrPxAE",
+    "custom_html_reBzBb",
+    "video_image_Bj4fB9",
+    "copy_image_BpTWcm",
+    "icon_row_L44bJz",
+    "wisita_videos_QkwJdq"
+  ]
+}

@@ -1,0 +1,364 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ shop.url }}"
+    }
+    {% if collection %}
+    ,
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ collection.title | escape }}",
+      "item": "{{ shop.url }}{{ collection.url }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ product.title | escape }}",
+      "item": "{{ shop.url }}{{ product.url }}"
+    }
+    {% else %}
+    ,
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ product.title | escape }}",
+      "item": "{{ shop.url }}{{ product.url }}"
+    }
+    {% endif %}
+  ]
+}
+</script>
+
+
+{% comment %}
+  Other Products
+{% endcomment %}
+
+{% assign current_variant = product.selected_or_first_available_variant %}
+<div class="container">
+  <div class="row justify-content-center lk">
+    <div class="col-11 jkl col-lg-6 pe-5">
+      <div class="position-relative {% if product.images.size <= 0 %}h-100{% endif %}">
+        {% render 'product-badge', product: product %}
+
+        {% if product.images.size > 1 %}
+          <div class="swiper-container swiper product-swiper" data-slidestoshow="1" id="product-slider">
+            <div class="swiper-wrapper">
+              {% for media in product.media %}
+                {% assign thisVariantID = "" %}
+                {% for variant in product.variants %}
+                  {% if variant.featured_image == media.src %}
+                    {% assign thisVariantID = variant.id %}
+                  {% endif %}
+                {% endfor %}
+                {% comment %} Add video check to conditional... maybe? {% endcomment %}
+                {% if media.media_type == "external_video" %}
+                  <div class="swiper-slide" data-variant-id="{{ thisVariantID }}" data-slide-index="{{ forloop.index }}">
+                    <a data-fancybox="gallery" href="{{ media | external_video_url: autoplay: 'true' }}" class="product-image product-image--video d-block">
+                      {{ media.preview_image | image_url: width: 1200 | image_tag }}
+                    </a>
+                  </div>
+                {% elsif media.media_type == "image" %}
+                  <div class="swiper-slide" data-variant-id="{{ thisVariantID }}" data-slide-index="{{ forloop.index }}">
+                    <a data-fancybox="gallery" href="{{ media | image_url: width: 2560 }}" class="product-image d-block">
+                      {{ media | image_url: width: 1200 | image_tag }}
+                    </a>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="swiper-container swiper control {% if product.media.size == 3 %} control-three {% endif %} {% if product.media.size == 5 %}control-five{% endif %}" id="product-slider-nav">
+            <div class="swiper-wrapper {% if product.media.size == 3 or product.media.size == 5 %}wide{% endif %}">
+              {% for media in product.media %}
+                {% if media.media_type == "external_video" %}
+                  <div class="swiper-slide">
+                    {{ media.preview_image | image_url: width: 600 | image_tag }}
+                  </div>
+                {% elsif media.media_type == "image" %}
+                  <div class="swiper-slide">
+                    {{ media | image_url: width: 1200 | image_tag }}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="swiper-nav">
+            <div class="swiper-button-prev swiper-prev"></div>
+            <div class="swiper-button-next swiper-next"></div>
+          </div>
+        {% elsif product.featured_image %}
+          <a data-fancybox="gallery" href="{{ product.featured_image | image_url: width: 2560 }}" class="product-image d-block">
+            {{ product.featured_image | image_url: width: 1200| image_tag }}
+          </a>
+        {% else %}
+          <div class="placeholder">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-11 gg col-lg-6 mt-3 mt-lg-0">
+      {% render 'product-hero-countdown', section: section %}
+      <h1>{{ product.title }}</h1>
+      <div class="product-rating">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when '@app' %}
+              {% render block %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+      {% render 'best-for-tag' %}
+      {% if product.description != blank or product.metafields.custom.product_usps.value.size > 0 %}
+        <div class="product-description">
+          {{ product.description }}
+          {% if product.metafields.custom.product_usps.value.size > 0 %}
+            <ul class="product-description__usps">
+              {% for usp in product.metafields.custom.product_usps.value %}
+                <li>{{ usp }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endif %}
+      {% if settings.enable_minmax_buys %}
+        {% assign min_buy = settings.min_buy_qty %}
+        {% assign max_buy = settings.max_buy_qty %}
+      {% endif %}
+      
+      {% assign fluorid_variant = null %}
+{% assign steel_variant = null %}
+
+{% for variant in product.variants %}
+  {% assign v_title = variant.title | downcase %}
+  {% if v_title contains "postreat fluorid refill media" %}
+    {% assign fluorid_variant = variant %}
+  {% endif %}
+  {% if v_title contains "postreat steel" %}
+    {% assign steel_variant = variant %}
+  {% endif %}
+{% endfor %}
+<form method="post" action="/cart/add" id="add-to-cart">
+  {%- comment -%}
+  Main variant: FluoRid Refill Media (Appstle supported)
+  {%- endcomment -%}
+  <input type="hidden" name="id" value="{{ fluorid_variant.id }}">
+
+  <div class="mb-3 p-3 border bg-light">
+    ✅ <strong>{{ fluorid_variant.title }}</strong>
+  </div>
+
+  {% if fluorid_variant.selling_plan_allocations.size > 0 %}
+    <div class="subscriptions__group mb-3" style="display:none">
+      <p class="h5">Save & Subscribe:</p>
+      {% for allocation in fluorid_variant.selling_plan_allocations %}
+        <label>
+          <input type="radio" name="selling_plan" value="{{ allocation.selling_plan.id }}"
+          {% if forloop.first %}checked{% endif %}>
+          {{ allocation.selling_plan.name }}
+        </label><br/>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if steel_variant %}
+    <input type="hidden" name="steel_variant_id" id="steel_variant_id" value="{{ steel_variant.id }}">
+    <div class="mb-3 p-3 border bg-light">
+      ✅ <strong>{{ steel_variant.title }}</strong>
+    </div>
+  {% endif %}
+
+  
+
+  <button type="submit" class="btn btn-primary">Add to Cart</button>
+</form>
+
+    </div>
+                
+
+  </div>
+</div>
+                   
+
+
+{% render 'sticky-add-to-cart' %}
+
+{% unless product == empty %}
+  {% comment %} Product Script {% endcomment %}
+  <script>
+    window.product = {{ product | json }} || {};
+    {% if product.metafields.custom.product_badge_text.value != blank %}
+      if(typeof product !== "undefined"){
+        product['badge'] = "{{ product.metafields.custom.product_badge_text.value }}";
+      }
+    {% endif %}
+    let metaInfo = product.handle + '?view=metafields';
+    fetch(metaInfo)
+      .then(response => response.json())
+      .then(pageMeta => {
+        window.product = Object.assign(product, pageMeta);
+        
+        if( document.readyState !== 'loading' ) {
+          initProductScript(window.product, 'product-selectors', document);
+        } else {
+          document.addEventListener('DOMContentLoaded', function () {
+            initProductScript(window.product, 'product-selectors', document);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching page meta:', error);
+      });
+  </script>
+{% endunless %}
+
+
+{% comment %} <script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.title | escape }}",
+  "image": ["{{ product.featured_image | img_url: '600x600' }}"],
+  "description": "{{ product.description | strip_html | truncatewords: 50 | escape }}",
+  "sku": "{{ product.selected_or_first_available_variant.sku }}",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "{{ shop.currency }}",
+    "price": {{ product.price | divided_by: 100.0 }},
+    "availability": "https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+    "url": "{{ shop.url }}{{ product.url }}"
+  }
+}
+</script> {% endcomment %}
+
+
+
+
+{% schema %}
+  {
+    "name": "Product Hero",
+    "tag": "section",
+    "class": "section-producthero",
+    "settings": [
+      {
+        "type": "text",
+        "id": "countdown_text",
+        "label": "Countdown Text",
+        "info": "Use the [month] shortcode to output the current month, and the [time] shortcode to output the countdown timer."
+      },
+      {
+        "type": "text",
+        "id": "countdown_time",
+        "label": "Countdown Time",
+        "info": "Date, time and timezone in the format: YYYY-MM-DDTHH:mm:ss+10:00. OR for an evergreen timer, enter the number of minutes followed by the word 'minutes'. e.g. 15 minutes"
+      },
+      {
+        "type": "product_list",
+        "id": "countdown_products",
+        "label": "Show Countdown On Products",
+        "info": "Only show the countdown on these products. Leave blank to show on all."
+      },
+      {
+        "type": "product_list",
+        "id": "product_boost",
+        "label": "Show Subscription",
+        "info": "Promote a subscription product option",
+        "limit": 1
+      }
+    ],
+    "blocks": [
+      {
+        "type": "@app"
+      },
+      {
+        "type": "upsell",
+        "name": "upsell",
+        "settings": [
+          {
+            "type": "product",
+            "id": "product_upsell",
+            "label": "Upsell Product"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product Hero"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["product"]
+    }
+  }
+{% endschema %}
+
+
+        <style>
+       .sale-badge {
+     color: #fff;
+            padding-right: 5px;
+            padding-left: 8px;
+            background-color: #dc2626;
+            display: inline-block;
+            font-weight: bold;
+            position: relative;
+            top: 0%;
+            left: 0%;
+         font-size: 15px;
+   
+}
+
+@media only screen and (max-width: 575px) 
+{
+  .sale-badge {
+  top: 0;
+   left:0;
+}
+}
+    </style>
+    <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("add-to-cart");
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const fluoridId = "{{ fluorid_variant.id }}";
+      const steelId = document.getElementById("steel_variant_id").value;
+      const quantity = parseInt(document.querySelector('input[name="quantity"]').value, 10) || 1;
+
+      const selectedPlan = document.querySelector('input[name="selling_plan"]:checked');
+      const sellingPlanId = selectedPlan ? selectedPlan.value : null;
+
+      const items = [
+        {
+          id: fluoridId,
+          quantity: quantity,
+          ...(sellingPlanId ? { selling_plan: sellingPlanId } : {})
+        },
+        {
+          id: steelId,
+          quantity: quantity
+        }
+      ];
+
+      fetch("/cart/add.js", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items })
+      }).then(() => {
+        window.location.href = "/cart";
+      }).catch(err => {
+        console.error('Cart Add Error:', err);
+      });
+    });
+  });
+</script>

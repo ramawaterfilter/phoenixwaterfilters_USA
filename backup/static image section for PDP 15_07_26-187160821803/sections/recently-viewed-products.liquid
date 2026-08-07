@@ -1,0 +1,64 @@
+<div class="container">
+	<div class="row">
+		<div class="col-12 text-center">
+			<h2>
+				{{ section.settings.section_heading}}	
+			</h2>
+		</div>
+	</div>
+	<div class="row justify-content-center" id="recently-viewed-container">
+    </div>
+
+	<template id="product-tile-template">
+		<div class="col-sm-6 col-md-6 col-xl-4 mb-5">
+			<a class="product-tile d-flex" href="#URL#">
+			    #BADGE#
+
+			    <div class="product-tile__img mb-5">
+			        #IMAGE#
+			    </div>
+
+			    <div class="product-tile__meta d-flex flex-column">
+			        <h4 class="product-tile__title">#TITLE#</h4>
+
+			        <p class="product-tile__price">
+			            #PRICE#
+			         </p>
+
+			        <div class="w-100 d-flex justify-content-between text-center">
+			            <div class="btn" data-quickview="/products/#HANDLE#.js">
+			                {{ 'products.product.quick_view' | t }}
+			            </div>
+			            <div class="btn">
+			                {{ 'products.product.buy_now' | t }}
+			            </div>
+			        </div>
+			    </div>
+			</a>
+        </div>
+	</template>
+</div>	
+
+{% schema %}
+{
+    "name": "Recently Viewed Products",
+    "tag": "section",
+    "class": "section-recentlyviewed",
+    "settings" : [
+    	{
+    		"type" : "text",
+    		"id" : "section_heading",
+    		"label" : "Section Heading",
+    		"default" : "Recently Viewed Products"
+    	}
+    ],
+    "presets":[
+        {
+            "name":"Recently Viewed Products"
+        }
+    ],
+    "disabled_on": {
+        "groups": ["header","footer"]
+    }
+}
+{% endschema %}

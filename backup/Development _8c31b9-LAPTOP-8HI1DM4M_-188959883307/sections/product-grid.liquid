@@ -1,0 +1,152 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 d-flex justify-content-end">
+      <div class="sorting">
+        <label for="sort">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="20"
+            viewBox="0 0 25 20"
+            fill="none">
+            <path d="M13.019 8.49807H19.1817C19.3101 8.49807 19.4156 8.46533 19.4979 8.39966C19.5805 8.33406 19.6218 8.25032 19.6218 8.14819V6.0491C19.6218 5.94698 19.5805 5.86323 19.4979 5.79763C19.4156 5.73211 19.3101 5.69922 19.1817 5.69922H13.019C12.8905 5.69922 12.7852 5.73196 12.7026 5.79763C12.6202 5.86323 12.5789 5.94698 12.5789 6.0491V8.14819C12.5789 8.25032 12.6201 8.33406 12.7026 8.39966C12.7852 8.46522 12.8905 8.49807 13.019 8.49807Z" fill="#6FD9FF" />
+            <path d="M13.019 2.90038H16.5404C16.6689 2.90038 16.7744 2.86764 16.8566 2.80204C16.9394 2.73641 16.9801 2.65266 16.9801 2.55057V0.45141C16.9801 0.349435 16.9394 0.265573 16.8566 0.199938C16.7744 0.134456 16.6689 0.101562 16.5404 0.101562H13.019C12.8905 0.101562 12.7852 0.134303 12.7026 0.1999C12.6202 0.265573 12.5789 0.349435 12.5789 0.451371V2.55053C12.5789 2.65262 12.6201 2.73637 12.7026 2.802C12.7852 2.86748 12.8905 2.90038 13.019 2.90038Z" fill="#6FD9FF" />
+            <path d="M9.93766 15.4951H7.29651V0.45141C7.29651 0.349435 7.25536 0.265458 7.17278 0.199938C7.0902 0.134456 6.98483 0.101562 6.85633 0.101562H4.21513C4.08682 0.101562 3.98116 0.134303 3.89872 0.1999C3.81638 0.265573 3.77499 0.349435 3.77499 0.451371V15.4951H1.1338C0.932208 15.4951 0.794602 15.5679 0.721174 15.7136C0.647698 15.8523 0.679979 15.9798 0.817392 16.0964L5.21927 19.5951C5.32017 19.6605 5.42554 19.6932 5.53568 19.6932C5.65488 19.6932 5.76045 19.6605 5.85209 19.5951L10.2402 16.1074C10.3321 16.0201 10.3778 15.9324 10.3778 15.8453C10.3778 15.7429 10.3365 15.6593 10.2541 15.5932C10.1716 15.5279 10.0662 15.4951 9.93766 15.4951Z" fill="#6FD9FF" />
+            <path d="M24.7804 16.9931C24.6977 16.9273 24.5924 16.8945 24.464 16.8945H13.019C12.8905 16.8945 12.7852 16.9273 12.7026 16.9931C12.6202 17.0586 12.5789 17.1424 12.5789 17.2444V19.3435C12.5789 19.4458 12.6201 19.5293 12.7026 19.5951C12.7852 19.6606 12.8905 19.6933 13.019 19.6933H24.4639C24.5924 19.6933 24.6977 19.6606 24.7803 19.5951C24.8627 19.5293 24.9039 19.4458 24.9039 19.3435V17.2444C24.9041 17.1425 24.8627 17.0586 24.7804 16.9931Z" fill="#6FD9FF" />
+            <path d="M13.019 14.0954H21.8229C21.9513 14.0954 22.0568 14.0626 22.1395 13.9971C22.2218 13.9316 22.263 13.8477 22.263 13.7458V11.6465C22.263 11.5445 22.2218 11.4606 22.1395 11.3951C22.0567 11.3296 21.9513 11.2969 21.8229 11.2969H13.019C12.8905 11.2969 12.7852 11.3296 12.7026 11.3951C12.6202 11.4607 12.5789 11.5445 12.5789 11.6465V13.7458C12.5789 13.8477 12.6201 13.9316 12.7026 13.9971C12.7852 14.0626 12.8905 14.0954 13.019 14.0954Z" fill="#6FD9FF" />
+          </svg>
+          {{ 'products.facets.sort_by_label' | t }}</label>
+
+        <div class="select-wrap">
+          <select name="sort_by" id="sort">
+            {%- for option in collection.sort_options -%}
+              <option
+                value="{{ option.value | escape }}"
+                {% if option.value == collection.sort_by %}
+                selected="selected"
+                {% endif %}>
+                {{ option.name | escape }}
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% paginate collection.products by 16 %}
+
+
+
+
+              
+    <div class="row justify-content-center mb-5">
+
+      {% comment %} <div class="col-12 col-lg-3" >
+                                        {% render 'filters'
+                                          , collection: collection %}
+                              </div> {% endcomment %}
+      <div class="col-12 col-lg-12">
+        <div class="row p-3 p-lg-0">
+
+          {% if collection.products.size > 0 %}
+            
+         {% comment %}Modified on June 3, for Appstle      {% endcomment %}
+{% for product in collection.products %}
+  {% unless product.title == "Phoenix Gravity Carbon filter Elements (Appstle)" or product.title == "POSTreat FluoRid Refill Media (Appstle)" %}
+    <div class="products col-6 col-md-3 mb-5">
+      {% render 'product-tile', product: product %}
+    </div>
+  {% endunless %}
+{% endfor %}
+<!-- Start of Judge.me code -->
+      <div style='{{ jm_style }}' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-auto-install='false'>
+        {{ product.metafields.judgeme.badge }}
+      </div>
+      <!-- End of Judge.me code -->
+ {% comment %}Modified on June 3, for Appstle      {% endcomment %}
+
+          
+          {% else %}
+            <div class="col-12 text-center">
+              <p>{{ 'sections.collection_template.empty' | t }}.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+
+
+
+              
+    {% if paginate.pages > 1 %}
+      <div class="row justify-content-center">
+        <div class="col-12">
+          {% render 'pagination'
+            , paginate: paginate %}
+        </div>
+      </div>
+    {% endif %}
+
+  {% endpaginate %}
+
+</div>
+
+
+<script>
+    Shopify.queryParams = {};
+
+        // Preserve existing query parameters
+    if (location.search.length) {
+        var params = location.search.substr(1).split('&');
+        for (var i = 0; i < params.length; i++) {
+            var keyValue = params[i].split('=');
+
+            if (keyValue.length) {
+                // Check if the parameter is already an array (in case of multiple selections)
+                if (Shopify.queryParams[decodeURIComponent(keyValue[0])]) {
+                    if (Array.isArray(Shopify.queryParams[decodeURIComponent(keyValue[0])])) {
+                        Shopify.queryParams[decodeURIComponent(keyValue[0])].push(decodeURIComponent(keyValue[1]));
+                    } else {
+                        Shopify.queryParams[decodeURIComponent(keyValue[0])] = [
+                            Shopify.queryParams[decodeURIComponent(keyValue[0])],
+                            decodeURIComponent(keyValue[1]),
+                        ];
+                    }
+                } else {
+                    Shopify.queryParams[decodeURIComponent(keyValue[0])] = decodeURIComponent(keyValue[1]);
+                }
+            }
+        }
+    }
+
+    // Update sort_by query parameter on select change
+    document.querySelectorAll('[name="sort_by"]').forEach(function(el, index) {
+        el.addEventListener('change', function(e) {
+            var value = e.target.value;
+            Shopify.queryParams.sort_by = value;
+            location.search = unescape(new URLSearchParams(Shopify.queryParams).toString());
+        });
+    });
+</script>
+
+
+{% schema %}
+  {
+    "name": "Product Grid",
+    "tag": "section",
+    "class": "section-productgrid",
+    "presets": [
+      {
+        "name": "Product Grid"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["collection"]
+    }
+  }
+{% endschema %}

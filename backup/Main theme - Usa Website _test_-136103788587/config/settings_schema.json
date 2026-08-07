@@ -1,0 +1,416 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "KingKong",
+    "theme_version": "1.0.0",
+    "theme_author": "KingKong",
+    "theme_documentation_url": "https:\/\/github.com\/Shopify\/themekit",
+    "theme_support_url": "https:\/\/github.com\/Shopify\/themekit\/issues"
+  },
+  {
+    "name": "Header Spacing",
+    "settings": [
+      {
+        "type": "range",
+        "id": "body_padding_desktop",
+        "label": "Body Top Padding (Desktop)",
+        "default": 216,
+        "unit": "px",
+        "step": 2,
+        "min": 100,
+        "max": 300
+      },
+      {
+        "type": "range",
+        "id": "body_padding_mobile",
+        "label": "Body Top Padding (Mobile)",
+        "default": 116,
+        "unit": "px",
+        "step": 2,
+        "min": 40,
+        "max": 200
+      }
+    ]
+  },
+  {
+    "name": "Entry Popup",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Entry Popup"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_entry_popup",
+        "label": "Show Entry Popup",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "entry_popup_side_button",
+        "label": "Side Hero Button Text",
+        "default": "Get 10% Off"
+      },
+      {
+        "type": "text",
+        "id": "entry_popup_side_button_id",
+        "label": "Klaviyo Form ID",
+        "info": "This is the klavio form ID of the form that should be triggered by the side button",
+        "default": "X76cnx"
+      },
+      {
+        "type": "image_picker",
+        "id": "entry_popup_image",
+        "label": "Popup Image"
+      },
+      {
+        "type": "text",
+        "id": "entry_popup_eyebrow",
+        "label": "Eyebrow Text",
+        "default": "Hey there!"
+      },
+      {
+        "type": "text",
+        "id": "entry_popup_heading",
+        "label": "Popup Heading",
+        "default": "Get 10% Off The Product"
+      },
+      {
+        "type": "richtext",
+        "id": "entry_popup_content",
+        "label": "Popup Content",
+        "default": "<p>Consider this as our goodwill gesture to help you achieve your big benefit<\/p>"
+      },
+      {
+        "type": "text",
+        "id": "entry_popup_button",
+        "label": "Popup Button Text",
+        "default": "GET MY 10% OFF"
+      },
+      {
+        "type": "text",
+        "id": "entry_popup_nothanks",
+        "label": "Popup No Thanks Text",
+        "default": "Not right now, thanks"
+      },
+      {
+        "type": "textarea",
+        "id": "entry_popup_disclaimer",
+        "label": "Popup Disclaimer",
+        "default": "By providing your email, you agree to our Privacy Policy and Terms & Conditions"
+      },
+      {
+        "type": "textarea",
+        "id": "entry_popup_fineprint",
+        "label": "Popup Fine Print",
+        "default": "No spam. We promise!"
+      }
+    ]
+  },
+  {
+    "name": "Exit Intent Popup",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Exit Intent"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_exit_popup",
+        "label": "Show Exit Intent Popup",
+        "default": false
+      },
+      {
+        "type": "image_picker",
+        "id": "exit_popup_image",
+        "label": "Exit Popup Image"
+      },
+      {
+        "type": "text",
+        "id": "exit_popup_eyebrow",
+        "label": "Eyebrow Text",
+        "default": "Hey there!"
+      },
+      {
+        "type": "text",
+        "id": "exit_popup_heading",
+        "label": "Popup Heading",
+        "default": "Get 10% Off The Product"
+      },
+      {
+        "type": "richtext",
+        "id": "exit_popup_content",
+        "label": "Popup Content",
+        "default": "<p>Consider this as our goodwill gesture to help you achieve your big benefit<\/p>"
+      },
+      {
+        "type": "text",
+        "id": "exit_popup_button",
+        "label": "Popup Button Text",
+        "default": "GET MY 10% OFF"
+      },
+      {
+        "type": "text",
+        "id": "exit_popup_nothanks",
+        "label": "Popup No Thanks Text",
+        "default": "Not right now, thanks"
+      },
+      {
+        "type": "textarea",
+        "id": "exit_popup_disclaimer",
+        "label": "Popup Disclaimer",
+        "default": "By providing your email, you agree to our Privacy Policy and Terms & Conditions <br\/>No spam. We promise!"
+      },
+      {
+        "type": "textarea",
+        "id": "exit_popup_fineprint",
+        "label": "Popup Fine Print",
+        "default": "No spam. We promise!"
+      }
+    ]
+  },
+  {
+    "name": "Filters & Sizes",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "filter_image_1",
+        "label": "Filter Image 1",
+        "info": "For Carbon Filters"
+      },
+      {
+        "type": "image_picker",
+        "id": "filter_image_2",
+        "label": "Filter Image 2",
+        "info": "For  + Stainless Filters"
+      },
+      {
+        "type": "image_picker",
+        "id": "size_icon_1",
+        "label": "Size Icon 1",
+        "info": "For 1.5 Gallon"
+      },
+      {
+        "type": "text",
+        "id": "size_for_1",
+        "label": "Size For 1",
+        "info": "For 1.5 Gallon"
+      },
+      {
+        "type": "richtext",
+        "id": "size_content_1",
+        "label": "Size Content 1",
+        "info": "For 1.5 Gallon"
+      },
+      {
+        "type": "image_picker",
+        "id": "size_icon_2",
+        "label": "Size Icon 2",
+        "info": "For 2.25 Gallon"
+      },
+      {
+        "type": "text",
+        "id": "size_for_2",
+        "label": "Size For 1",
+        "info": "For 2.25 Gallon"
+      },
+      {
+        "type": "richtext",
+        "id": "size_content_2",
+        "label": "Size Content 2",
+        "info": "For 2.25 Gallon"
+      },
+      {
+        "type": "image_picker",
+        "id": "size_icon_3",
+        "label": "Size Icon 3",
+        "info": "For 3.25 Gallon"
+      },
+      {
+        "type": "text",
+        "id": "size_for_3",
+        "label": "Size For 3",
+        "info": "For 3.25 Gallon"
+      },
+      {
+        "type": "richtext",
+        "id": "size_content_3",
+        "label": "Size Content 3",
+        "info": "For 3.25 Gallon"
+      },
+   {
+        "type": "image_picker",
+        "id": "stand_1",
+        "label": "Stand 1",
+        "info": "No stand"
+      },
+ {
+        "type": "image_picker",
+        "id": "stand_2",
+        "label": "Stand 2",
+        "info": "Wooden stand"
+      },
+ {
+        "type": "image_picker",
+        "id": "stand_3",
+        "label": "Stand 3",
+        "info": "Stainless Steel stand"
+      }
+
+
+      
+    ]
+  },
+  {
+    "name": "Subscription Plans",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "complete_plan_content",
+        "label": "Subscription Benefits"
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon_16",
+        "label": "Favicon Image 16x16"
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon_32",
+        "label": "Favicon Image 32x32"
+      }
+    ]
+  },
+  {
+    "name": "Variant Colours",
+    "settings": [
+      {
+        "type": "textarea",
+        "id": "variant_colours",
+        "label": "Variant Colour Swatches",
+        "info": "Overrides the hex colour value of any variant selector buttons on product pages. Should be formatted with the variant name, followed by a colon, followed by the hex value with a hash. Comma separate for multiple values. e.g red:#ed1c24,blue:#6BCFF7"
+      }
+    ]
+  },
+  {
+    "name": "Min\/Max Buys",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_minmax_buys",
+        "label": "Enable Min\/Max Buy",
+        "info": "Quantities need to be set in the per product metafields. This enables the JS to work with them."
+      }
+    ]
+  },
+  {
+    "name": "Min Buys",
+    "settings": [
+      {
+        "type": "number",
+        "id": "min_buy_qty",
+        "label": "Enter Qty",
+        "default": 1,
+        "info": "Limit minimum qty product"
+      }
+    ]
+  },
+  {
+    "name": "Max Buys",
+    "settings": [
+      {
+        "type": "number",
+        "id": "max_buy_qty",
+        "label": "Enter Qty",
+        "default": 10,
+        "info": "Limit Maximum qty product"
+      }
+    ]
+  },
+  {
+    "name": "Your Cart",
+    "settings": [
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Free Standard Shipping Threshold",
+        "info": "This is for the free shipping alert. Set this to be the minimum cart amount to qualify for free shipping. Important: This does not change the shipping costs in the checkout.",
+        "default": 100
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_slide_cart",
+        "label": "Enable Slide Out Cart",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_ajax_cart",
+        "label": "Enable Ajax Add To Cart",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "cart_usp_1_text",
+        "label": "Cart USP 1 Text"
+      },
+      {
+        "type": "image_picker",
+        "id": "cart_usp_1_image",
+        "label": "Cart USP 1 Image"
+      },
+      {
+        "type": "text",
+        "id": "cart_usp_2_text",
+        "label": "Cart USP 2 Text"
+      },
+      {
+        "type": "image_picker",
+        "id": "cart_usp_2_image",
+        "label": "Cart USP 2 Image"
+      },
+      {
+        "type": "text",
+        "id": "cart_usp_3_text",
+        "label": "Cart USP 3 Text"
+      },
+      {
+        "type": "image_picker",
+        "id": "cart_usp_3_image",
+        "label": "Cart USP 3 Image"
+      }
+    ]
+  },
+  {
+    "name": "Localization",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Country\/region selector",
+        "info": "To add a country\/region, go to your [market settings.](\/admin\/settings\/markets)"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_country_selector",
+        "default": true,
+        "label": "Enable country\/region selector"
+      },
+      {
+        "type": "header",
+        "content": "Language selector",
+        "info": "To add a language, go to your [language settings.](\/admin\/settings\/languages)"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_language_selector",
+        "default": true,
+        "label": "Enable language selector"
+      }
+    ]
+  }
+]

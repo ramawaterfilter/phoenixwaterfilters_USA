@@ -1,0 +1,556 @@
+
+		<div class="site-header__top">
+	<div class="container">
+		<div class="row d-flex align-items-center justify-content-center">
+			
+			<div class="col-10">
+				{% render 'searchform' %}
+			</div>
+		</div>
+	</div>
+</div>
+			
+<div class="container">
+	<div class="row">
+		<div class="col-12">
+
+			<div class="site-header__main">
+					
+	            {% comment %}
+				
+				This gets a long string of all the menu handles. It's then matched to the hrefs set in the actual menu.
+				If a menu item links to another menu item, then we assume it wants it to act as a mega menu.
+
+				{% endcomment %}
+
+	            {%- capture allmenus -%}
+	            {%- for linklist in linklists -%}
+	            #{{ linklist.handle }}
+	            {%- endfor -%}
+	            {%- endcapture -%}
+
+							 {% comment %}
+HAMBURGER NOTE: Design was for a desktop with a hamburger nav that displayed all page links, with home and products in the main menu, this is why we built the nav using the mega menu funtion. We are now only showing the hamburger on mobile as we normally would so this function was not required.
+
+No time to revert. soz. 
+
+								 {% endcomment %}
+
+      <button
+        class="hamburger"
+        type="button"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-navigation-{{ section.id }}"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+	      <div class="site-header__nav" id="mobile-navigation-{{ section.id }}">
+
+        <div class='site-header__drawer-logo'>
+          <a href='{{ routes.root_url }}' aria-label='{{ shop.name }}'>
+            {% if section.settings.sitelogo != blank %}
+              {{ section.settings.sitelogo | image_url: width: 240 | image_tag: alt: shop.name }}
+            {% endif %}
+          </a>
+        </div>
+
+					<ul>
+					    {% for link in section.settings.sitemenu.links %}
+
+					    	{% assign original_link = link.url | split: '#' %}
+					    	{% assign mega_menu_name = original_link[1] %}
+					    	{% assign original_link = original_link[0] %}
+                        {% assign is_navigation_menu = false %}
+                        {% if mega_menu_name == 'megamenu' %}
+                          {% assign is_navigation_menu = true %}
+                        {% endif %}
+
+			        		{% if allmenus contains mega_menu_name %}
+							    {% assign links = linklists[mega_menu_name].links %}
+						        <li class="{% if original_link == request.path %}active {% endif %}{% if is_navigation_menu %}nav-navigation{% endif %}" data-mega-menu="#{{ mega_menu_name }}">
+
+                                <a
+                                  href="{{ original_link }}"
+                                  {% if is_navigation_menu %}
+                                    class="navigation"
+                                    aria-label="Open menu"
+                                    aria-expanded="false"
+                                  {% else %}
+                                    aria-label="Mega menu"
+                                  {% endif %}
+                                >
+                                  {% unless is_navigation_menu %}
+                                    {{ link.title }}
+                                    {% if links.size > 0 %}
+                                      <span class="sub-menu-trigger"></span>
+                                    {% endif %}
+                                  {% endunless %}
+                                </a>
+
+									{% render 'megamenu', megamenu: mega_menu_name, index: forloop.index %}
+
+									{% if links.size > 0 %}
+						                <ul class="sub-menu">
+						                    {% for sublink in links %}
+						                    <li class="{% if sublink.url == request.path %}active{% endif %}">
+						                        <a href="{{ sublink.url }}" target="{{ sublink.target }}">
+						                       		{{ sublink.title }}
+						                   		</a>
+						                    </li>
+						                    {% endfor %}
+						                </ul>
+						            {% endif %}
+						        </li>
+				        	{% else %}
+							    {% assign links = link.links %}
+						        <li class="{% if original_link == request.path %}active{% endif %}">
+					           		<a href="{{ original_link }}" target="{{ link.target }}">
+						           		{{ link.title }}
+
+							            {% if link.links.size > 0 %}
+						           	 		<span class="sub-menu-trigger"></span>
+						        		{% endif %}
+						           	</a>
+									{% if links.size > 0 %}
+						                <ul class="sub-menu">
+						                    {% for sublink in links %}
+						                    <li class="{% if sublink.url == request.path %}active{% endif %}">
+						                        <a href="{{ sublink.url }}" target="{{ sublink.target }}">
+						                       		{{ sublink.title }}
+						                   		</a>
+						                    </li>
+						                    {% endfor %}
+						                </ul>
+						            {% endif %}
+						        </li>
+				        	{% endif %}
+					    {% endfor %}
+				</ul>
+			</div>
+
+			<div class="site-header__logo">
+					<a href="{{ routes.root_url }}">
+						{% if section.settings.sitelogo != blank %}
+	      	   	{{ section.settings.sitelogo | image_url: width: 1000 | image_tag: alt: shop.name }}
+					 	{% endif %}
+	        </a>
+	      </div>
+
+	            <div class="site-header__aux">
+
+							{% comment %} <ul>
+								{% if customer == nil %}
+				            <li class="d-block d-lg-none">
+				            	<a href="{{ routes.login_url }}">
+				            		{{ 'customer.log_in' | t }}
+				            	</a>
+				            </li>
+						{% else: %}
+				            <li class="d-block d-lg-none">
+				            	<a href="{{ routes.account_url }}">
+				            		{{ 'customer.account.title' | t }}
+				            	</a>
+				            </li>
+				            <li class="d-block d-lg-none">
+				            	<a href="{{ routes.logout_url }}">
+				            		{{ 'customer.log_out' | t }}
+				            	</a>
+				            </li>
+					{% endif; %}
+							</ul> {% endcomment %}
+							<ul class="site-header__top__nav">
+						{% if shop.customer_accounts_enabled %}
+						{% if customer == nil %}
+				            <li>
+				            	<a href="{{ routes.account_login_url }}">
+												<img src="{{ 'icon-account.svg' | asset_url }}" loading="lazy" width="24" height="24" title="Login" alt="Login" />
+				            	</a>
+				            </li>
+						{% else %}
+							<li>
+                            <a href="{{ routes.account_url }}" aria-label="Account">
+                              <span class="site-header__account-label">Welcome {{ customer.first_name }}</span>
+                              <img src="{{ 'icon-account.svg' | asset_url }}" loading="lazy" width="24" height="24" class="" alt="Welcome" />
+                            </a>
+					        </li>
+							<li class="site-header__logout">
+                            <a href="{{ routes.account_logout_url }}">
+                              {{ 'customer.log_out' | t }}
+                            </a>
+					        </li>
+						{% endif %}
+						{% endif %}
+						<li>
+                            <a href="#" class="search-toggle" aria-label="Open search">
+                              <img src="{{ 'icon-search.svg' | asset_url }}" loading="lazy" width="24" height="24" class="" alt="Search" />
+                            </a>
+					        </li>
+					</ul>
+				            	
+	                <div class="cart-icon">
+											
+	                    <a href="{{ routes.cart_url }}" {% if settings.enable_slide_cart %}data-cartslide{% endif %}>
+
+													<img src="{{ 'icon-cart.svg' | asset_url }}" loading="lazy" width="24" height="24" class="" alt="Cart" />
+	                        <span class="count">{{ cart.item_count }}</span>
+	                     
+	                    </a>
+	                </div>
+
+	                
+	            </div>
+            </div>
+
+		</div>
+	</div>
+</div>
+
+
+<script>
+// mob menu
+let hamburger = document.querySelector('.site-header__main > .hamburger');
+
+if (hamburger) {
+	hamburger.addEventListener('click', function() {
+		const isOpen = document.documentElement.classList.toggle('menu-open');
+		hamburger.setAttribute('aria-expanded', isOpen.toString());
+		hamburger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+
+		if (newNavContainer && newNav) {
+			newNavContainer.classList.toggle('mega-active', isOpen);
+			newNav.setAttribute('aria-expanded', isOpen.toString());
+		}
+	});
+
+	document.addEventListener('keydown', function(event) {
+		if (event.key === 'Escape' && document.documentElement.classList.contains('menu-open')) {
+			document.documentElement.classList.remove('menu-open');
+			newNavContainer?.classList.remove('mega-active');
+			newNav?.setAttribute('aria-expanded', 'false');
+			hamburger.setAttribute('aria-expanded', 'false');
+			hamburger.setAttribute('aria-label', 'Open menu');
+			hamburger.focus();
+		}
+	});
+}
+
+let newNav = document.querySelector('.site-header__nav li[data-mega-menu="#megamenu"] > a.navigation');
+let newNavContainer = newNav ? newNav.closest('li') : null;
+
+// Open on hover (or click)
+if (newNavContainer) {
+    newNavContainer.addEventListener('click', function(event) {
+        // Check if the clicked element is newNav
+        if (event.target === newNav) {
+            event.preventDefault(); // Prevent default only if newNav is clicked
+            this.classList.add('mega-active');
+            newNav.setAttribute('aria-expanded', 'true');
+        }
+    });
+}
+
+// Close mega
+let closeMega = newNavContainer ? newNavContainer.querySelector('.megamenu .megamenu_close') : null;
+
+if (closeMega && newNav) {
+    closeMega.addEventListener('click', function(event) {
+        event.stopPropagation();  // Prevent event bubbling
+         
+        newNavContainer.classList.remove('mega-active');
+        newNav.setAttribute('aria-expanded', 'false');
+        document.documentElement.classList.remove('menu-open');
+        hamburger?.setAttribute('aria-expanded', 'false');
+        hamburger?.setAttribute('aria-label', 'Open menu');
+    });
+}
+
+
+
+
+
+// sub nav trigger
+let subNavTriggers = document.querySelectorAll('.sub-menu-trigger');
+subNavTriggers.forEach((el) => {
+	el.addEventListener('click', function(e){
+		e.preventDefault();
+		el.closest('li').classList.toggle('active');
+	});
+});
+
+// mega menu trigger
+let mmLinks = document.querySelectorAll('.megamenu__links li a');
+mmLinks.forEach(function(el, index){
+
+
+	el.addEventListener('mouseover', function(){
+		let thisIndex = el.dataset.index;
+		let relatedLists = el.closest('.megamenu').querySelectorAll('.megamenu li[data-index="'+thisIndex+'"]');
+		let activeLists =  el.closest('.megamenu').querySelectorAll('.megamenu li.active');
+
+		if(!relatedLists){
+			return;
+		}
+
+		activeLists.forEach((el) => {
+			el.classList.remove('active');
+		});
+
+		relatedLists.forEach((el) => {
+			el.classList.add('active');
+		});
+	});
+});
+
+</script>
+
+<script>
+  window.developer = atob("S2FsaWVzd2FyYW4gLSBXZWJzaXRlIERldmVsb3Blcg==");
+</script>
+
+<style>
+.site-header__drawer-logo {
+	display: none;
+}
+
+@media (max-width: 991.98px) {
+	.site-header__main {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+		align-items: center;
+		column-gap: 1rem;
+		flex-wrap: nowrap;
+	}
+
+	.site-header__main > .hamburger {
+		display: block;
+		grid-column: 1;
+		grid-row: 1;
+		justify-self: start;
+		appearance: none;
+		border: 0;
+		padding: 0;
+		margin: 0;
+		background: transparent;
+		z-index: 1001;
+	}
+
+	html.menu-open {
+		overflow: hidden;
+	}
+
+	.menu-open .site-header__main > .hamburger {
+		position: fixed;
+		top: 3rem;
+		right: 3rem;
+		left: auto;
+	}
+
+	.menu-open .site-header__nav li.mega-active .megamenu_close {
+		display: none;
+	}
+
+	.site-header__nav,
+	.site-header__nav .megamenu,
+	.site-header .hamburger span {
+		transition: none !important;
+	}
+
+	.site-header__nav {
+		position: fixed;
+		inset: 0;
+		z-index: 1000;
+		display: flex;
+		width: 100vw;
+		min-height: 100vh;
+		min-height: 100dvh;
+		padding: 4rem 3rem 3rem;
+		flex-direction: column;
+		align-items: center;
+		background: #fff;
+		opacity: 0;
+		pointer-events: none;
+		transform: translateX(-100%);
+		transition: opacity .3s ease, transform .3s ease;
+		overflow-y: auto;
+	}
+
+	.site-header__drawer-logo {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex: 0 0 auto;
+		width: 100%;
+		min-height: 10rem;
+		margin-bottom: 2rem;
+		text-align: center;
+	}
+
+	.site-header__drawer-logo a {
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+		width: auto;
+	}
+
+	.site-header__drawer-logo img,
+	.site-header__drawer-logo svg {
+		display: block;
+		width: 9.6rem;
+		max-width: 9.6rem;
+		height: auto;
+	}
+
+	.site-header__nav > ul {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		width: 100%;
+		max-width: 100%;
+		margin: 0;
+		gap: 0;
+	}
+
+	.site-header__nav > ul > li,
+	.site-header__nav ul li.nav-navigation {
+		display: flex;
+		width: 100%;
+		min-width: 0;
+		border-top: 1px solid #d9dee3;
+	}
+
+	.site-header__nav > ul > li:last-child {
+		border-bottom: 1px solid #d9dee3;
+	}
+
+	.site-header__nav > ul > li > a {
+		width: 100%;
+		padding: 1.5rem 3.5rem;
+		font-size: 2.4rem;
+		line-height: 1.35;
+		text-align: center;
+	}
+
+	.menu-open .site-header__nav {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translateX(0);
+	}
+
+	.site-header__nav .navigation {
+		display: block;
+		width: 2.4rem;
+		height: 1.8rem;
+		background-size: 100% 100%;
+	}
+
+	.site-header__logo {
+		grid-column: 2;
+		grid-row: 1;
+		justify-self: center;
+	}
+
+	.site-header__aux {
+		grid-column: 3;
+		grid-row: 1;
+		justify-self: end;
+		flex-wrap: nowrap;
+		gap: 1.2rem;
+	}
+
+	.site-header__top__nav {
+		align-items: center;
+		gap: 1.2rem;
+	}
+
+	.site-header__top__nav li {
+		margin: 0;
+	}
+
+	.site-header__aux a {
+		line-height: 1;
+	}
+
+	.site-header__aux img {
+		display: block;
+	}
+
+	.site-header__account-label,
+	.site-header__logout {
+		display: none;
+	}
+}
+
+@media (min-width: 992px) {
+	.site-header__main > .hamburger {
+		display: none;
+	}
+
+	.site-header__main {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+		align-items: center;
+		column-gap: 2rem;
+	}
+
+	.site-header__main > div {
+		width: auto;
+	}
+
+	.site-header__logo {
+		grid-column: 1;
+		grid-row: 1;
+		justify-content: flex-start;
+	}
+
+	.site-header__nav {
+		grid-column: 2;
+		grid-row: 1;
+		justify-content: center;
+		min-width: 0;
+	}
+
+	.site-header__nav > ul {
+		justify-content: center;
+		flex-wrap: nowrap;
+		width: auto;
+	}
+
+	.site-header__aux {
+		grid-column: 3;
+		grid-row: 1;
+		justify-content: flex-end;
+	}
+}
+</style>
+
+{% schema %}
+	{
+		"name": "Header",
+		"tag": "div",
+		"class": "site-header__inner",
+		"settings": [
+	        {
+	            "type":"image_picker",
+	            "id":"sitelogo",
+	            "label":"Logo"
+	        },
+	        {
+	            "type":"link_list",
+	            "id":"sitemenu",
+	            "label":"Main Menu"
+	        }
+		],
+		"presets": [
+			{
+				"name": "Header"
+			}
+		],
+	    "enabled_on": {
+	        "groups": ["header"]
+	    }
+	}
+{% endschema %}

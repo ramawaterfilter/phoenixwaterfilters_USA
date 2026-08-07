@@ -1,0 +1,91 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "video_image_UAiJcE": {
+      "type": "video-image",
+      "blocks": {
+        "text_NfaxUd": {
+          "type": "text",
+          "settings": {
+            "video_id": "",
+            "banner_image": "shopify://shop_images/Black_friday_banner_2a.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "text_NfaxUd"
+      ],
+      "settings": {
+        "is_posttreat": false
+      }
+    },
+    "hero_cVMpXV": {
+      "type": "hero",
+      "disabled": true,
+      "custom_css": [
+        "h1.mb-4 {margin-top: 39px !important; margin-bottom: 13px !important;}"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Black Friday Sale - 20% Off!",
+        "content": "<p>A deal you wouldn't want to miss!</p>",
+        "sideimage": "shopify://shop_images/kitchen03_in-situ02.png",
+        "section_video_bg": "",
+        "buttonlink": "",
+        "buttontext": ""
+      }
+    },
+    "map_Nw9MHc": {
+      "type": "map",
+      "settings": {
+        "banner_text": "",
+        "show_form": true,
+        "form_title": "Black Friday Sale - 20% Off!",
+        "klavyio_id": "klaviyo-form-RzcRV3",
+        "form_content": "<p>A deal you wouldn't want to miss!</p><p></p>",
+        "show_map": false,
+        "col1_heading": "Hours:",
+        "col1_content": "",
+        "col2_heading": "Address:",
+        "col2_content": ""
+      }
+    },
+    "copy_image_JyXnRn": {
+      "type": "copy-image",
+      "custom_css": [
+        "li {font-size: 17px;}"
+      ],
+      "settings": {
+        "style": "bg-white",
+        "layout": "centered-copy",
+        "vertical_align": "align-items-center",
+        "heading": "<h1 style=\"font-size:30px;margin-bottom:-20px;margin-top:-20px\"> Terms and Conditions  </h1>   ",
+        "content": "<ul><li>Free shipping on orders over $99; standard shipping applies below $99.  <br/></li><li>$120 off on orders $600+; 20% off on all others.  <br/></li><li>Black Friday Coupon code cannot be combined with other offers.</li></ul>",
+        "video_id": "",
+        "large_image": "img-standard",
+        "second_content": "",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "bg_image_style": "contain",
+        "section_randoimg_position": "top"
+      }
+    }
+  },
+  "order": [
+    "video_image_UAiJcE",
+    "hero_cVMpXV",
+    "map_Nw9MHc",
+    "copy_image_JyXnRn"
+  ]
+}

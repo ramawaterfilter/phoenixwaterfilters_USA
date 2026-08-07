@@ -1,0 +1,99 @@
+{% comment %} ////////////////////////////////////////////////custom-upsell-html-start/////////////////////////////////////////////////////////// {% endcomment %}
+{% assign upsell_product = all_products[settings.upsell_product] %}
+{% if upsell_product and upsell_product.title != blank and upsell_product.featured_image != blank %}
+  <div class="cart-upsells up">
+    <h4>Frequently Bought Together</h4>
+    <p class="fbt-cart-upsell">90% of customers also add</p>
+
+    <div class="cart-upsell__item up">
+      <div class="cart-upsell__img up">
+        <img src="{{ upsell_product.featured_image | image_url: width: 300 }}" alt="{{ upsell_product.title }}">
+      </div>
+
+      <div class="cart-upsell__info">
+        <p class="title-up">{{ upsell_product.title }}</p>
+        <p class="price-up">{{ upsell_product.price | money }}</p>
+
+        {% if upsell_product.available %}
+          <button 
+            class="btn upsell-atc" 
+            data-variant-id="{{ upsell_product.variants.first.id }}">
+            Add to Cart
+          </button>
+        {% else %}
+          <button class="btn sold-out" disabled>Sold Out</button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% comment %} ////////////////////////////////////////////////custom-upsell-html-end/////////////////////////////////////////////////////////// {% endcomment %}
+
+
+
+
+<div class="cart-usps">
+  {% if settings.cart_usp_1_text != blank %}
+    <div class="cart-usps__item">
+      <div class="cart-usps__item__img">
+        {{ settings.cart_usp_1_image | image_url: width: 1000 | image_tag }}
+      </div>
+      <div class="cart-usps__item__text">
+        {{ settings.cart_usp_1_text }}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if settings.cart_usp_2_text != blank %}
+    <div class="cart-usps__item">
+      <div class="cart-usps__item__img">
+        {{ settings.cart_usp_2_image | image_url: width: 1000 | image_tag }}
+      </div>
+      <div class="cart-usps__item__text">
+        {{ settings.cart_usp_2_text }}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if settings.cart_usp_3_text != blank %}
+    <div class="cart-usps__item">
+      <div class="cart-usps__item__img">
+        {{ settings.cart_usp_3_image | image_url: width: 1000 | image_tag }}
+      </div>
+      <div class="cart-usps__item__text">
+        {{ settings.cart_usp_3_text }}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+
+
+{% comment %} ////////////////////////////////////////////////custom-upsell-script-start/////////////////////////////////////////////////////////// {% endcomment %}
+<script>
+  document.querySelectorAll('.upsell-atc').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var variantId = this.dataset.variantId;
+      var button = this;
+
+      button.disabled = true;
+      button.textContent = 'Adding...';
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: variantId, quantity: 1 })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function() {
+        // Page refresh + cart drawer open
+        window.location.href = window.location.pathname + '?cart=open';
+      })
+      .catch(function() {
+        button.textContent = 'Error!';
+        button.disabled = false;
+      });
+    });
+  });
+</script>
+{% comment %} ////////////////////////////////////////////////custom-upsell-script-end/////////////////////////////////////////////////////////// {% endcomment %}

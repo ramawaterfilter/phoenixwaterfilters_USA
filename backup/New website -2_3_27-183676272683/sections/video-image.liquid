@@ -1,0 +1,271 @@
+{% if product.metafields.custom.hide_posttreat_filter_hero and section.settings.is_posttreat %}
+{% else %}
+
+<div class="swiper-container full-width-swiper">
+  <div class="swiper-wrapper">
+    {% for block in section.blocks %}
+      {% if block.settings.video_id != blank %}
+        <div class="swiper-slide video">
+          <a href="{{ block.settings.link }}">
+            <div class="video-preview-container view-animation fade-up" data-wistia-vid-id="{{ block.settings.video_id }}">
+              <script src="https://fast.wistia.com/embed/medias/{{ block.settings.video_id }}.jsonp" async></script>
+              <div class="wistia_responsive_padding" style="position:relative;">
+                <div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;">
+                  <div class="wistia_embed wistia_async_{{ block.settings.video_id }} seo=true videoFoam=true" style="height:100%;position:relative;width:100%">
+                    <div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;">
+                      <img src="https://fast.wistia.com/embed/medias/{{ block.settings.video_id }}/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;" loading="lazy"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+      {% elsif block.settings.banner_image != blank %}
+        <div class="swiper-slide image">
+          <a href="{{ block.settings.link }}" aria-label="{{ block.settings.heading | default: 'Shop product' | escape }}">
+            {{ block.settings.banner_image | image_url: width: 1920 | image_tag: alt: block.settings.heading }}
+          </a>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- ✅ COUNTDOWN TIMER (NO CONFLICT) -->
+  {% if section.settings.enable_countdown %}
+  <div id="cd-{{ section.id }}" 
+       class="cd-wrapper {% if section.settings.hide_on_mobile %}cd-hide-mobile{% endif %}">
+    <div class="cd-inner">
+
+      {% if section.settings.cd_heading != blank %}
+        <h3 class="cd-heading">{{ section.settings.cd_heading }}</h3>
+      {% endif %}
+
+      <div class="cd-timer" data-hours="{{ section.settings.cd_hours }}">
+        <div><span class="cd-days count-tim">00</span><small class="count-timm">Date</small></div>
+        <div><span class="cd-hours count-tim">00</span><small class="count-timm">Hours</small></div>
+        <div><span class="cd-minutes count-tim">00</span><small class="count-timm">Minutes</small></div>
+        <div><span class="cd-seconds count-tim">00</span><small class="count-timm">Seconds</small></div>
+      </div>
+
+    </div>
+  </div>
+      {% endif %}
+
+</div>
+
+<div class="swiper-pagination"></div>
+
+<style>
+
+  @media (max-width: 767px){
+  #cd-{{ section.id }}.cd-hide-mobile{
+    display: none !important;
+  }
+}
+/* ✅ Scoped countdown CSS (no conflict) */
+#cd-{{ section.id }} {
+  text-align: center;
+  margin-top: 15px;
+}
+
+#cd-{{ section.id }} .cd-heading {
+  font-size: {{ section.settings.cd_heading_size }}px;
+  color: {{ section.settings.cd_heading_color }};
+  margin-bottom: 8px;
+}
+
+#cd-{{ section.id }} .cd-timer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+#cd-{{ section.id }} .cd-timer .count-tim {
+  background: {{ section.settings.cd_box_color }};
+  color: {{ section.settings.cd_text_color }};
+  padding: 8px 12px;
+  border-radius: 6px;
+  min-width: 50px;
+}
+
+#cd-{{ section.id }} span {
+  display: block;
+  font-size: {{ section.settings.cd_size }}px;
+  font-weight: bold;
+}
+
+#cd-{{ section.id }} small {
+    font-size: 12px;
+    color: black;
+    font-weight: bold;
+    background: white;
+    padding: 6px 15px;
+    border-radius: 3px;
+}
+.cd-inner {
+    position: absolute;
+    top: 80%;
+    left: 60%;
+    z-index: 9999999;
+    transform: translate(-50%, -50%);
+}
+</style>
+
+{% if section.settings.enable_countdown %}
+<script>
+(function(){
+  const wrap = document.getElementById("cd-{{ section.id }}");
+  if(!wrap) return;
+
+  const timer = wrap.querySelector(".cd-timer");
+  const hours = parseInt(timer.dataset.hours);
+
+  const storageKey = "cd_end_{{ section.id }}";
+  const hoursKey = "cd_hours_{{ section.id }}";
+
+  let savedHours = localStorage.getItem(hoursKey);
+  let end = localStorage.getItem(storageKey);
+
+  if (!end || savedHours != hours) {
+    end = new Date().getTime() + hours * 60 * 60 * 1000;
+    localStorage.setItem(storageKey, end);
+    localStorage.setItem(hoursKey, hours);
+  }
+
+  function update(){
+    const now = new Date().getTime();
+    let diff = end - now;
+
+    if(diff <= 0){
+      end = new Date().getTime() + hours * 60 * 60 * 1000;
+      localStorage.setItem(storageKey, end);
+      diff = end - now;
+    }
+
+    const d = Math.floor(diff / (1000*60*60*24));
+    const h = Math.floor((diff / (1000*60*60)) % 24);
+    const m = Math.floor((diff / (1000*60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+
+    wrap.querySelector(".cd-days").innerText = String(d).padStart(2,'0');
+    wrap.querySelector(".cd-hours").innerText = String(h).padStart(2,'0');
+    wrap.querySelector(".cd-minutes").innerText = String(m).padStart(2,'0');
+    wrap.querySelector(".cd-seconds").innerText = String(s).padStart(2,'0');
+  }
+
+  update();
+  setInterval(update,1000);
+})();
+</script>
+{% endif %}
+
+{% endif %}
+
+{% schema %}
+{
+  "name": "Image / Video",
+  "tag": "section",
+  "class": "section-video-image p-0 trigger-observer",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "is_posttreat",
+      "label": "PostTreat Hero Image?"
+    },
+{
+  "type": "checkbox",
+  "id": "enable_countdown",
+  "label": "Enable Countdown Timer",
+  "default": false
+},
+{
+  "type": "checkbox",
+  "id": "hide_on_mobile",
+  "label": "Hide on Mobile",
+  "default": true
+},
+    {
+      "type": "text",
+      "id": "cd_heading",
+      "label": "Countdown Heading",
+      "default": "Hurry! Sale Ends Soon"
+    },
+    {
+      "type": "range",
+      "id": "cd_hours",
+      "label": "Timer (Hours)",
+      "min": 24,
+      "max": 72,
+      "step": 1,
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "cd_heading_color",
+      "label": "Heading Color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "cd_box_color",
+      "label": "Box Color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "cd_text_color",
+      "label": "Text Color",
+      "default": "#fff"
+    },
+    {
+      "type": "range",
+      "id": "cd_heading_size",
+      "label": "Heading Size",
+      "min": 14,
+      "max": 30,
+      "step": 1,
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "cd_size",
+      "label": "Timer Size",
+      "min": 14,
+      "max": 30,
+      "step": 1,
+      "default": 18
+    }
+
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Image / Video",
+      "settings": [
+        {
+          "type": "text",
+          "id": "video_id",
+          "label": "Wistia Video ID"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "image_picker",
+          "id": "banner_image",
+          "label": "Large Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image / Video with Countdown"
+    }
+  ]
+}
+{% endschema %}

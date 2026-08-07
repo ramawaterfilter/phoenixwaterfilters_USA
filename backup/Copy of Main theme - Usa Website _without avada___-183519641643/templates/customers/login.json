@@ -1,0 +1,75 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "copy_image_qTLqaA": {
+      "type": "copy-image",
+      "name": "Copy Image",
+      "settings": {
+        "style": "bg-white",
+        "layout": "centered-copy",
+        "vertical_align": "align-items-center",
+        "heading": "",
+        "content": "",
+        "video_id": "",
+        "large_image": "img-standard",
+        "second_content": "",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "bg_image_style": "contain",
+        "section_randoimg_position": "top"
+      }
+    },
+    "copy_image_kD46pp": {
+      "type": "copy-image",
+      "name": "Copy Image",
+      "settings": {
+        "style": "bg-white",
+        "layout": "centered-copy",
+        "vertical_align": "align-items-center",
+        "heading": "",
+        "content": "",
+        "video_id": "",
+        "large_image": "img-standard",
+        "second_content": "",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "bg_image_style": "contain",
+        "section_randoimg_position": "top"
+      }
+    },
+    "pagetitle": {
+      "type": "pagetitle",
+      "settings": {
+        "pagetitle": "",
+        "show_breadcrumbs": false,
+        "show_back": false,
+        "show_back_text": "",
+        "show_back_url": ""
+      }
+    },
+    "account-login": {
+      "type": "account-login",
+      "settings": {}
+    }
+  },
+  "order": [
+    "copy_image_qTLqaA",
+    "copy_image_kD46pp",
+    "pagetitle",
+    "account-login"
+  ]
+}

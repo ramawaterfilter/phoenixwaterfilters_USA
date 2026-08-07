@@ -1,0 +1,60 @@
+{% comment %}
+
+  This outputs the content of the megamenus captures earlier
+  megamenus is a string of menu handles #menu1#menu2
+{% endcomment %}
+
+{% assign runningCount = 0 %}
+{% assign midRunningCount = 0 %}
+{% assign endRunningCount = 0 %}
+
+{% if linklists[megamenu] != blank %}
+
+  <div class="megamenu" data-id="#{{ megamenu }}">
+    <img src="{{ 'icon-close-mega.svg' | asset_url  }}" class="megamenu_close" alt="Close" />
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-12 text-center">
+          <p class="h3">
+            <a href="/" class="mega__logo">
+              {% if section.settings.sitelogo != blank %}
+                {{ section.settings.sitelogo | image_url: width: 64 | image_tag: alt: shop.name }}
+              {% endif %}
+            </a>
+          </p>
+        </div>
+      </div>
+      <div class="row align-items-center">
+        <div class="col-12">
+          <div class="megamenu__links">
+            <ul>
+              {% for link in linklists[megamenu].links %}
+
+                <li>
+                  <a
+                    href="{{ link.url }}"
+                    target="{{ link.target }}"
+                    data-index="{{ runningCount }}">
+                    {{ link.title }}
+                  </a>
+                  {% if link.links.size > 0 %}
+                    <ul class="sub-mega-menu">
+                      {% for sublink in link.links %}
+
+                        <li data-index="{{ midRunningCount }}">
+                          <a href="{{ sublink.url }}" target="{{ sublink.target }}">
+                            {{ sublink.title }}
+                          </a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}

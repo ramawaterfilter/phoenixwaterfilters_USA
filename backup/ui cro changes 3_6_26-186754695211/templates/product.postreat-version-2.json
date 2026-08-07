@@ -1,0 +1,1311 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "blocks_Xxkrh7": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_866760f_KQ87ic": {
+          "type": "ai_gen_block_866760f",
+          "disabled": true,
+          "settings": {
+            "custom_html": "<div class=\"trust-wrapper\">\n  <div class=\"trust-bar-inner\">\n\n    <!-- ORIGINAL ITEMS -->\n    <div class=\"trust-item\">\n<span>🏅</span> NSF/ANSI Certified</div>\n    <div class=\"trust-item\">\n<span>⭐</span> 4.8/5 — 2,400+ Reviews</div>\n    <div class=\"trust-item\">\n<span>🚚</span> Free Shipping $99+</div>\n    <div class=\"trust-item\">\n<span>🔄</span> 100-Day Money-Back Guarantee</div>\n    <div class=\"trust-item\">\n<span>🛡️</span> 10-Year Warranty</div>\n    <div class=\"trust-item\">\n<span>🌿</span> No Aluminum. No Plastic Waste.</div>\n    <div class=\"trust-item\">\n<span>📍</span> Ships from Austin, TX</div>\n\n    <!-- DUPLICATED ITEMS FOR SMOOTH LOOP -->\n    <div class=\"trust-item\">\n<span>🏅</span> NSF/ANSI Certified</div>\n    <div class=\"trust-item\">\n<span>⭐</span> 4.8/5 — 2,400+ Reviews</div>\n    <div class=\"trust-item\">\n<span>🚚</span> Free Shipping $99+</div>\n    <div class=\"trust-item\">\n<span>🔄</span> 100-Day Money-Back Guarantee</div>\n    <div class=\"trust-item\">\n<span>🛡️</span> 10-Year Warranty</div>\n    <div class=\"trust-item\">\n<span>🌿</span> No Aluminum. No Plastic Waste.</div>\n    <div class=\"trust-item\">\n<span>📍</span> Ships from Austin, TX</div>\n\n  </div>\n</div>",
+            "custom_css": "/* TRUST BAR */\n.trust-wrapper {\n  width: 100%;\n  background: #2B2B4E !important;\n  padding: 14px 0;\n  overflow: hidden;\n  border-top: 1px solid rgba(255,255,255,0.08);\n  border-bottom: 1px solid rgba(255,255,255,0.08);\n}\n\n/* MOVING CONTENT */\n.trust-bar-inner {\n  display: flex;\n  align-items: center;\n  gap: 30px;\n  width: max-content;\n  white-space: nowrap;\n  animation: marquee 28s linear infinite;\n}\n\n/* EACH ITEM */\n.trust-item {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  color: #ffffff;\n  font-size: 15px;\n  font-weight: 600;\n  flex-shrink: 0;\n}\n\n.trust-item span {\n  color: #5eead4;\n  font-size: 18px;\n}\n\n/* SCROLL ANIMATION */\n@keyframes marquee {\n  from {\n    transform: translateX(0);\n  }\n  to {\n    transform: translateX(-50%);\n  }\n}\n\n/* PAUSE ON HOVER */\n.trust-wrapper:hover .trust-bar-inner {\n  animation-play-state: paused;\n}\n\n/* MOBILE */\n@media (max-width: 768px) {\n  .trust-item {\n    font-size: 14px;\n  }\n\n  .trust-bar-inner {\n    gap: 32px;\n    animation-duration: 22s;\n  }\n}",
+            "custom_js": "",
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_866760f_KQ87ic"
+      ],
+      "disabled": true,
+      "settings": {}
+    },
+    "product-hero": {
+      "type": "product-hero",
+      "blocks": {
+        "judge_me_reviews_preview_badge_4BPtgQ": {
+          "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_preview_badge_4BPtgQ"
+      ],
+      "custom_css": [
+        ".below-atc-icons {display: none;}",
+        "@media (min-width: 1024px) {.section-producthero .control .swiper-slide {padding-bottom: 13%; } .pe-5 {padding-right: 0rem !important; }}",
+        "@media (min-width: 1200px) {.container {max-width: 1200px !important; }}",
+        "@media (max-width: 1024px) {.row > * {padding-left: 10px; }}",
+        ".product-countdown {background: #2b2b4e; color: #f8fafc !important;}"
+      ],
+      "settings": {
+        "countdown_text": "{{ product.metafields.custom.month_sale.value }}",
+        "countdown_time": "",
+        "countdown_products": [],
+        "product_boost": []
+      }
+    },
+    "custom_support_TByi4L": {
+      "type": "custom-support",
+      "blocks": {
+        "support_item_U69CBy": {
+          "type": "support_item",
+          "settings": {
+            "icon_style": "support",
+            "label": "Customer Support",
+            "link": ""
+          }
+        },
+        "support_item_pggETt": {
+          "type": "support_item",
+          "settings": {
+            "icon_style": "fit",
+            "label": "Universal Fit",
+            "link": ""
+          }
+        },
+        "support_item_xWT9cC": {
+          "type": "support_item",
+          "settings": {
+            "icon_style": "warehouse",
+            "label": "US Warehouse",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "support_item_U69CBy",
+        "support_item_pggETt",
+        "support_item_xWT9cC"
+      ],
+      "custom_css": [
+        "section {padding-top: 0px; padding-bottom: 0px;}"
+      ],
+      "name": "Custom support",
+      "settings": {
+        "accessibility_label": "Customer benefits",
+        "background_color": "#071a27",
+        "text_color": "#ffcf32",
+        "icon_color": "#dce6ef",
+        "section_height": 80
+      }
+    },
+    "custom_trust_badges_zB4rJr": {
+      "type": "custom-trust-badges",
+      "blocks": {
+        "badge_WC7hE7": {
+          "type": "badge",
+          "settings": {
+            "label": "NSF/ANSI 42 & 372",
+            "icon": "nsf"
+          }
+        },
+        "badge_RGL9kM": {
+          "type": "badge",
+          "settings": {
+            "label": "Lab Tested",
+            "icon": "lab"
+          }
+        },
+        "badge_yQRFee": {
+          "type": "badge",
+          "settings": {
+            "label": "10-Year Warranty",
+            "icon": "warranty"
+          }
+        },
+        "badge_jeCz73": {
+          "type": "badge",
+          "settings": {
+            "label": "Aluminum-Free",
+            "icon": "aluminum"
+          }
+        },
+        "badge_fNpRwr": {
+          "type": "badge",
+          "settings": {
+            "label": "Non-Toxic",
+            "icon": "toxic"
+          }
+        },
+        "badge_VHKJGz": {
+          "type": "badge",
+          "settings": {
+            "label": "100-Day Trial",
+            "icon": "trial"
+          }
+        }
+      },
+      "block_order": [
+        "badge_WC7hE7",
+        "badge_RGL9kM",
+        "badge_yQRFee",
+        "badge_jeCz73",
+        "badge_fNpRwr",
+        "badge_VHKJGz"
+      ],
+      "custom_css": [
+        "section {padding-top: 0px; padding-bottom: 0px;}"
+      ],
+      "name": "Custom trust badges",
+      "settings": {
+        "eyebrow": "Built on Trust",
+        "heading": "2,400+ Americans Trust Their Water to POSTreat™",
+        "description": "<p>Certified, tested, and verified — backed by real customers who've made the switch.</p>",
+        "background_color": "#ffffff",
+        "text_color": "#00142c",
+        "accent_color": "#153b5e",
+        "border_color": "#e1e6ef",
+        "card_background_color": "#ffffff",
+        "icon_background_color": "#ededed"
+      }
+    },
+    "custom_product_details_tabular_form_AKNBim": {
+      "type": "custom-product-details-tabular-form",
+      "blocks": {
+        "detail_KWVxdB": {
+          "type": "detail",
+          "settings": {
+            "label": "Material",
+            "value": "<p>AISI 304 stainless steel &mdash; rust-resistant and non-leaching</p>"
+          }
+        },
+        "detail_V3QeWm": {
+          "type": "detail",
+          "settings": {
+            "label": "Capacity",
+            "value": "<p>Up to 1,100 gallons per pair</p>"
+          }
+        },
+        "detail_GgYxkX": {
+          "type": "detail",
+          "settings": {
+            "label": "Compatibility",
+            "value": "<p>Phoenix Gravity Carbon Filter Elements &amp; Black Berkey&reg; Elements</p>"
+          }
+        },
+        "detail_Wh9DUf": {
+          "type": "detail",
+          "settings": {
+            "label": "Media",
+            "value": "<p>FluoRid &mdash; activated carbon blend + proprietary fluoride-reduction media</p>"
+          }
+        },
+        "detail_HwAnAY": {
+          "type": "detail",
+          "settings": {
+            "label": "Warranty",
+            "value": "<p>10-year coverage on defects in materials or performance</p>"
+          }
+        },
+        "detail_tziDRW": {
+          "type": "detail",
+          "settings": {
+            "label": "Fluoride Reduction",
+            "value": "<p>&gt;95% from drinking water</p>"
+          }
+        }
+      },
+      "block_order": [
+        "detail_KWVxdB",
+        "detail_V3QeWm",
+        "detail_GgYxkX",
+        "detail_Wh9DUf",
+        "detail_HwAnAY",
+        "detail_tziDRW"
+      ],
+      "custom_css": [
+        "section {padding-top: 0px; padding-bottom: 0px;}"
+      ],
+      "name": "Product details table",
+      "settings": {
+        "eyebrow": "Product details",
+        "heading": "Technical Specifications",
+        "product_image": "shopify://shop_images/Artboard_1.jpg",
+        "desktop_image_position": "left",
+        "mobile_image_position": "above",
+        "image_width": 40,
+        "content_width": 100,
+        "background_color": "#ffffff",
+        "text_color": "#00142c",
+        "accent_color": "#006d6d",
+        "border_color": "#e6e9ee"
+      }
+    },
+    "custom_certificate_info_card_RipJUk": {
+      "type": "custom-certificate-info-card",
+      "blocks": {
+        "step_ipJHpb": {
+          "type": "step",
+          "settings": {
+            "step_label": "01",
+            "icon": "shopify://shop_images/Fill_the_upper_chamber.png",
+            "icon_alt": "",
+            "heading": "Fill Upper Chamber",
+            "description": "<p>Pour tap water into the upper stainless steel chamber.</p>"
+          }
+        },
+        "step_mBwGhe": {
+          "type": "step",
+          "settings": {
+            "step_label": "02",
+            "icon": "shopify://shop_images/Carbon_Filtration.png",
+            "icon_alt": "",
+            "heading": "Carbon Filtration",
+            "description": "<p>Coconut-shell carbon elements remove 99.9% of chlorine, heavy metals, microplastics & PFAS.</p>"
+          }
+        },
+        "step_nmVaLK": {
+          "type": "step",
+          "settings": {
+            "step_label": "03",
+            "icon": "shopify://shop_images/POSTreat_Stage.png",
+            "icon_alt": "",
+            "heading": "POSTreat™ Stage",
+            "description": "<p>Water passes through FluoRid media inside AISI 304 steel casings, capturing fluoride efficiently.</p>"
+          }
+        },
+        "step_wX4gnW": {
+          "type": "step",
+          "settings": {
+            "step_label": "04",
+            "icon": "shopify://shop_images/POSTreat_Stage.png",
+            "icon_alt": "",
+            "heading": "Pure Water Collected",
+            "description": "<p>Clean, mineral-rich water collects in the lower chamber - ready to drink.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "step_ipJHpb",
+        "step_mBwGhe",
+        "step_nmVaLK",
+        "step_wX4gnW"
+      ],
+      "custom_css": [],
+      "name": "Certificate info card",
+      "settings": {
+        "eyebrow": "The science behind it",
+        "heading": "How POSTreat™ Filters Your Water",
+        "background_color": "#f5f8fd",
+        "text_color": "#071733",
+        "muted_text_color": "#697895",
+        "line_color": "#d3d7e2",
+        "accent_color": "#193d65",
+        "icon_background_color": "#ffffff"
+      }
+    },
+    "custom_timeline_kktmmj": {
+      "type": "custom-timeline",
+      "blocks": {
+        "timeline_step_9y8XTW": {
+          "type": "timeline_step",
+          "settings": {
+            "label": "Month 0",
+            "description": "<p>Install & start filtering</p>"
+          }
+        },
+        "timeline_step_iWgidr": {
+          "type": "timeline_step",
+          "settings": {
+            "label": "Month 4",
+            "description": "<p>Replace FluoRid Media (~1,060 gal)</p>"
+          }
+        },
+        "timeline_step_7kGnJQ": {
+          "type": "timeline_step",
+          "settings": {
+            "label": "Month 8",
+            "description": "<p>Replace FluoRid Media again</p>"
+          }
+        },
+        "timeline_step_fDP8Va": {
+          "type": "timeline_step",
+          "settings": {
+            "label": "Month 12",
+            "description": "<p>Replace Carbon Elements + FluoRid</p>"
+          }
+        }
+      },
+      "block_order": [
+        "timeline_step_9y8XTW",
+        "timeline_step_iWgidr",
+        "timeline_step_7kGnJQ",
+        "timeline_step_fDP8Va"
+      ],
+      "custom_css": [
+        "section {padding-top: 0px; padding-bottom: 0px;}"
+      ],
+      "name": "Custom timeline",
+      "settings": {
+        "eyebrow": "Maintenance made easy",
+        "heading": "Filter Lifespan Timeline",
+        "introduction": "",
+        "background_color": "#ffffff",
+        "text_color": "#1a6b6b",
+        "muted_text_color": "#1a6b6b",
+        "accent_color": "#1a6b6b",
+        "line_color": "#1a6b6b",
+        "card_image": "shopify://shop_images/Fluoride_Media_Refil.jpg",
+        "card_image_alt": "",
+        "card_heading": "FluoRid Media Refill",
+        "card_description": "<p>Replace every <strong>4 months</strong> or 1,060 gallons. The AISI 304 steel casing is reusable for years - only the media needs topping up.</p>",
+        "card_background_color": "#0d1f2d",
+        "card_text_color": "#ffffff",
+        "card_heading_color": "#c88b44",
+        "card_border_color": "#dfe2ed"
+      }
+    },
+    "blocks_LW8dxL": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_866760f_imPyF7": {
+          "type": "ai_gen_block_866760f",
+          "settings": {
+            "custom_html": "<section class=\"postreat-process-section\">\n  <div class=\"postreat-process-container\">\n\n    <p class=\"postreat-process-subtitle\">THE SCIENCE BEHIND IT</p>\n\n    <h2 class=\"postreat-process-heading\">\n      How POSTreat™ Filters Your Water\n    </h2>\n\n    <div class=\"postreat-process-steps-wrapper\">\n\n      <!-- CONNECTING LINE -->\n      <div class=\"postreat-process-line\"></div>\n\n      <!-- STEP 01 -->\n      <div class=\"postreat-process-step-card\">\n\n        <div class=\"postreat-process-circle\">\n          <img src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/Fill_the_upper_chamber.png?v=1779951781\" alt=\"Fill chamber icon\">\n        </div>\n\n        <span class=\"postreat-process-step-label\">STEP 01</span>\n\n        <h3 class=\"postreat-process-step-title\">\n          Fill Upper Chamber\n        </h3>\n\n        <p class=\"postreat-process-step-text\">\n          Pour tap water into the upper stainless steel chamber.\n        </p>\n      </div>\n\n      <!-- STEP 02 -->\n      <div class=\"postreat-process-step-card\">\n\n        <div class=\"postreat-process-circle\">\n          <img src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/Carbon_Filtration.png?v=1779951780\" alt=\"Carbon filtration icon\">\n        </div>\n\n        <span class=\"postreat-process-step-label\">STEP 02</span>\n\n        <h3 class=\"postreat-process-step-title\">\n          Carbon Filtration\n        </h3>\n\n        <p class=\"postreat-process-step-text\">\n          Coconut-shell carbon elements remove 99.9% of chlorine,\n          heavy metals, microplastics &amp; PFAS.\n        </p>\n      </div>\n\n      <!-- STEP 03 -->\n      <div class=\"postreat-process-step-card\">\n\n        <div class=\"postreat-process-circle\">\n          <img src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/POSTreat_Stage.png?v=1779951780\" alt=\"Fluoride filtration icon\">\n        </div>\n\n        <span class=\"postreat-process-step-label\">STEP 03</span>\n\n        <h3 class=\"postreat-process-step-title\">\n          POSTreat™ Stage\n        </h3>\n\n        <p class=\"postreat-process-step-text\">\n          Water passes through FluoRid media inside AISI 304 steel casings,\n          capturing fluoride efficiently.\n        </p>\n      </div>\n\n      <!-- STEP 04 -->\n      <div class=\"postreat-process-step-card\">\n\n        <div class=\"postreat-process-circle\">\n          <img src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/Pure_water.png?v=1779951781\" alt=\"Pure water icon\">\n        </div>\n\n        <span class=\"postreat-process-step-label\">STEP 04</span>\n\n        <h3 class=\"postreat-process-step-title\">\n          Pure Water Collected\n        </h3>\n\n        <p class=\"postreat-process-step-text\">\n          Clean, mineral-rich water collects in the lower chamber —\n          ready to drink.\n        </p>\n      </div>\n\n    </div>\n  </div>\n</section>",
+            "custom_css": "/* =========================\n   RESET\n========================= */\n\n.postreat-process-section *,\n.postreat-process-section *::before,\n.postreat-process-section *::after {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\n/* =========================\n   SECTION\n========================= */\n\n.postreat-process-section {\n  background:\n    linear-gradient(\n      180deg,\n      #ffffff 0%,\n      #f8fbff 100%\n    );\n\n  padding: 100px 20px;\n  overflow: hidden;\n  position: relative;\n}\n\n.postreat-process-container {\n  width: 100%;\n  max-width: 1180px;\n  margin: 0 auto;\n}\n\n.postreat-process-subtitle {\n  color: #2B2B4E;\n  font-size: 13px;\n  font-weight: 700;\n  letter-spacing: 4px;\n  margin-bottom: 18px;\n  text-transform: uppercase;\n  text-align: center;\n}\n\n.postreat-process-heading {\n  font-size: 48px;\n  line-height: 1.1;\n  font-weight: 800;\n  color: #07132a;\n  margin-bottom: 70px;\n  text-align: center;\n}\n\n/* =========================\n   STEPS WRAPPER\n========================= */\n\n.postreat-process-steps-wrapper {\n  position: relative;\n\n  display: grid;\n  grid-template-columns: repeat(4, 1fr);\n\n  gap: 30px;\n  align-items: start;\n}\n\n/* =========================\n   CONNECTING LINE\n========================= */\n\n.postreat-process-line {\n  position: absolute;\n\n  top: 72px;\n  left: 12%;\n  width: 76%;\n  height: 4px;\n\n  background:\n    linear-gradient(\n      to right,\n      rgba(43, 43, 78, 0.08),\n      rgba(43, 43, 78, 0.5),\n      rgba(43, 43, 78, 0.08)\n    );\n\n  border-radius: 50px;\n  z-index: 0;\n}\n\n/* =========================\n   STEP CARD\n========================= */\n\n.postreat-process-step-card {\n  position: relative;\n  z-index: 2;\n\n  text-align: center;\n\n  padding: 20px 18px;\n\n  border-radius: 30px;\n\n  transition:\n    transform 0.35s ease,\n    box-shadow 0.35s ease;\n}\n\n.postreat-process-step-card:hover {\n  transform: translateY(-8px);\n}\n\n/* =========================\n   STEP LABEL\n========================= */\n\n.postreat-process-step-label {\n  display: inline-block;\n\n  margin-bottom: 18px;\n\n  color: #2B2B4E;\n\n  font-size: 12px;\n  font-weight: 800;\n  letter-spacing: 2px;\n\n  text-transform: uppercase;\n}\n\n/* =========================\n   ICON CIRCLE\n========================= */\n\n.postreat-process-circle {\n  position: relative;\n  z-index: 3;\n\n  width: 145px;\n  height: 145px;\n\n  margin: 0 auto 30px;\n\n  border-radius: 50%;\n\n  border: 2px solid rgba(43, 43, 78, 0.12);\n\n  background:\n    linear-gradient(\n      180deg,\n      #ffffff 0%,\n      #f5fbff 100%\n    );\n\n  display: flex;\n  align-items: center;\n  justify-content: center;\n\n  box-shadow:\n    0 15px 40px rgba(43, 43, 78, 0.08),\n    inset 0 0 20px rgba(43, 43, 78, 0.04);\n\n  transition:\n    transform 0.35s ease,\n    box-shadow 0.35s ease,\n    border-color 0.35s ease;\n}\n\n.postreat-process-circle img {\n    width: 173px;\n    height: 173px;\n    object-fit: contain;\n    transition: transform 0.35s ease;\n}\n\n.postreat-process-step-card:hover .postreat-process-circle {\n  transform: scale(1.06);\n\n  border-color: rgba(43, 43, 78, 0.22);\n\n  box-shadow:\n    0 24px 55px rgba(43, 43, 78, 0.16),\n    inset 0 0 20px rgba(43, 43, 78, 0.05);\n}\n\n.postreat-process-step-card:hover .postreat-process-circle img {\n  transform: scale(1.08);\n}\n\n/* =========================\n   TEXT\n========================= */\n\n.postreat-process-step-title {\n  font-size: 28px;\n  line-height: 1.25;\n\n  color: #07132a;\n\n  margin-bottom: 16px;\n\n  font-weight: 800;\n}\n\n.postreat-process-step-text {\n  font-size: 16px;\n  line-height: 1.8;\n\n  color: #667085;\n\n  max-width: 290px;\n  margin: 0 auto;\n}\n\n/* =========================\n   TABLET\n========================= */\n\n@media (max-width: 1100px) {\n\n  .postreat-process-section {\n    padding: 80px 20px;\n  }\n\n  .postreat-process-heading {\n    font-size: 38px;\n    margin-bottom: 50px;\n  }\n\n  .postreat-process-steps-wrapper {\n    grid-template-columns: repeat(2, 1fr);\n    gap: 40px 30px;\n  }\n\n  .postreat-process-line {\n    display: none;\n  }\n}\n\n/* =========================\n   MOBILE\n========================= */\n\n@media (max-width: 768px) {\n\n  .postreat-process-section {\n    padding: 70px 16px;\n  }\n\n  .postreat-process-subtitle {\n    font-size: 11px;\n    letter-spacing: 3px;\n  }\n\n  .postreat-process-heading {\n    font-size: 30px;\n    line-height: 1.2;\n    margin-bottom: 40px;\n  }\n\n  .postreat-process-steps-wrapper {\n    grid-template-columns: 1fr;\n    gap: 24px;\n  }\n\n  .postreat-process-step-card {\n    background: #ffffff;\n\n    border: 1px solid #edf2f7;\n\n    padding: 32px 22px;\n\n    box-shadow:\n      0 10px 30px rgba(15, 23, 42, 0.05);\n  }\n\n  .postreat-process-circle {\n    width: 105px;\n    height: 105px;\n\n    margin-bottom: 22px;\n  }\n\n  .postreat-process-circle img {\n    width: 46px;\n    height: 46px;\n  }\n\n  .postreat-process-step-title {\n    font-size: 22px;\n    margin-bottom: 12px;\n  }\n\n  .postreat-process-step-text {\n    font-size: 15px;\n    line-height: 1.7;\n  }\n}\n\n/* =========================\n   SMALL MOBILE\n========================= */\n\n@media (max-width: 480px) {\n\n  .postreat-process-heading {\n    font-size: 24px;\n  }\n\n  .postreat-process-circle {\n    width: 88px;\n    height: 88px;\n  }\n\n  .postreat-process-circle img {\n    width: 40px;\n    height: 40px;\n  }\n\n  .postreat-process-step-card {\n    padding: 24px 18px;\n    border-radius: 24px;\n  }\n\n  .postreat-process-step-title {\n    font-size: 19px;\n  }\n\n  .postreat-process-step-text {\n    font-size: 14px;\n  }\n}",
+            "custom_js": "",
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_866760f_imPyF7"
+      ],
+      "disabled": true,
+      "settings": {}
+    },
+    "custom_info_cards_MgRpbx": {
+      "type": "custom-info-cards",
+      "blocks": {
+        "info_card_UCMgj9": {
+          "type": "info_card",
+          "settings": {
+            "desktop_image": "shopify://shop_images/01.Neurological_Health.jpg",
+            "image_alt": "",
+            "heading": "Neurological Health",
+            "description": "<p>Emerging research has raised concerns about excessive fluoride exposure and potential health effects.</p>"
+          }
+        },
+        "info_card_C7hbmi": {
+          "type": "info_card",
+          "settings": {
+            "desktop_image": "shopify://shop_images/02.Thyroid_Function.jpg",
+            "image_alt": "",
+            "heading": "Thyroid Function",
+            "description": "<p>Prolonged exposure to high fluoride concentrations may interfere with normal thyroid activity, especially with iodine deficiency.</p>"
+          }
+        },
+        "info_card_HGXKjy": {
+          "type": "info_card",
+          "settings": {
+            "desktop_image": "shopify://shop_images/03.Skeletal_Health.jpg",
+            "image_alt": "",
+            "heading": "Skeletal Health",
+            "description": "<p>Excessive intake over time may adversely affect bones and joints, potentially leading to skeletal fluorosis with prolonged exposure.</p>"
+          }
+        },
+        "info_card_mT4iXc": {
+          "type": "info_card",
+          "settings": {
+            "desktop_image": "shopify://shop_images/04._Low_Birth_Weight.jpg",
+            "image_alt": "",
+            "heading": "Maternal Health",
+            "description": "<p>Research suggests elevated fluoride levels may be associated with increased risks of low birth weight and preterm birth.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "info_card_UCMgj9",
+        "info_card_C7hbmi",
+        "info_card_HGXKjy",
+        "info_card_mT4iXc"
+      ],
+      "custom_css": [
+        "section {padding-top: 0px; padding-bottom: 0px;}"
+      ],
+      "name": "Custom info cards",
+      "settings": {
+        "eyebrow": "Why it matters",
+        "heading": "Removes >95% of Fluoride",
+        "introduction": "",
+        "columns_desktop": "4",
+        "background_color": "#ffffff",
+        "text_color": "#0d1f2d",
+        "accent_color": "#0b6b73"
+      }
+    },
+    "blocks_p6TpgX": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_866760f_jiptDU": {
+          "type": "ai_gen_block_866760f",
+          "settings": {
+            "custom_html": "<section class=\"flt-main-section\">\n\n  <div class=\"flt-label-tag\">MAINTENANCE MADE EASY</div>\n\n  <h1 class=\"flt-main-heading\">Filter Lifespan Timeline</h1>\n\n  <p class=\"flt-description-text\">\n    Know exactly when to replace each component.\n  </p>\n\n  <!-- Timeline -->\n  <div class=\"flt-timeline-container\">\n\n    <div class=\"flt-progress-line\"></div>\n\n    <div class=\"flt-timeline-row\">\n\n      <div class=\"flt-stage-block\">\n        <div class=\"flt-status-dot flt-status-dot-blue\"></div>\n        <div class=\"flt-time-label\">Month 0</div>\n        <p>Install &amp; start filtering</p>\n      </div>\n\n      <div class=\"flt-stage-block\">\n        <div class=\"flt-status-dot flt-status-dot-gold\"></div>\n        <div class=\"flt-time-label\">Month 4</div>\n        <p>Replace FluoRid Media (~1,060 gal)</p>\n      </div>\n\n      <div class=\"flt-stage-block\">\n        <div class=\"flt-status-dot flt-status-dot-gold\"></div>\n        <div class=\"flt-time-label\">Month 8</div>\n        <p>Replace FluoRid Media again</p>\n      </div>\n\n      <div class=\"flt-stage-block\">\n        <div class=\"flt-status-dot flt-status-dot-gold\"></div>\n        <div class=\"flt-time-label\">Month 12</div>\n        <p>Replace Carbon Elements + FluoRid</p>\n      </div>\n\n    </div>\n\n  </div>\n\n  <!-- Cards -->\n  <div class=\"flt-info-grid\">\n\n    <div class=\"flt-info-card flt-card-gold-accent\">\n\n      <div class=\"flt-icon-circle flt-icon-green\">\n  <img src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/Fluoride_Media_Refil.jpg?v=1779960156\" alt=\"FluoRid Icon\" class=\"flt-card-icon\">\n</div>\n\n      <div>\n        <h3>FluoRid Media Refill</h3>\n\n        <p>\n          Replace every <strong>4 months</strong>\n          or 1,060 gallons. The AISI 304 steel casing\n          is reusable for years — only the media\n          needs topping up.\n        </p>\n      </div>\n\n    </div>\n\n  </div>\n\n</section>",
+            "custom_css": ".flt-main-section{\n  max-width:1125px;\n  margin:15px auto;\n  padding:0 15px;\n}\n.flt-card-icon{\n  width:60px;\n  height:60px;\n  object-fit:contain;\n}\n\n.flt-icon-circle{\n  width:46px;\n  height:46px;\n  border-radius:50%;\n  display:flex;\n  align-items:center;\n  justify-content:center;\n  flex-shrink:0;\n  overflow:hidden;\n}\n.flt-label-tag{\n  color:#2B2B4E;\n  font-size:11px;\n  font-weight:700;\n  letter-spacing:3px;\n  text-transform:uppercase;\n  margin-bottom:12px;\n}\n\n.flt-main-heading{\n  font-size:24px;\n  line-height:1.1;\n  font-weight:700;\n  margin-bottom:16px;\n  color:#0b1d35;\n}\n\n.flt-description-text{\n  font-size:16px;\n  line-height:1.6;\n  color:#5a6b80;\n  max-width:700px;\n  margin-bottom:25px;\n}\n\n/* Timeline */\n\n.flt-timeline-container{\n  position:relative;\n  margin-bottom:25px;\n}\n\n.flt-progress-line{\n  position:absolute;\n  top:12px;\n  left:0;\n  width:100%;\n  height:4px;\n  border-radius:10px;\n  background:#d7dbea;\n  z-index:1;\n}\n\n.flt-timeline-row{\n  display:flex;\n  justify-content:space-between;\n  position:relative;\n  z-index:2;\n  gap:15px;\n}\n\n.flt-stage-block{\n  width:180px;\n}\n\n.flt-status-dot{\n  width:24px;\n  height:24px;\n  border-radius:50%;\n  margin-bottom:18px;\n  position:relative;\n}\n\n/* Brand Color */\n\n.flt-status-dot-blue{\n  background:#4a4abe;\n \n}\n\n.flt-status-dot-gold{\n  background:#2B2B4E;\n}\n\n.flt-time-label{\n  font-size:18px;\n  font-weight:700;\n  margin-bottom:8px;\n  color:#0b1d35;\n}\n\n.flt-stage-block p{\n  font-size:14px;\n  line-height:1.5;\n  color:#607086;\n  margin:0;\n}\n\n/* Cards */\n\n.flt-info-grid{\n  display:grid;\n  gap:18px;\n  grid-auto-flow:column;\n}\n\n.flt-info-card{\n  background:#f7f8fc;\n  border-radius:18px;\n  padding:22px;\n  display:flex;\n  gap:16px;\n  align-items:flex-start;\n  border:1px solid #e4e7f2;\n  transition:all 0.3s ease;\n}\n\n.flt-info-card:hover{\n  transform:translateY(-2px);\n  box-shadow:0 10px 20px rgba(43,43,78,0.08);\n}\n\n.flt-card-blue-accent{\n  border-left:4px solid #2B2B4E;\n}\n\n.flt-card-gold-accent{\n  border-left:4px solid #2B2B4E;\n}\n\n.flt-icon-circle{\n  width:46px;\n  height:46px;\n  border-radius:50%;\n  display:flex;\n  align-items:center;\n  justify-content:center;\n  font-size:20px;\n  flex-shrink:0;\n}\n\n.flt-icon-purple{\n  background:linear-gradient(135deg,#2B2B4E,#44446d);\n  color:white;\n}\n\n.flt-icon-green{\n  background:linear-gradient(135deg,#2B2B4E,#44446d);\n  color:white;\n}\n\n.flt-info-card h3{\n  font-size:20px;\n  margin-bottom:8px;\n  color:#0b1d35;\n}\n\n.flt-info-card p{\n  font-size:14px;\n  line-height:1.6;\n  color:#5f7085;\n  margin:0;\n}\n\n.flt-info-card strong{\n  color:#0b1d35;\n}\n\n/* Mobile */\n\n@media (max-width:768px){\n\n  .flt-timeline-row{\n    flex-direction:row;\n    align-items:flex-start;\n    gap:12px;\n    overflow-x:auto;\n    flex-wrap:nowrap;\n    padding-bottom:10px;\n    justify-content:space-between;\n  }\n\n  .flt-info-grid{\n    display:grid;\n    gap:18px;\n    grid-auto-flow:row !important;\n  }\n\n  .flt-stage-block{\n    min-width:60px;\n    width:60px;\n    flex:0 0 auto;\n  }\n\n  .flt-info-grid{\n    display:grid;\n    gap:18px;\n  }\n\n  .flt-status-dot{\n    width:18px;\n    height:18px;\n    margin-bottom:10px;\n  }\n\n  .flt-time-label{\n    font-size:14px;\n    margin-bottom:6px;\n  }\n\n  .flt-stage-block p{\n    font-size:12px;\n    line-height:1.4;\n  }\n}",
+            "custom_js": "",
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_866760f_jiptDU"
+      ],
+      "disabled": true,
+      "settings": {}
+    },
+    "blocks_6wiVVF": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_866760f_9kaBy3": {
+          "type": "ai_gen_block_866760f",
+          "settings": {
+            "custom_html": "<section class=\"promise-section\">\n\n  <div class=\"promise-container\">\n\n    <div class=\"promise-label\">\n      OUR PROMISE\n    </div>\n\n    <h2 class=\"promise-heading\">\n      Built on Trust. Backed by Science.\n    </h2>\n\n    <p class=\"promise-text\">\n      Every claim is tested, certified, and guaranteed — so you can drink with complete confidence.\n    </p>\n\n    <div class=\"promise-grid\">\n\n      <div class=\"promise-card\">\n        <div class=\"promise-icon\">🏅</div>\n        <h3>NSF Certified</h3>\n        <p>Independently tested to meet NSF/ANSI drinking water standards.</p>\n      </div>\n\n      <div class=\"promise-card\">\n        <div class=\"promise-icon\">🔩</div>\n        <h3>AISI 304 Steel</h3>\n        <p>Food-safe stainless steel that is rust-free and non-leaching.</p>\n      </div>\n\n      <div class=\"promise-card\">\n        <div class=\"promise-icon\">🛡️</div>\n        <h3>10-Year Warranty</h3>\n        <p>Coverage for defects in materials and performance.</p>\n      </div>\n\n      <div class=\"promise-card\">\n        <div class=\"promise-icon\">🚫</div>\n        <h3>Aluminum-Free</h3>\n        <p>Zero aluminum used in the filtration system.</p>\n      </div>\n\n      <div class=\"promise-card\">\n        <div class=\"promise-icon\">♻️</div>\n        <h3>Reusable Design</h3>\n        <p>Replace only the filter media — not the entire unit.</p>\n      </div>\n\n      <div class=\"promise-card\">\n        <div class=\"promise-icon\">🌿</div>\n        <h3>Eco-Friendly</h3>\n        <p>No electricity, less waste, and natural carbon filtration.</p>\n      </div>\n\n      <div class=\"promise-card\">\n        <div class=\"promise-icon\">🏠</div>\n        <h3>Fast US Shipping</h3>\n        <p>Quick nationwide delivery with free shipping available.</p>\n      </div>\n\n      <div class=\"promise-card\">\n        <div class=\"promise-icon\">↩️</div>\n        <h3>100-Day Trial</h3>\n        <p>Try it risk-free with our money-back guarantee.</p>\n      </div>\n\n    </div>\n\n  </div>\n\n</section>",
+            "custom_css": ".promise-section{\n  width:100%;\n  background:#ffffff;\n  padding:50px 0;\n}\n\n.promise-container{\n  width:100%;\n  max-width:1125px;\n  margin:0 auto;\n  padding:0 20px;\n}\n\n/* TOP TEXT */\n\n.promise-label{\n  color:#00b8d9;\n  font-size:10px;\n  letter-spacing:2px;\n  font-weight:700;\n  text-transform:uppercase;\n  margin-bottom:10px;\n}\n\n.promise-heading{\n  font-size:34px;\n  line-height:1.1;\n  font-weight:800;\n  color:#0f172a;\n  margin:0 0 14px;\n  max-width:700px;\n}\n\n.promise-text{\n  font-size:15px;\n  line-height:1.6;\n  color:#64748b;\n  max-width:640px;\n  margin:0 0 36px;\n}\n\n/* GRID */\n\n.promise-grid{\n  display:grid;\n  grid-template-columns:repeat(4,1fr);\n  gap:14px;\n}\n\n/* CARD */\n\n.promise-card{\n  background:#ffffff;\n  border:1px solid #e2e8f0;\n  border-radius:18px;\n  padding:20px 16px;\n  transition:all .25s ease;\n  box-shadow:0 2px 10px rgba(15,23,42,0.04);\n}\n\n.promise-card:hover{\n  transform:translateY(-3px);\n  border-color:#b6e7ef;\n  box-shadow:0 8px 22px rgba(15,23,42,0.08);\n}\n\n.promise-icon{\n  width:44px;\n  height:44px;\n  display:flex;\n  align-items:center;\n  justify-content:center;\n  background:#f0fbfd;\n  border-radius:12px;\n  font-size:22px;\n  margin-bottom:14px;\n}\n\n.promise-card h3{\n  font-size:16px;\n  line-height:1.3;\n  font-weight:700;\n  color:#0f172a;\n  margin:0 0 8px;\n}\n\n.promise-card p{\n  font-size:12px;\n  line-height:1.6;\n  color:#64748b;\n  margin:0;\n}\n\n/* TABLET */\n\n@media screen and (max-width:1024px){\n\n  .promise-grid{\n    grid-template-row:repeat(2,1fr);\n  }\n\n  .promise-heading{\n    font-size:30px;\n  }\n\n}\n\n/* MOBILE */\n\n@media screen and (max-width:768px){\n\n  .promise-section{\n    padding:40px 0;\n  }\n\n  .promise-container{\n    padding:0 14px;\n  }\n\n  .promise-heading{\n    font-size:26px;\n  }\n\n  .promise-text{\n    font-size:14px;\n    margin-bottom:28px;\n  }\n\n  .promise-grid{\n    gap:12px;\n  }\n\n  .promise-card{\n    padding:18px 14px;\n    border-radius:16px;\n  }\n\n  .promise-icon{\n    width:40px;\n    height:40px;\n    font-size:20px;\n    margin-bottom:12px;\n  }\n\n  .promise-card h3{\n    font-size:15px;\n  }\n\n  .promise-card p{\n    font-size:11px;\n  }\n\n}\n\n/* SMALL MOBILE */\n\n@media screen and (max-width:480px){\n\n  .promise-grid{\n    grid-template-columns:2fr;\n  }\n\n  .promise-heading{\n    font-size:22px;\n  }\n\n  .promise-text{\n    font-size:13px;\n  }\n\n}",
+            "custom_js": "",
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_866760f_9kaBy3"
+      ],
+      "disabled": true,
+      "settings": {}
+    },
+    "blocks_zGp6Qd": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_de512dc_jj8L4a": {
+          "type": "ai_gen_block_de512dc",
+          "settings": {
+            "container_width": 1200,
+            "icon_size": 90,
+            "padding_top": 60,
+            "padding_bottom": 60,
+            "background_color": "#ffffff",
+            "heading_color": "#000000",
+            "text_color": "#000000",
+            "button_color": "#000000",
+            "feature_1_enabled": true,
+            "feature_1_icon": "shopify://shop_images/95_Fluoride_Reduction_1.png",
+            "feature_1_heading": "95% Fluoride Reduction",
+            "feature_1_description": "Industry-leading removal rate",
+            "feature_1_button_text": "Learn More",
+            "feature_1_button_link": "",
+            "feature_2_enabled": true,
+            "feature_2_icon": "shopify://shop_images/Up_to_1_050_Gallons.png",
+            "feature_2_heading": "Up to 1,050 Gallons ",
+            "feature_2_description": "Long-lasting performance for 4 months of clean water",
+            "feature_2_button_text": "Learn More",
+            "feature_2_button_link": "",
+            "feature_3_enabled": true,
+            "feature_3_icon": "shopify://shop_images/Dual-Layer_Filtration.png",
+            "feature_3_heading": "Dual-Layer Filtration",
+            "feature_3_description": "Hybrid nano-carbon technology for superior filtration",
+            "feature_3_button_text": "Learn More",
+            "feature_3_button_link": "",
+            "feature_4_enabled": true,
+            "feature_4_icon": "shopify://shop_images/100_Aluminum-Free.png",
+            "feature_4_heading": "100% Aluminum-Free",
+            "feature_4_description": "Safe filtration without aluminum risks, guaranteed.",
+            "feature_4_button_text": "Learn More",
+            "feature_4_button_link": "",
+            "feature_5_enabled": false,
+            "feature_5_heading": "",
+            "feature_5_description": "",
+            "feature_5_button_text": "Learn More",
+            "feature_5_button_link": "",
+            "feature_6_enabled": false,
+            "feature_6_heading": "",
+            "feature_6_description": "",
+            "feature_6_button_text": "Learn More",
+            "feature_6_button_link": "",
+            "feature_7_enabled": false,
+            "feature_7_heading": "",
+            "feature_7_description": "",
+            "feature_7_button_text": "Learn More",
+            "feature_7_button_link": "",
+            "feature_8_enabled": false,
+            "feature_8_heading": "",
+            "feature_8_description": "",
+            "feature_8_button_text": "Learn More",
+            "feature_8_button_link": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_de512dc_jj8L4a"
+      ],
+      "disabled": true,
+      "custom_css": [
+        ".ai-feature-icons-heading-atenumudyt3zprxbftaigenblockde512dcjj8l4a {font-size: 18px; font-weight: 500 !important;}"
+      ],
+      "name": "Feature icons section",
+      "settings": {}
+    },
+    "custom_html_rChwV7": {
+      "type": "custom-html",
+      "disabled": true,
+      "custom_css": [
+        "wistia-player {display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background-color: transparent; object-fit: cover; border: none;}"
+      ],
+      "name": "Custom Embed Video",
+      "settings": {
+        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/c3cghpaqz1.js\" async type=\"module\"></script><style>wistia-player[media-id='c3cghpaqz1']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/c3cghpaqz1/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"c3cghpaqz1\" aspect=\"1.7777777777777777\"></wistia-player>"
+      }
+    },
+    "blocks_NnKDpK": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_866760f_aFXUai": {
+          "type": "ai_gen_block_866760f",
+          "settings": {
+            "custom_html": "<section class=\"flrd-health-section\">\n\n    <!-- Header -->\n    <div class=\"flrd-section-header\">\n        <h2>Removes &gt;95% of Fluoride  withthe first refillable stainless steel fluoride filter designed for home gravity systems.</h2>\n\n  <p>\n  Fluoride is added to public drinking water for approximately three out of four Americans. However, \n  <a href=\"https://pmc.ncbi.nlm.nih.gov/articles/PMC3876610/\" target=\"_blank\" style=\"color:#2B2B4E;\">\n    growing scientific research has raised concerns that excessive fluoride exposure may potentially impact brain health and could be associated with an increased risk of osteosarcoma.\n  </a>\n</p>\n    </div>\n\n    <!-- Cards -->\n    <div class=\"flrd-cards-wrap\">\n\n        <!-- Card 1 -->\n        <div class=\"flrd-card\">\n            <img class=\"flrd-card-img\" src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/03.Skeletal_Health.jpg?v=1779951273\" alt=\"Dental and Skeletal Fluorosis\">\n\n            <div class=\"flrd-card-body\">\n                <h3 class=\"flrd-card-title\">\n                   Neurological Health\n                </h3>\n\n                <p class=\"flrd-card-desc\">\n                   Emerging research has raised concerns about the potential impact of excessive fluoride exposure on neurological health, particularly in developing children. Long term consumption of drinking water with elevated fluoride levels has been associated in studies with cognitive and neurodevelopmental effects, highlighting the importance of maintaining safe fluoride concentrations in everyday drinking water.\n                </p>\n            </div>\n        </div>\n\n        <!-- Card 2 -->\n        <div class=\"flrd-card\">\n            <img class=\"flrd-card-img\" src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/01.Neurological_Health.jpg?v=1779951272\" alt=\"Neurological Effects\">\n\n            <div class=\"flrd-card-body\">\n                <h3 class=\"flrd-card-title\">\n                    Thyroid Function\n                </h3>\n\n                <p class=\"flrd-card-desc\">\n                    The thyroid plays a vital role in regulating metabolism, energy levels, and overall hormonal balance. Studies suggest that prolonged exposure to high fluoride concentrations may interfere with normal thyroid activity, especially in individuals with iodine deficiency, making cleaner, fluoride reduced water an important consideration for overall wellness.\n                </p>\n            </div>\n        </div>\n\n        <!-- Card 3 -->\n        <div class=\"flrd-card\">\n            <img class=\"flrd-card-img\" src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/02.Thyroid_Function.jpg?v=1779951272\" alt=\"Thyroid Function\">\n\n            <div class=\"flrd-card-body\">\n                <h3 class=\"flrd-card-title\">\n                    Skeletal Health\n                </h3>\n\n                <p class=\"flrd-card-desc\">\n                    While fluoride is often associated with dental health at controlled levels, excessive intake over time may adversely affect bones and joints. Elevated fluoride concentrations in drinking water have been linked to skeletal fluorosis, a condition that can lead to joint stiffness, discomfort, and changes in bone structure with prolonged exposure.\n                </p>\n            </div>\n        </div>\n\n        <!-- Card 4 -->\n        <div class=\"flrd-card\">\n            <img class=\"flrd-card-img\" src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/04._Low_Birth_Weight.jpg?v=1779951272\" alt=\"Kidney Health\">\n\n            <div class=\"flrd-card-body\">\n                <h3 class=\"flrd-card-title\">\n                    Low Birth Weight and Preterm Birth\n                </h3>\n\n                <p class=\"flrd-card-desc\">\n                    Scientific studies have explored the potential connection between high fluoride exposure during pregnancy and adverse birth outcomes. Research suggests that elevated fluoride levels in drinking water may be associated with increased risks of low birth weight and preterm birth, underscoring the importance of safer drinking water for maternal and infant health.\n                </p>\n            </div>\n        </div>\n\n    </div>\n\n</section>",
+            "custom_css": ".flrd-health-section{\n    width:75%;\n    max-width:1280px;\n    margin:0 auto;\n    padding:10px 20px;\n    box-sizing:border-box;\n    background:#ffffff;\n}\np a {\n    color: #132555;\n     text-decoration: none; \n}\n/* =========================\nHEADER\n========================= */\n\n.flrd-section-header{\n    width:100%;\n    max-width:760px;\n    margin:0px auto 20px 0px ;\n    text-align:left;\n}\n\n.flrd-section-header h2{\n    margin:0 0 5px;\n    font-size:42px;\n    line-height:50px;\n    font-weight:500;\n    color:#1a2433;\n    letter-spacing:-0.5px;\n}\n\n.flrd-section-header p{\n    margin:0 auto;\n    max-width:760px;\n    font-size:16px;\n    line-height:28px;\n    color:#5a6475;\n    font-weight:400;\n}\n\n.flrd-section-header p strong{\n    color:#1a2433;\n    font-weight:600;\n}\n\n/* =========================\nCARDS WRAPPER\n========================= */\n\n.flrd-cards-wrap{\n    display:grid;\n    grid-template-columns:repeat(4, 1fr);\n    gap:24px;\n    align-items:stretch;\n}\n\n/* =========================\nCARD\n========================= */\n\n.flrd-card{\n    background:#ffffff;\n    border-radius:18px;\n    overflow:hidden;\n    border:1px solid #edf1f5;\n    box-shadow:0 4px 14px rgba(0,0,0,0.04);\n    transition:all 0.3s ease;\n    display:flex;\n    flex-direction:column;\n    height:100%;\n}\n\n.flrd-card:hover{\n    transform:translateY(-6px);\n    box-shadow:0 12px 28px rgba(0,0,0,0.08);\n}\n\n/* =========================\nIMAGE\n========================= */\n\n.flrd-card-img{\n    width:100%;\n    height:220px;\n    object-fit:cover;\n    display:block;\n}\n\n/* =========================\nBODY\n========================= */\n\n.flrd-card-body{\n    padding:24px 22px 28px;\n    display:flex;\n    flex-direction:column;\n    gap:12px;\n    flex:1;\n}\n\n.flrd-card-title{\n    margin:0;\n    font-size:20px;\n    line-height:28px;\n    font-weight:600;\n    color:#1a2433;\n    letter-spacing:-0.2px;\n}\n\n.flrd-card-desc{\n    margin:0;\n    font-size:15px;\n    line-height:26px;\n    color:#5a6475;\n}\n\n/* =========================\nTABLET\n========================= */\n\n@media (max-width: 991px){\n\n    .flrd-health-section{\n        padding:20px 18px;\nmargin:0 5px;\n    }\n.flrd-health-section{\n    width:90%;\n    \n}\n\n    .flrd-section-header{\n        margin-bottom:36px;\n    }\n\n    .flrd-section-header h2{\n        font-size:34px;\n        line-height:42px;\n    }\n\n    .flrd-section-header p{\n        font-size:15px;\n        line-height:26px;\n    }\n\n    .flrd-cards-wrap{\n        grid-template-columns:repeat(2,1fr);\n        gap:20px;\n    }\n\n    .flrd-card-img{\n        height:210px;\n    }\n}\n\n/* =========================\nMOBILE\n========================= */\n\n@media (max-width: 640px){\n\n    .flrd-health-section{\n        padding:10px 16px;\nmargin:0 5px;\n    }\n\n    .flrd-section-header{\n        text-align:left;\n        margin-bottom:28px;\n    }\n\n    .flrd-section-header h2{\n        font-size:28px;\n        line-height:36px;\n        margin-bottom:14px;\n    }\n\n    .flrd-section-header p{\n        font-size:14px;\n        line-height:24px;\n    }\n\n    .flrd-cards-wrap{\n        display:flex;\n        gap:16px;\n        overflow-x:auto;\n        scroll-snap-type:x mandatory;\n        padding-bottom:6px;\n        -webkit-overflow-scrolling:touch;\n        scrollbar-width:none;\n    }\n\n    .flrd-cards-wrap::-webkit-scrollbar{\n        display:none;\n    }\n\n    .flrd-card{\n        min-width:85%;\n        scroll-snap-align:start;\n    }\n\n    .flrd-card-img{\n        height:200px;\n    }\n\n    .flrd-card-body{\n        padding:20px;\n    }\n\n    .flrd-card-title{\n        font-size:18px;\n        line-height:26px;\n    }\n\n    .flrd-card-desc{\n        font-size:14px;\n        line-height:24px;\n    }\n}",
+            "custom_js": "",
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_866760f_aFXUai"
+      ],
+      "disabled": true,
+      "settings": {}
+    },
+    "177876003432b8c2be": {
+      "type": "_blocks",
+      "disabled": true,
+      "settings": {}
+    },
+    "secondary_details_M3cr8M": {
+      "type": "secondary-details",
+      "disabled": true,
+      "name": "Secondary Details",
+      "settings": {
+        "style": "bg-white",
+        "heading": "Removes >95% of Fluoride  with “First-of-its-Kind” Filtration System",
+        "content": "<p>Fluoride is added to public drinking water for approximately three out of four Americans. However, <a href=\"https://pmc.ncbi.nlm.nih.gov/articles/PMC3876610/\" title=\"https://pmc.ncbi.nlm.nih.gov/articles/PMC3876610/\">there is growing concern in the scientific community that excessive fluoride levels could potentially be toxic to the brain or even increase the risk of the rare cancer, osteosarcoma.<br/></a><br/>Designed as an essential add-on to our Gravity Water Filter system, our scientists have developed athe first refillable stainless steel fluoride filter designed for home gravity systems.that removes more than 95% of fluoride from drinking water while retaining essential nutrients. Arsenic<br/><br/>Engineered for everyday use, the filter requires a simple top-up of the proprietary filtration media every four months or after treating up to 1,060 gallons of water. This makes it the most effective and sustainable fluoride removal system on the market, helping you maintain a healthy lifestyle.<br/></p>",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": ""
+      }
+    },
+    "copy_image_DfRFKh": {
+      "type": "copy-image",
+      "disabled": true,
+      "settings": {
+        "style": "bg-light",
+        "layout": "image-copy",
+        "vertical_align": "align-items-center",
+        "heading": "WARNING: Drinking tap water makes 7.2 million americans sick every year!",
+        "content": "<p>Every year, millions of Americans fall ill from ingesting harmful chemicals in tap water. In Baltimore, a parasite was recently detected in the drinking water; in California’s Coachella Valley, water from fast-food soda fountains tested positive for salmonella; and in Iowa, unsafe levels of nitrate and alachlor were found.<br/><br/>These contaminants have been linked to a range of serious health issues, including liver and kidney damage, thyroid disease, cancer, and even “blue baby syndrome” in infants.<br/><br/>Phoenix Gravity Water Filters use advanced Nano adsorption filtration technology to remove 99.9% of contaminants from tap water, making it safe to drink no matter where you live in the U.S.</p>",
+        "video_id": "",
+        "large_image": "img-lrg",
+        "second_content": "",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "section_bgimg": "shopify://shop_images/tap-water.jpg",
+        "bg_image_style": "cover",
+        "section_randoimg_position": "top"
+      }
+    },
+    "custom_health_alert_mJqUQC": {
+      "type": "custom-health-alert",
+      "custom_css": [],
+      "name": "Custom health alert",
+      "settings": {
+        "eyebrow": "Public health alert",
+        "heading": "Tap Water Makes <strong>7.2 Million Americans</strong> Sick Every Year",
+        "body": "<p>Every year, millions of Americans fall ill from harmful chemicals in tap water — including parasites, salmonella, nitrates, and alachlor. These contaminants are linked to liver and kidney damage, thyroid disease, and cancer.</p>",
+        "footer_text": "<p>Phoenix Gravity Water Filters use advanced Nano adsorption filtration to remove 99.9% of contaminants.</p>",
+        "max_width": 64,
+        "background_color": "#071c2b",
+        "text_color": "#ffffff",
+        "accent_color": "#f2b64b"
+      }
+    },
+    "custom_tabular_comparison_table_v2_rzJ6wj": {
+      "type": "custom-tabular-comparison-table_v2",
+      "blocks": {
+        "group_bFMwVr": {
+          "type": "group",
+          "settings": {
+            "title": "Filtration performance"
+          }
+        },
+        "feature_8JKJiP": {
+          "type": "feature",
+          "settings": {
+            "feature": "Removes >95% of Fluoride",
+            "detail": "Tested for Sodium Fluoride, Fluorosilicic Acid & more",
+            "brand_status": "yes",
+            "brand_custom": "",
+            "comparison_1_status": "yes",
+            "comparison_1_custom": "",
+            "comparison_2_status": "no",
+            "comparison_2_custom": "",
+            "comparison_3_status": "no",
+            "comparison_3_custom": ""
+          }
+        },
+        "feature_Rfwpyj": {
+          "type": "feature",
+          "settings": {
+            "feature": "Removes Arsenic",
+            "detail": "Targets arsenic naturally present in well & tap water",
+            "brand_status": "yes",
+            "brand_custom": "",
+            "comparison_1_status": "yes",
+            "comparison_1_custom": "",
+            "comparison_2_status": "varies",
+            "comparison_2_custom": "",
+            "comparison_3_status": "no",
+            "comparison_3_custom": ""
+          }
+        },
+        "feature_PgxVt7": {
+          "type": "feature",
+          "settings": {
+            "feature": "Retains Healthy Minerals",
+            "detail": "Keeps calcium, magnesium & potassium intact in water",
+            "brand_status": "yes",
+            "brand_custom": "",
+            "comparison_1_status": "no",
+            "comparison_1_custom": "",
+            "comparison_2_status": "varies",
+            "comparison_2_custom": "",
+            "comparison_3_status": "no",
+            "comparison_3_custom": ""
+          }
+        },
+        "group_LgqVRz": {
+          "type": "group",
+          "settings": {
+            "title": "Build quality & safety"
+          }
+        },
+        "feature_iKPY7M": {
+          "type": "feature",
+          "settings": {
+            "feature": "AISI 304 Stainless Steel Housing",
+            "detail": "Rust-proof, BPA-free — no plastic leaching into your water",
+            "brand_status": "yes",
+            "brand_custom": "",
+            "comparison_1_status": "no",
+            "comparison_1_custom": "",
+            "comparison_2_status": "custom",
+            "comparison_2_custom": "Plastic",
+            "comparison_3_status": "custom",
+            "comparison_3_custom": "Plastic"
+          }
+        },
+        "feature_fwTXwy": {
+          "type": "feature",
+          "settings": {
+            "feature": "Zero Microplastic Leaching",
+            "detail": "Won't release microplastics into filtered water — unlike plastic housings",
+            "brand_status": "yes",
+            "brand_custom": "",
+            "comparison_1_status": "varies",
+            "comparison_1_custom": "",
+            "comparison_2_status": "no",
+            "comparison_2_custom": "",
+            "comparison_3_status": "no",
+            "comparison_3_custom": ""
+          }
+        },
+        "group_QY7bCy": {
+          "type": "group",
+          "settings": {
+            "title": "Convenience & cost"
+          }
+        },
+        "feature_RKaVkH": {
+          "type": "feature",
+          "settings": {
+            "feature": "Refillable & Reusable",
+            "detail": "Refill media every ~4 months — no full-unit replacement needed",
+            "brand_status": "yes",
+            "brand_custom": "",
+            "comparison_1_status": "no",
+            "comparison_1_custom": "",
+            "comparison_2_status": "no",
+            "comparison_2_custom": "",
+            "comparison_3_status": "no",
+            "comparison_3_custom": ""
+          }
+        },
+        "feature_KFJGP9": {
+          "type": "feature",
+          "settings": {
+            "feature": "No Plumbing or Electricity",
+            "detail": "Gravity-fed — works anywhere, installs in minutes, zero utility cost",
+            "brand_status": "yes",
+            "brand_custom": "",
+            "comparison_1_status": "no",
+            "comparison_1_custom": "",
+            "comparison_2_status": "yes",
+            "comparison_2_custom": "",
+            "comparison_3_status": "yes",
+            "comparison_3_custom": ""
+          }
+        },
+        "feature_Ura8zm": {
+          "type": "feature",
+          "settings": {
+            "feature": "Long Filter Life (1,060+ Gal/Set)",
+            "detail": "Each media refill treats up to 1,060 gallons before replacement",
+            "brand_status": "yes",
+            "brand_custom": "",
+            "comparison_1_status": "varies",
+            "comparison_1_custom": "",
+            "comparison_2_status": "no",
+            "comparison_2_custom": "",
+            "comparison_3_status": "no",
+            "comparison_3_custom": ""
+          }
+        },
+        "feature_zUDFNz": {
+          "type": "feature",
+          "settings": {
+            "feature": "Fraction of the Cost vs. Bottled Water",
+            "detail": "As little as 5¢ per gallon — saves thousands vs. bottled & RO systems",
+            "brand_status": "yes",
+            "brand_custom": "",
+            "comparison_1_status": "no",
+            "comparison_1_custom": "",
+            "comparison_2_status": "no",
+            "comparison_2_custom": "",
+            "comparison_3_status": "partial",
+            "comparison_3_custom": ""
+          }
+        },
+        "group_Rbw7kH": {
+          "type": "group",
+          "settings": {
+            "title": "Trust & assurance"
+          }
+        },
+        "feature_DxgN8e": {
+          "type": "feature",
+          "settings": {
+            "feature": "3rd-Party Lab Tested & Verified",
+            "detail": "Independent lab reports publicly available — no guesswork",
+            "brand_status": "yes",
+            "brand_custom": "",
+            "comparison_1_status": "varies",
+            "comparison_1_custom": "",
+            "comparison_2_status": "varies",
+            "comparison_2_custom": "",
+            "comparison_3_status": "custom",
+            "comparison_3_custom": "Rarely"
+          }
+        },
+        "feature_bWkW4Y": {
+          "type": "feature",
+          "settings": {
+            "feature": "100-Day Risk-Free Trial",
+            "detail": "Full money-back guarantee — return it if you're not 100% satisfied",
+            "brand_status": "yes",
+            "brand_custom": "",
+            "comparison_1_status": "no",
+            "comparison_1_custom": "",
+            "comparison_2_status": "no",
+            "comparison_2_custom": "",
+            "comparison_3_status": "no",
+            "comparison_3_custom": ""
+          }
+        },
+        "feature_WN66Db": {
+          "type": "feature",
+          "settings": {
+            "feature": "Backed by 50+ Years of Expertise",
+            "detail": "Over 800,000 happy customers trust Phoenix across the US",
+            "brand_status": "yes",
+            "brand_custom": "",
+            "comparison_1_status": "varies",
+            "comparison_1_custom": "",
+            "comparison_2_status": "varies",
+            "comparison_2_custom": "",
+            "comparison_3_status": "no",
+            "comparison_3_custom": ""
+          }
+        }
+      },
+      "block_order": [
+        "group_bFMwVr",
+        "feature_8JKJiP",
+        "feature_Rfwpyj",
+        "feature_PgxVt7",
+        "group_LgqVRz",
+        "feature_iKPY7M",
+        "feature_fwTXwy",
+        "group_QY7bCy",
+        "feature_RKaVkH",
+        "feature_KFJGP9",
+        "feature_Ura8zm",
+        "feature_zUDFNz",
+        "group_Rbw7kH",
+        "feature_DxgN8e",
+        "feature_bWkW4Y",
+        "feature_WN66Db"
+      ],
+      "custom_css": [
+        "section {padding-top: 0px; padding-bottom: 0px;}"
+      ],
+      "name": "Tabular comparison v2",
+      "settings": {
+        "eyebrow": "Why Phoenix POSTreat?",
+        "heading": "The Only Fluoride Filter That <strong>Does It All</strong>",
+        "description": "<p>See exactly how the Phoenix POSTreat Fluoride Reduction Elements stack up against every other option on the market — so you can decide with confidence.</p>",
+        "table_label": "Water filtration comparison",
+        "feature_heading": "Features",
+        "badge": "Best value",
+        "brand_heading": "Phoenix POSTreat Fluoride Reduction",
+        "brand_subheading": "Add-on filter elements",
+        "comparison_1": "Reverse osmosis",
+        "comparison_2": "Bottled water",
+        "comparison_3": "Pitcher filters",
+        "button_label": "Shop POSTreat now",
+        "button_link": "",
+        "button_note": "Free US Shipping on $99+ · 100-Day Guarantee",
+        "footnote": "<p><strong>How to read this table:</strong> The Phoenix POSTreat Fluoride Reduction Elements are designed to work alongside your Phoenix Carbon Filter Elements as a complete two-stage system. Comparison data reflects typical real-world performance. RO = under-sink Reverse Osmosis system. Pitcher filters include popular brands that use activated carbon only. Individual results may vary based on source water quality.</p>",
+        "background_color": "#f4f8fb",
+        "navy_color": "#0c2c50",
+        "green_color": "#187866",
+        "accent_color": "#dfa51e",
+        "border_color": "#cbddea",
+        "feature_background": "#f2f7fa",
+        "highlight_background": "#f0faf8"
+      }
+    },
+    "custom_tabular_comparison_table_RthnCr": {
+      "type": "custom-tabular-comparison-table",
+      "blocks": {
+        "comparison_row_4Eh6TW": {
+          "type": "comparison_row",
+          "settings": {
+            "feature": "Affordable",
+            "column_one": true,
+            "column_two": false,
+            "column_three": false,
+            "column_four": true
+          }
+        },
+        "comparison_row_4kT49f": {
+          "type": "comparison_row",
+          "settings": {
+            "feature": "Portable",
+            "column_one": true,
+            "column_two": false,
+            "column_three": true,
+            "column_four": true
+          }
+        },
+        "comparison_row_PQneCx": {
+          "type": "comparison_row",
+          "settings": {
+            "feature": "Steel Build",
+            "column_one": true,
+            "column_two": true,
+            "column_three": false,
+            "column_four": false
+          }
+        },
+        "comparison_row_GAKKy7": {
+          "type": "comparison_row",
+          "settings": {
+            "feature": "100-Day Trial",
+            "column_one": true,
+            "column_two": false,
+            "column_three": false,
+            "column_four": false
+          }
+        },
+        "comparison_row_6eNeB3": {
+          "type": "comparison_row",
+          "settings": {
+            "feature": "Easy Maint.",
+            "column_one": true,
+            "column_two": true,
+            "column_three": false,
+            "column_four": false
+          }
+        },
+        "comparison_row_HXKece": {
+          "type": "comparison_row",
+          "settings": {
+            "feature": "Large Capacity",
+            "column_one": true,
+            "column_two": true,
+            "column_three": false,
+            "column_four": false
+          }
+        },
+        "comparison_row_rQYrBr": {
+          "type": "comparison_row",
+          "settings": {
+            "feature": "No Plumbing",
+            "column_one": true,
+            "column_two": false,
+            "column_three": true,
+            "column_four": true
+          }
+        }
+      },
+      "block_order": [
+        "comparison_row_4Eh6TW",
+        "comparison_row_4kT49f",
+        "comparison_row_PQneCx",
+        "comparison_row_GAKKy7",
+        "comparison_row_6eNeB3",
+        "comparison_row_HXKece",
+        "comparison_row_rQYrBr"
+      ],
+      "name": "Comparison table",
+      "settings": {
+        "eyebrow": "Smart choice",
+        "heading": "Most Affordable Way to <strong>Pure Water</strong>",
+        "feature_column_label": "Feature",
+        "column_one_label": "Phoenix",
+        "column_two_label": "In-Home",
+        "column_three_label": "Bottles",
+        "column_four_label": "Pitchers",
+        "background_color": "#ffffff",
+        "text_color": "#07182d",
+        "accent_color": "#006d6d",
+        "header_background_color": "#071c2b",
+        "header_text_color": "#d5a94f",
+        "row_background_color": "#eef5f4",
+        "check_color": "#2f8c44",
+        "cross_color": "#cbd3d9"
+      }
+    },
+    "custom_add_to_cart_section_7VwTjY": {
+      "type": "custom-addToCart-section",
+      "custom_css": [
+        "section {padding-top: 0px; padding-bottom: 0px;}"
+      ],
+      "name": "Custom add to cart",
+      "settings": {
+        "heading": "Ready for <strong>Fluoride-Free Water?</strong>",
+        "subheading": "<p>Join 2,400+ Americans who've made the switch.</p>",
+        "product": "",
+        "button_label": "Add to Cart",
+        "use_product_price": true,
+        "price_text": "$99",
+        "sold_out_label": "Sold Out",
+        "button_link": "",
+        "background_color": "#ffffff",
+        "text_color": "#07182d",
+        "accent_color": "#006d6d",
+        "muted_text_color": "#667085",
+        "button_background_color": "#071c2b",
+        "button_text_color": "#ffffff"
+      }
+    },
+    "product_reviews_J4aYbK": {
+      "type": "product-reviews",
+      "blocks": {
+        "judge_me_reviews_review_widget_AbygGd": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_AbygGd"
+      ],
+      "custom_css": [
+        "@media (min-width: 786px) {.jdgm-rev-widg__title {margin-top: 0; font-size: 50px; }}",
+        ".col-12.mb-5 {display: none;}"
+      ],
+      "settings": {
+        "section_heading": ""
+      }
+    },
+    "custom_accordion_tabs_QVGEck": {
+      "type": "custom-accordion-tabs",
+      "blocks": {
+        "tab_WPedLV": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Set Up"
+          }
+        },
+        "question_answer_mYKLkg": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Long Will the POSTreat™ Fluoride Removal Filter Elements Last?",
+            "answer": "<p>The POSTreat™ Fluoride Removal Filter Elements are precision crafted from premium AISI 304 stainless steel. Built to perform for up to 10 years, it is backed by our 10 Year Warranty.Inside each element is our proprietary FluoRid media, specially formulated for highly effective fluoride reduction. The media is rated for up to 1,060 gallons of filtration capacity and typically requires replacement approximately every 4 months, depending on water quality and usage.We also offer a refill media subscription service. We’ll keep track of your replacement schedule and send your refill media when it’s time, so you can enjoy uninterrupted performance without the hassle.<br/><br/></p>"
+          }
+        },
+        "question_answer_iraLkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Long Will The POSTreat Fluoride Removal Filter Elements Last?",
+            "answer": "<p>Our POSTreat Fluoride Removal Filter Elements are made from ASI 304-Stainless Steel and are designed to last for years - which is why we included a 1 year warranty with our products.</p><p>The proprietary FluoRid media will last for 1060 gallons and need replacing approximately 4 months. </p><p>We also offer a subscription service for replacement media - we’ll remember when they’re due, so you don’t have to. </p>"
+          }
+        },
+        "question_answer_AD6Bgq": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Frequently Do I Need To Change My Filter Elements?",
+            "answer": "<p>This depends on the usage frequency and quality of your water input. We recommend replacing them at the following milestones:Carbon Filter Elements: 12 months.POSTreat FluoRid Refill Media: 4 months</p>"
+          }
+        },
+        "question_answer_QHmNV7": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Will I Be Able To Assemble My System And Change My Filters Myself?",
+            "answer": "<p>Certainly! Our systems are designed to be extremely easy to assemble and everything you need will be included. You can do it yourself with just your hands - there’s no specialist tools, plumbers or electricians required.</p><p>We include full instructions with every unit and we’re always here to help. </p>"
+          }
+        },
+        "question_answer_QkHGNn": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Frequently Do I Need To Change My Filter Elements?",
+            "answer": "<p>This depends on the usage frequency and quality of your water input. As a guide, we recommend replacing them at the following milestones:</p><p>Carbon Filter Elements: 12 months.</p><p>POSTreat (and FluoRid Media Refill): 4 months</p><p>We also offer a subscription service, which also works out to 5% off each order. Let us remind you when you need to change your filters, so you don’t have to!</p>"
+          }
+        },
+        "tab_mc7dJ3": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Filtration"
+          }
+        },
+        "question_answer_XXejdk": {
+          "type": "question_answer",
+          "settings": {
+            "question": "What Do Your Filters Really Remove?",
+            "answer": "<p>Phoenix Gravity Carbon Filter Elements are made from pure coconut shells, which are a sustainable and renewable resource. The carbon in the filters is activated, which means that it has a high surface area and is very porous. This allows it to trap a wide range of contaminants, including chlorine, heavy metals, and other impurities. </p><p>Phoenix Gravity Carbon Filters removes microplastics down to 5 microns in size and also eliminates PFAs, Hormones and Pharmaceutical residues from the water. Phoenix Gravity Carbon Filters are designed to provide clean, odorless water with a great taste. They do not release any harmful chemicals or by-products into the water, and they are very effective at removing chlorine and other volatile organic compounds.  A pair of carbon filter elements can filter gallons of water by providing safe and healthy drinking water.</p>"
+          }
+        },
+        "question_answer_pJgb7K": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Do Your Gravity Filters And Filter Elements Compare To Others?",
+            "answer": "<p>We are one of the leaders in advanced Gravity Filtration. With over 50 plus years’ experience of manufacturing in-house, we have complete control over the process and the quality of our filters and filter elements. We are enormously proud of the effort it has taken us to become a leading manufacturer of Gravity Water Filters.</p>"
+          }
+        },
+        "question_answer_pnJYGF": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Are Your Filters As Comprehensive As Berkey?",
+            "answer": "<p>Absolutely! We have run extensive and independent tests on our filters for a variety of chemical contaminants such as Lead, chlorine, chromium, Volatile organic compounds and 100 more.</p><p>What’s more, with over 50 plus years’ experience of in-house manufacturing - we’re one of the leading global manufacturers of  AISI 304 Grade Stainless Steel gravity filtration systems. We also have complete control over the process and the quality of our filters and replacement filter elements. We are enormously proud of the effort it has taken us to become the world’s leading manufacturer of Gravity Water Filters.</p>"
+          }
+        },
+        "question_answer_WytehT": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do Phoenix Gravity Filters Lower The TDS?",
+            "answer": "<p>TDS stands for Total Dissolved Solids and is measured in parts per million (ppm) or parts per billion (ppb). It’s a measure of the water’s organic and inorganic content including minerals and nutrients.</p><p>Natural water will have a TDS reading from minerals and nutrients picked up from the rocks and ground it flows through. It’s generally accepted that 300 ppm is a good mineral content. We purposely do not bring our TDS to zero, because we’re all about preserving the natural vitamins and minerals your body needs.</p>"
+          }
+        },
+        "tab_bq9xz8": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Shipping"
+          }
+        },
+        "question_answer_JCkLCT": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do I need the stainless steel casing for the POSTreat Fluoride Removal Filters?",
+            "answer": "<p>Yes, the stainless steel casing is essential. It holds the media inside. This optimized interaction with water enhances fluoride reduction and overall effectiveness. The AISI 304 stainless steel is reusable and refillable with the FluoRid media once in 4 months.</p>"
+          }
+        },
+        "question_answer_EyB336": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Are Phoenix Gravity POSTreat Fluoride Removal Filters compatible with my existing Phoenix Gravity system and filters?",
+            "answer": "<p>Yes, Phoenix Gravity POSTreat Fluoride Removal Filters are designed to be fully compatible with Phoenix Gravity systems. They sit in the lower chamber of most standard gravity-fed filtration units. However, we always recommend confirming thread(nozzle) size to ensure seamless installation. If you need help determining compatibility, our team is here to assist!</p>"
+          }
+        },
+        "question_answer_z3THNq": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do I need one POSTreat Fluoride Removal Filter for each Carbon Filter?",
+            "answer": "<p>Yes, you'll need one POSTreat Fluoride Removal Filter for each carbon Filter in your system. The<strong> </strong>POSTreat Fluoride Removal Filters are designed as a 1-to-1 companion product, meaning each fluoride removal filter connects directly to one carbon Filter.</p>"
+          }
+        },
+        "question_answer_QDt7D4": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Why can’t I purchase POSTreat Fluoride Removal Filters in California or Iowa?",
+            "answer": "<p>POSTreat Fluoride Removal Filters are not available to ship to California or Iowa due to state-specific regulations and compliance requirements. These states have unique laws regarding the sale of water filtration products that make certain contaminant reduction claims.</p>"
+          }
+        },
+        "question_answer_MNNPpe": {
+          "type": "question_answer",
+          "settings": {
+            "question": "My Item Has Arrived Damaged Or Incorrect, What Can I Do?",
+            "answer": "<p>Please send a photograph of your full order including the packaging along with your order number to our support team at hello@phoenixwaterfilters.com, and we’ll get back to you as a matter of priority within 24 hours.</p>"
+          }
+        },
+        "tab_z4YC8M": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Warranty"
+          }
+        },
+        "question_answer_PUALtG": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Does The 100-Day Money-Back Guarantee Work?",
+            "answer": "<p>The 100-Day Money Back Guarantee is applicable only to the Phoenix Gravity Systems purchased with the AISI 304 Grade Stainless Steel housings, via our website. The trial is not applicable for replacement filters and accessories purchased separately. </p><p><strong>Here’s how it works:</strong></p><p>Purchase your Phoenix Gravity Water Filter System via our website. Once it arrives, start using it straight away.</p><p>If you don’t fall in love with your Phoenix Gravity System within 100 days of use from the date of delivery, contact our support team to initiate a return. The return must be initiated within 100 days from the date of purchase.</p><p>The system must be returned complete with all original parts and packaging. The AISI 304 Grade Stainless Steel housing should not be dented or otherwise damaged. The filter elements must not be cracked or damaged upon our receipt of the return.</p><p>Upon safe receipt of the system and inspection of condition, we will be in touch to initiate a full refund to your original payment method. This process may take up to 10 business days to complete.</p><p><a href=\"/pages/contact-us\" title=\"Contact Us\">Talk To Us About The 100-Day Money Back Guarantee.</a></p>"
+          }
+        },
+        "question_answer_VHW4yd": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Is The 100-Day Return Policy Valid If I Order From Amazon?",
+            "answer": "<p>No. Your Phoenix Gravity Filter system must be purchased via our website to qualify for our 100-day money back guarantee.</p>"
+          }
+        },
+        "question_answer_kADyCr": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Does the Warranty Work?",
+            "answer": "<p>We stand behind the quality of our products and offer warranty coverage against defects in materials and workmanship.Warranty coverage includes:• 10 year warranty on POSTreat™ Fluoride Reduction Filter Elements• 1 year warranty on Phoenix Gravity 304 Grade Stainless Steel Spigots• 3 month warranty on Carbon Filter Elements• 6 month warranty on all other parts and accessoriesIf you experience an issue covered under warranty, our team will be happy to assist you.</p>"
+          }
+        },
+        "tab_dtmipY": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Account"
+          }
+        },
+        "question_answer_yQfjbD": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Can I Get A Subscription On My Elements?",
+            "answer": "<p>Yes, we offer a subscription to replace your elements to save you time and headspace.</p>"
+          }
+        },
+        "question_answer_XNEhpU": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Do I Make Changes To My Subscription?",
+            "answer": "<p>Your subscription can be amended and updated from your Phoenix Gravity Account. Once you’ve logged into your account, click on subscriptions to make any changes.</p><p>If you need any further help, please don’t hesitate to contact us.</p>"
+          }
+        },
+        "question_answer_PairCt": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Can I Skip Or Cancel My Subscription?",
+            "answer": "<p>Yes, you can make changes to frequency or cancel your subscription at any time.</p><p>Please note that cancelling your subscription will forfeit any special pricing on your subscription, so if you wish to re-subscribe after canceling, you may not be able to recover the same special pricing you had previously.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "tab_WPedLV",
+        "question_answer_mYKLkg",
+        "question_answer_iraLkf",
+        "question_answer_AD6Bgq",
+        "question_answer_QHmNV7",
+        "question_answer_QkHGNn",
+        "tab_mc7dJ3",
+        "question_answer_XXejdk",
+        "question_answer_pJgb7K",
+        "question_answer_pnJYGF",
+        "question_answer_WytehT",
+        "tab_bq9xz8",
+        "question_answer_JCkLCT",
+        "question_answer_EyB336",
+        "question_answer_z3THNq",
+        "question_answer_QDt7D4",
+        "question_answer_MNNPpe",
+        "tab_z4YC8M",
+        "question_answer_PUALtG",
+        "question_answer_VHW4yd",
+        "question_answer_kADyCr",
+        "tab_dtmipY",
+        "question_answer_yQfjbD",
+        "question_answer_XNEhpU",
+        "question_answer_PairCt"
+      ],
+      "name": "Custom accordion tabs",
+      "settings": {
+        "eyebrow": "Got questions?",
+        "heading": "We've Got <strong>Answers</strong>",
+        "background_color": "#ffffff",
+        "text_color": "#07182d",
+        "accent_color": "#12736f",
+        "border_color": "#e6e9ee",
+        "active_tab_background_color": "#071c2b",
+        "active_tab_text_color": "#ffffff"
+      }
+    },
+    "video_image_RqVDUe": {
+      "type": "video-image",
+      "blocks": {
+        "text_dAH4Wr": {
+          "type": "text",
+          "settings": {
+            "video_id": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_dAH4Wr"
+      ],
+      "custom_css": [],
+      "settings": {
+        "is_posttreat": false
+      }
+    }
+  },
+  "order": [
+    "blocks_Xxkrh7",
+    "product-hero",
+    "custom_support_TByi4L",
+    "custom_trust_badges_zB4rJr",
+    "custom_product_details_tabular_form_AKNBim",
+    "custom_certificate_info_card_RipJUk",
+    "custom_timeline_kktmmj",
+    "blocks_LW8dxL",
+    "custom_info_cards_MgRpbx",
+    "blocks_p6TpgX",
+    "blocks_6wiVVF",
+    "blocks_zGp6Qd",
+    "custom_html_rChwV7",
+    "blocks_NnKDpK",
+    "177876003432b8c2be",
+    "secondary_details_M3cr8M",
+    "copy_image_DfRFKh",
+    "custom_health_alert_mJqUQC",
+    "custom_tabular_comparison_table_v2_rzJ6wj",
+    "custom_tabular_comparison_table_RthnCr",
+    "custom_add_to_cart_section_7VwTjY",
+    "product_reviews_J4aYbK",
+    "custom_accordion_tabs_QVGEck",
+    "video_image_RqVDUe"
+  ]
+}

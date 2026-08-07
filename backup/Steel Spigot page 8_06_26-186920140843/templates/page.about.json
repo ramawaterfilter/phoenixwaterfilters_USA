@@ -1,0 +1,153 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero_fGiC9Y": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "",
+        "heading": "About Us",
+        "content": "",
+        "sideimage": "shopify://shop_images/about-phoenix-water-filters.jpg",
+        "section_video_bg": "",
+        "buttonlink": "",
+        "buttontext": ""
+      }
+    },
+    "article_callout_66xp3E": {
+      "type": "article-callout",
+      "settings": {
+        "style": "style-2",
+        "reducepadding": true,
+        "heading": "Established 1970",
+        "content": ""
+      }
+    },
+    "copy_image_VPPNeV": {
+      "type": "copy-image",
+      "settings": {
+        "style": "bg-white",
+        "layout": "copy-image-copy",
+        "vertical_align": "align-items-center",
+        "heading": "Our Story So Far",
+        "content": "<p>In London, a soon-to-be-father was increasingly concerned about the quality of tap water. Existing solutions were expensive, complicated, and not guaranteed to do the job. So, starting from scratch and leveraging innovative new technology, he designed and manufactured high-quality, low-waste drinking water filter ceramics in the UK.<br/><br/>Meanwhile in Chennai, another soon-to-be father saw an opportunity to manufacture water filters using the highest-grade stainless steel. So, he created a sustainable factory (run exclusively on solar power) to do just that. By 1985, it had become the go-to global supplier for 304 stainless steel water filter housings.<br/><br/>The two fathers joined forces in the early 2000s and by 2005, the partnership blossomed to provide a unique combination of high-quality water filtration and manufacturing expertise.<br/><br/>Years later their children, having worked in water filtration their whole lives, decided to combine this expertise with their passion for health and sustainability.</p><p>Manufactured in our solar-powered factory in Chennai, India — shipped from our US warehouse.</p>",
+        "column_img": "shopify://shop_images/water-filter-eCom1.webp",
+        "video_id": "",
+        "large_image": "img-standard",
+        "second_content": "<p>The Phoenix Gravity Water Filters offer the highest-grade stainless steel gravity drinking water filtration on the market, Phoenix Gravity Water Filters are bringing better- tasting, and better-nourishing water back to 800,000 + homes globally (and counting!) - just as nature intended.</p>",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "bg_image_style": "contain",
+        "section_randoimg_position": "bottom"
+      }
+    },
+    "copy_image_EF7HdE": {
+      "type": "copy-image",
+      "custom_css": [
+        "@media (max-width: 768px) {h2 {font-size: 20px; }}"
+      ],
+      "settings": {
+        "style": "bg-white",
+        "layout": "copy-image-copy",
+        "vertical_align": "align-items-center",
+        "heading": "Great Technology, Greater Purpose",
+        "content": "<p>For over 50 years, we've poured passion, precision, and purpose into every drop of what we do. At the core of our gravity water filters is a beautiful balance - natural materials, thoughtful design, and technology that stands the test of time.</p><p>We believe great technology isn’t just about what goes into our filters, it’s about the people behind them. Innovators, problem-solvers, and caretakers of health and the planet. Together, we’ve created a legacy of trust, transforming everyday water into something purer, safer, and simply better.<br/><br/></p>",
+        "video_id": "",
+        "large_image": "img-standard",
+        "second_content": "",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "bg_image_style": "contain",
+        "section_randoimg_position": "bottom"
+      }
+    },
+    "gallery_NqrkDB": {
+      "type": "gallery",
+      "blocks": {
+        "gallery_images_block_PfRCFJ": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-01.jpg"
+          }
+        },
+        "gallery_images_block_CCJWT7": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-02.jpg"
+          }
+        },
+        "gallery_images_block_qX3Fqd": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-03.jpg"
+          }
+        },
+        "gallery_images_block_w7gYzt": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-04.jpg"
+          }
+        },
+        "gallery_images_block_qRpxPB": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-05.jpg"
+          }
+        },
+        "gallery_images_block_TFAfTb": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-06.jpg"
+          }
+        },
+        "gallery_images_block_AHBK7Y": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-07.jpg"
+          }
+        },
+        "gallery_images_block_TKg4Uz": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-08.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "gallery_images_block_PfRCFJ",
+        "gallery_images_block_CCJWT7",
+        "gallery_images_block_qX3Fqd",
+        "gallery_images_block_w7gYzt",
+        "gallery_images_block_qRpxPB",
+        "gallery_images_block_TFAfTb",
+        "gallery_images_block_AHBK7Y",
+        "gallery_images_block_TKg4Uz"
+      ],
+      "custom_css": [],
+      "settings": {
+        "gallery_heading": "",
+        "gallery_content": ""
+      }
+    }
+  },
+  "order": [
+    "hero_fGiC9Y",
+    "article_callout_66xp3E",
+    "copy_image_VPPNeV",
+    "copy_image_EF7HdE",
+    "gallery_NqrkDB"
+  ]
+}

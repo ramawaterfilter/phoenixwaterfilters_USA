@@ -1,0 +1,226 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="site-footer__inner">
+        <div class="site-footer__col1">
+          {% if section.settings.footer-logo %}
+            <a href="/" aria-label="footer logo">
+              {{ section.settings.footer-logo | image_url: width: 1000 | image_tag }}
+            </a>
+          {% endif %}
+
+          {{ section.settings.col1_text }}
+        </div>
+
+        <div class="site-footer__col2">
+          {{ section.settings.col2_text }}
+        </div>
+
+        <div class="site-footer__col3">
+          {{ section.settings.col3_text }}
+        </div>
+
+        <div class="site-footer__col4">
+
+          {% render 'newsletter-form' %}
+
+          <div class="footer-socials">
+
+            <p>
+              <strong>{{ section.settings.socials_title }}</strong>
+            </p>
+
+            <ul class="socials">
+              {% if section.settings.socials_fb != blank %}
+                <li>
+                  <a href="{{ section.settings.socials_fb }}" target="_blank">
+                    <img src="{{ 'icon-facebook.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
+                  </a>
+                </li>
+              {% endif %}
+              {% if section.settings.socials_tw != blank %}
+                <li>
+                  <a href="{{ section.settings.socials_tw }}" target="_blank">
+                    <img src="{{ 'icon-x-twitter.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
+                  </a>
+                </li>
+              {% endif %}
+              {% if section.settings.socials_ig != blank %}
+                <li>
+                  <a href="{{ section.settings.socials_ig }}" target="_blank">
+                    <img src="{{ 'icon-instagram.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
+                  </a>
+                </li>
+              {% endif %}
+              {% if section.settings.socials_li != blank %}
+                <li>
+                  <a href="{{ section.settings.socials_li }}" target="_blank">
+                    <img src="{{ 'icon-linkedin.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
+                  </a>
+                </li>
+              {% endif %}
+              {% if section.settings.socials_yt != blank %}
+                <li>
+                  <a href="{{ section.settings.socials_yt }}" target="_blank">
+                    <img src="{{ 'icon-youtube.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+
+        <div class="site-footer__col5">
+          {% comment %} <ul class="payment-methods">
+                                                {%- for type in shop.enabled_payment_types -%}
+                                                  <li class="list-payment__item">
+                                                    {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+                                                  </li>
+                                                {%- endfor -%}
+                                        </ul> {% endcomment %}
+        </div>
+
+        <div class="site-footer__bottom">
+          <div class="col-12 d-flex justify-content-between align-items-start pb-5">
+            {% if section.settings.contact_title != blank %}
+              <p class="contact-title">{{ section.settings.contact_title }}</p>
+            {% endif %}
+          {% comment %} {% render 'localization' %} {% endcomment %}
+          </div>
+
+          {% if section.settings.email != blank or section.settings.phone != blank or section.settings.terms != blank %}
+
+            <div class="contacts d-flex">
+              {% if section.settings.phone != blank %}
+                <div class="detail col-12 col-md-4 col-lg-3">
+                  <div class="ico-bg">
+                    <img src="{{ 'icon-phone.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
+                  </div>
+                  <div class="wrap">
+                    <p class="title">Phone Number</p>
+                    <a href="tel:{{ section.settings.phone }}">{{ section.settings.phone }}</a>
+                  </div>
+                </div>
+              {% endif %}
+
+              {% if section.settings.email != blank %}
+                <div class="detail col-12 col-md-8 col-lg-4">
+                  <div class="ico-bg">
+                    <img src="{{ 'icon-mail.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
+                  </div>
+                  <div class="wrap">
+                    <p class="title">Email Address</p>
+                    <a href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a>
+                  </div>
+                </div>
+              {% endif %}
+
+              {% if section.settings.terms != blank %}
+                <div class="detail terms col-12 col-lg-5">
+                  <div class="ico-bg">
+                    <img src="{{ 'icon-alert.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
+                  </div>
+                  {{ section.settings.terms }}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="copyright container-fluid">
+  <div class="row justify-content-center align-items-center">
+    <div class="col-12 p-5 text-center">
+      {% if section.settings.disclaimer != blank %}
+        {% assign current_year = 'now' | date: '%Y' %}
+
+
+        {% assign disclaimer_with_year = section.settings.disclaimer | replace: '[dyn-year]', current_year %}
+
+
+        {{ disclaimer_with_year }}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Footer",
+    "tag": "footer",
+    "class": "site-footer pb-0",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "footer-logo",
+        "label": "Footer Logo"
+      },
+      {
+        "type": "richtext",
+        "id": "col1_text",
+        "label": "Column 1 Text"
+      },
+      {
+        "type": "richtext",
+        "id": "col2_text",
+        "label": "Column 2 Text"
+      },
+      {
+        "type": "richtext",
+        "id": "col3_text",
+        "label": "Column 3 Text"
+      }, {
+        "type": "text",
+        "id": "socials_title",
+        "label": "Socials Title",
+        "default": "Follow Us On"
+      }, {
+        "type": "text",
+        "id": "socials_fb",
+        "label": "Facebook URL"
+      }, {
+        "type": "text",
+        "id": "socials_tw",
+        "label": "Twitter URL"
+      }, {
+        "type": "text",
+        "id": "socials_ig",
+        "label": "Instagram URL"
+      }, {
+        "type": "text",
+        "id": "socials_yt",
+        "label": "Youtube URL"
+      }, {
+        "type": "text",
+        "id": "contact_title",
+        "label": "Contacts Title"
+      }, {
+        "type": "text",
+        "id": "phone",
+        "label": "Phone #"
+      }, {
+        "type": "text",
+        "id": "email",
+        "label": "Email"
+      }, {
+        "type": "richtext",
+        "id": "terms",
+        "label": "Terms"
+      }, {
+        "type": "richtext",
+        "id": "disclaimer",
+        "label": "Disclaimer"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Footer"
+      }
+    ],
+    "enabled_on": {
+      "groups": ["footer"]
+    }
+  }
+{% endschema %}

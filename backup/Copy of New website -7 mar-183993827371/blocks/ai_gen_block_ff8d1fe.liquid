@@ -1,0 +1,234 @@
+{% doc %}
+  @prompt
+    create hte swction i need to add the embed code and add the heading and i need to change the width and height everthing manually and  font size for hedaing to \, i need to chang eht text color and paddign aand margin to  and i need  change the text and , remove the padding for the videoas onoy i  need the headibg what i need is in heading i need text alignment and text padding margin thos things i  video i need to give mebed code and manulalyt change the width adn height everthing
+{% enddoc %}
+
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-embed-code-container-{{ ai_gen_id }} {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .ai-embed-code-heading-{{ ai_gen_id }} {
+    margin-top: {{ block.settings.heading_margin_top }}px;
+    margin-bottom: {{ block.settings.heading_margin_bottom }}px;
+    margin-left: {{ block.settings.heading_margin_left }}px;
+    margin-right: {{ block.settings.heading_margin_right }}px;
+    padding-top: {{ block.settings.heading_padding_top }}px;
+    padding-bottom: {{ block.settings.heading_padding_bottom }}px;
+    padding-left: {{ block.settings.heading_padding_left }}px;
+    padding-right: {{ block.settings.heading_padding_right }}px;
+    font-size: {{ block.settings.heading_font_size }}px;
+    color: {{ block.settings.heading_color }};
+    text-align: {{ block.settings.heading_alignment }};
+  }
+
+  .ai-embed-code-wrapper-{{ ai_gen_id }} {
+    width: {{ block.settings.embed_width }}px;
+    height: {{ block.settings.embed_height }}px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-embed-code-wrapper-{{ ai_gen_id }} iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+{% endstyle %}
+
+<div
+  class="ai-embed-code-container-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.heading != blank %}
+    <h2 class="ai-embed-code-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+  {% endif %}
+
+  {% if block.settings.embed_code != blank %}
+    <div class="ai-embed-code-wrapper-{{ ai_gen_id }}">
+      {{ block.settings.embed_code }}
+    </div>
+  {% else %}
+    <div class="ai-embed-code-wrapper-{{ ai_gen_id }}" style="background-color: #f4f4f4; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14px;">
+      Add your embed code in the block settings
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Custom embed code",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading text"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "min": 12,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Font size",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Heading padding"
+    },
+    {
+      "type": "range",
+      "id": "heading_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_padding_left",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Left",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_padding_right",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Right",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Heading margin"
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_left",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Left",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_right",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Right",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Embed code"
+    },
+    {
+      "type": "html",
+      "id": "embed_code",
+      "label": "Embed code"
+    },
+    {
+      "type": "range",
+      "id": "embed_width",
+      "min": 200,
+      "max": 2000,
+      "step": 20,
+      "unit": "px",
+      "label": "Width",
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "embed_height",
+      "min": 200,
+      "max": 2000,
+      "step": 20,
+      "unit": "px",
+      "label": "Height",
+      "default": 600
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom embed code"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,163 @@
+{%- liquid
+  assign media_id = section.settings.media_id | strip | escape
+
+  assign poster_url = ''
+  if section.settings.poster_image != blank
+    assign poster_url = section.settings.poster_image | image_url: width: 1600
+  elsif media_id != blank
+    assign poster_url = 'https://fast.wistia.com/embed/medias/' | append: media_id | append: '/swatch'
+  endif
+
+  assign embed_src = 'https://fast.wistia.com/embed/' | append: media_id | append: '.js'
+-%}
+
+{%- if media_id != blank -%}
+  <section
+    class="kk-fws-video{% if section.settings.crop_mobile %} kk-fws-video--crop-mobile{% endif %}"
+    style="
+      --kk-fws-video-background: {{ section.settings.background_color }};
+      {% if poster_url != blank %}--kk-fws-video-poster: url('{{ poster_url }}');{% endif %}
+    "
+  >
+    <div class="kk-fws-video__frame">
+      <wistia-player
+        class="kk-fws-video__player"
+        media-id="{{ media_id }}"
+        aspect="1.7777777777777777"
+        {% if section.settings.video_title != blank %}
+          aria-label="{{ section.settings.video_title | escape }}"
+        {% endif %}
+      ></wistia-player>
+    </div>
+  </section>
+
+  {%- comment -%}
+    The theme does not load the Wistia player globally (src/js/wistia.js only handles the older
+    [data-wistia-vid-id] embeds), so this section injects the same two scripts the existing
+    custom-html embed uses. The guard keeps a second instance of this section on the same page
+    from loading them twice.
+  {%- endcomment -%}
+  <script>
+    (function () {
+      var load = function (src, isModule) {
+        if (document.querySelector('script[data-kk-fws-video="' + src + '"]')) return;
+        var script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        script.setAttribute('data-kk-fws-video', src);
+        if (isModule) script.type = 'module';
+        document.head.appendChild(script);
+      };
+      load('https://fast.wistia.com/player.js', false);
+      load({{ embed_src | json }}, true);
+    })();
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  .kk-fws-video {
+    /* Full-bleed band: override the theme global `section { padding: 20px 0 }`. */
+    padding: 0;
+    width: 100%;
+    background: var(--kk-fws-video-background, #ffffff);
+  }
+
+  .kk-fws-video__frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1366 / 769;
+    overflow: hidden;
+  }
+
+  .kk-fws-video__player {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    background-color: transparent;
+  }
+
+  /* Poster shown until the Wistia custom element upgrades. */
+  .kk-fws-video__player:not(:defined) {
+    background: center / cover no-repeat var(--kk-fws-video-poster, none);
+    filter: blur(5px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kk-fws-video__player:not(:defined) {
+      filter: none;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .kk-fws-video__frame {
+      aspect-ratio: 375 / 260;
+    }
+
+    .kk-fws-video--crop-mobile .kk-fws-video__player {
+      width: auto;
+      height: 100%;
+      min-width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Video",
+  "tag": "div",
+  "class": "section-kk-fws-video",
+  "settings": [
+    {
+      "type": "text",
+      "id": "media_id",
+      "label": "Wistia media ID",
+      "default": "t5p83isk4k",
+      "info": "The hashed ID from the Wistia media URL."
+    },
+    {
+      "type": "text",
+      "id": "video_title",
+      "label": "Accessible label",
+      "default": "Phoenix Gravity Water Filter System | Clean & Healthy Water"
+    },
+    {
+      "type": "image_picker",
+      "id": "poster_image",
+      "label": "Poster image",
+      "info": "Optional. Shown while the player loads. Falls back to the Wistia thumbnail for the media ID above."
+    },
+    {
+      "type": "checkbox",
+      "id": "crop_mobile",
+      "label": "Crop to band height on mobile",
+      "default": true,
+      "info": "Matches the 375x260 mobile Figma band by cropping the 16:9 video's sides. Uncheck to letterbox instead."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Video",
+      "settings": {
+        "media_id": "t5p83isk4k",
+        "crop_mobile": true
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,152 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-5">
+      {% if section.settings.content %}
+        {{ section.settings.content }}
+      {% endif %}
+    </div>
+    <div class="col-12 col-md-10 col-lg-6 offset-lg-1 mt-5 mt-lg-0">
+      {% if section.settings.form_title %}
+        <h2>
+          {{ section.settings.form_title }}
+        </h2>
+      {% endif %}
+
+      {% form 'contact'
+        , class: 'kk-validation' %}
+
+        {% if form.posted_successfully? %}
+          <p class="form-thankyou">
+            Thankyou, your enquiry has been received.
+          </p>
+        {% endif %}
+
+
+        {{ form.errors | default_errors }}
+
+
+        <div class="form-group">
+          <label for="name" class="sr-only">{{ 'templates.contact.form.name' | t }}</label>
+          <img
+            class="icon"
+            src="{{ 'icon-user.svg' | asset_url }}"
+            loading="lazy" />
+
+          <input
+            type="text"
+            id="name"
+            name="contact[name]"
+            placeholder="{{ 'templates.contact.form.name' | t }}*"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="sr-only">{{ 'templates.contact.form.email' | t }}</label>
+          <img
+            class="icon"
+            src="{{ 'icon-email.svg' | asset_url }}"
+            loading="lazy" />
+          <input
+            type="email"
+            id="email"
+            name="contact[email]"
+            placeholder="{{ 'templates.contact.form.email' | t }}*"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label for="phone" class="sr-only">{{ 'templates.contact.form.phone' | t }}</label>
+          <img
+            class="icon"
+            src="{{ 'icon-phone.svg' | asset_url }}"
+            loading="lazy" />
+          <input
+            type="tel"
+            id="phone"
+            name="contact[phone]"
+            placeholder="{{ 'templates.contact.form.phone' | t }}" />
+        </div>
+
+        <div class="form-group">
+          <label for="message" class="sr-only">{{ 'templates.contact.form.comment' | t }}</label>
+          <img
+            class="icon textarea"
+            src="{{ 'icon-message.svg' | asset_url }}"
+            loading="lazy" />
+          <textarea
+            id="message"
+            name="contact[message]"
+            placeholder="{{ 'templates.contact.form.comment' | t }}*"
+            required></textarea>
+        </div>
+
+        <button class="btn btn-secondary btn-hug">
+          {{ 'templates.contact.form.send' | t }}
+        </button>
+      {% endform %}
+    </div>
+  </div>
+
+  {% if section.settings.cta_text != blank and section.settings.cta != blank %}
+    <div class="row contact-cta justify-content-center text-center ">
+      <div class="divider col-10"></div>
+      <div class="col-12">
+        <a href="{{ section.settings.cta }}">
+          {{ section.settings.cta_text }}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="60"
+            height="30"
+            viewBox="0 0 60 30"
+            fill="none">
+            <path d="M45.1618 15.2057C45.7328 14.6347 45.7328 13.709 45.1618 13.1381L35.8575 3.83369C35.2865 3.26273 34.3608 3.26273 33.7898 3.83369C33.2189 4.40465 33.2189 5.33037 33.7898 5.90133L42.0604 14.1719L33.7898 22.4424C33.2189 23.0134 33.2189 23.9391 33.7898 24.5101C34.3608 25.081 35.2865 25.081 35.8575 24.5101L45.1618 15.2057ZM9.03906 15.6339H44.128V12.7098H9.03906V15.6339Z" fill="#153A5B" />
+            <rect
+              x="0.267578"
+              y="0.136719"
+              width="59.0664"
+              height="29.2408"
+              fill="#C4C4C4"
+              fill-opacity="0.02" />
+          </svg>
+
+        </a>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+
+{% schema %}
+  {
+    "name": "Contact Form",
+    "tag": "section",
+    "class": "section-contact",
+    "settings": [
+      {
+        "type": "text",
+        "id": "form_title",
+        "label": "Form Title"
+      }, {
+        "type": "richtext",
+        "id": "content",
+        "label": "Content"
+      }, {
+        "type": "text",
+        "id": "cta_text",
+        "label": "CTA Text"
+      }, {
+        "type": "url",
+        "id": "cta",
+        "label": "CTA URL"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Contact Form"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["page"]
+    }
+  }
+{% endschema %}

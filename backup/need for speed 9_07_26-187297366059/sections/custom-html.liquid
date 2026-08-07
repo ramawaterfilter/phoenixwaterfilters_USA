@@ -1,0 +1,134 @@
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign conditional_visibility = false
+  if section.settings.visibility == 'variant_ids' and section.settings.variant_ids != blank
+    assign conditional_visibility = true
+  endif
+%}
+
+<variant-visibility-scope
+  id="CustomEmbed-{{ section.id }}"
+  class="custom-embed-video-container"
+  data-variant-visibility-item
+  {% if conditional_visibility %}data-variant-visibility-ids="{{ section.settings.variant_ids | escape }}"{% endif %}
+  current-variant-id="{{ current_variant.id }}"
+  {% if conditional_visibility %}
+    hidden
+  {% endif %}
+>
+  <div class="responsive-embed-wrapper" data-variant-visibility-mount></div>
+
+  {% if conditional_visibility %}
+    <template data-variant-visibility-template>
+      {{ section.settings.embed_code }}
+    </template>
+  {% else %}
+    <template data-custom-embed-template>
+      {{ section.settings.embed_code }}
+    </template>
+  {% endif %}
+</variant-visibility-scope>
+
+{% if conditional_visibility %}
+  <script src="{{ 'variant-visibility.js' | asset_url }}" defer></script>
+{% else %}
+  <script>
+    (() => {
+      const root = document.getElementById('CustomEmbed-{{ section.id }}');
+      if (!root) return;
+
+      const load = () => {
+        if (root.dataset.customEmbedLoaded === 'true') return;
+        const mount = root.querySelector('[data-variant-visibility-mount]');
+        const template = root.querySelector('[data-custom-embed-template]');
+        if (!mount || !template) return;
+
+        mount.append(template.content.cloneNode(true));
+        mount.querySelectorAll('script').forEach(oldScript => {
+          const script = document.createElement('script');
+          Array.from(oldScript.attributes).forEach(({ name, value }) => script.setAttribute(name, value));
+          script.textContent = oldScript.textContent;
+          oldScript.replaceWith(script);
+        });
+        root.dataset.customEmbedLoaded = 'true';
+      };
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(entries => {
+          if (!entries.some(entry => entry.isIntersecting)) return;
+          observer.disconnect();
+          load();
+        }, { rootMargin: '600px 0px' });
+        observer.observe(root);
+      } else {
+        window.addEventListener('load', load, { once: true });
+      }
+    })();
+  </script>
+{% endif %}
+
+{% stylesheet %}
+  .custom-embed-video-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .responsive-embed-wrapper {
+    position: relative;
+    height: 0;
+    padding-bottom: 56.25%;
+    overflow: hidden;
+  }
+
+  .responsive-embed-wrapper iframe,
+  .responsive-embed-wrapper .wistia_responsive_wrapper {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Custom Embed Video",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "embed_code",
+      "label": "Embed Code",
+      "info": "Paste your full Wistia/YouTube/Vimeo embed code here"
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "label": "Visibility",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always"
+        },
+        {
+          "value": "variant_ids",
+          "label": "Selected variant IDs"
+        }
+      ],
+      "default": "always"
+    },
+    {
+      "type": "textarea",
+      "id": "variant_ids",
+      "label": "Variant IDs",
+      "info": "Comma-separated variant IDs that should display this section"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Embed Video"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,30 @@
+{% doc %}
+Renders product hero description statistics.
+@param {section} section - Section settings for statistic content and colors.
+@example
+{% render 'product-hero-description-stats', section: section %}
+{% enddoc %}
+
+{% if section.settings.show_description_stats %}
+  <div
+    class="product-description-stats"
+    style="--stats-background: {{ section.settings.description_stats_background }}; --stats-value-color: {{ section.settings.description_stats_value_color }}; --stats-label-color: {{ section.settings.description_stats_label_color }};"
+  >
+    {% for index in (1..4) %}
+      {% capture value_key %}description_stat_{{ index }}_value{% endcapture %}
+      {% capture label_key %}description_stat_{{ index }}_label{% endcapture %}
+      {% assign stat_value = section.settings[value_key] %}
+      {% assign stat_label = section.settings[label_key] %}
+      {% if stat_value != blank or stat_label != blank %}
+        <div class="product-description-stats__item">
+          {% if stat_value != blank %}
+            <strong>{{ stat_value | escape }}</strong>
+          {% endif %}
+          {% if stat_label != blank %}
+            <span>{{ stat_label | escape }}</span>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}

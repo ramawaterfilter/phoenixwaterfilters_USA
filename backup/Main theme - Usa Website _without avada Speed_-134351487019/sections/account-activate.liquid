@@ -1,0 +1,46 @@
+<div class="container">
+    <div class="row justify-content-center text-center">
+        <div class="col-12 col-lg-8 justify-content-between">
+            <h5>Create your password to activate your account</h5>
+
+            {% form 'activate_customer_password' %}
+	
+				<div class="password">
+					<label for="password" class="form-field">
+						<input type="password" name="customer[password]" id="password" placeholder="Password">
+					</label>
+				</div>
+
+				<div class="password_confirm">
+					<label for="password_confirmation" class="form-field">
+						<input type="password" name="customer[password_confirmation]" id="password_confirmation" placeholder="Password Confirmation" >
+					</label>
+				</div>
+
+				<div class="actions forgotpass">
+					<label for="submit" class="form-field">
+						<input type="submit" value="Activate Account">
+					</label>
+					<p>or</p>
+					<label for="submit" class="form-field form-field-half">
+						<input type="submit" name="decline" class="decline" value="Decline Invitation" />
+					</label>
+				</div>
+
+				{{ form.errors | default_errors }}
+
+			{% endform %}
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Activate Account",
+    "tag": "section",
+    "class": "section-activateaccount",
+    "enabled_on": {
+        "templates": ["customers/activate_account"]
+    }
+}
+{% endschema %}

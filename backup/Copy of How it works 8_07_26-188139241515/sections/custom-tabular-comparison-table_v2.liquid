@@ -1,0 +1,1119 @@
+{% liquid
+  assign custom_column_count = 0
+  for block in section.blocks
+    if block.type == 'column'
+      assign custom_column_count = custom_column_count | plus: 1
+    endif
+  endfor
+
+  assign legacy_column_count = 3
+  if section.settings.show_comparison_3
+    assign legacy_column_count = 4
+  endif
+%}
+
+<section
+  id="PhoenixComparison-{{ section.id }}"
+  class="phoenix-comparison"
+  style="
+    --pc-background: {{ section.settings.background_color }};
+    --pc-navy: {{ section.settings.navy_color }};
+    --pc-green: {{ section.settings.green_color }};
+    --pc-accent: {{ section.settings.accent_color }};
+    --pc-border: {{ section.settings.border_color }};
+    --pc-feature-bg: {{ section.settings.feature_background }};
+    --pc-highlight-bg: {{ section.settings.highlight_background }};
+    --pc-feature-width: {{ section.settings.feature_column_width }}px;
+    --pc-default-column-width: {{ section.settings.default_column_width }}px;
+  "
+>
+  <div class="phoenix-comparison__inner">
+    <header class="phoenix-comparison__header">
+      {% if section.settings.show_eyebrow and section.settings.eyebrow != blank %}
+        <p class="phoenix-comparison__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {% endif %}
+
+      {% if section.settings.show_heading and section.settings.heading != blank %}
+        <h2 class="phoenix-comparison__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.show_description and section.settings.description != blank %}
+        <div class="phoenix-comparison__description">{{ section.settings.description }}</div>
+      {% endif %}
+    </header>
+
+    <div class="phoenix-comparison__scroll" tabindex="0" role="region" aria-label="{{ section.settings.table_label | escape }}">
+      <table class="phoenix-comparison__table">
+        <colgroup>
+          <col style="width: var(--pc-feature-width);">
+          {% if custom_column_count > 0 %}
+            {% for block in section.blocks %}
+              {% if block.type == 'column' %}
+                <col style="width: {{ block.settings.width }}px;">
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            {% for column_number in (1..legacy_column_count) %}
+              <col style="width: var(--pc-default-column-width);">
+            {% endfor %}
+          {% endif %}
+        </colgroup>
+
+        <thead>
+          <tr>
+            <th class="phoenix-comparison__feature-heading" scope="col">
+              {{ section.settings.feature_heading | escape }}
+            </th>
+
+            {% if custom_column_count > 0 %}
+              {% for block in section.blocks %}
+                {% if block.type == 'column' %}
+                  <th
+                    class="{% if block.settings.highlight_column %}phoenix-comparison__brand-heading{% endif %}"
+                    scope="col"
+                    {{ block.shopify_attributes }}
+                  >
+                    {% if block.settings.badge != blank %}
+                      <span class="phoenix-comparison__badge">{{ block.settings.badge | escape }}</span>
+                    {% endif %}
+                    <strong>{{ block.settings.heading | escape }}</strong>
+                    {% if block.settings.subheading != blank %}
+                      <small>{{ block.settings.subheading | escape }}</small>
+                    {% endif %}
+                  </th>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <th class="phoenix-comparison__brand-heading" scope="col">
+                {% if section.settings.show_badge and section.settings.badge != blank %}
+                  <span class="phoenix-comparison__badge">{{ section.settings.badge | escape }}</span>
+                {% endif %}
+                <strong>{{ section.settings.brand_heading }}</strong>
+                {% if section.settings.show_brand_subheading and section.settings.brand_subheading != blank %}
+                  <small>{{ section.settings.brand_subheading | escape }}</small>
+                {% endif %}
+              </th>
+              <th scope="col">{{ section.settings.comparison_1 | escape }}</th>
+              <th scope="col">{{ section.settings.comparison_2 | escape }}</th>
+              {% if section.settings.show_comparison_3 %}
+                <th scope="col">{{ section.settings.comparison_3 | escape }}</th>
+              {% endif %}
+            {% endif %}
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'group' %}
+                <tr class="phoenix-comparison__group" {{ block.shopify_attributes }}>
+                  <th scope="rowgroup">{{ block.settings.title | escape }}</th>
+                  <td colspan="{% if custom_column_count > 0 %}{{ custom_column_count }}{% else %}{{ legacy_column_count }}{% endif %}"></td>
+                </tr>
+
+              {% when 'row' %}
+                {% assign row_cells = block.settings.cells | newline_to_br | split: '<br />' %}
+                <tr class="phoenix-comparison__row" {{ block.shopify_attributes }}>
+                  <th scope="row">
+                    <strong>{{ block.settings.feature | escape }}</strong>
+                    {% if block.settings.detail != blank %}
+                      <span>{{ block.settings.detail | escape }}</span>
+                    {% endif %}
+                  </th>
+
+                  {% assign cell_index = 0 %}
+                  {% for column_block in section.blocks %}
+                    {% if column_block.type == 'column' %}
+                      {% assign cell_text = row_cells[cell_index] | strip %}
+                      {% assign cell_tone = 'neutral' %}
+                      {% assign cell_icon = '' %}
+                      {% assign cell_text_normalized = cell_text | downcase %}
+                      {% assign cell_first_character = cell_text | slice: 0, 1 %}
+                      {% if cell_text_normalized == 'yes' or cell_first_character == '+' %}
+                        {% assign cell_tone = 'yes' %}
+                        {% assign cell_icon = 'check' %}
+                      {% elsif cell_text_normalized == 'no' or cell_text_normalized == 'x' or cell_first_character == '-' %}
+                        {% assign cell_tone = 'no' %}
+                        {% assign cell_icon = 'cross' %}
+                      {% endif %}
+                      {% if cell_first_character == '+' or cell_first_character == '-' %}
+                        {% assign cell_text = cell_text | slice: 1, 999 | strip %}
+                      {% endif %}
+                      <td{% if column_block.settings.highlight_column %} class="phoenix-comparison__highlight"{% endif %}>
+                        {% if cell_text != blank %}
+                          <span class="phoenix-comparison__cell-text phoenix-comparison__cell-text--{{ cell_tone }}">
+                            {% if cell_icon != blank %}
+                              <span class="phoenix-comparison__cell-icon" aria-hidden="true">
+                                {% if cell_icon == 'check' %}
+                                  &#10003;
+                                {% else %}
+                                  X
+                                {% endif %}
+                              </span>
+                            {% endif %}
+                            {{ cell_text | escape }}
+                          </span>
+                        {% else %}
+                          <span class="phoenix-comparison__cell-text">&nbsp;</span>
+                        {% endif %}
+                      </td>
+                      {% assign cell_index = cell_index | plus: 1 %}
+                    {% endif %}
+                  {% endfor %}
+                </tr>
+
+              {% when 'feature' %}
+                {% if custom_column_count == 0 %}
+                  <tr class="phoenix-comparison__row" {{ block.shopify_attributes }}>
+                    <th scope="row">
+                      <strong>{{ block.settings.feature | escape }}</strong>
+                      {% if block.settings.detail != blank %}
+                        <span>{{ block.settings.detail | escape }}</span>
+                      {% endif %}
+                    </th>
+
+                    {% for column_number in (1..legacy_column_count) %}
+                      {% liquid
+                        case column_number
+                          when 1
+                            assign status = block.settings.brand_status
+                            assign custom_text = block.settings.brand_custom
+                          when 2
+                            assign status = block.settings.comparison_1_status
+                            assign custom_text = block.settings.comparison_1_custom
+                          when 3
+                            assign status = block.settings.comparison_2_status
+                            assign custom_text = block.settings.comparison_2_custom
+                          when 4
+                            assign status = block.settings.comparison_3_status
+                            assign custom_text = block.settings.comparison_3_custom
+                        endcase
+
+                        assign status_text = status | capitalize
+                        if custom_text != blank
+                          assign status_text = custom_text
+                        endif
+                      %}
+                      <td{% if column_number == 1 %} class="phoenix-comparison__highlight"{% endif %}>
+                        <span class="phoenix-comparison__pill phoenix-comparison__pill--{{ status }}">
+                          <span class="phoenix-comparison__pill-icon" aria-hidden="true">
+                            {% if status == 'yes' %}
+                              &#10003;
+                            {% elsif status == 'varies' or status == 'partial' %}
+                              ~
+                            {% else %}
+                              X
+                            {% endif %}
+                          </span>
+                          {{ status_text | escape }}
+                        </span>
+                      </td>
+                    {% endfor %}
+                  </tr>
+                {% endif %}
+            {% endcase %}
+          {% endfor %}
+        </tbody>
+
+        {% if section.settings.show_button and section.settings.button_label != blank %}
+          <tfoot>
+            <tr>
+              <td></td>
+              <td class="phoenix-comparison__cta-cell" colspan="{% if custom_column_count > 0 %}{{ custom_column_count }}{% else %}{{ legacy_column_count }}{% endif %}">
+                <a class="phoenix-comparison__button" href="{{ section.settings.button_link | default: '#' }}">
+                  {{ section.settings.button_label | escape }}
+                </a>
+                {% if section.settings.button_note != blank %}
+                  <small>{{ section.settings.button_note | escape }}</small>
+                {% endif %}
+              </td>
+            </tr>
+          </tfoot>
+        {% endif %}
+      </table>
+    </div>
+
+    {% if section.settings.show_footnote and section.settings.footnote != blank %}
+      <div class="phoenix-comparison__footnote">{{ section.settings.footnote }}</div>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .phoenix-comparison {
+    background: var(--pc-background);
+    color: var(--pc-navy);
+    padding: 56px 20px 44px;
+  }
+
+  .phoenix-comparison * {
+    box-sizing: border-box;
+  }
+
+  .phoenix-comparison__inner {
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+
+  .phoenix-comparison__header {
+    max-width: 760px;
+    margin: 0 auto 36px;
+    text-align: center;
+  }
+
+  .phoenix-comparison__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    min-height: 27px;
+    margin: 0 0 20px;
+    padding: 4px 18px;
+    border: 1px solid color-mix(in srgb, var(--pc-green) 34%, transparent);
+    border-radius: 999px;
+    color: var(--pc-green);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .phoenix-comparison__heading {
+    max-width: 820px;
+    margin: 0 auto;
+    color: var(--pc-navy);
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-size: clamp(34px, 4vw, 52px);
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.03;
+  }
+
+  .phoenix-comparison__heading em,
+  .phoenix-comparison__heading strong {
+    color: var(--pc-green);
+    font-style: normal;
+  }
+
+  .phoenix-comparison__description {
+    max-width: 680px;
+    margin: 20px auto 0;
+    color: #164477;
+    font-size: 17px;
+    line-height: 1.55;
+  }
+
+  .phoenix-comparison__description p,
+  .phoenix-comparison__footnote p {
+    margin: 0;
+  }
+
+  .phoenix-comparison__scroll {
+    overflow-x: auto;
+    border: 1px solid var(--pc-border);
+    border-radius: 0;
+    box-shadow: none;
+    outline: none;
+    scrollbar-color: var(--pc-green) rgba(10, 39, 72, 0.12);
+    scrollbar-width: thin;
+  }
+
+  .phoenix-comparison__scroll:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--pc-green) 35%, transparent);
+  }
+
+  .phoenix-comparison__table {
+    width: 100%;
+    min-width: max-content;
+    border-collapse: collapse;
+    border-spacing: 0;
+    table-layout: fixed;
+    background: #fff;
+  }
+
+  .phoenix-comparison__table th,
+  .phoenix-comparison__table td {
+    border-bottom: 1px solid var(--pc-border);
+    padding: 18px 24px;
+    vertical-align: middle;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    white-space: normal;
+  }
+
+  .phoenix-comparison__table tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  .phoenix-comparison__table thead th {
+    height: 56px;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-bottom: 0;
+    background: var(--pc-navy);
+    color: #69b4dd;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.35;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .phoenix-comparison__table .phoenix-comparison__brand-heading {
+    background: var(--pc-navy);
+    color: #39aee8;
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+
+  .phoenix-comparison__brand-heading strong,
+  .phoenix-comparison__brand-heading small,
+  .phoenix-comparison__table thead th strong,
+  .phoenix-comparison__table thead th small {
+    display: block;
+  }
+
+  .phoenix-comparison__brand-heading strong,
+  .phoenix-comparison__table thead th strong {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .phoenix-comparison__brand-heading small,
+  .phoenix-comparison__table thead th small {
+    font-family: var(--font-body-family, Arial, sans-serif);
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .phoenix-comparison__badge {
+    display: block;
+    margin: 0 0 5px;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--pc-accent);
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .phoenix-comparison__row th {
+    background: var(--pc-feature-bg);
+    color: var(--pc-navy);
+    font-size: 14px;
+    line-height: 1.25;
+    text-align: left;
+  }
+
+  .phoenix-comparison__row th strong,
+  .phoenix-comparison__row th span {
+    display: block;
+  }
+
+  .phoenix-comparison__row th strong {
+    font-weight: 800;
+  }
+
+  .phoenix-comparison__row th span {
+    margin-top: 6px;
+    color: #7390b3;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.45;
+  }
+
+  .phoenix-comparison__row td {
+    height: 62px;
+    background: #fff;
+    color: #687c91;
+    font-size: 14px;
+    line-height: 1.35;
+    text-align: left;
+  }
+
+  .phoenix-comparison__row .phoenix-comparison__highlight {
+    background: var(--pc-highlight-bg);
+  }
+
+  .phoenix-comparison__cell-text {
+    display: block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    white-space: normal;
+  }
+
+  .phoenix-comparison__cell-text--yes {
+    color: var(--pc-green);
+    font-weight: 700;
+  }
+
+  .phoenix-comparison__cell-text--no {
+    color: #d84b3f;
+  }
+
+  .phoenix-comparison__cell-icon {
+    margin-right: 3px;
+    color: currentColor;
+    font-weight: 700;
+  }
+
+  .phoenix-comparison__group {
+    display: none;
+  }
+
+  .phoenix-comparison__pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    min-height: 0;
+    max-width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.35;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .phoenix-comparison__pill-icon {
+    display: inline;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    background: transparent;
+    color: currentColor;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: inherit;
+  }
+
+  .phoenix-comparison__pill--yes {
+    color: var(--pc-green);
+  }
+
+  .phoenix-comparison__pill--no,
+  .phoenix-comparison__pill--custom {
+    color: #d84b3f;
+  }
+
+  .phoenix-comparison__pill--varies,
+  .phoenix-comparison__pill--partial {
+    color: #66798f;
+  }
+
+  .phoenix-comparison__table tfoot td {
+    height: 82px;
+    padding: 18px 24px;
+    border-bottom: 0;
+    background: #fff;
+    text-align: center;
+  }
+
+  .phoenix-comparison__table tfoot .phoenix-comparison__cta-cell {
+    background: var(--pc-highlight-bg);
+  }
+
+  .phoenix-comparison__button {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 25px;
+    border-radius: 4px;
+    background: var(--pc-green);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: filter 180ms ease, transform 180ms ease;
+  }
+
+  .phoenix-comparison__button:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+  }
+
+  .phoenix-comparison__cta-cell small {
+    display: block;
+    margin-top: 8px;
+    color: #687c91;
+    font-size: 11px;
+  }
+
+  .phoenix-comparison__footnote {
+    max-width: 840px;
+    margin: 28px auto 0;
+    color: #7894b4;
+    font-size: 12px;
+    line-height: 1.65;
+    text-align: center;
+  }
+
+  .phoenix-comparison__footnote strong {
+    color: var(--pc-navy);
+  }
+
+  @media screen and (max-width: 749px) {
+    .phoenix-comparison {
+      padding: 42px 12px 34px;
+    }
+
+    .phoenix-comparison__header {
+      margin-bottom: 32px;
+    }
+
+    .phoenix-comparison__eyebrow {
+      margin-bottom: 15px;
+      font-size: 10px;
+    }
+
+    .phoenix-comparison__heading {
+      font-size: clamp(32px, 10vw, 43px);
+    }
+
+    .phoenix-comparison__description {
+      margin-top: 16px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .phoenix-comparison__scroll {
+      border-radius: 0;
+      scroll-snap-type: x proximity;
+    }
+
+    .phoenix-comparison__table th,
+    .phoenix-comparison__table td {
+      padding: 9px 8px;
+    }
+
+    .phoenix-comparison__table thead th {
+      height: 58px;
+      font-size: 10px;
+      letter-spacing: 0;
+    }
+
+    .phoenix-comparison__feature-heading,
+    .phoenix-comparison__row th {
+      padding-left: 14px;
+    }
+
+    .phoenix-comparison__brand-heading strong,
+    .phoenix-comparison__table thead th strong {
+      font-size: 10px;
+      line-height: 1.25;
+    }
+
+    .phoenix-comparison__brand-heading small,
+    .phoenix-comparison__table thead th small {
+      font-size: 9px;
+    }
+
+    .phoenix-comparison__badge {
+      padding: 0;
+      font-size: 7px;
+    }
+
+    .phoenix-comparison__row th {
+      font-size: 12px;
+      line-height: 1.15;
+    }
+
+    .phoenix-comparison__row th span {
+      display: none;
+    }
+
+    .phoenix-comparison__row td {
+      height: 58px;
+      font-size: 12px;
+    }
+
+    .phoenix-comparison__pill {
+      gap: 3px;
+      min-height: 0;
+      max-width: 100%;
+      padding: 0;
+      font-size: 12px;
+    }
+
+    .phoenix-comparison__pill-icon {
+      width: auto;
+      height: auto;
+      font-size: 12px;
+    }
+
+    .phoenix-comparison__table tfoot td {
+      height: 76px;
+      padding: 10px 8px;
+    }
+
+    .phoenix-comparison__button {
+      min-height: 32px;
+      padding: 8px 14px;
+      font-size: 9px;
+    }
+
+    .phoenix-comparison__cta-cell small {
+      margin-top: 5px;
+      font-size: 7px;
+    }
+
+    .phoenix-comparison__footnote {
+      margin-top: 22px;
+      padding: 0 8px;
+      font-size: 11px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Tabular comparison v2",
+  "tag": "section",
+  "class": "section-tabular-comparison-v2",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "Show eyebrow",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Comparison"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show heading",
+      "default": false
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Filter comparison"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show description",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Compare filtration options side by side.</p>"
+    },
+    {
+      "type": "text",
+      "id": "table_label",
+      "label": "Accessible table label",
+      "default": "Water filtration comparison"
+    },
+    {
+      "type": "text",
+      "id": "feature_heading",
+      "label": "First column heading",
+      "default": "Feature"
+    },
+    {
+      "type": "range",
+      "id": "feature_column_width",
+      "label": "First column width",
+      "min": 120,
+      "max": 420,
+      "step": 10,
+      "unit": "px",
+      "default": 190
+    },
+    {
+      "type": "range",
+      "id": "default_column_width",
+      "label": "Legacy comparison column width",
+      "min": 120,
+      "max": 420,
+      "step": 10,
+      "unit": "px",
+      "default": 210
+    },
+    {
+      "type": "header",
+      "content": "Legacy column headings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show brand badge",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Brand badge",
+      "default": "Best value"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "brand_heading",
+      "label": "Brand heading",
+      "default": "POSTreat&trade; Steel (Phoenix Gravity)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_subheading",
+      "label": "Show brand subheading",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "brand_subheading",
+      "label": "Brand subheading",
+      "default": "Gravity system"
+    },
+    {
+      "type": "text",
+      "id": "comparison_1",
+      "label": "Comparison 1",
+      "default": "Reverse osmosis system"
+    },
+    {
+      "type": "text",
+      "id": "comparison_2",
+      "label": "Comparison 2",
+      "default": "Plastic pitcher filter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_comparison_3",
+      "label": "Show comparison 3",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "comparison_3",
+      "label": "Comparison 3",
+      "default": "Bottled water"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "button_note",
+      "label": "Button note",
+      "default": "Free US shipping on qualifying orders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_footnote",
+      "label": "Show footnote",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "footnote",
+      "label": "Footnote",
+      "default": "<p>Comparison details may vary by source water and product configuration.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "navy_color",
+      "label": "Navy",
+      "default": "#0b1d2e"
+    },
+    {
+      "type": "color",
+      "id": "green_color",
+      "label": "Green",
+      "default": "#18a957"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Gold accent",
+      "default": "#dfa51e"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Table borders",
+      "default": "#dde6ed"
+    },
+    {
+      "type": "color",
+      "id": "feature_background",
+      "label": "Feature cells",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "highlight_background",
+      "label": "Highlighted column cells",
+      "default": "#eef5f9"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Column heading"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge"
+        },
+        {
+          "type": "range",
+          "id": "width",
+          "label": "Column width",
+          "min": 120,
+          "max": 420,
+          "step": 10,
+          "unit": "px",
+          "default": 210
+        },
+        {
+          "type": "checkbox",
+          "id": "highlight_column",
+          "label": "Highlight this column",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "name": "Row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature",
+          "label": "First cell",
+          "default": "Feature name"
+        },
+        {
+          "type": "textarea",
+          "id": "detail",
+          "label": "Supporting detail"
+        },
+        {
+          "type": "textarea",
+          "id": "cells",
+          "label": "Column cells",
+          "info": "Enter one cell per line. Lines match the column blocks from top to bottom.",
+          "default": "Yes\nNo\nVaries"
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "name": "Category divider",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Category"
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "name": "Legacy feature row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature",
+          "label": "Feature",
+          "default": "Feature name"
+        },
+        {
+          "type": "textarea",
+          "id": "detail",
+          "label": "Supporting detail"
+        },
+        {
+          "type": "select",
+          "id": "brand_status",
+          "label": "Phoenix status",
+          "options": [
+            { "value": "yes", "label": "Yes" },
+            { "value": "no", "label": "No" },
+            { "value": "varies", "label": "Varies" },
+            { "value": "partial", "label": "Partial" },
+            { "value": "custom", "label": "Custom negative" }
+          ],
+          "default": "yes"
+        },
+        {
+          "type": "text",
+          "id": "brand_custom",
+          "label": "Phoenix custom text"
+        },
+        {
+          "type": "select",
+          "id": "comparison_1_status",
+          "label": "Comparison 1 status",
+          "options": [
+            { "value": "yes", "label": "Yes" },
+            { "value": "no", "label": "No" },
+            { "value": "varies", "label": "Varies" },
+            { "value": "partial", "label": "Partial" },
+            { "value": "custom", "label": "Custom negative" }
+          ],
+          "default": "no"
+        },
+        {
+          "type": "text",
+          "id": "comparison_1_custom",
+          "label": "Comparison 1 custom text"
+        },
+        {
+          "type": "select",
+          "id": "comparison_2_status",
+          "label": "Comparison 2 status",
+          "options": [
+            { "value": "yes", "label": "Yes" },
+            { "value": "no", "label": "No" },
+            { "value": "varies", "label": "Varies" },
+            { "value": "partial", "label": "Partial" },
+            { "value": "custom", "label": "Custom negative" }
+          ],
+          "default": "no"
+        },
+        {
+          "type": "text",
+          "id": "comparison_2_custom",
+          "label": "Comparison 2 custom text"
+        },
+        {
+          "type": "select",
+          "id": "comparison_3_status",
+          "label": "Comparison 3 status",
+          "options": [
+            { "value": "yes", "label": "Yes" },
+            { "value": "no", "label": "No" },
+            { "value": "varies", "label": "Varies" },
+            { "value": "partial", "label": "Partial" },
+            { "value": "custom", "label": "Custom negative" }
+          ],
+          "default": "no"
+        },
+        {
+          "type": "text",
+          "id": "comparison_3_custom",
+          "label": "Comparison 3 custom text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tabular comparison v2",
+      "blocks": [
+        {
+          "type": "column",
+          "settings": {
+            "heading": "POSTreat Steel",
+            "subheading": "Gravity system",
+            "badge": "Best value",
+            "width": 220,
+            "highlight_column": true
+          }
+        },
+        {
+          "type": "column",
+          "settings": {
+            "heading": "Reverse osmosis system",
+            "width": 220
+          }
+        },
+        {
+          "type": "column",
+          "settings": {
+            "heading": "Plastic pitcher filter",
+            "width": 220
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "feature": "Removes Fluoride (95%+)",
+            "cells": "Yes\nYes\nNo"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "feature": "Preserves Healthy Minerals",
+            "cells": "Yes\nStrips minerals\nYes"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "feature": "No Plumbing Required",
+            "cells": "Yes\nRequires install\nYes"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

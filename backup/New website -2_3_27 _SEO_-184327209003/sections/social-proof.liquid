@@ -1,0 +1,102 @@
+<div
+  class="section-socialproof__inner"
+  {% if section.settings.section_bgcolour != blank %}
+  style="background: {{ section.settings.section_bgcolour  }};"
+  {% endif %}>
+  <div class="container">
+    <div class="row justify-content-center justify-content-lg-center align-items-center">
+      <div class="col-11 col-md-8 p-md-5 col-lg-4 col-xl-4 mb-3">
+        <h2 class="h4">{{ section.settings.intro }}</h2>
+      </div>
+      <div class="col-12 col-md-12 col-lg-8 col-xl-8">
+        <div class="social-proof d-flex flex-row justify-content-center flex-xl-nowrap">
+
+          {% for block in section.blocks %}
+            <div class="social-card d-flex flex-column flex-lg-row align-items-center justify-content-center">
+
+
+              {% if block.settings.logo != blank %}
+                <div class="social-proof__logo">
+                  {% if block.settings.link != blank %}
+                    <a
+                      href="{{ block.settings.link }}"
+                      target="_blank"
+                      title="link">
+                  {% endif %}
+                  {{ block.settings.logo | image_url: width: 400 | image_tag }}
+                  {% if block.settings.link != blank %}
+                    </a>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings.logo != blank and block.settings.title != blank %}
+                <div class="divider d-none d-lg-block"></div>
+              {% endif %}
+              {% if block.settings.title != blank %}
+                {% if block.settings.link != blank %}
+                  <a
+                    href="{{ block.settings.link }}"
+                    target="_blank"
+                    title="link">
+                {% endif %}
+                <p class="social-proof__title">
+                  {{ block.settings.title }}
+                </p>
+                {% if block.settings.link != blank %}
+                  </a>
+                {% endif %}
+              {% endif %}
+            </div>
+          {% endfor %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Social Proof",
+    "tag": "section",
+    "class": "section-socialproof",
+    "settings": [
+      {
+        "id": "intro",
+        "type": "text",
+        "label": "Heading",
+        "default": "As Seen In"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Social Proof"
+      }
+    ],
+    "blocks": [
+      {
+        "name": "Logo",
+        "type": "logo",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          }, {
+            "type": "image_picker",
+            "id": "logo",
+            "label": "Logo"
+          }, {
+            "type": "url",
+            "id": "link",
+            "label": "Link",
+            "info": "Optional"
+          }
+        ]
+      }
+    ],
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    }
+  }
+{% endschema %}

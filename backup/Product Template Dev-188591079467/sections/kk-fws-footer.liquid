@@ -1,0 +1,1246 @@
+{%- liquid
+  assign phone = section.settings.phone
+  assign email = section.settings.email
+
+  # The tel: href must be dial-safe: strip spaces, parentheses, dots and dashes
+  # from whatever the merchant typed, but keep a leading + for international numbers.
+  assign phone_href = phone | replace: ' ', '' | replace: '(', '' | replace: ')', '' | replace: '-', '' | replace: '.', ''
+
+  assign email_input_id = 'kk-fws-footer-email-' | append: section.id
+
+  assign has_social = false
+  if section.settings.social_x_url != blank or section.settings.social_facebook_url != blank or section.settings.social_instagram_url != blank or section.settings.social_youtube_url != blank
+    assign has_social = true
+  endif
+
+  assign current_year = 'now' | date: '%Y'
+
+-%}
+
+<div
+  class="kk-fws-footer"
+  style="
+    --kk-fws-footer-background: {{ section.settings.background_color }};
+    --kk-fws-footer-heading: {{ section.settings.heading_color }};
+    --kk-fws-footer-text: {{ section.settings.text_color }};
+    --kk-fws-footer-line: {{ section.settings.line_color }};
+    --kk-fws-footer-surface: {{ section.settings.surface_color }};
+    --kk-fws-footer-glyph: {{ section.settings.glyph_color }};
+  "
+>
+  <div class="kk-fws-footer__container">
+    <div class="kk-fws-footer__top">
+      <div class="kk-fws-footer__brand">
+        {%- if section.settings.wordmark != blank -%}
+          <p class="kk-fws-footer__wordmark">{{ section.settings.wordmark }}</p>
+        {%- endif -%}
+        {%- if section.settings.tagline != blank -%}
+          <p class="kk-fws-footer__tagline">{{ section.settings.tagline }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if section.blocks.size > 0 -%}
+        {%- comment -%}
+          Two fixed columns, matched against literal 'a' / 'b'. An earlier version looped
+          `for column in nav_columns` and compared `block.settings.nav_column == column`; every
+          block matched the first pass and all six links landed in column A. Literals remove
+          the ambiguity, and the design has exactly two columns, so the loop bought nothing.
+          Empty lists are suppressed by CSS `:empty` rather than a counter.
+        {%- endcomment -%}
+        <nav class="kk-fws-footer__nav" aria-label="{{ section.settings.nav_label | escape }}">
+          {%- assign link_blocks = section.blocks | where: 'type', 'link' -%}
+
+          <ul class="kk-fws-footer__list kk-fws-footer__list--a">
+            {%- for block in link_blocks -%}
+              {%- if block.settings.label != blank and block.settings.nav_column == 'a' -%}
+                <li class="kk-fws-footer__item" {{ block.shopify_attributes }}>
+                  <a class="kk-fws-footer__link" href="{{ block.settings.link | default: '#' }}">
+                    {{- block.settings.label -}}
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+
+          <ul class="kk-fws-footer__list kk-fws-footer__list--b">
+            {%- for block in link_blocks -%}
+              {%- if block.settings.label != blank and block.settings.nav_column == 'b' -%}
+                <li class="kk-fws-footer__item" {{ block.shopify_attributes }}>
+                  <a class="kk-fws-footer__link" href="{{ block.settings.link | default: '#' }}">
+                    {{- block.settings.label -}}
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- endif -%}
+
+      {%- if section.settings.show_subscribe -%}
+        <div class="kk-fws-footer__subscribe">
+          {%- if section.settings.subscribe_heading != blank -%}
+            <p class="kk-fws-footer__subscribe-heading">{{ section.settings.subscribe_heading }}</p>
+          {%- endif -%}
+
+          {%- form 'customer', id: 'kk-fws-footer-newsletter', class: 'kk-fws-footer__form' -%}
+            {%- comment -%}
+              Same contract as the theme's own snippets/newsletter-form.liquid:
+              Shopify's native customer form, posting contact[email]. The hidden
+              contact[tags] field is what marks the created customer as a
+              newsletter signup rather than a plain account.
+            {%- endcomment -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+
+            {%- if form.posted_successfully? -%}
+              {%- comment -%}
+                Shopify's own post-back state. No fake success message is rendered
+                anywhere else in this section — this branch is the only success path.
+              {%- endcomment -%}
+              <p class="kk-fws-footer__form-success" role="status">
+                {{ section.settings.subscribe_success | default: 'Thanks — your subscription has been received.' }}
+              </p>
+            {%- else -%}
+              {%- if form.errors -%}
+                <div class="kk-fws-footer__form-errors" role="alert">
+                  {{ form.errors | default_errors }}
+                </div>
+              {%- endif -%}
+
+              <div class="kk-fws-footer__field">
+                <label class="kk-fws-footer__label" for="{{ email_input_id }}">
+                  {{ section.settings.subscribe_label }}
+                </label>
+
+                <input
+                  class="kk-fws-footer__input"
+                  id="{{ email_input_id }}"
+                  type="email"
+                  name="contact[email]"
+                  placeholder="{{ section.settings.subscribe_placeholder | escape }}"
+                  autocomplete="email"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  required
+                >
+
+                <button class="kk-fws-footer__submit" type="submit">
+                  <span class="kk-fws-footer__visually-hidden">
+                    {{- section.settings.subscribe_button_label -}}
+                  </span>
+                  <img
+                    class="kk-fws-footer__submit-icon"
+                    src="{{ 'kk-fws-icon-arrow-right.svg' | asset_url }}"
+                    alt=""
+                    role="presentation"
+                    width="18"
+                    height="11"
+                    loading="lazy"
+                  >
+                </button>
+              </div>
+            {%- endif -%}
+          {%- endform -%}
+
+          {%- if has_social -%}
+            <ul class="kk-fws-footer__social">
+              {%- assign social_keys = 'x,facebook,instagram,youtube' | split: ',' -%}
+              {%- for key in social_keys -%}
+                {%- liquid
+                  case key
+                    when 'x'
+                      assign social_url = section.settings.social_x_url
+                      assign social_name = 'X (Twitter)'
+                    when 'facebook'
+                      assign social_url = section.settings.social_facebook_url
+                      assign social_name = 'Facebook'
+                    when 'instagram'
+                      assign social_url = section.settings.social_instagram_url
+                      assign social_name = 'Instagram'
+                    when 'youtube'
+                      assign social_url = section.settings.social_youtube_url
+                      assign social_name = 'YouTube'
+                  endcase
+                -%}
+                {%- if social_url != blank -%}
+                  <li class="kk-fws-footer__social-item">
+                    <a
+                      class="kk-fws-footer__social-link"
+                      href="{{ social_url }}"
+                      rel="noopener"
+                      target="_blank"
+                    >
+                      <span class="kk-fws-footer__visually-hidden">{{ social_name }}</span>
+                      <img
+                        class="kk-fws-footer__social-icon kk-fws-footer__social-icon--{{ key }}"
+                        src="{{ 'kk-fws-icon-social-' | append: key | append: '.svg' | asset_url }}"
+                        alt=""
+                        role="presentation"
+                        width="18"
+                        height="18"
+                        loading="lazy"
+                      >
+                    </a>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <hr class="kk-fws-footer__divider">
+
+    <div class="kk-fws-footer__bottom">
+      <div class="kk-fws-footer__chat-row">
+        {%- if section.settings.chat_heading != blank -%}
+          <p class="kk-fws-footer__chat-heading">{{ section.settings.chat_heading }}</p>
+        {%- endif -%}
+
+        {%- comment -%}
+          Language selector.
+
+          The design draws a dropdown, but this store publishes exactly one
+          locale (locales/ contains only en.default.json, and
+          localization.available_languages therefore has size 1). The theme's own
+          <localization-form> (snippets/localization.liquid, driven by
+          src/js/localization.js) is additionally gated behind
+          settings.enable_language_selector, which is off, and its render call in
+          sections/footer.liquid is commented out.
+
+          Rather than ship a control that opens a one-item menu (or, worse, does
+          nothing at all), this renders the design's pill as a STATIC, inert
+          element. The chevron is decorative and hidden from assistive tech. If
+          the store ever publishes a second locale, replace this block with the
+          theme's <localization-form> pattern.
+        {%- endcomment -%}
+        {%- if section.settings.show_locale -%}
+          <p class="kk-fws-footer__locale">
+            <img
+              class="kk-fws-footer__locale-flag"
+              src="{{ 'kk-fws-icon-flag-us.svg' | asset_url }}"
+              alt=""
+              role="presentation"
+              width="20"
+              height="20"
+              loading="lazy"
+            >
+            <span class="kk-fws-footer__locale-label">{{ section.settings.locale_label }}</span>
+            <img
+              class="kk-fws-footer__locale-chevron"
+              src="{{ 'kk-fws-icon-chevron-down.svg' | asset_url }}"
+              alt=""
+              role="presentation"
+              width="10"
+              height="6"
+              loading="lazy"
+            >
+          </p>
+        {%- endif -%}
+      </div>
+
+      <ul class="kk-fws-footer__contacts">
+        {%- if phone != blank -%}
+          <li class="kk-fws-footer__contact kk-fws-footer__contact--phone">
+            <img
+              class="kk-fws-footer__contact-icon"
+              src="{{ 'kk-fws-icon-phone.svg' | asset_url }}"
+              alt=""
+              role="presentation"
+              width="36"
+              height="36"
+              loading="lazy"
+            >
+            <div class="kk-fws-footer__contact-body">
+              {%- if section.settings.phone_label != blank -%}
+                <p class="kk-fws-footer__contact-label">{{ section.settings.phone_label }}</p>
+              {%- endif -%}
+              <a class="kk-fws-footer__contact-value" href="tel:{{ phone_href }}">{{ phone }}</a>
+            </div>
+          </li>
+        {%- endif -%}
+
+        {%- if email != blank -%}
+          <li class="kk-fws-footer__contact kk-fws-footer__contact--email">
+            <span class="kk-fws-footer__contact-icon kk-fws-footer__contact-icon--framed">
+              <img
+                src="{{ 'kk-fws-icon-email.svg' | asset_url }}"
+                alt=""
+                role="presentation"
+                width="24"
+                height="24"
+                loading="lazy"
+              >
+            </span>
+            <div class="kk-fws-footer__contact-body">
+              {%- if section.settings.email_label != blank -%}
+                <p class="kk-fws-footer__contact-label">{{ section.settings.email_label }}</p>
+              {%- endif -%}
+              <a class="kk-fws-footer__contact-value" href="mailto:{{ email }}">{{ email }}</a>
+            </div>
+          </li>
+        {%- endif -%}
+
+        {%- if section.settings.terms_body != blank -%}
+          <li class="kk-fws-footer__contact kk-fws-footer__contact--terms">
+            <img
+              class="kk-fws-footer__contact-icon"
+              src="{{ 'kk-fws-icon-info.svg' | asset_url }}"
+              alt=""
+              role="presentation"
+              width="36"
+              height="36"
+              loading="lazy"
+            >
+            <p class="kk-fws-footer__terms">
+              {%- if section.settings.terms_label != blank -%}
+                <span class="kk-fws-footer__terms-label">{{ section.settings.terms_label }}</span>
+              {%- endif -%}
+              <span class="kk-fws-footer__terms-body">{{ section.settings.terms_body }}</span>
+            </p>
+          </li>
+        {%- endif -%}
+      </ul>
+    </div>
+
+    {%- if section.settings.copyright != blank -%}
+      <p class="kk-fws-footer__copyright">
+        {{- section.settings.copyright | replace: '[dyn-year]', current_year -}}
+      </p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  /* ------------------------------------------------------------------
+     Global footer suppression.
+
+     The campaign page ships its own footer, but the real site footer is
+     rendered unconditionally from sections/footer-group.json, via the
+     footer-group "sections" call in layout/theme.liquid (line 451) — neither
+     of which we may edit, and neither of which offers a per-template override.
+
+     Shopify stamps every section rendered by that group with the
+     `shopify-section-group-footer-group` class, so hiding on the group class
+     removes all three elements the group emits on this template (two
+     zero-height `div`s plus the visible `footer.site-footer`). A bare
+     `footer { display: none }` would miss the two empty divs AND could
+     accidentally match a `<footer>` element inside campaign content.
+
+     !important because the global CSS bundles set `display` on
+     `.site-footer` at equal specificity and bundle order is not guaranteed.
+
+     EXACTLY ONE campaign section may own this rule, and this is it.
+     (`sections/kk-fws-offer-bar.liquid` owns the matching `.site-header` rule
+     for the header group.) This is the sanctioned exception to the
+     no-global-selectors convention.
+
+     This section is NOT caught by the rule: it is an ordinary template
+     section, rendered inside the layout's main element from
+     content_for_layout (theme.liquid lines 446-448), a sibling of the footer
+     group rather than a member of it. Its wrapper therefore carries
+     shopify-section + section-kk-fws-footer and never the group class, which
+     Shopify only applies to members of a section group.
+     ------------------------------------------------------------------ */
+  .shopify-section-group-footer-group {
+    display: none !important;
+  }
+
+  .kk-fws-footer {
+    display: block;
+    /* Explicit zero. The theme applies a global rule adding 20px block padding
+       to section elements; the schema uses tag "div" to stay clear of it, and
+       all footer spacing lives on __container regardless. */
+    padding: 0;
+    background: var(--kk-fws-footer-background, #f5f3f1);
+  }
+
+  .kk-fws-footer__container {
+    width: min(100% - 3.2rem, 114rem);
+    margin: 0 auto;
+    padding: 6rem 0 4.8rem;
+    box-sizing: border-box;
+  }
+
+  .kk-fws-footer__visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ---------------------------------------------------------------- top row */
+
+  /* Desktop is four columns: brand / menu column A / menu column B /
+     subscribe. The nav is a single grid item holding both lists so the <nav>
+     keeps its box (display:contents on a landmark is not safe). */
+  .kk-fws-footer__top {
+    display: grid;
+    grid-template-columns: 33.2rem auto 33.9rem;
+    justify-content: space-between;
+    column-gap: 4rem;
+    row-gap: 4rem;
+    align-items: start;
+  }
+
+  .kk-fws-footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 2.3rem;
+  }
+
+  .kk-fws-footer__wordmark {
+    margin: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.5348rem;
+    line-height: 1.105;
+    color: var(--kk-fws-footer-heading, #153a5b);
+  }
+
+  .kk-fws-footer__tagline {
+    margin: 0;
+    max-width: 33.12rem;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.7rem;
+    line-height: 1.595;
+    color: var(--kk-fws-footer-text, #26303a);
+  }
+
+  .kk-fws-footer__nav {
+    display: flex;
+    align-items: flex-start;
+    column-gap: 11rem;
+    padding-top: 1.4rem;
+  }
+
+  .kk-fws-footer__list:empty {
+    display: none;
+  }
+
+  .kk-fws-footer__list {
+    display: flex;
+    flex-direction: column;
+    gap: 3.3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-footer__item {
+    display: block;
+  }
+
+  .kk-fws-footer__link {
+    display: block;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.3563rem;
+    line-height: 2rem;
+    letter-spacing: 0.15rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--kk-fws-footer-heading, #153a5b);
+    transition: opacity 0.2s ease;
+  }
+
+  /* Figma sets the first entry of each menu column in the Bold cut. */
+  .kk-fws-footer__item:first-child .kk-fws-footer__link {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+  }
+
+  .kk-fws-footer__link:hover,
+  .kk-fws-footer__link:focus-visible {
+    opacity: 0.7;
+    text-decoration: none;
+    color: var(--kk-fws-footer-heading, #153a5b);
+  }
+
+  /* -------------------------------------------------------------- subscribe */
+
+  .kk-fws-footer__subscribe {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.1rem;
+    padding-top: 1.4rem;
+  }
+
+  .kk-fws-footer__subscribe-heading {
+    margin: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.3563rem;
+    line-height: 2rem;
+    letter-spacing: 0.15rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-footer-heading, #153a5b);
+  }
+
+  .kk-fws-footer__form {
+    margin: 0;
+  }
+
+  /* The pill IS the field: white, fully rounded, with the submit arrow inline
+     inside it rather than as a separate adjacent button. */
+  .kk-fws-footer__field {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem 2.5rem;
+    box-sizing: border-box;
+    background: var(--kk-fws-footer-surface, #ffffff);
+    border-radius: 10rem;
+  }
+
+  .kk-fws-footer__field:focus-within {
+    outline: 2px solid var(--kk-fws-footer-heading, #153a5b);
+    outline-offset: 2px;
+  }
+
+  .kk-fws-footer__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .kk-fws-footer__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.595;
+    color: var(--kk-fws-footer-text, #26303a);
+  }
+
+  .kk-fws-footer__input:focus,
+  .kk-fws-footer__input:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .kk-fws-footer__input::placeholder {
+    color: var(--kk-fws-footer-text, #26303a);
+    opacity: 0.6;
+  }
+
+  .kk-fws-footer__submit {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: transform 0.2s ease;
+  }
+
+  .kk-fws-footer__submit:hover,
+  .kk-fws-footer__submit:focus-visible {
+    transform: translateX(0.2rem);
+  }
+
+  .kk-fws-footer__submit-icon {
+    display: block;
+    width: 1.7446rem;
+    height: 1.0909rem;
+    object-fit: contain;
+  }
+
+  .kk-fws-footer__form-success {
+    margin: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.5rem;
+    line-height: 1.4;
+    color: var(--kk-fws-footer-heading, #153a5b);
+  }
+
+  .kk-fws-footer__form-errors {
+    margin: 0 0 1.2rem;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    color: #b3261e;
+  }
+
+  .kk-fws-footer__form-errors ul {
+    margin: 0;
+    padding-left: 1.8rem;
+  }
+
+  /* ----------------------------------------------------------------- social */
+
+  .kk-fws-footer__social {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1.2rem;
+    margin: 2.4rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-footer__social-item {
+    display: block;
+  }
+
+  /* The white disc behind each glyph is a plain circle, so it is CSS rather
+     than a second exported asset. Only the glyph is an exported SVG. */
+  .kk-fws-footer__social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.6rem;
+    height: 3.6rem;
+    box-sizing: border-box;
+    border-radius: 50%;
+    background: var(--kk-fws-footer-surface, #ffffff);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .kk-fws-footer__social-link:hover,
+  .kk-fws-footer__social-link:focus-visible {
+    opacity: 0.75;
+  }
+
+  .kk-fws-footer__social-icon {
+    display: block;
+    object-fit: contain;
+  }
+
+  .kk-fws-footer__social-icon--x {
+    width: 1.5387rem;
+    height: 1.3885rem;
+  }
+
+  .kk-fws-footer__social-icon--facebook {
+    width: 1.7666rem;
+    height: 1.7666rem;
+  }
+
+  .kk-fws-footer__social-icon--instagram {
+    width: 1.7946rem;
+    height: 1.7906rem;
+  }
+
+  .kk-fws-footer__social-icon--youtube {
+    width: 1.8361rem;
+    height: 1.2866rem;
+  }
+
+  /* ---------------------------------------------------------------- divider */
+
+  /* Figma draws a 0.25px rule at 22% black; 1px is the smallest reliable CSS
+     border, and --kk-fws-footer-line carries that value pre-composited over
+     the #f5f3f1 band so it can stay a colour setting. */
+  .kk-fws-footer__divider {
+    width: 100%;
+    height: 0;
+    margin: 7.5rem 0 5.8rem;
+    border: 0;
+    border-top: 1px solid var(--kk-fws-footer-line, #bfbebc);
+  }
+
+  /* ------------------------------------------------------------- bottom row */
+
+  .kk-fws-footer__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 3.9rem;
+  }
+
+  .kk-fws-footer__chat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.4rem;
+  }
+
+  .kk-fws-footer__chat-heading {
+    margin: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 2rem;
+    letter-spacing: 0.05rem;
+    color: var(--kk-fws-footer-heading, #153a5b);
+  }
+
+  /* Static, non-interactive: single-locale store. See the Liquid comment. */
+  .kk-fws-footer__locale {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 1rem;
+    border-radius: 10rem;
+    background: var(--kk-fws-footer-surface, #ffffff);
+  }
+
+  .kk-fws-footer__locale-flag {
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+  }
+
+  .kk-fws-footer__locale-label {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.1063rem;
+    line-height: 1;
+    color: var(--kk-fws-footer-heading, #153a5b);
+  }
+
+  .kk-fws-footer__locale-chevron {
+    display: block;
+    width: 0.9502rem;
+    height: 0.5501rem;
+    margin: 0 0.7rem;
+    object-fit: contain;
+  }
+
+  /* --------------------------------------------------------------- contacts */
+
+  .kk-fws-footer__contacts {
+    display: grid;
+    grid-template-columns: minmax(0, 22rem) minmax(0, 38rem) minmax(0, 1fr);
+    column-gap: 4rem;
+    row-gap: 2.4rem;
+    align-items: start;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-footer__contact {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .kk-fws-footer__contact-icon {
+    display: block;
+    flex: 0 0 auto;
+    width: 3.6rem;
+    height: 3.6rem;
+    object-fit: contain;
+  }
+
+  /* The email glyph exports without its disc (Figma draws that disc as a
+     parent frame fill), unlike the phone and info glyphs which carry theirs.
+     A plain circle, so CSS supplies it. */
+  .kk-fws-footer__contact-icon--framed {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: 50%;
+    background: var(--kk-fws-footer-surface, #ffffff);
+  }
+
+  .kk-fws-footer__contact-icon--framed img {
+    display: block;
+    width: 2.4rem;
+    height: 2.4rem;
+    object-fit: contain;
+  }
+
+  .kk-fws-footer__contact-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  .kk-fws-footer__contact-label {
+    margin: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1.595;
+    color: var(--kk-fws-footer-heading, #153a5b);
+  }
+
+  .kk-fws-footer__contact-value {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 2rem;
+    letter-spacing: 0.05rem;
+    overflow-wrap: anywhere;
+    text-decoration: none;
+    color: var(--kk-fws-footer-heading, #153a5b);
+    transition: opacity 0.2s ease;
+  }
+
+  .kk-fws-footer__contact-value:hover,
+  .kk-fws-footer__contact-value:focus-visible {
+    opacity: 0.7;
+    text-decoration: underline;
+    color: var(--kk-fws-footer-heading, #153a5b);
+  }
+
+  .kk-fws-footer__terms {
+    margin: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.3rem;
+    line-height: 1.595;
+    color: var(--kk-fws-footer-heading, #153a5b);
+  }
+
+  .kk-fws-footer__terms-label {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+  }
+
+  /* -------------------------------------------------------------- copyright */
+
+  /* Figma node 7511:676 (mobile). The desktop frame 7423:1222 has no
+     equivalent node, so the desktop treatment below is an extrapolation of the
+     mobile one: same copy, same centring, tighter vertical padding. */
+  .kk-fws-footer__copyright {
+    margin: 4.8rem 0 0;
+    text-align: center;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: var(--kk-fws-footer-text, #26303a);
+  }
+
+  /* ------------------------------------------------------------- responsive */
+
+  @media (max-width: 989px) {
+    .kk-fws-footer__top {
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 4rem;
+    }
+
+    .kk-fws-footer__nav {
+      column-gap: 6rem;
+    }
+
+    .kk-fws-footer__subscribe {
+      grid-column: 1 / -1;
+      padding-top: 0;
+    }
+
+    .kk-fws-footer__contacts {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .kk-fws-footer__contact--terms {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .kk-fws-footer__container {
+      width: min(100% - 4rem, 54rem);
+      padding: 3.2rem 0 0;
+    }
+
+    .kk-fws-footer__top {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1.8rem;
+    }
+
+    .kk-fws-footer__brand {
+      gap: 1.6rem;
+    }
+
+    .kk-fws-footer__wordmark {
+      font-size: 2rem;
+    }
+
+    .kk-fws-footer__tagline {
+      max-width: none;
+      font-size: 1.6rem;
+      line-height: 1.4;
+    }
+
+    /* Mobile keeps the two menu columns: Figma puts column A at x=0 and column
+       B at x=251 of a 335 frame, which is exactly space-between. */
+    .kk-fws-footer__nav {
+      justify-content: space-between;
+      column-gap: 2rem;
+      padding-top: 0.6rem;
+    }
+
+    .kk-fws-footer__list {
+      gap: 2.4rem;
+    }
+
+    .kk-fws-footer__link {
+      font-size: 1.2rem;
+    }
+
+    .kk-fws-footer__subscribe {
+      gap: 1.6rem;
+      padding-top: 0;
+    }
+
+    .kk-fws-footer__subscribe-heading {
+      font-size: 1.4rem;
+    }
+
+    .kk-fws-footer__field {
+      padding: 1.2rem 2.5rem;
+    }
+
+    .kk-fws-footer__social {
+      margin-top: 1.6rem;
+    }
+
+    .kk-fws-footer__divider {
+      margin: 1.8rem 0;
+    }
+
+    .kk-fws-footer__bottom {
+      gap: 2.4rem;
+    }
+
+    .kk-fws-footer__chat-heading {
+      max-width: 13.5rem;
+    }
+
+    .kk-fws-footer__contacts {
+      grid-template-columns: 15rem minmax(0, 1fr);
+      column-gap: 2rem;
+      row-gap: 1.6rem;
+    }
+
+    /* Icon stacks above the text on mobile. */
+    .kk-fws-footer__contact {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.8rem;
+    }
+
+    .kk-fws-footer__contact-label {
+      line-height: 1.4;
+    }
+
+    .kk-fws-footer__contact-value {
+      line-height: 1.4;
+    }
+
+    .kk-fws-footer__terms {
+      font-size: 1.2rem;
+      line-height: 1.4;
+    }
+
+    .kk-fws-footer__copyright {
+      margin: 0;
+      padding: 4.8rem 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kk-fws-footer__link,
+    .kk-fws-footer__submit,
+    .kk-fws-footer__social-link,
+    .kk-fws-footer__contact-value {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Footer",
+  "tag": "div",
+  "class": "section-kk-fws-footer",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "text",
+      "id": "wordmark",
+      "label": "Wordmark",
+      "default": "Phoenix Gravity"
+    },
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "The Simplest, Safest And Most Affordable Way To Enjoy Pure Drinking Water That’s 99% Free From Contaminants"
+    },
+    {
+      "type": "header",
+      "content": "Menu"
+    },
+    {
+      "type": "text",
+      "id": "nav_label",
+      "label": "Menu accessible label",
+      "default": "Footer navigation"
+    },
+    {
+      "type": "header",
+      "content": "Subscribe"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subscribe",
+      "label": "Show subscribe form",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "subscribe_heading",
+      "label": "Subscribe heading",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_label",
+      "label": "Email field label",
+      "default": "Email address",
+      "info": "Visually hidden, read by screen readers."
+    },
+    {
+      "type": "text",
+      "id": "subscribe_placeholder",
+      "label": "Email field placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_button_label",
+      "label": "Submit button accessible label",
+      "default": "Subscribe",
+      "info": "The button shows only the arrow; this text is read by screen readers."
+    },
+    {
+      "type": "text",
+      "id": "subscribe_success",
+      "label": "Success message",
+      "default": "Thanks - your subscription has been received.",
+      "info": "Shown only after Shopify confirms the signup."
+    },
+    {
+      "type": "header",
+      "content": "Social"
+    },
+    {
+      "type": "url",
+      "id": "social_x_url",
+      "label": "X (Twitter) URL"
+    },
+    {
+      "type": "url",
+      "id": "social_facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "social_instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube_url",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "header",
+      "content": "Contact"
+    },
+    {
+      "type": "text",
+      "id": "chat_heading",
+      "label": "Contact heading",
+      "default": "Got a question? Let’s chat"
+    },
+    {
+      "type": "text",
+      "id": "phone_label",
+      "label": "Phone label",
+      "default": "Phone Number"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone number",
+      "default": "000 000 0000",
+      "info": "Rendered as a tel: link."
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email label",
+      "default": "Email Address"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email address",
+      "default": "phoenix_sales@phoenixwaterfilters.com",
+      "info": "Rendered as a mailto: link."
+    },
+    {
+      "type": "header",
+      "content": "Language"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_locale",
+      "label": "Show language badge",
+      "default": true,
+      "info": "Static badge, not a selector. This store publishes a single locale."
+    },
+    {
+      "type": "text",
+      "id": "locale_label",
+      "label": "Language label",
+      "default": "ENG (US)"
+    },
+    {
+      "type": "header",
+      "content": "Terms and copyright"
+    },
+    {
+      "type": "text",
+      "id": "terms_label",
+      "label": "Terms label",
+      "default": "Terms and conditions: "
+    },
+    {
+      "type": "textarea",
+      "id": "terms_body",
+      "label": "Terms body",
+      "default": "Applicable for purchase of Phoenix systems only. Customers must bear the return shipping cost to Phoenix’s warehouse in the USA."
+    },
+    {
+      "type": "text",
+      "id": "copyright",
+      "label": "Copyright line",
+      "default": "Copyright © Phoenix Gravity [dyn-year] | All Rights Reserved",
+      "info": "Use [dyn-year] for the current year."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f5f3f1"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Headings, links and contacts",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text",
+      "default": "#26303a"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Divider",
+      "default": "#bfbebc"
+    },
+    {
+      "type": "color",
+      "id": "surface_color",
+      "label": "Pill and icon surface",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "glyph_color",
+      "label": "Icon glyph",
+      "default": "#6fd9ff",
+      "info": "Reference only - the exported icons carry their own colour."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Menu link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Home"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "nav_column",
+          "label": "Column",
+          "options": [
+            { "value": "a", "label": "Left" },
+            { "value": "b", "label": "Right" }
+          ],
+          "default": "a"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Footer",
+      "blocks": [
+        { "type": "link", "settings": { "label": "Home", "nav_column": "a" } },
+        { "type": "link", "settings": { "label": "Products", "nav_column": "a" } },
+        { "type": "link", "settings": { "label": "Reports", "nav_column": "a" } },
+        { "type": "link", "settings": { "label": "Catalogue", "nav_column": "a" } },
+        { "type": "link", "settings": { "label": "Contact Us", "nav_column": "b" } },
+        { "type": "link", "settings": { "label": "Blogs", "nav_column": "b" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,86 @@
+{% doc %}
+Renders product media for the product hero.
+@param {product} product - Product to render media for.
+@example
+{% render 'product-hero-media', product: product %}
+{% enddoc %}
+
+<div class="product-hero-media position-relative {% if product.images.size <= 0 %}h-100{% endif %}">
+  {% render 'product-badge', product: product %}
+
+  {% if product.images.size > 1 %}
+    <div class="swiper-container swiper product-swiper" data-slidestoshow="1" id="product-slider">
+      <div class="swiper-wrapper">
+        {% for media in product.media %}
+          {% assign this_variant_id = '' %}
+          {% for variant in product.variants %}
+            {% if variant.featured_image == media.src %}
+              {% assign this_variant_id = variant.id %}
+            {% endif %}
+          {% endfor %}
+
+          {% if media.media_type == 'external_video' %}
+            <div class="swiper-slide" data-variant-id="{{ this_variant_id }}" data-slide-index="{{ forloop.index }}">
+              <a
+                data-fancybox="gallery"
+                href="{{ media | external_video_url: autoplay: 'true' }}"
+                class="product-image product-image--video d-block"
+              >
+                {{ media.preview_image | image_url: width: 1200 | image_tag }}
+              </a>
+            </div>
+          {% elsif media.media_type == 'video' %}
+            <div class="swiper-slide" data-variant-id="{{ this_variant_id }}" data-slide-index="{{ forloop.index }}">
+              <a
+                data-fancybox="gallery"
+                href="{{ media.sources[1].url }}"
+                class="product-image product-image--video d-block"
+                aria-label="Play product video"
+              >
+                {{ media.preview_image | image_url: width: 1200 | image_tag }}
+              </a>
+            </div>
+          {% elsif media.media_type == 'image' %}
+            <div class="swiper-slide" data-variant-id="{{ this_variant_id }}" data-slide-index="{{ forloop.index }}">
+              <a data-fancybox="gallery" href="{{ media | image_url: width: 2560 }}" class="product-image d-block">
+                {{ media | image_url: width: 1200 | image_tag }}
+              </a>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div
+      class="swiper-container swiper control {% if product.media.size == 3 %}control-three{% endif %} {% if product.media.size == 5 %}control-five{% endif %}"
+      id="product-slider-nav"
+    >
+      <div class="swiper-wrapper {% if product.media.size == 3 or product.media.size == 5 %}wide{% endif %}">
+        {% for media in product.media %}
+          {% if media.media_type == 'external_video' or media.media_type == 'video' %}
+            <div class="swiper-slide">
+              {{ media.preview_image | image_url: width: 600 | image_tag }}
+            </div>
+          {% elsif media.media_type == 'image' %}
+            <div class="swiper-slide">
+              {{ media | image_url: width: 1200 | image_tag }}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="swiper-nav">
+      <div class="swiper-button-prev swiper-prev"></div>
+      <div class="swiper-button-next swiper-next"></div>
+    </div>
+  {% elsif product.featured_image %}
+    <a data-fancybox="gallery" href="{{ product.featured_image | image_url: width: 2560 }}" class="product-image d-block">
+      {{ product.featured_image | image_url: width: 1200 | image_tag }}
+    </a>
+  {% else %}
+    <div class="placeholder">
+      {{ 'image' | placeholder_svg_tag }}
+    </div>
+  {% endif %}
+</div>

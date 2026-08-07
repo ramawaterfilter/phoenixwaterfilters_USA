@@ -1,0 +1,66 @@
+<div class="container">
+	<div class="row justify-content-center">
+
+		{% paginate search.results by 12 %}
+
+			<div class="col-12 col-lg-3">
+                {% render 'filters' , collection: search %}
+            </div>
+
+            <div class="col-12 col-lg-9">
+                <div class="row">
+					{% for item in search.results %}
+					
+						{% if item.object_type == 'product' -%}
+
+		                    <div class="col-sm-6 col-md-6 col-xl-4 mb-5">
+								{% render 'product-tile', product: item %}
+							</div>
+
+						{%- endif -%}
+
+						{% if item.object_type == 'article' -%}
+
+		                    <div class="col-sm-6 col-md-6 col-xl-4 mb-5">
+								{% render 'blog-tile', article: item %}
+							</div>
+
+						{%- elsif item.object_type == 'page' -%}
+
+		                    <div class="col-sm-6 col-md-6 col-xl-4 mb-5">
+								{% render 'page-tile', page: item %}
+							</div>
+
+						{% endif %}
+
+					{% endfor %}
+                </div>
+            </div>
+
+			{%- if paginate.pages > 1 -%}
+            	<div class="col-12">
+					{% render 'pagination', paginate: paginate %}
+	            </div>
+			{%- endif -%}
+
+    	{% endpaginate %}
+
+
+	</div>
+</div>
+
+{% schema %}
+{
+    "name": "Search Results",
+    "tag": "section",
+    "class": "section-search-results",
+    "presets":[
+        {
+            "name":"Search Results"
+        }
+    ],
+    "enabled_on": {
+        "templates": ["search"]
+    }
+}
+{% endschema %}

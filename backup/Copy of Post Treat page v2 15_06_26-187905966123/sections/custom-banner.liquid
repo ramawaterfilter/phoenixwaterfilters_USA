@@ -1,0 +1,438 @@
+{% assign section_id = section.settings.section_id | default: section.id %}
+
+<section id="banner-{{ section_id }}" class="custom-banner {{ section.settings.banner_width }} height-desktop-{{ section.settings.banner_height_desktop }} height-mobile-{{ section.settings.banner_height_mobile }}">
+  <div class="banner-inner">
+
+    <!-- Adapt mode: real img tag for natural image height -->
+    {% if section.settings.banner_height_desktop == 'adapt' or section.settings.banner_height_mobile == 'adapt' %}
+      <div class="banner-img-wrap">
+        <img
+          class="banner-bg-img desktop-img"
+          src="{{ section.settings.bg_image_desktop | image_url: width: 2000 }}"
+          alt=""
+          loading="lazy"
+        >
+        <img
+          class="banner-bg-img mobile-img"
+          src="{{ section.settings.bg_image_mobile | image_url: width: 1000 }}"
+          alt=""
+          loading="lazy"
+        >
+      </div>
+    {% endif %}
+
+    <div class="banner-content">
+      {% if section.settings.heading != blank %}
+        <h1 class="banner-heading">{{ section.settings.heading }}</h1>
+      {% endif %}
+
+      {% if section.settings.text != blank %}
+        <p class="banner-text">{{ section.settings.text }}</p>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a href="{{ section.settings.button_link }}" class="banner-btn">
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+#banner-{{ section_id }} {
+  background-color: {{ section.settings.bg_color }};
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Background image (non-adapt modes) ── */
+#banner-{{ section_id }}:not(.height-desktop-adapt) {
+  background-image: url({{ section.settings.bg_image_desktop | image_url: width: 2000 }});
+}
+
+@media(max-width: 768px){
+  #banner-{{ section_id }}:not(.height-mobile-adapt) {
+    background-image: url({{ section.settings.bg_image_mobile | image_url: width: 1000 }});
+  }
+}
+
+/* ── DESKTOP HEIGHT OPTIONS ── */
+@media(min-width: 769px){
+  #banner-{{ section_id }}.height-desktop-small  { min-height: {{ section.settings.height_desktop_small | default: 300 }}px; }
+  #banner-{{ section_id }}.height-desktop-medium { min-height: {{ section.settings.height_desktop_medium | default: 500 }}px; }
+  #banner-{{ section_id }}.height-desktop-large  { min-height: {{ section.settings.height_desktop_large | default: 700 }}px; }
+  #banner-{{ section_id }}.height-desktop-adapt  { min-height: unset; padding: 0; background-image: none !important; }
+}
+
+/* ── MOBILE HEIGHT OPTIONS ── */
+@media(max-width: 768px){
+  #banner-{{ section_id }}.height-mobile-small  { min-height: {{ section.settings.height_mobile_small | default: 300 }}px; }
+  #banner-{{ section_id }}.height-mobile-medium { min-height: {{ section.settings.height_mobile_medium | default: 500 }}px; }
+  #banner-{{ section_id }}.height-mobile-large  { min-height: {{ section.settings.height_mobile_large | default: 700 }}px; }
+  #banner-{{ section_id }}.height-mobile-adapt  { min-height: unset; padding: 0; background-image: none !important; }
+}
+
+/* ── ADAPT MODE: real image fills section ── */
+#banner-{{ section_id }}.height-desktop-adapt .banner-img-wrap,
+#banner-{{ section_id }}.height-mobile-adapt .banner-img-wrap {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+}
+
+#banner-{{ section_id }}.height-desktop-adapt .banner-bg-img,
+#banner-{{ section_id }}.height-mobile-adapt .banner-bg-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media(min-width: 768px){
+/* Show desktop / hide mobile by default */
+#banner-{{ section_id }}.height-desktop-adapt .desktop-img { display: block; }
+}
+
+
+#banner-{{ section_id }}.height-desktop-adapt .mobile-img  { display: none;  }
+
+@media(max-width: 768px){
+  #banner-{{ section_id }}.height-mobile-adapt .desktop-img { display: none;  }
+  #banner-{{ section_id }}.height-mobile-adapt .mobile-img  { display: block; }
+  #banner-{{ section_id }}.height-desktop-adapt .desktop-img { display: none; }
+}
+}
+
+/* ── ADAPT MODE: content overlays the image ── */
+#banner-{{ section_id }}.height-desktop-adapt .banner-inner,
+#banner-{{ section_id }}.height-mobile-adapt .banner-inner {
+  position: relative;
+}
+
+
+/* ── DESKTOP TYPOGRAPHY ── */
+@media(min-width: 769px){
+  #banner-{{ section_id }} .banner-heading {
+    font-weight: 600;
+    color: {{ section.settings.text_color }};
+    font-family: Open Sans;
+    font-size: 52px;
+    line-height: 60.5px;
+    letter-spacing: 0%;
+    vertical-align: middle;
+  }
+  /* ── Content ── */
+#banner-{{ section_id }} .banner-content {
+  max-width: 55%;
+  color: {{ section.settings.text_color }};
+  padding: 0 {{ section.settings.padding_top }}px;
+}
+  /* ── Width ── */
+#banner-{{ section_id }} .banner-inner {
+  {% if section.settings.banner_width == 'boxed' %}
+    max-width: 100%;
+    margin: 0 auto;
+  {% endif %}
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+  #banner-{{ section_id }} .banner-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: {{ section.settings.button_bg }};
+    color: {{ section.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: 'Open Sans';
+    border: 1px solid white;
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  #banner-{{ section_id }} .banner-text {
+    font-family: Open Sans;
+    font-weight: 400;
+    font-size: 20.3px;
+    line-height: 30.8px;
+    letter-spacing: 0%;
+    vertical-align: middle;
+  }
+  #banner-banner-two .banner-content {
+    max-width: 42%;
+}
+#banner-banner-two.height-desktop-adapt .banner-content {
+    right: 6%;
+}
+  #banner-banner-one .banner-content {
+    max-width: 42%;
+    position: absolute;
+    top: 50%;
+    left: 11%;
+}
+#banner-{{ section_id }}.height-desktop-adapt .banner-content,
+#banner-{{ section_id }}.height-mobile-adapt .banner-content {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+}
+
+/* ── MOBILE TYPOGRAPHY ── */
+@media(max-width: 768px){
+  #banner-{{ section_id }} .banner-heading {
+    font-weight: 600;
+    color:{{ section.settings.text_color }};
+    font-family: Open Sans;
+    font-size: 20px;
+    line-height: 22px;
+    letter-spacing: 0%;
+  }
+section#banner-banner-two .banner-content {
+    position: absolute;
+    left: 46%;
+    padding-right: 5px;
+    top: 20%;
+}
+
+section#banner-banner-one .banner-content {
+    position: absolute;
+    bottom: 0px;
+    left: 6%;
+    top: 22%;
+}
+  /* ── Content ── */
+#banner-{{ section_id }} .banner-content {
+  max-width: 95%;
+  margin: 0 auto;
+  color: {{ section.settings.text_color }};
+  padding: 0 {{ section.settings.padding_top }}px;
+}
+  /* ── Width ── */
+#banner-{{ section_id }} .banner-inner {
+  {% if section.settings.banner_width == 'boxed' %}
+    max-width: 100%;
+    margin: 0 auto;
+  {% endif %}
+  height: 100%;
+  display: block;
+  align-items: center;
+}
+  #banner-{{ section_id }}.height-desktop-adapt .banner-content,
+#banner-{{ section_id }}.height-mobile-adapt .banner-content {
+  {% comment %} position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2; {% endcomment %}
+}
+  #banner-{{ section_id }} .banner-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: {{ section.settings.button_bg }};
+    color: {{ section.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 12px;
+    font-family: 'Open Sans';
+    border: 1px solid white;
+    width: 90%;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  #banner-{{ section_id }} .banner-text {
+    font-family: Open Sans;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 30.8px;
+    letter-spacing: 0%;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Custom Banner Advanced",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_id",
+      "label": "Unique Section ID"
+    },
+    {
+      "type": "select",
+      "id": "banner_width",
+      "label": "Banner Width",
+      "options": [
+        { "value": "full",  "label": "Full Width" },
+        { "value": "boxed", "label": "Boxed" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image_desktop",
+      "label": "Desktop Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image_mobile",
+      "label": "Mobile Image"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Height Settings"
+    },
+    {
+      "type": "select",
+      "id": "banner_height_desktop",
+      "label": "Desktop Banner Height",
+      "options": [
+        { "value": "small",  "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large",  "label": "Large" },
+        { "value": "adapt",  "label": "Adapt to Original Image Size" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "range",
+      "id": "height_desktop_small",
+      "label": "Desktop Small Height (px)",
+      "min": 200,
+      "max": 800,
+      "step": 10,
+      "default": 300,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "height_desktop_medium",
+      "label": "Desktop Medium Height (px)",
+      "min": 300,
+      "max": 1000,
+      "step": 10,
+      "default": 500,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "height_desktop_large",
+      "label": "Desktop Large Height (px)",
+      "min": 500,
+      "max": 1200,
+      "step": 10,
+      "default": 700,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Height Settings"
+    },
+    {
+      "type": "select",
+      "id": "banner_height_mobile",
+      "label": "Mobile Banner Height",
+      "options": [
+        { "value": "small",  "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large",  "label": "Large" },
+        { "value": "adapt",  "label": "Adapt to Original Image Size" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "range",
+      "id": "height_mobile_small",
+      "label": "Mobile Small Height (px)",
+      "min": 200,
+      "max": 600,
+      "step": 10,
+      "default": 300,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "height_mobile_medium",
+      "label": "Mobile Medium Height (px)",
+      "min": 300,
+      "max": 800,
+      "step": 10,
+      "default": 500,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "height_mobile_large",
+      "label": "Mobile Large Height (px)",
+      "min": 400,
+      "max": 900,
+      "step": 10,
+      "default": 700,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fallback Background",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button Background",
+      "default": "#1e3a5f"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Banner Advanced"
+    }
+  ]
+}
+{% endschema %}

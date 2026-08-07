@@ -1,0 +1,23 @@
+{% doc %}
+Renders product hero price.
+@param {product} product - Product to render price for.
+@example
+{% render 'product-hero-price', product: product %}
+{% enddoc %}
+
+{% if product.available %}
+  <div class="product-quantity"></div>
+  <div class="priceline">
+    <span data-price class="product-dyn-price m-0">
+      {{ product.selected_or_first_available_variant.price | money }}
+    </span>
+    {{ shop.currency }}
+    <span data-compare>
+      <s>
+        {% if product.selected_or_first_available_variant.compare_at_price %}
+          {{ product.selected_or_first_available_variant.compare_at_price | money }}
+        {% endif %}
+      </s>
+    </span>
+  </div>
+{% endif %}

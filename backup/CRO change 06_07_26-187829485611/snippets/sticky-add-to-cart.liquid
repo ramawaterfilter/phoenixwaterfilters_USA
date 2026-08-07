@@ -1,0 +1,193 @@
+{% doc %}
+Renders the mobile sticky product actions.
+@param {product} product - The current product.
+{% enddoc %}
+
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+<div class="sticky-add-to-cart" data-sticky-atc aria-hidden="true">
+  <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="{{ current_variant.id }}" data-sticky-variant>
+    <input type="hidden" name="quantity" value="1">
+    <input type="hidden" name="handle" value="{{ product.handle }}">
+    {% render 'variant-cart-image-property', product: product, current_variant: current_variant %}
+
+    <button
+      type="submit"
+      class="sticky-add-to-cart__add"
+      data-sticky-add
+      {% unless current_variant.available %}disabled{% endunless %}
+    >
+      {% if current_variant.available %}
+        {{ 'products.product.add_to_cart' | t }}
+      {% else %}
+        {{ 'products.product.sold_out' | t }}
+      {% endif %}
+    </button>
+    <button
+      type="button"
+      class="sticky-add-to-cart__buy"
+      data-sticky-buy
+      {% unless current_variant.available %}disabled{% endunless %}
+    >
+      {% if current_variant.available %}
+        {{ 'products.product.buy_now' | t }}
+      {% else %}
+        {{ 'products.product.sold_out' | t }}
+      {% endif %}
+    </button>
+  </form>
+</div>
+
+{% style %}
+  .sticky-add-to-cart {
+    display: none !important;
+  }
+
+  @media (max-width: 767px) {
+    .sticky-add-to-cart,
+    .sticky-add-to-cart.in {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 999;
+      display: block !important;
+      padding: 5px 0 max(0px, env(safe-area-inset-bottom));
+      background: #fff;
+      box-shadow: 0 -4px 18px rgb(0 0 0 / 14%);
+      visibility: hidden;
+      opacity: 0;
+      transform: translateY(100%);
+      transition: opacity 180ms ease, transform 180ms ease, visibility 180ms;
+    }
+
+    .sticky-add-to-cart.is-visible {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .sticky-add-to-cart form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .sticky-add-to-cart button {
+      width: 100%;
+      min-width: 0;
+      height: 50px;
+      margin: 0;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 0;
+      /* color: #fff; */
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .sticky-add-to-cart__add {
+      background: #fff;
+      color: #000;
+    }
+
+    .sticky-add-to-cart__buy {
+      background: #153A5B;
+      color: #fff;
+    }
+
+    .sticky-add-to-cart button:disabled {
+      cursor: not-allowed;
+      opacity: .55;
+    }
+  }
+{% endstyle %}
+
+<script>
+  (() => {
+    const root = document.querySelector('[data-sticky-atc]');
+    if (!root) return;
+
+    const form = root.querySelector('form');
+    const variants = {{ product.variants | json }};
+    const variantInput = root.querySelector('[data-sticky-variant]');
+    const addButton = root.querySelector('[data-sticky-add]');
+    const buyButton = root.querySelector('[data-sticky-buy]');
+    const addText = {{ 'products.product.add_to_cart' | t | json }};
+    const buyText = {{ 'products.product.buy_now' | t | json }};
+    const soldText = {{ 'products.product.sold_out' | t | json }};
+    let mainButton;
+
+    const updateVariant = (id) => {
+      const variant = variants.find((item) => String(item.id) === String(id));
+      if (!variant) return;
+
+      variantInput.value = variant.id;
+      addButton.disabled = !variant.available;
+      buyButton.disabled = !variant.available;
+      addButton.textContent = variant.available ? addText : soldText;
+      buyButton.textContent = variant.available ? buyText : soldText;
+    };
+
+    const findMainButton = () => {
+      const buttons = [...document.querySelectorAll('main form[action*="/cart/add"] button[type="submit"]')];
+      return buttons.find((item) => item.getClientRects().length) || null;
+    };
+
+    const updateVisibility = () => {
+      mainButton ||= findMainButton();
+      const passedMainButton = mainButton && mainButton.getBoundingClientRect().bottom < 0;
+      const visible = window.innerWidth <= 767
+        && passedMainButton
+        && !document.body.classList.contains('cart-open');
+
+      root.classList.toggle('is-visible', Boolean(visible));
+      root.setAttribute('aria-hidden', String(!visible));
+    };
+
+    document.addEventListener('change', (event) => {
+      if (!event.target.closest('main')) return;
+      if (event.target.matches('select[name="id"], [data-variant-select]')) {
+        updateVariant(event.target.value);
+      }
+    });
+
+    ['variant:change', 'product:variant-change'].forEach((eventName) => {
+      document.addEventListener(eventName, (event) => {
+        if (event.detail?.variant?.id) updateVariant(event.detail.variant.id);
+      });
+    });
+
+    buyButton.addEventListener('click', async () => {
+      if (buyButton.disabled) return;
+
+      buyButton.disabled = true;
+      try {
+        const response = await fetch(`${window.Shopify.routes.root}cart/add.js`, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: new FormData(form)
+        });
+        if (!response.ok) throw new Error();
+        window.location.assign(`${window.Shopify.routes.root}checkout`);
+      } catch {
+        buyButton.disabled = false;
+      }
+    });
+
+    window.addEventListener('scroll', updateVisibility, { passive: true });
+    window.addEventListener('resize', updateVisibility);
+    window.addEventListener('pageshow', () => updateVariant(variantInput.value));
+    new MutationObserver(updateVisibility).observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    updateVisibility();
+  })();
+</script>

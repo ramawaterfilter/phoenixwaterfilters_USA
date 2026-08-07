@@ -1,0 +1,35 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero_jweG6c": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "",
+        "heading": "Collections",
+        "content": "",
+        "sideimage": "shopify://shop_images/view-products.jpg",
+        "section_video_bg": "",
+        "buttonlink": "",
+        "buttontext": ""
+      }
+    },
+    "collection-grid": {
+      "type": "collection-grid",
+      "settings": {
+        "exclude_collections": []
+      }
+    }
+  },
+  "order": [
+    "hero_jweG6c",
+    "collection-grid"
+  ]
+}

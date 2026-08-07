@@ -1,0 +1,51 @@
+<a class="product-tile" href="{{ product.url }}">
+  {% render 'product-badge'
+    , product: product %}
+
+  <div class="product-tile__img mb-5">
+    {% if product.featured_image %}
+      {{ product.featured_image | image_url: width: 1000 | image_tag: class: "mx-auto", loading: "lazy" }}
+    {% else %}
+      {{ 'image' | placeholder_svg_tag: 'placeholder' }}
+    {% endif %}
+  </div>
+
+  <div class="product-tile__meta d-flex flex-column">
+    <h4 class="product-tile__title">{{ product.title }}</h4>
+<!-- Start of Judge.me code -->
+      <div style='{{ jm_style }}' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-auto-install='false'>
+        {{ product.metafields.judgeme.badge }}
+      </div>
+      <!-- End of Judge.me code -->
+    <p class="product-tile__price">
+      {% if product.price_min != product.price_max %}
+
+        {{ product.price_min | money }}
+
+      {% else %}
+        {{ product.price | money }}
+
+        <s>
+          {% if product.variants.first.compare_at_price %}
+            {{ product.variants.first.compare_at_price | money }}
+          {% endif %}
+        </s>
+      {% endif %}
+    </p>
+
+    <div class="w-100 d-flex justify-content-between ">
+
+      <div class="btn mb-5">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="49"
+          height="2"
+          viewBox="0 0 49 2"
+          fill="none">
+          <path d="M0.804199 0.855469H48.8042" stroke="#6FD9FF" />
+        </svg>
+        {{ 'products.product.buy_now' | t }}
+      </div>
+    </div>
+  </div>
+</a>

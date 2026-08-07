@@ -1,0 +1,177 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "body_padding_desktop": 142,
+    "body_padding_mobile": 84,
+    "show_entry_popup": false,
+    "entry_popup_side_button": "",
+    "entry_popup_side_button_id": "",
+    "entry_popup_eyebrow": "",
+    "entry_popup_heading": "",
+    "entry_popup_content": "",
+    "entry_popup_button": "",
+    "entry_popup_nothanks": "",
+    "entry_popup_disclaimer": "",
+    "entry_popup_fineprint": "",
+    "show_exit_popup": false,
+    "exit_popup_eyebrow": "",
+    "exit_popup_heading": "",
+    "exit_popup_content": "",
+    "exit_popup_button": "",
+    "exit_popup_nothanks": "",
+    "exit_popup_disclaimer": "",
+    "exit_popup_fineprint": "",
+    "filter_image_1": "shopify://shop_images/carbon2.png",
+    "filter_image_2": "shopify://shop_images/stainless2.png",
+    "size_icon_1": "shopify://shop_images/family-1.svg",
+    "size_for_1": "Family of 1-2",
+    "size_content_1": "<p>1.5 Gallon</p>",
+    "size_icon_2": "shopify://shop_images/family-3.svg",
+    "size_for_2": "Family of 3-4",
+    "size_content_2": "<p>2.25 Gallon</p>",
+    "size_icon_3": "shopify://shop_images/family-5.svg",
+    "size_for_3": "Family of 5+",
+    "size_content_3": "<p>3.25 Gallon</p>",
+    "stand_1": "shopify://shop_images/no_stand.png",
+    "stand_2": "shopify://shop_images/stand_ss.png",
+    "stand_3": "shopify://shop_images/stand_wooden.png",
+    "complete_plan_content": "<ul><li>No commitment. Cancel anytime.</li><li>Free USA Shipping</li></ul>",
+    "favicon_16": "shopify://shop_images/phoenix-logo.svg",
+    "favicon_32": "shopify://shop_images/phoenix-logo.svg",
+    "variant_colours": "",
+    "enable_minmax_buys": true,
+    "min_buy_qty": 1,
+    "max_buy_qty": 10,
+    "free_shipping_threshold": 96,
+    "enable_slide_cart": true,
+    "enable_ajax_cart": true,
+    "cart_usp_1_text": "50+ Years Of Experience",
+    "cart_usp_1_image": "shopify://shop_images/icon-experience.svg",
+    "cart_usp_2_text": "Filter Out 99.9% Of Contaminants",
+    "cart_usp_2_image": "shopify://shop_images/icon-water-drop.svg",
+    "cart_usp_3_text": "1,298+ Happy Customers",
+    "cart_usp_3_image": "shopify://shop_images/icon-happy.svg",
+    "checkout_header_image": "shopify://shop_images/a-frame-wood-cabin-in-forest.jpg",
+    "checkout_logo_image": "shopify://shop_images/site-logo-wt.png",
+    "checkout_logo_size": "small",
+    "checkout_body_background_color": "#ffffff",
+    "checkout_input_background_color_mode": "transparent",
+    "checkout_sidebar_background_color": "#ffffff",
+    "checkout_heading_font": "Helvetica Neue",
+    "checkout_body_font": "Helvetica Neue",
+    "checkout_accent_color": "#000000",
+    "checkout_button_color": "#000000",
+    "complete_plan_savings_banner": "",
+    "complete_plan_details": "",
+    "lifestyle_plan_savings_banner": "",
+    "lifestyle_plan_details": "",
+    "lifestyle_plan_content": "",
+    "filter_image": "shopify://shop_images/carbon-filters.jpg",
+    "size_icon": "shopify://shop_images/family-1.svg",
+    "size_content": "<p><strong>Family of 1-4 </strong><br/>1.5 Gallon</p>",
+    "sizeguide_popup_eyebrow": "",
+    "sizeguide_popup_content": "",
+    "size_1_title": "1.5 Gallon",
+    "size_1_description": "Family of 4",
+    "size_1_image": "shopify://shop_images/6-litre.jpg",
+    "size_2_title": "2.25 Gallon",
+    "size_2_description": "Family of 6",
+    "size_2_image": "shopify://shop_images/8-litre.jpg",
+    "size_3_title": "3.25 Gallon",
+    "size_3_description": "Family of 8",
+    "size_3_image": "shopify://shop_images/12-litre.jpg",
+    "page_handle": "about-us",
+    "sections": {
+      "pagetitle": {
+        "type": "pagetitle",
+        "settings": {
+          "pagetitle": "",
+          "show_breadcrumbs": false
+        }
+      }
+    },
+    "content_for_index": [],
+    "blocks": {
+      "855628211100114053": {
+        "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/klaviyo-onsite-embed/2632fe16-c075-4321-a88b-50b567f42507",
+        "disabled": true,
+        "settings": {}
+      },
+      "15683396631634586217": {
+        "type": "shopify://apps/inbox/blocks/chat/841fc607-4181-4ad1-842d-e24d7f8bad6b",
+        "disabled": true,
+        "settings": {
+          "button_color": "#000000",
+          "secondary_color": "#ffffff",
+          "ternary_color": "#6a6a6a",
+          "button_icon": "chat_bubble",
+          "button_text": "chat_with_us",
+          "button_horizontal_position": "bottom_right",
+          "button_vertical_position": "lowest",
+          "greeting_message": ""
+        }
+      },
+      "3138269044488530766": {
+        "type": "shopify://apps/uppromote-affiliate/blocks/core-script/64c32457-930d-4cb9-9641-e24c0d9cf1f4",
+        "disabled": true,
+        "settings": {}
+      },
+      "1173261918193615741": {
+        "type": "shopify://apps/geo-pro-geolocation/blocks/geopro/16fc5313-7aee-4e90-ac95-f50fc7c8b657",
+        "disabled": true,
+        "settings": {}
+      },
+      "6143736321357441667": {
+        "type": "shopify://apps/tidio-live-chat-chatbots/blocks/app-embed/1002274d-fb18-4939-98f6-5f05a8deeadc",
+        "disabled": true,
+        "settings": {}
+      },
+      "13768625480086291342": {
+        "type": "shopify://apps/forms/blocks/forms/8744a304-fcb1-4347-b211-bb6b4759a76a",
+        "disabled": true,
+        "settings": {}
+      },
+      "14060646107696862457": {
+        "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+        "disabled": true,
+        "settings": {}
+      },
+      "10436698916776057164": {
+        "type": "shopify://apps/appstle-subscription/blocks/appstle-subscription-helper/fe257d39-6f88-4f35-ab08-bd437e3aa94e",
+        "disabled": true,
+        "settings": {}
+      },
+      "9010622670419788200": {
+        "type": "shopify://apps/avada-seo-suite/blocks/avada-site-verification/15507c6e-1aa3-45d3-b698-7e175e033440",
+        "disabled": false,
+        "settings": {
+          "google_search_console": "",
+          "bing_webmaster_tools": "",
+          "baidu_webmaster_tools": "",
+          "pinterest": "",
+          "yandex_webmaster_tools": ""
+        }
+      },
+      "4889590626180137072": {
+        "type": "shopify://apps/avada-seo-suite/blocks/avada-seo/15507c6e-1aa3-45d3-b698-7e175e033440",
+        "disabled": true,
+        "settings": {}
+      }
+    }
+  },
+  "content_for_index": [],
+  "platform_customizations": {
+    "custom_css": [
+      ".chat-app.chat-app--.chat-app--is-mobile {margin: 0; margin-top: -44px !important;}",
+      ".blog-image.hh.col-md-11.px-md-3 {margin-bottom: 30px;}"
+    ]
+  }
+}

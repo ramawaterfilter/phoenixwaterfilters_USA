@@ -1,0 +1,19 @@
+{% assign show_module = false %}
+
+{% if section.settings.countdown_products == blank %}
+  {% assign show_module = true %}
+{% else %}
+  {% for sub_product in section.settings.countdown_products %}
+    {% if sub_product.handle == product.handle %}
+      {% assign show_module = true %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if show_module %}
+  <div class="product-countdown">
+    {% assign countdown_span = '<span data-countdown-end="[time]"><span class="days">00</span>:<span class="hours">00</span>:<span class="minutes">00</span>:<span class="seconds">00</span></span>' | replace: '[time]', section.settings.countdown_time %}
+
+    {{ section.settings.countdown_text | replace: '[month]', '<span class="dyn-month"></span>' | replace: '[time]', countdown_span }}
+  </div>
+{% endif %}

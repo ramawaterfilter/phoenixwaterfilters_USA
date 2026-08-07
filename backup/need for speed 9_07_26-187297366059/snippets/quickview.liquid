@@ -1,0 +1,44 @@
+<div class="modal fade" id="quickViewModal" role="dialog" aria-labelledby="quickViewModal" aria-hidden="true">
+    <div tabindex="-1" data-micromodal-close>
+        <div role="dialog" aria-modal="true" aria-labelledby="modal-1-title" class="modal__dialog">
+            <div id="modal-1-content" class="modal__content">
+                <span data-micromodal-close>
+                    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.7071 1.70711C17.0976 1.31658 17.0976 0.683417 16.7071 0.292893C16.3166 -0.0976311 15.6834 -0.0976311 15.2929 0.292893L16.7071 1.70711ZM0.292893 15.2929C-0.0976311 15.6834 -0.0976311 16.3166 0.292893 16.7071C0.683417 17.0976 1.31658 17.0976 1.70711 16.7071L0.292893 15.2929ZM1.70711 0.292893C1.31658 -0.0976311 0.683417 -0.0976311 0.292893 0.292893C-0.0976311 0.683417 -0.0976311 1.31658 0.292893 1.70711L1.70711 0.292893ZM15.2929 16.7071C15.6834 17.0976 16.3166 17.0976 16.7071 16.7071C17.0976 16.3166 17.0976 15.6834 16.7071 15.2929L15.2929 16.7071ZM15.2929 0.292893L0.292893 15.2929L1.70711 16.7071L16.7071 1.70711L15.2929 0.292893ZM0.292893 1.70711L15.2929 16.7071L16.7071 15.2929L1.70711 0.292893L0.292893 1.70711Z" fill="black"/>
+                    </svg>
+                </span>
+
+				<div class="quickview">
+					<div class="quickview__images" data-qv="images"></div>
+					<div class="quickview__bio">
+						<p class="h3" data-qv="title"></p>
+						<p class="description" data-qv="description"></p>
+
+
+						<form action="/cart/add" method="post" enctype="multipart/form-data" id="add-to-cart">
+							<span data-qv="handle"></span>
+
+							<div class="subscriptions" data-qv="subscriptions"></div>
+
+							<div data-qv="variants"></div>
+
+			                <p class="price">
+			                	<span data-price data-qv="price"></span>
+			    
+			                    <span data-compare>
+			                        <s data-qv="compare"></s>
+			                    </span>
+			                </p>
+
+							<div data-qv="quantity"></div>
+
+							<div data-qv="availability"></div>
+
+							<div data-qv="action"></div>
+						</form>
+					</div>
+				</div>
+			</main>
+		</div>
+    </div>
+</div>

@@ -1,0 +1,1058 @@
+<section
+  id="PhoenixComparison-{{ section.id }}"
+  class="phoenix-comparison"
+  style="
+    --pc-background: {{ section.settings.background_color }};
+    --pc-navy: {{ section.settings.navy_color }};
+    --pc-green: {{ section.settings.green_color }};
+    --pc-accent: {{ section.settings.accent_color }};
+    --pc-border: {{ section.settings.border_color }};
+    --pc-feature-bg: {{ section.settings.feature_background }};
+    --pc-highlight-bg: {{ section.settings.highlight_background }};
+  "
+>
+  <div class="phoenix-comparison__inner">
+    <header class="phoenix-comparison__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="phoenix-comparison__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="phoenix-comparison__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="phoenix-comparison__description">{{ section.settings.description }}</div>
+      {% endif %}
+    </header>
+
+    <div class="phoenix-comparison__scroll" tabindex="0" role="region" aria-label="{{ section.settings.table_label | escape }}">
+      <table class="phoenix-comparison__table">
+        <thead>
+          <tr>
+            <th class="phoenix-comparison__feature-heading" scope="col">
+              {{ section.settings.feature_heading | escape }}
+            </th>
+            <th class="phoenix-comparison__brand-heading" scope="col">
+              {% if section.settings.badge != blank %}
+                <span class="phoenix-comparison__badge">{{ section.settings.badge | escape }}</span>
+              {% endif %}
+              <strong>{{ section.settings.brand_heading }}</strong>
+              {% if section.settings.brand_subheading != blank %}
+                <small>{{ section.settings.brand_subheading | escape }}</small>
+              {% endif %}
+            </th>
+            <th scope="col">{{ section.settings.comparison_1 | escape }}</th>
+            <th scope="col">{{ section.settings.comparison_2 | escape }}</th>
+            <th scope="col">{{ section.settings.comparison_3 | escape }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for block in section.blocks %}
+            {% if block.type == 'group' %}
+              <tr class="phoenix-comparison__group" {{ block.shopify_attributes }}>
+                <th scope="rowgroup">{{ block.settings.title | escape }}</th>
+                <td></td>
+                <td colspan="3"></td>
+              </tr>
+            {% else %}
+              <tr class="phoenix-comparison__row" {{ block.shopify_attributes }}>
+                <th scope="row">
+                  <strong>{{ block.settings.feature | escape }}</strong>
+                  {% if block.settings.detail != blank %}
+                    <span>{{ block.settings.detail | escape }}</span>
+                  {% endif %}
+                </th>
+
+                {% for column_number in (1..4) %}
+                  {% liquid
+                    case column_number
+                      when 1
+                        assign status = block.settings.brand_status
+                        assign custom_text = block.settings.brand_custom
+                      when 2
+                        assign status = block.settings.comparison_1_status
+                        assign custom_text = block.settings.comparison_1_custom
+                      when 3
+                        assign status = block.settings.comparison_2_status
+                        assign custom_text = block.settings.comparison_2_custom
+                      when 4
+                        assign status = block.settings.comparison_3_status
+                        assign custom_text = block.settings.comparison_3_custom
+                    endcase
+
+                    assign status_text = status | capitalize
+                    if status == 'custom' and custom_text != blank
+                      assign status_text = custom_text
+                    endif
+                  %}
+                  <td{% if column_number == 1 %} class="phoenix-comparison__highlight"{% endif %}>
+                    <span class="phoenix-comparison__pill phoenix-comparison__pill--{{ status }}">
+                      <span class="phoenix-comparison__pill-icon" aria-hidden="true">
+                        {% if status == 'yes' %}
+                          &#10003;
+                        {% elsif status == 'varies' or status == 'partial' %}
+                          !
+                        {% else %}
+                          &#215;
+                        {% endif %}
+                      </span>
+                      {{ status_text | escape }}
+                    </span>
+                  </td>
+                {% endfor %}
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+        {% if section.settings.button_label != blank %}
+          <tfoot>
+            <tr>
+              <td></td>
+              <td class="phoenix-comparison__cta-cell">
+                <a class="phoenix-comparison__button" href="{{ section.settings.button_link | default: '#' }}">
+                  {{ section.settings.button_label | escape }}
+                </a>
+                {% if section.settings.button_note != blank %}
+                  <small>{{ section.settings.button_note | escape }}</small>
+                {% endif %}
+              </td>
+              <td colspan="3"></td>
+            </tr>
+          </tfoot>
+        {% endif %}
+      </table>
+    </div>
+
+    {% if section.settings.footnote != blank %}
+      <div class="phoenix-comparison__footnote">{{ section.settings.footnote }}</div>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .phoenix-comparison {
+    background: var(--pc-background);
+    color: var(--pc-navy);
+    padding: 64px 20px 46px;
+  }
+
+  .phoenix-comparison * {
+    box-sizing: border-box;
+  }
+
+  .phoenix-comparison__inner {
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+
+  .phoenix-comparison__header {
+    max-width: 850px;
+    margin: 0 auto 52px;
+    text-align: center;
+  }
+
+  .phoenix-comparison__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    min-height: 27px;
+    margin: 0 0 20px;
+    padding: 4px 18px;
+    border: 1px solid color-mix(in srgb, var(--pc-green) 34%, transparent);
+    border-radius: 999px;
+    color: var(--pc-green);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .phoenix-comparison__heading {
+    max-width: 820px;
+    margin: 0 auto;
+    color: var(--pc-navy);
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-size: clamp(38px, 4.6vw, 58px);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.03;
+  }
+
+  .phoenix-comparison__heading em,
+  .phoenix-comparison__heading strong {
+    color: var(--pc-green);
+    font-style: normal;
+  }
+
+  .phoenix-comparison__description {
+    max-width: 680px;
+    margin: 20px auto 0;
+    color: #164477;
+    font-size: 17px;
+    line-height: 1.55;
+  }
+
+  .phoenix-comparison__description p,
+  .phoenix-comparison__footnote p {
+    margin: 0;
+  }
+
+  .phoenix-comparison__scroll {
+    overflow-x: auto;
+    border-radius: 22px;
+    box-shadow: 0 18px 42px rgba(10, 39, 72, 0.12);
+    outline: none;
+    scrollbar-color: var(--pc-green) rgba(10, 39, 72, 0.12);
+    scrollbar-width: thin;
+  }
+
+  .phoenix-comparison__scroll:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--pc-green) 35%, transparent), 0 18px 42px rgba(10, 39, 72, 0.12);
+  }
+
+  .phoenix-comparison__table {
+    width: 100%;
+    min-width: 960px;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    background: #fff;
+  }
+
+  .phoenix-comparison__table th,
+  .phoenix-comparison__table td {
+    border-right: 1px solid var(--pc-border);
+    border-bottom: 1px solid var(--pc-border);
+    padding: 20px 24px;
+    vertical-align: middle;
+  }
+
+  .phoenix-comparison__table tr > *:last-child {
+    border-right: 0;
+  }
+
+  .phoenix-comparison__table thead th {
+    height: 136px;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-bottom: 0;
+    background: var(--pc-navy);
+    color: #89a3c8;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.15;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .phoenix-comparison__table thead th:first-child {
+    width: 26%;
+    padding-top: 82px;
+    text-align: left;
+  }
+
+  .phoenix-comparison__table thead th:nth-child(2) {
+    width: 33%;
+  }
+
+  .phoenix-comparison__table thead th:nth-child(n + 3) {
+    width: 13.666%;
+  }
+
+  .phoenix-comparison__table thead th:first-child {
+    border-radius: 22px 0 0;
+  }
+
+  .phoenix-comparison__table thead th:last-child {
+    border-radius: 0 22px 0 0;
+  }
+
+  .phoenix-comparison__table .phoenix-comparison__brand-heading {
+    position: relative;
+    background: var(--pc-green);
+    color: #fff;
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-size: 18px;
+    text-transform: none;
+  }
+
+  .phoenix-comparison__brand-heading strong,
+  .phoenix-comparison__brand-heading small {
+    display: block;
+  }
+
+  .phoenix-comparison__brand-heading strong {
+    max-width: 245px;
+    margin: 8px auto 4px;
+    font-size: 18px;
+    line-height: 1.05;
+  }
+
+  .phoenix-comparison__brand-heading small {
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .phoenix-comparison__badge {
+    display: table;
+    margin: 0 auto;
+    padding: 5px 13px;
+    border-radius: 999px;
+    background: var(--pc-accent);
+    color: #fff;
+    font-family: var(--font-body-family, Arial, sans-serif);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .phoenix-comparison__badge::before {
+    content: "★";
+    margin-right: 5px;
+  }
+
+  .phoenix-comparison__row th {
+    position: relative;
+    z-index: 1;
+    background: var(--pc-feature-bg);
+    color: var(--pc-navy);
+    font-size: 14px;
+    line-height: 1.25;
+    text-align: left;
+  }
+
+  .phoenix-comparison__row th strong,
+  .phoenix-comparison__row th span {
+    display: block;
+  }
+
+  .phoenix-comparison__row th strong {
+    font-weight: 800;
+  }
+
+  .phoenix-comparison__row th span {
+    margin-top: 6px;
+    color: #7390b3;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.45;
+  }
+
+  .phoenix-comparison__row td {
+    height: 88px;
+    background: #fff;
+    text-align: center;
+  }
+
+  .phoenix-comparison__row .phoenix-comparison__highlight {
+    background: var(--pc-highlight-bg);
+  }
+
+  .phoenix-comparison__group th,
+  .phoenix-comparison__group td {
+    height: 31px;
+    padding: 7px 24px;
+    border: 0;
+    background: var(--pc-navy);
+    color: #89a3c8;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .phoenix-comparison__group td:nth-child(2) {
+    background: var(--pc-green);
+  }
+
+  .phoenix-comparison__pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 29px;
+    padding: 4px 11px;
+    border: 1px solid;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .phoenix-comparison__pill-icon {
+    display: inline-grid;
+    width: 15px;
+    height: 15px;
+    place-items: center;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .phoenix-comparison__pill--yes {
+    border-color: #79cabe;
+    background: #d8f2ee;
+    color: #087566;
+  }
+
+  .phoenix-comparison__pill--yes .phoenix-comparison__pill-icon {
+    background: #147d70;
+  }
+
+  .phoenix-comparison__pill--no,
+  .phoenix-comparison__pill--custom {
+    border-color: #ffaaa4;
+    background: #fff0ef;
+    color: #d93a30;
+  }
+
+  .phoenix-comparison__pill--no .phoenix-comparison__pill-icon,
+  .phoenix-comparison__pill--custom .phoenix-comparison__pill-icon {
+    background: #df4438;
+  }
+
+  .phoenix-comparison__pill--varies,
+  .phoenix-comparison__pill--partial {
+    border-color: #efba51;
+    background: #fff8e8;
+    color: #966200;
+  }
+
+  .phoenix-comparison__pill--varies .phoenix-comparison__pill-icon,
+  .phoenix-comparison__pill--partial .phoenix-comparison__pill-icon {
+    background: #d69b23;
+  }
+
+  .phoenix-comparison__table tfoot td {
+    height: 98px;
+    padding: 18px;
+    border: 0;
+    background: var(--pc-navy);
+    text-align: center;
+  }
+
+  .phoenix-comparison__table tfoot td:first-child {
+    border-radius: 0 0 0 22px;
+  }
+
+  .phoenix-comparison__table tfoot td:last-child {
+    border-radius: 0 0 22px;
+  }
+
+  .phoenix-comparison__table tfoot .phoenix-comparison__cta-cell {
+    background: var(--pc-green);
+  }
+
+  .phoenix-comparison__button {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 25px;
+    border-radius: 999px;
+    background: var(--pc-accent);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: filter 180ms ease, transform 180ms ease;
+  }
+
+  .phoenix-comparison__button:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+  }
+
+  .phoenix-comparison__cta-cell small {
+    display: block;
+    margin-top: 8px;
+    color: #6bb8ac;
+    font-size: 11px;
+  }
+
+  .phoenix-comparison__footnote {
+    max-width: 840px;
+    margin: 28px auto 0;
+    color: #7894b4;
+    font-size: 12px;
+    line-height: 1.65;
+    text-align: center;
+  }
+
+  .phoenix-comparison__footnote strong {
+    color: var(--pc-navy);
+  }
+
+  @media screen and (max-width: 749px) {
+    .phoenix-comparison {
+      padding: 42px 12px 34px;
+    }
+
+    .phoenix-comparison__header {
+      margin-bottom: 32px;
+    }
+
+    .phoenix-comparison__eyebrow {
+      margin-bottom: 15px;
+      font-size: 10px;
+    }
+
+    .phoenix-comparison__heading {
+      font-size: clamp(32px, 10vw, 43px);
+    }
+
+    .phoenix-comparison__description {
+      margin-top: 16px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .phoenix-comparison__scroll {
+      border-radius: 16px;
+      scroll-snap-type: x proximity;
+    }
+
+    .phoenix-comparison__table {
+      width: 730px;
+      min-width: 730px;
+    }
+
+    .phoenix-comparison__table th,
+    .phoenix-comparison__table td {
+      padding: 9px 8px;
+    }
+
+    .phoenix-comparison__table thead th {
+      height: 91px;
+      font-size: 10px;
+      letter-spacing: 0;
+    }
+
+    .phoenix-comparison__table thead th:first-child {
+      width: 130px;
+      padding-top: 55px;
+      padding-left: 22px;
+      border-radius: 16px 0 0;
+    }
+
+    .phoenix-comparison__table thead th:nth-child(2) {
+      width: 210px;
+    }
+
+    .phoenix-comparison__table thead th:nth-child(n + 3) {
+      width: 130px;
+    }
+
+    .phoenix-comparison__table thead th:last-child {
+      border-radius: 0 16px 0 0;
+    }
+
+    .phoenix-comparison__brand-heading strong {
+      max-width: 175px;
+      margin: 4px auto 2px;
+      font-size: 12px;
+      line-height: 1.05;
+    }
+
+    .phoenix-comparison__brand-heading small {
+      font-size: 7px;
+    }
+
+    .phoenix-comparison__badge {
+      padding: 3px 9px;
+      font-size: 7px;
+    }
+
+    .phoenix-comparison__badge::before {
+      margin-right: 3px;
+    }
+
+    .phoenix-comparison__group th,
+    .phoenix-comparison__group td {
+      height: 39px;
+      padding: 7px 22px;
+      font-size: 9px;
+      line-height: 1.05;
+    }
+
+    .phoenix-comparison__row th {
+      padding-left: 22px;
+      font-size: 12px;
+      line-height: 1.15;
+    }
+
+    .phoenix-comparison__row th span {
+      display: none;
+    }
+
+    .phoenix-comparison__row td {
+      height: 59px;
+    }
+
+    .phoenix-comparison__pill {
+      gap: 5px;
+      min-height: 27px;
+      max-width: 100%;
+      padding: 4px 9px;
+      font-size: 12px;
+    }
+
+    .phoenix-comparison__pill-icon {
+      width: 13px;
+      height: 13px;
+      font-size: 9px;
+    }
+
+    .phoenix-comparison__table tfoot td {
+      height: 76px;
+      padding: 10px 8px;
+    }
+
+    .phoenix-comparison__button {
+      min-height: 32px;
+      padding: 8px 14px;
+      font-size: 9px;
+    }
+
+    .phoenix-comparison__cta-cell small {
+      margin-top: 5px;
+      font-size: 7px;
+    }
+
+    .phoenix-comparison__footnote {
+      margin-top: 22px;
+      padding: 0 8px;
+      font-size: 11px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Tabular comparison v2",
+  "tag": "section",
+  "class": "section-tabular-comparison-v2",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Why Phoenix POSTreat?"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Only Fluoride Filter That <strong>Does It All</strong>"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>See exactly how the Phoenix POSTreat Fluoride Reduction Elements stack up against every other option on the market — so you can decide with confidence.</p>"
+    },
+    {
+      "type": "text",
+      "id": "table_label",
+      "label": "Accessible table label",
+      "default": "Water filtration comparison"
+    },
+    {
+      "type": "text",
+      "id": "feature_heading",
+      "label": "Feature column heading",
+      "default": "Features"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Brand badge",
+      "default": "Best value"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "brand_heading",
+      "label": "Brand heading",
+      "default": "Phoenix POSTreat Fluoride Reduction"
+    },
+    {
+      "type": "text",
+      "id": "brand_subheading",
+      "label": "Brand subheading",
+      "default": "Add-on filter elements"
+    },
+    {
+      "type": "text",
+      "id": "comparison_1",
+      "label": "Comparison 1",
+      "default": "Reverse osmosis"
+    },
+    {
+      "type": "text",
+      "id": "comparison_2",
+      "label": "Comparison 2",
+      "default": "Bottled water"
+    },
+    {
+      "type": "text",
+      "id": "comparison_3",
+      "label": "Comparison 3",
+      "default": "Pitcher filters"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop POSTreat now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "button_note",
+      "label": "Button note",
+      "default": "Free US Shipping on $99+ · 100-Day Guarantee"
+    },
+    {
+      "type": "richtext",
+      "id": "footnote",
+      "label": "Footnote",
+      "default": "<p><strong>How to read this table:</strong> The Phoenix POSTreat Fluoride Reduction Elements are designed to work alongside your Phoenix Carbon Filter Elements as a complete two-stage system. Comparison data reflects typical real-world performance. RO = under-sink Reverse Osmosis system. Pitcher filters include popular brands that use activated carbon only. Individual results may vary based on source water quality.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#f4f8fb"
+    },
+    {
+      "type": "color",
+      "id": "navy_color",
+      "label": "Navy",
+      "default": "#0c2c50"
+    },
+    {
+      "type": "color",
+      "id": "green_color",
+      "label": "Green",
+      "default": "#187866"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Gold accent",
+      "default": "#dfa51e"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Table borders",
+      "default": "#cbddea"
+    },
+    {
+      "type": "color",
+      "id": "feature_background",
+      "label": "Feature cells",
+      "default": "#f2f7fa"
+    },
+    {
+      "type": "color",
+      "id": "highlight_background",
+      "label": "Brand cells",
+      "default": "#f0faf8"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "group",
+      "name": "Category divider",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Category"
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "name": "Feature row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature",
+          "label": "Feature",
+          "default": "Feature name"
+        },
+        {
+          "type": "textarea",
+          "id": "detail",
+          "label": "Supporting detail"
+        },
+        {
+          "type": "select",
+          "id": "brand_status",
+          "label": "Phoenix status",
+          "options": [
+            { "value": "yes", "label": "Yes" },
+            { "value": "no", "label": "No" },
+            { "value": "varies", "label": "Varies" },
+            { "value": "partial", "label": "Partial" },
+            { "value": "custom", "label": "Custom negative" }
+          ],
+          "default": "yes"
+        },
+        {
+          "type": "text",
+          "id": "brand_custom",
+          "label": "Phoenix custom text"
+        },
+        {
+          "type": "select",
+          "id": "comparison_1_status",
+          "label": "Comparison 1 status",
+          "options": [
+            { "value": "yes", "label": "Yes" },
+            { "value": "no", "label": "No" },
+            { "value": "varies", "label": "Varies" },
+            { "value": "partial", "label": "Partial" },
+            { "value": "custom", "label": "Custom negative" }
+          ],
+          "default": "no"
+        },
+        {
+          "type": "text",
+          "id": "comparison_1_custom",
+          "label": "Comparison 1 custom text"
+        },
+        {
+          "type": "select",
+          "id": "comparison_2_status",
+          "label": "Comparison 2 status",
+          "options": [
+            { "value": "yes", "label": "Yes" },
+            { "value": "no", "label": "No" },
+            { "value": "varies", "label": "Varies" },
+            { "value": "partial", "label": "Partial" },
+            { "value": "custom", "label": "Custom negative" }
+          ],
+          "default": "no"
+        },
+        {
+          "type": "text",
+          "id": "comparison_2_custom",
+          "label": "Comparison 2 custom text"
+        },
+        {
+          "type": "select",
+          "id": "comparison_3_status",
+          "label": "Comparison 3 status",
+          "options": [
+            { "value": "yes", "label": "Yes" },
+            { "value": "no", "label": "No" },
+            { "value": "varies", "label": "Varies" },
+            { "value": "partial", "label": "Partial" },
+            { "value": "custom", "label": "Custom negative" }
+          ],
+          "default": "no"
+        },
+        {
+          "type": "text",
+          "id": "comparison_3_custom",
+          "label": "Comparison 3 custom text"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "Tabular comparison v2",
+      "blocks": [
+        {
+          "type": "group",
+          "settings": {
+            "title": "Filtration performance"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "Removes >95% of Fluoride",
+            "detail": "Tested for Sodium Fluoride, Fluorosilicic Acid & more",
+            "brand_status": "yes",
+            "comparison_1_status": "yes",
+            "comparison_2_status": "no",
+            "comparison_3_status": "no"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "Removes Arsenic",
+            "detail": "Targets arsenic naturally present in well & tap water",
+            "brand_status": "yes",
+            "comparison_1_status": "yes",
+            "comparison_2_status": "varies",
+            "comparison_3_status": "no"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "Retains Healthy Minerals",
+            "detail": "Keeps calcium, magnesium & potassium intact in water",
+            "brand_status": "yes",
+            "comparison_1_status": "no",
+            "comparison_2_status": "varies",
+            "comparison_3_status": "no"
+          }
+        },
+        {
+          "type": "group",
+          "settings": {
+            "title": "Build quality & safety"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "AISI 304 Stainless Steel Housing",
+            "detail": "Rust-proof, BPA-free — no plastic leaching into your water",
+            "brand_status": "yes",
+            "comparison_1_status": "no",
+            "comparison_2_status": "custom",
+            "comparison_2_custom": "Plastic",
+            "comparison_3_status": "custom",
+            "comparison_3_custom": "Plastic"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "Zero Microplastic Leaching",
+            "detail": "Won't release microplastics into filtered water — unlike plastic housings",
+            "brand_status": "yes",
+            "comparison_1_status": "varies",
+            "comparison_2_status": "no",
+            "comparison_3_status": "no"
+          }
+        },
+        {
+          "type": "group",
+          "settings": {
+            "title": "Convenience & cost"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "Refillable & Reusable",
+            "detail": "Refill media every ~4 months — no full-unit replacement needed",
+            "brand_status": "yes",
+            "comparison_1_status": "no",
+            "comparison_2_status": "no",
+            "comparison_3_status": "no"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "No Plumbing or Electricity",
+            "detail": "Gravity-fed — works anywhere, installs in minutes, zero utility cost",
+            "brand_status": "yes",
+            "comparison_1_status": "no",
+            "comparison_2_status": "yes",
+            "comparison_3_status": "yes"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "Long Filter Life (1,060+ Gal/Set)",
+            "detail": "Each media refill treats up to 1,060 gallons before replacement",
+            "brand_status": "yes",
+            "comparison_1_status": "varies",
+            "comparison_2_status": "no",
+            "comparison_3_status": "no"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "Fraction of the Cost vs. Bottled Water",
+            "detail": "As little as 5¢ per gallon — saves thousands vs. bottled & RO systems",
+            "brand_status": "yes",
+            "comparison_1_status": "no",
+            "comparison_2_status": "no",
+            "comparison_3_status": "partial"
+          }
+        },
+        {
+          "type": "group",
+          "settings": {
+            "title": "Trust & assurance"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "3rd-Party Lab Tested & Verified",
+            "detail": "Independent lab reports publicly available — no guesswork",
+            "brand_status": "yes",
+            "comparison_1_status": "varies",
+            "comparison_2_status": "varies",
+            "comparison_3_status": "custom",
+            "comparison_3_custom": "Rarely"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "100-Day Risk-Free Trial",
+            "detail": "Full money-back guarantee — return it if you're not 100% satisfied",
+            "brand_status": "yes",
+            "comparison_1_status": "no",
+            "comparison_2_status": "no",
+            "comparison_3_status": "no"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "Backed by 50+ Years of Expertise",
+            "detail": "Over 800,000 happy customers trust Phoenix across the US",
+            "brand_status": "yes",
+            "comparison_1_status": "varies",
+            "comparison_2_status": "varies",
+            "comparison_3_status": "no"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

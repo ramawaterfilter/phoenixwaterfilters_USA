@@ -1,0 +1,581 @@
+{%- liquid
+  assign step_blocks = section.blocks | where: 'type', 'step'
+-%}
+
+<section
+  class="kk-fws-how-it-works"
+  id="kk-fws-how-it-works"
+  style="
+    --kk-fws-hiw-background: {{ section.settings.background_color }};
+    --kk-fws-hiw-card-background: {{ section.settings.card_background_color }};
+    --kk-fws-hiw-heading: {{ section.settings.heading_color }};
+    --kk-fws-hiw-text: {{ section.settings.text_color }};
+    --kk-fws-hiw-number-background: {{ section.settings.number_background_color }};
+    --kk-fws-hiw-number-text: {{ section.settings.number_text_color }};
+    --kk-fws-hiw-bar-background: {{ section.settings.bar_background_color }};
+    --kk-fws-hiw-bar-text: {{ section.settings.bar_text_color }};
+    --kk-fws-hiw-pill-background: {{ section.settings.pill_background_color }};
+    --kk-fws-hiw-pill-text: {{ section.settings.pill_text_color }};
+    --kk-fws-hiw-bar-line: {{ section.settings.bar_line_color }};
+  "
+>
+  <div class="kk-fws-how-it-works__container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="kk-fws-how-it-works__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if step_blocks.size > 0 -%}
+      <ol class="kk-fws-how-it-works__steps">
+        {%- for block in step_blocks -%}
+          <li class="kk-fws-how-it-works__step" {{ block.shopify_attributes }}>
+            <span class="kk-fws-how-it-works__step-number" aria-hidden="true">{{ block.settings.number }}</span>
+
+            {%- if block.settings.title != blank -%}
+              <h3 class="kk-fws-how-it-works__step-title">{{ block.settings.title }}</h3>
+            {%- endif -%}
+
+            {%- if block.settings.body != blank -%}
+              <p class="kk-fws-how-it-works__step-body">{{ block.settings.body }}</p>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
+
+    {%- if section.settings.show_pricing_bar -%}
+      <div class="kk-fws-how-it-works__bar">
+        <div class="kk-fws-how-it-works__plans">
+          <div class="kk-fws-how-it-works__plan">
+            {%- if section.settings.plan_a_label != blank -%}
+              <span class="kk-fws-how-it-works__plan-label">{{ section.settings.plan_a_label }}</span>
+            {%- endif -%}
+            <div class="kk-fws-how-it-works__plan-figures">
+              {%- if section.settings.plan_a_price != blank -%}
+                <span class="kk-fws-how-it-works__plan-price">{{ section.settings.plan_a_price }}</span>
+              {%- endif -%}
+              {%- if section.settings.plan_a_price_note != blank -%}
+                <span class="kk-fws-how-it-works__plan-note">{{ section.settings.plan_a_price_note }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+
+          <span class="kk-fws-how-it-works__plan-divider" aria-hidden="true"></span>
+
+          <div class="kk-fws-how-it-works__plan">
+            {%- if section.settings.plan_b_label != blank -%}
+              <span class="kk-fws-how-it-works__plan-label">{{ section.settings.plan_b_label }}</span>
+            {%- endif -%}
+            <div class="kk-fws-how-it-works__plan-figures">
+              {%- if section.settings.plan_b_price != blank -%}
+                <span class="kk-fws-how-it-works__plan-price">{{ section.settings.plan_b_price }}</span>
+              {%- endif -%}
+              {%- if section.settings.plan_b_price_note != blank -%}
+                <span class="kk-fws-how-it-works__plan-note">{{ section.settings.plan_b_price_note }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        {%- if section.settings.savings_text != blank -%}
+          <p class="kk-fws-how-it-works__savings">{{ section.settings.savings_text }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .kk-fws-how-it-works {
+    background: var(--kk-fws-hiw-background, #f5f3f1);
+    padding: 10rem 0;
+  }
+
+  .kk-fws-how-it-works__container {
+    width: min(100% - 3.2rem, 114rem);
+    margin: 0 auto;
+  }
+
+  .kk-fws-how-it-works__heading {
+    max-width: 55.3rem;
+    margin: 0 auto;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 5.2rem;
+    line-height: 1.1;
+    text-align: center;
+    text-transform: none;
+    color: var(--kk-fws-hiw-heading, #153a5b);
+  }
+
+  .kk-fws-how-it-works__steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.743rem;
+    margin: 4rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-how-it-works__step {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+    box-sizing: border-box;
+    min-height: 43.727rem;
+    padding: 5.326rem 2.799rem;
+    background: var(--kk-fws-hiw-card-background, #ffffff);
+  }
+
+  .kk-fws-how-it-works__step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 7.5745rem;
+    height: 7.5745rem;
+    border-radius: 50%;
+    background: var(--kk-fws-hiw-number-background, #153a5b);
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 4rem;
+    line-height: 1.2;
+    color: var(--kk-fws-hiw-number-text, #ffffff);
+  }
+
+  .kk-fws-how-it-works__step-title {
+    margin: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.4787rem;
+    line-height: 1.2;
+    text-transform: none;
+    color: var(--kk-fws-hiw-heading, #153a5b);
+  }
+
+  .kk-fws-how-it-works__step-body {
+    margin: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 2.2rem;
+    line-height: 1.4;
+    color: var(--kk-fws-hiw-text, #26303a);
+  }
+
+  .kk-fws-how-it-works__bar {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    box-sizing: border-box;
+    margin-top: 1.7rem;
+    padding: 5.474rem 5.551rem;
+    background: var(--kk-fws-hiw-bar-background, #153a5b);
+  }
+
+  .kk-fws-how-it-works__plans {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 5rem;
+  }
+
+  .kk-fws-how-it-works__plan {
+    display: flex;
+    flex: 0 0 27.2rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.4rem;
+    max-width: 27.2rem;
+  }
+
+  .kk-fws-how-it-works__plan-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7875rem 1.647rem;
+    border-radius: 0.3rem;
+    background: var(--kk-fws-hiw-pill-background, #f8f5f3);
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: normal;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--kk-fws-hiw-pill-text, #26303a);
+  }
+
+  .kk-fws-how-it-works__plan-figures {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+    color: var(--kk-fws-hiw-bar-text, #ffffff);
+  }
+
+  .kk-fws-how-it-works__plan-price {
+    flex-shrink: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.4787rem;
+    line-height: 1.2;
+  }
+
+  .kk-fws-how-it-works__plan-note {
+    flex: 1 1 auto;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 2.2rem;
+    line-height: 1.4;
+  }
+
+  .kk-fws-how-it-works__plan-divider {
+    display: block;
+    flex: 0 0 auto;
+    width: 0;
+    height: 11.275rem;
+    border-left: 1px solid var(--kk-fws-hiw-bar-line, #315472);
+  }
+
+  .kk-fws-how-it-works__savings {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 1.978rem 4.149rem;
+    border: 0.0782rem solid var(--kk-fws-hiw-bar-text, #ffffff);
+    border-radius: 19.5549rem;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1.5644rem;
+    letter-spacing: 0.11733rem;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--kk-fws-hiw-bar-text, #ffffff);
+  }
+
+  @media (max-width: 989px) {
+    .kk-fws-how-it-works {
+      padding: 6rem 0;
+    }
+
+    .kk-fws-how-it-works__heading {
+      font-size: 4rem;
+    }
+
+    .kk-fws-how-it-works__step {
+      min-height: 0;
+      padding: 3.2rem 2.4rem;
+    }
+
+    .kk-fws-how-it-works__step-title {
+      font-size: 2.2rem;
+    }
+
+    .kk-fws-how-it-works__step-body {
+      font-size: 1.8rem;
+    }
+
+    .kk-fws-how-it-works__bar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 2.4rem;
+      padding: 3.2rem 2.4rem;
+    }
+
+    .kk-fws-how-it-works__plans {
+      justify-content: space-between;
+      gap: 2.4rem;
+    }
+
+    .kk-fws-how-it-works__plan {
+      flex: 1 1 0;
+      max-width: none;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .kk-fws-how-it-works {
+      padding: 4rem 0;
+    }
+
+    .kk-fws-how-it-works__container {
+      width: min(100% - 4rem, 54rem);
+    }
+
+    .kk-fws-how-it-works__heading {
+      max-width: none;
+      font-size: 2.8rem;
+    }
+
+    .kk-fws-how-it-works__steps {
+      grid-template-columns: 1fr;
+      gap: 1.6rem;
+      margin-top: 1.8rem;
+    }
+
+    .kk-fws-how-it-works__step {
+      gap: 1.6rem;
+      padding: 2rem;
+    }
+
+    .kk-fws-how-it-works__step-number {
+      width: 5.6rem;
+      height: 5.6rem;
+      font-size: 2.9573rem;
+    }
+
+    .kk-fws-how-it-works__step-title {
+      font-size: 2rem;
+    }
+
+    .kk-fws-how-it-works__step-body {
+      font-size: 1.6rem;
+    }
+
+    .kk-fws-how-it-works__bar {
+      gap: 2.4rem;
+      margin-top: 1.8rem;
+      padding: 3rem 1.2rem;
+    }
+
+    .kk-fws-how-it-works__plans {
+      align-items: stretch;
+      gap: 1.5rem;
+    }
+
+    .kk-fws-how-it-works__plan {
+      gap: 1.2rem;
+    }
+
+    .kk-fws-how-it-works__plan-label {
+      padding: 0.6rem 1.6rem;
+      font-size: 1.2rem;
+      line-height: 1.1;
+      letter-spacing: 0.12rem;
+    }
+
+    .kk-fws-how-it-works__plan-figures {
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .kk-fws-how-it-works__plan-price {
+      font-size: 1.8rem;
+    }
+
+    .kk-fws-how-it-works__plan-note {
+      flex: 0 0 auto;
+      font-size: 1.4rem;
+    }
+
+    .kk-fws-how-it-works__plan-divider {
+      height: 11rem;
+      align-self: center;
+    }
+
+    .kk-fws-how-it-works__savings {
+      padding: 1.6rem 3.8rem;
+      font-size: 1.6rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS How It Works",
+  "tag": "div",
+  "class": "section-kk-fws-how-it-works",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Here's Exactly How the Free Tower Works"
+    },
+    {
+      "type": "header",
+      "content": "Pricing comparison bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pricing_bar",
+      "label": "Show pricing comparison bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "plan_a_label",
+      "label": "Plan A label",
+      "default": "Buy outright"
+    },
+    {
+      "type": "text",
+      "id": "plan_a_price",
+      "label": "Plan A price",
+      "default": "$249 upfront"
+    },
+    {
+      "type": "text",
+      "id": "plan_a_price_note",
+      "label": "Plan A price note",
+      "default": "+ $129 every 6 months"
+    },
+    {
+      "type": "text",
+      "id": "plan_b_label",
+      "label": "Plan B label",
+      "default": "free system plan"
+    },
+    {
+      "type": "text",
+      "id": "plan_b_price",
+      "label": "Plan B price",
+      "default": "$0 upfront"
+    },
+    {
+      "type": "text",
+      "id": "plan_b_price_note",
+      "label": "Plan B price note",
+      "default": "+ $99 / 6 months"
+    },
+    {
+      "type": "text",
+      "id": "savings_text",
+      "label": "Savings callout",
+      "default": "you save $30 every cycle"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#f5f3f1"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Step card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Headings",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text",
+      "default": "#26303a"
+    },
+    {
+      "type": "color",
+      "id": "number_background_color",
+      "label": "Step number background",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "number_text_color",
+      "label": "Step number text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "bar_background_color",
+      "label": "Pricing bar background",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "bar_text_color",
+      "label": "Pricing bar text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "pill_background_color",
+      "label": "Plan label background",
+      "default": "#f8f5f3"
+    },
+    {
+      "type": "color",
+      "id": "pill_text_color",
+      "label": "Plan label text",
+      "default": "#26303a"
+    },
+    {
+      "type": "color",
+      "id": "bar_line_color",
+      "label": "Pricing bar divider",
+      "default": "#315472"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "default": "1"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Choose the Family Protection Plan"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body",
+          "default": "Subscribe to the replacement Star plan at $99/month That's everything your household needs to stay protected"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS How It Works",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "number": "1",
+            "title": "Choose the Family Protection Plan",
+            "body": "Subscribe to the replacement Star plan at $99/month That's everything your household needs to stay protected"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "number": "2",
+            "title": "We Ship You the Full Tower...Free",
+            "body": "Your complete $249 stainless steel housing unit arrives at your door. You pay nothing for It-just cover shipping"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "number": "3",
+            "title": "Fresh Filters, Delivered Automatically",
+            "body": "New filters arrive every 6 months, right on schedule. reminders, no reordering your water just stays clean."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

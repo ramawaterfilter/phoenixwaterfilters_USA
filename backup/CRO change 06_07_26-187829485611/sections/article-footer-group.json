@@ -1,0 +1,82 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "Article Footer",
+  "type": "footer",
+  "sections": {
+    "article_related_stories_MW4r7B": {
+      "type": "article-related-stories",
+      "blocks": {
+        "text_PhhyfF": {
+          "type": "text",
+          "settings": {
+            "story_image": "shopify://shop_images/machine-learning.jpg",
+            "story_text": "Learn, Adapt, Evolve: Machine Learning Magic",
+            "category": "Machine Learning",
+            "date_picker": "April 09, 2022"
+          }
+        },
+        "text_VDbQrz": {
+          "type": "text",
+          "settings": {
+            "story_image": "shopify://shop_images/shop-smart.png",
+            "story_text": "Shop Smart, Shop Quick, Ecommerce Click",
+            "category": "Ecommerce",
+            "date_picker": "April 09, 2022"
+          }
+        },
+        "text_4NKG89": {
+          "type": "text",
+          "settings": {
+            "story_image": "shopify://shop_images/timeless-trends.png",
+            "story_text": "Elevate Your Every Day with Timeless Trends",
+            "category": "Fashion",
+            "date_picker": "April 09, 2022"
+          }
+        },
+        "text_K74qQM": {
+          "type": "text",
+          "settings": {
+            "story_image": "shopify://shop_images/innovation.png",
+            "story_text": "Empowering Success Through Innovation, Integrity",
+            "category": "Business",
+            "date_picker": "April 09, 2022"
+          }
+        }
+      },
+      "block_order": [
+        "text_PhhyfF",
+        "text_VDbQrz",
+        "text_4NKG89",
+        "text_K74qQM"
+      ],
+      "settings": {
+        "related_title": "Related Stories",
+        "content": "<p>Phoenix’s Website Is Currently Running A Deal (While Stocks Last)</p>"
+      }
+    },
+    "article_footer_B96kYT": {
+      "type": "article-footer",
+      "settings": {
+        "footer-logo": "shopify://shop_images/Southern-Logo-footer.svg",
+        "col1_text": "<p>The Simplest, Safest And Most Affordable Way To Enjoy Pure Drinking Water That’s 99% Free From Contaminants</p>",
+        "socials_title": "",
+        "socials_fb": "#",
+        "socials_tw": "#",
+        "socials_ig": "#",
+        "socials_yt": "#"
+      }
+    }
+  },
+  "order": [
+    "article_related_stories_MW4r7B",
+    "article_footer_B96kYT"
+  ]
+}

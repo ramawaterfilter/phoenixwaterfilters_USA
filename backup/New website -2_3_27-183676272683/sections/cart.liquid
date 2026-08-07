@@ -1,0 +1,358 @@
+<div class="container">
+  <div class="row align-items-center py-5 my-5">
+    <div class="col-12 col-lg-6">
+      <h3 class="mb-0">Your Cart</h3>
+    </div>
+    <div class="col-12 col-lg-6 text-right">
+      <a class="btn btn-primary continue-shopping" href="collections/all">
+        Continue Shopping
+      </a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+
+      {% if settings.enable_minmax_buys %}
+        <script>
+          var mins = [];
+          var maxs = [];
+        </script>
+      {% endif %}
+
+      {% if cart.item_count > 0 %}
+
+        {% comment %} {% render 'free-shipping' %} {% endcomment %}
+
+        <form
+          action="/cart"
+          method="post"
+          id="cartform">
+          <table>
+            <thead>
+              <tr>
+                <th colspan="2">{{ 'sections.cart.headings.product' | t }}</th>
+                <th class="text-center">{{ 'sections.cart.headings.quantity' | t }}</th>
+                <th class="text-right">{{ 'sections.cart.headings.total' | t }}</th>
+
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for item in cart.items %}
+
+                {% assign min_buy = settings.min_buy_qty %}
+                {% assign max_buy = settings.max_buy_qty %}
+
+                {% if settings.enable_minmax_buys %}
+                  <script>
+                      mins[{{ item.id }}] = {{ min_buy }};
+                      maxs[{{ item.id }}] = {{ max_buy }};
+                  </script>
+                {% endif %}
+
+                <script>
+                  window.variantStock[{{- item.variant.id -}}] = {{ item.variant.inventory_quantity }};
+                </script>
+
+                <tr class="cart-item" data-id="{{item.variant.id}}">
+                  <td class="cart-image">
+                    <a href="{{ item.url }}">
+                      {% if item.image %}
+                        <img src="{{ item | image_url: width: 600 }}" alt="{{ item.title | escape }}">
+                      {% else %}
+                        <img src="{{ 'default-feature.jpg' | asset_img_url: 'x1920' }}" alt="">
+                      {% endif %}
+                    </a>
+                  </td>
+                  <td class="cart-title">
+                    <a href="{{ item.url }}" class="d-block">
+                      <h5>{{ item.product.title }}</h5>
+
+                      {% if item.product.has_only_default_variant != true %}
+                        {% for option in item.options_with_values %}
+                          <span class="variant-title">
+                            {{ option.name }}:
+                            {{ option.value | upcase }}
+                          </span>
+                        {% endfor %}
+                      {% endif %}
+
+                      {% unless item.selling_plan_allocation == nil %}
+                        <span class="cart-selling-plan">
+                          {{ item.selling_plan_allocation.selling_plan.name }}
+                        </span>
+                      {% endunless %}
+                    </a>
+
+                    {% assign invalid = '' %}
+                    {% if item.variant.inventory_policy == "continue" or item.variant.inventory_management == null %}
+                      {% assign invalid = 'invalid' %}
+                    {% endif %}
+
+                    {% assign disabled = 'disabled' %}
+                    {% if item.quantity > item.variant.inventory_quantity %}
+                      {% assign disabled = '' %}
+                    {% endif %}
+
+                    <p class="js-availability-notice cart-availability {{ disabled }} {{ invalid }}">There are only
+                      <strong class="js-availablilty">{{ item.variant.inventory_quantity }}</strong>
+                      of these available in stock.</p>
+                  </td>
+
+                  <td class="qty">
+                    <div class="d-flex qty-container">
+                      <span class="qty-btn cart-qty decrease js-qty-update">-</span>
+                      <input
+                        type="number"
+                        placeholder="Quantity"
+                        name="updates[]"
+                        id="updates_{{ item.key }}"
+                        value="{{ item.quantity }}"
+                        min="{{ min_buy }}"
+                        max="{{ max_buy }}">
+                      <span class="qty-btn cart-qty increase js-qty-update">+</span>
+                      <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0">
+                        <svg
+                          width="26"
+                          height="26"
+                          viewBox="0 0 26 26"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M19.1138 6.88477L6.74268 19.2559"
+                            stroke="#999999"
+                            stroke-width="1.66623"
+                            stroke-linecap="round" />
+                          <path
+                            d="M19.1138 19.2559L6.74268 6.88476"
+                            stroke="#999999"
+                            stroke-width="1.66623"
+                            stroke-linecap="round" />
+                        </svg>
+                      </a>
+                    </div>
+                  </td>
+
+                  <td class="price text-right">
+                    <span class="d-lg-none sub-total">Sub total</span>
+                    <strong>{{ item.final_line_price | money }}</strong>
+
+                    {% if item.final_line_price < item.original_line_price %}
+                      <s>{{ item.original_line_price | money }}</s>
+                    {% endif %}
+                  </td>
+                </tr>
+
+
+              {% endfor %}
+            </tbody>
+          </table>
+
+
+          <div class="col-12 d-flex justify-content-end pb-5">
+           <button
+                class="btn btn-primary update-cart "
+                type="submit"
+                name="update">
+                {{ 'sections.cart.update' | t }}
+              </button>
+          </div>
+       
+
+
+        <div class="flex-wrap d-flex flex-row justify-content-end">
+         
+          <div class="sub-total order-last text-center text-lg-right col-12 col-lg-5">
+          
+            <div class="sub-total__text">
+              <table>
+                {% if cart.total_discount > 0 %}
+                  <tr>
+                    <th>
+                      {{ 'sections.cart.discount' | t }}:
+                    </th>
+                    <td class="discount">
+                      - {{ cart.total_discount | money }}
+                    </td>
+                  </tr>
+                {% endif %}
+
+                <tr>
+                  <th>{{ 'sections.cart.subtotal' | t }}:</th>
+                  <td>
+                    <strong>{{ cart.total_price | money }}</strong>
+
+                    {% if cart.total_price < cart.original_total_price %}
+                      <s>{{ cart.original_total_price | money }}</s>
+                    {% endif %}
+                  </td>
+                </tr>
+              </table>
+
+              <p class="tax-details">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="27"
+                  height="27"
+                  viewBox="0 0 27 27"
+                  fill="none">
+                  <path d="M15.5591 19.8555C15.5591 20.1207 15.4537 20.375 15.2662 20.5626C15.0787 20.7501 14.8243 20.8555 14.5591 20.8555C14.0287 20.8555 13.5199 20.6448 13.1449 20.2697C12.7698 19.8946 12.5591 19.3859 12.5591 18.8555V13.8555C12.2939 13.8555 12.0395 13.7501 11.852 13.5626C11.6644 13.375 11.5591 13.1207 11.5591 12.8555C11.5591 12.5903 11.6644 12.3359 11.852 12.1484C12.0395 11.9608 12.2939 11.8555 12.5591 11.8555C13.0895 11.8555 13.5982 12.0662 13.9733 12.4413C14.3484 12.8163 14.5591 13.325 14.5591 13.8555V18.8555C14.8243 18.8555 15.0787 18.9608 15.2662 19.1484C15.4537 19.3359 15.5591 19.5903 15.5591 19.8555ZM26.5591 13.8555C26.5591 16.4266 25.7967 18.94 24.3682 21.0779C22.9397 23.2157 20.9094 24.882 18.534 25.8659C16.1585 26.8498 13.5447 27.1073 11.0229 26.6057C8.50116 26.1041 6.18478 24.8659 4.3667 23.0479C2.54862 21.2298 1.31049 18.9134 0.808879 16.3916C0.307271 13.8699 0.564715 11.256 1.54865 8.88058C2.53259 6.50514 4.19884 4.47482 6.33667 3.04636C8.47451 1.61791 10.9879 0.855469 13.5591 0.855469C17.0058 0.859109 20.3103 2.22992 22.7475 4.6671C25.1846 7.10428 26.5554 10.4088 26.5591 13.8555ZM24.5591 13.8555C24.5591 11.6799 23.9139 9.55314 22.7053 7.7442C21.4966 5.93526 19.7786 4.52536 17.7686 3.69279C15.7586 2.86023 13.5469 2.64239 11.4131 3.06683C9.2793 3.49127 7.31929 4.53892 5.78091 6.07729C4.24254 7.61567 3.19489 9.57568 2.77045 11.7095C2.34601 13.8433 2.56385 16.055 3.39641 18.065C4.22898 20.075 5.63887 21.7929 7.44781 23.0016C9.25676 24.2103 11.3835 24.8555 13.5591 24.8555C16.4755 24.8522 19.2714 23.6922 21.3336 21.63C23.3958 19.5678 24.5558 16.7718 24.5591 13.8555ZM13.0591 9.85547C13.3558 9.85547 13.6458 9.7675 13.8924 9.60267C14.1391 9.43785 14.3314 9.20358 14.4449 8.92949C14.5584 8.6554 14.5881 8.3538 14.5303 8.06283C14.4724 7.77186 14.3295 7.50459 14.1197 7.29481C13.91 7.08503 13.6427 6.94217 13.3517 6.88429C13.0608 6.82641 12.7592 6.85612 12.4851 6.96965C12.211 7.08318 11.9767 7.27544 11.8119 7.52211C11.6471 7.76879 11.5591 8.0588 11.5591 8.35547C11.5591 8.75329 11.7171 9.13482 11.9984 9.41613C12.2797 9.69743 12.6613 9.85547 13.0591 9.85547Z" fill="#0EB6FF" />
+                </svg>
+                {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
+              </p>
+
+              <div class="payment-details">
+                <span class="payment-details__content">
+                  Includes Fast & Free Shipping on US Orders $99+</span>
+
+                <ul class="payment-methods">
+                  {%- for type in shop.enabled_payment_types -%}
+                    <li class="list-payment__item">
+                      {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+             
+              <button
+                class="btn btn-secondary checkout"
+                type="submit"
+                name="checkout">
+                {{ 'sections.cart.checkout' | t }}
+              </button>
+
+            </div>
+          </div>
+        </div>
+
+
+      {% else %}
+        <p class="text-center">{{ 'sections.cart.empty' | t }}.</p>
+      {% endif %}
+ </form>
+  <div class="col-12 col-lg-6">
+            {% render 'upsell-element'
+              , ajax: true %}
+
+          </div>
+    </div>
+  </div>
+</div>
+
+{% javascript %}
+	if(enable_minmax_buys){
+		_checkCartPageQuantities(mins, maxs);
+	}
+{% endjavascript %}
+
+{% schema %}
+  {
+    "name": "Cart",
+    "tag": "section",
+    "class": "section-cart",
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Upsell",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Upsell Blocks",
+            "info": "Select the product to upsell, and the condition that the cart has to match in order to show the product. Leave the conditional product empty to show this product always. This will only ever show the first block that gets matched."
+          }, {
+            "type": "product",
+            "id": "upsell_product",
+            "label": "Product Upsell"
+          }, {
+            "type": "product",
+            "id": "upsell_match",
+            "label": "Condition (show above product when this is in the cart)"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Cart",
+        "category": "Sections"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["cart"]
+    }
+  }
+{% endschema %}
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  document.querySelectorAll('.cart-item').forEach(function(row, index) {
+
+    const input = row.querySelector('input[type="number"]');
+    const increaseBtn = row.querySelector('.increase');
+    const decreaseBtn = row.querySelector('.decrease');
+
+    function updateCart(quantity) {
+
+      fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          line: index + 1,
+          quantity: quantity
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+
+        const item = data.items[index];
+        const priceElement = row.querySelector('.price strong');
+        const totalElement = document.querySelector('.cart-total-price');
+
+        if (priceElement) {
+          priceElement.innerHTML = Shopify.formatMoney(item.final_line_price);
+        }
+
+        if (totalElement) {
+          totalElement.innerHTML = Shopify.formatMoney(data.total_price);
+        }
+
+      });
+
+    }
+
+    // IMPORTANT: stop old click events
+    increaseBtn.onclick = null;
+    decreaseBtn.onclick = null;
+
+    increaseBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      let qty = parseInt(input.value) + 1;
+      input.value = qty;
+      updateCart(qty);
+    });
+
+    decreaseBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      let qty = parseInt(input.value) - 1;
+      if (qty < 1) qty = 1;
+
+      input.value = qty;
+      updateCart(qty);
+    });
+
+    input.addEventListener('change', function () {
+      let qty = parseInt(this.value);
+      if (qty < 1) qty = 1;
+      updateCart(qty);
+    });
+
+  });
+
+});
+</script>

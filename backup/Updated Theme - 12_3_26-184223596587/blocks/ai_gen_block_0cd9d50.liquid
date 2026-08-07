@@ -1,0 +1,960 @@
+{% doc %}
+  @prompt
+    Create a custom Shopify section called “Video Carousel”. At the top, display the title “Real Stories of Proven Performance”. Below the title, show multiple video cards in a carousel format. On desktop view, display 4 video cards in a row. On mobile view, display 1 video card per slide with left and right navigation buttons that are sized perfectly for touch on mobile. Each video card must include: a small heading or testimonial text above the video, the video itself (supporting embed codes such as YouTube, Vimeo, or Shopify-hosted video), and a caption area below with the product title and variant (e.g., “Water Filter System – Black/Polished”). Add an Instagram profile link or icon inside each card so that it can be clicked to open the related Instagram page. The active or selected video card should change background color to highlight it. All video cards should have rounded corners, light shadows, and padding for a clean design. Use a section background color of light beige (#FAF9F6), and highlight the first card with a light green background (#D9F3ED). Make the carousel fully responsive, with smooth scrolling and navigation, optimized for both desktop and mobile, and ensure the videos load in high quality.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-video-carousel-{{ ai_gen_id }} {
+    background-color: #FAF9F6;
+    padding: 60px 20px;
+    overflow: hidden;
+  }
+
+  .ai-video-carousel-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-video-carousel-title-{{ ai_gen_id }} {
+    text-align: center;
+    font-size: {{ block.settings.title_font_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 40px;
+  }
+
+  .ai-video-carousel-wrapper-{{ ai_gen_id }} {
+    position: relative;
+  }
+
+  .ai-video-carousel-track-{{ ai_gen_id }} {
+    display: flex;
+    transition: transform 0.3s ease;
+    gap: 20px;
+  }
+
+  .ai-video-card-{{ ai_gen_id }} {
+    flex: 0 0 calc(25% - 15px);
+    background-color: #ffffff;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .ai-video-card-{{ ai_gen_id }}.active {
+    background-color: #D9F3ED;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-video-card-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_heading_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.card_text_color }};
+    margin: 0 0 15px;
+    line-height: 1.3;
+  }
+
+  .ai-video-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+  }
+
+  .ai-video-wrapper-{{ ai_gen_id }} iframe,
+  .ai-video-wrapper-{{ ai_gen_id }} video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .ai-video-caption-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .ai-video-product-info-{{ ai_gen_id }} {
+    flex: 1;
+  }
+
+  .ai-video-product-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.product_title_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.card_text_color }};
+    margin: 0 0 5px;
+    line-height: 1.2;
+  }
+
+  .ai-video-product-variant-{{ ai_gen_id }} {
+    font-size: {{ block.settings.product_variant_size }}px;
+    color: {{ block.settings.variant_text_color }};
+    margin: 0;
+  }
+
+  .ai-instagram-link-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+
+  .ai-instagram-link-{{ ai_gen_id }}:hover {
+    transform: scale(1.1);
+  }
+
+  .ai-instagram-link-{{ ai_gen_id }} svg {
+    width: 18px;
+    height: 18px;
+    fill: white;
+  }
+
+  .ai-carousel-nav-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-carousel-nav-button-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background-color: {{ block.settings.nav_button_color }};
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    z-index: 10;
+  }
+
+  .ai-carousel-nav-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.nav_button_hover_color }};
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .ai-carousel-nav-button-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+    fill: {{ block.settings.nav_button_icon_color }};
+  }
+
+  .ai-carousel-prev-{{ ai_gen_id }} {
+    left: -25px;
+  }
+
+  .ai-carousel-next-{{ ai_gen_id }} {
+    right: -25px;
+  }
+
+  .ai-carousel-dots-{{ ai_gen_id }} {
+    display: none;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 30px;
+  }
+
+  .ai-carousel-dot-{{ ai_gen_id }} {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #ccc;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-carousel-dot-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.nav_button_color }};
+  }
+
+  @media screen and (max-width: 1024px) {
+    .ai-video-card-{{ ai_gen_id }} {
+      flex: 0 0 calc(50% - 10px);
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-video-carousel-{{ ai_gen_id }} {
+      padding: 40px 15px;
+    }
+
+    .ai-video-carousel-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_font_size | times: 0.8 }}px;
+      margin-bottom: 30px;
+    }
+
+    .ai-video-card-{{ ai_gen_id }} {
+      flex: 0 0 100%;
+      padding: 15px;
+    }
+
+    .ai-carousel-nav-{{ ai_gen_id }} {
+      display: block;
+    }
+
+    .ai-carousel-nav-button-{{ ai_gen_id }} {
+      width: 60px;
+      height: 60px;
+    }
+
+    .ai-carousel-nav-button-{{ ai_gen_id }} svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .ai-carousel-prev-{{ ai_gen_id }} {
+      left: 10px;
+    }
+
+    .ai-carousel-next-{{ ai_gen_id }} {
+      right: 10px;
+    }
+
+    .ai-carousel-dots-{{ ai_gen_id }} {
+      display: flex;
+    }
+
+    .ai-video-carousel-track-{{ ai_gen_id }} {
+      gap: 0;
+    }
+  }
+
+  .ai-video-placeholder-{{ ai_gen_id }} {
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+  }
+
+  .ai-video-placeholder-{{ ai_gen_id }} svg {
+    width: 60px;
+    height: 60px;
+    opacity: 0.5;
+  }
+
+  .ai-empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+{% endstyle %}
+
+<video-carousel-{{ ai_gen_id }}
+  class="ai-video-carousel-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-video-carousel-container-{{ ai_gen_id }}">
+    <h2 class="ai-video-carousel-title-{{ ai_gen_id }}">
+      {{ block.settings.section_title }}
+    </h2>
+
+    <div class="ai-video-carousel-wrapper-{{ ai_gen_id }}">
+      <div class="ai-video-carousel-track-{{ ai_gen_id }}" data-track>
+        {% for i in (1..8) %}
+          {% liquid
+            assign video_enabled_key = 'video_' | append: i | append: '_enabled'
+            assign video_heading_key = 'video_' | append: i | append: '_heading'
+            assign video_embed_key = 'video_' | append: i | append: '_embed'
+            assign product_title_key = 'video_' | append: i | append: '_product_title'
+            assign product_variant_key = 'video_' | append: i | append: '_product_variant'
+            assign instagram_url_key = 'video_' | append: i | append: '_instagram_url'
+
+            assign video_enabled = block.settings[video_enabled_key]
+            assign video_heading = block.settings[video_heading_key]
+            assign video_embed = block.settings[video_embed_key]
+            assign product_title = block.settings[product_title_key]
+            assign product_variant = block.settings[product_variant_key]
+            assign instagram_url = block.settings[instagram_url_key]
+          %}
+
+          {% if video_enabled %}
+            <div 
+              class="ai-video-card-{{ ai_gen_id }} {% if forloop.first %}active{% endif %}"
+              data-video-card="{{ i }}"
+            >
+              {% if video_heading != blank %}
+                <h3 class="ai-video-card-heading-{{ ai_gen_id }}">{{ video_heading }}</h3>
+              {% endif %}
+
+              <div class="ai-video-wrapper-{{ ai_gen_id }}">
+                {% if video_embed != blank %}
+                  {{ video_embed }}
+                {% else %}
+                  <div class="ai-video-placeholder-{{ ai_gen_id }}">
+                    {{ 'play' | placeholder_svg_tag }}
+                  </div>
+                  <div class="ai-empty-state-{{ ai_gen_id }}">
+                    Add video embed code
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="ai-video-caption-{{ ai_gen_id }}">
+                <div class="ai-video-product-info-{{ ai_gen_id }}">
+                  {% if product_title != blank %}
+                    <h4 class="ai-video-product-title-{{ ai_gen_id }}">{{ product_title }}</h4>
+                  {% endif %}
+                  {% if product_variant != blank %}
+                    <p class="ai-video-product-variant-{{ ai_gen_id }}">{{ product_variant }}</p>
+                  {% endif %}
+                </div>
+
+                {% if instagram_url != blank %}
+                  <a 
+                    href="{{ instagram_url }}" 
+                    class="ai-instagram-link-{{ ai_gen_id }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="View on Instagram"
+                  >
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="ai-carousel-nav-{{ ai_gen_id }}">
+        <button 
+          class="ai-carousel-nav-button-{{ ai_gen_id }} ai-carousel-prev-{{ ai_gen_id }}"
+          data-prev
+          aria-label="Previous video"
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+        </button>
+        <button 
+          class="ai-carousel-nav-button-{{ ai_gen_id }} ai-carousel-next-{{ ai_gen_id }}"
+          data-next
+          aria-label="Next video"
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-carousel-dots-{{ ai_gen_id }}" data-dots></div>
+    </div>
+  </div>
+</video-carousel-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class VideoCarousel{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentSlide = 0;
+        this.totalSlides = 0;
+        this.isTouch = false;
+        this.startX = 0;
+        this.currentX = 0;
+        this.isDragging = false;
+      }
+
+      connectedCallback() {
+        this.track = this.querySelector('[data-track]');
+        this.prevButton = this.querySelector('[data-prev]');
+        this.nextButton = this.querySelector('[data-next]');
+        this.dotsContainer = this.querySelector('[data-dots]');
+        this.cards = this.querySelectorAll('.ai-video-card-{{ ai_gen_id }}');
+        
+        this.totalSlides = this.cards.length;
+        
+        if (this.totalSlides > 0) {
+          this.setupEventListeners();
+          this.createDots();
+          this.updateCarousel();
+          this.setupTouchEvents();
+        }
+      }
+
+      setupEventListeners() {
+        if (this.prevButton) {
+          this.prevButton.addEventListener('click', () => this.prevSlide());
+        }
+        if (this.nextButton) {
+          this.nextButton.addEventListener('click', () => this.nextSlide());
+        }
+
+        this.cards.forEach((card, index) => {
+          card.addEventListener('click', () => this.goToSlide(index));
+        });
+
+        window.addEventListener('resize', () => this.updateCarousel());
+      }
+
+      setupTouchEvents() {
+        this.track.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+        this.track.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: true });
+        this.track.addEventListener('touchend', () => this.handleTouchEnd(), { passive: true });
+        
+        this.track.addEventListener('mousedown', (e) => this.handleMouseDown(e));
+        this.track.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+        this.track.addEventListener('mouseup', () => this.handleMouseUp());
+        this.track.addEventListener('mouseleave', () => this.handleMouseUp());
+      }
+
+      handleTouchStart(e) {
+        this.isTouch = true;
+        this.startX = e.touches[0].clientX;
+        this.isDragging = true;
+      }
+
+      handleTouchMove(e) {
+        if (!this.isDragging) return;
+        this.currentX = e.touches[0].clientX;
+      }
+
+      handleTouchEnd() {
+        if (!this.isDragging) return;
+        this.isDragging = false;
+        
+        const diffX = this.startX - this.currentX;
+        const threshold = 50;
+        
+        if (Math.abs(diffX) > threshold) {
+          if (diffX > 0) {
+            this.nextSlide();
+          } else {
+            this.prevSlide();
+          }
+        }
+      }
+
+      handleMouseDown(e) {
+        if (window.innerWidth > 768) return;
+        this.isTouch = false;
+        this.startX = e.clientX;
+        this.isDragging = true;
+        this.track.style.cursor = 'grabbing';
+      }
+
+      handleMouseMove(e) {
+        if (!this.isDragging || window.innerWidth > 768) return;
+        this.currentX = e.clientX;
+      }
+
+      handleMouseUp() {
+        if (!this.isDragging || window.innerWidth > 768) return;
+        this.isDragging = false;
+        this.track.style.cursor = 'grab';
+        
+        const diffX = this.startX - this.currentX;
+        const threshold = 50;
+        
+        if (Math.abs(diffX) > threshold) {
+          if (diffX > 0) {
+            this.nextSlide();
+          } else {
+            this.prevSlide();
+          }
+        }
+      }
+
+      createDots() {
+        if (!this.dotsContainer) return;
+        
+        this.dotsContainer.innerHTML = '';
+        for (let i = 0; i < this.totalSlides; i++) {
+          const dot = document.createElement('button');
+          dot.className = `ai-carousel-dot-{{ ai_gen_id }} ${i === 0 ? 'active' : ''}`;
+          dot.addEventListener('click', () => this.goToSlide(i));
+          dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+          this.dotsContainer.appendChild(dot);
+        }
+      }
+
+      updateCarousel() {
+        const isMobile = window.innerWidth <= 768;
+        
+        if (isMobile) {
+          const translateX = -this.currentSlide * 100;
+          this.track.style.transform = `translateX(${translateX}%)`;
+        } else {
+          this.track.style.transform = 'translateX(0)';
+          this.currentSlide = 0;
+        }
+
+        this.updateActiveStates();
+        this.updateDots();
+      }
+
+      updateActiveStates() {
+        this.cards.forEach((card, index) => {
+          card.classList.toggle('active', index === this.currentSlide);
+        });
+      }
+
+      updateDots() {
+        const dots = this.dotsContainer?.querySelectorAll('.ai-carousel-dot-{{ ai_gen_id }}');
+        if (dots) {
+          dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === this.currentSlide);
+          });
+        }
+      }
+
+      prevSlide() {
+        this.currentSlide = this.currentSlide > 0 ? this.currentSlide - 1 : this.totalSlides - 1;
+        this.updateCarousel();
+      }
+
+      nextSlide() {
+        this.currentSlide = this.currentSlide < this.totalSlides - 1 ? this.currentSlide + 1 : 0;
+        this.updateCarousel();
+      }
+
+      goToSlide(index) {
+        this.currentSlide = index;
+        this.updateCarousel();
+      }
+    }
+
+    customElements.define('video-carousel-{{ ai_gen_id }}', VideoCarousel{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Video Carousel",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section title",
+      "default": "Real Stories of Proven Performance"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 24,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Title font size",
+      "default": 36
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Card Style"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_heading_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Card heading size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "product_title_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Product title size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "product_variant_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Product variant size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "variant_text_color",
+      "label": "Variant text color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_color",
+      "label": "Navigation button color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_hover_color",
+      "label": "Navigation button hover color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_icon_color",
+      "label": "Navigation icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Video 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_1_enabled",
+      "label": "Enable video 1",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "video_1_heading",
+      "label": "Heading",
+      "default": "Amazing water quality transformation"
+    },
+    {
+      "type": "html",
+      "id": "video_1_embed",
+      "label": "Video embed code"
+    },
+    {
+      "type": "text",
+      "id": "video_1_product_title",
+      "label": "Product title",
+      "default": "Water Filter System"
+    },
+    {
+      "type": "text",
+      "id": "video_1_product_variant",
+      "label": "Product variant",
+      "default": "Black/Polished"
+    },
+    {
+      "type": "url",
+      "id": "video_1_instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "header",
+      "content": "Video 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_2_enabled",
+      "label": "Enable video 2",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "video_2_heading",
+      "label": "Heading",
+      "default": "Crystal clear results every time"
+    },
+    {
+      "type": "html",
+      "id": "video_2_embed",
+      "label": "Video embed code"
+    },
+    {
+      "type": "text",
+      "id": "video_2_product_title",
+      "label": "Product title",
+      "default": "Water Filter System"
+    },
+    {
+      "type": "text",
+      "id": "video_2_product_variant",
+      "label": "Product variant",
+      "default": "Stainless Steel"
+    },
+    {
+      "type": "url",
+      "id": "video_2_instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "header",
+      "content": "Video 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_3_enabled",
+      "label": "Enable video 3",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "video_3_heading",
+      "label": "Heading",
+      "default": "Perfect for family use"
+    },
+    {
+      "type": "html",
+      "id": "video_3_embed",
+      "label": "Video embed code"
+    },
+    {
+      "type": "text",
+      "id": "video_3_product_title",
+      "label": "Product title",
+      "default": "Water Filter System"
+    },
+    {
+      "type": "text",
+      "id": "video_3_product_variant",
+      "label": "Product variant",
+      "default": "Large Capacity"
+    },
+    {
+      "type": "url",
+      "id": "video_3_instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "header",
+      "content": "Video 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_4_enabled",
+      "label": "Enable video 4",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "video_4_heading",
+      "label": "Heading",
+      "default": "Easy installation process"
+    },
+    {
+      "type": "html",
+      "id": "video_4_embed",
+      "label": "Video embed code"
+    },
+    {
+      "type": "text",
+      "id": "video_4_product_title",
+      "label": "Product title",
+      "default": "Water Filter System"
+    },
+    {
+      "type": "text",
+      "id": "video_4_product_variant",
+      "label": "Product variant",
+      "default": "Compact Design"
+    },
+    {
+      "type": "url",
+      "id": "video_4_instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "header",
+      "content": "Video 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_5_enabled",
+      "label": "Enable video 5",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "video_5_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "html",
+      "id": "video_5_embed",
+      "label": "Video embed code"
+    },
+    {
+      "type": "text",
+      "id": "video_5_product_title",
+      "label": "Product title"
+    },
+    {
+      "type": "text",
+      "id": "video_5_product_variant",
+      "label": "Product variant"
+    },
+    {
+      "type": "url",
+      "id": "video_5_instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "header",
+      "content": "Video 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_6_enabled",
+      "label": "Enable video 6",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "video_6_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "html",
+      "id": "video_6_embed",
+      "label": "Video embed code"
+    },
+    {
+      "type": "text",
+      "id": "video_6_product_title",
+      "label": "Product title"
+    },
+    {
+      "type": "text",
+      "id": "video_6_product_variant",
+      "label": "Product variant"
+    },
+    {
+      "type": "url",
+      "id": "video_6_instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "header",
+      "content": "Video 7"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_7_enabled",
+      "label": "Enable video 7",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "video_7_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "html",
+      "id": "video_7_embed",
+      "label": "Video embed code"
+    },
+    {
+      "type": "text",
+      "id": "video_7_product_title",
+      "label": "Product title"
+    },
+    {
+      "type": "text",
+      "id": "video_7_product_variant",
+      "label": "Product variant"
+    },
+    {
+      "type": "url",
+      "id": "video_7_instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "header",
+      "content": "Video 8"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_8_enabled",
+      "label": "Enable video 8",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "video_8_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "html",
+      "id": "video_8_embed",
+      "label": "Video embed code"
+    },
+    {
+      "type": "text",
+      "id": "video_8_product_title",
+      "label": "Product title"
+    },
+    {
+      "type": "text",
+      "id": "video_8_product_variant",
+      "label": "Product variant"
+    },
+    {
+      "type": "url",
+      "id": "video_8_instagram_url",
+      "label": "Instagram URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Carousel"
+    }
+  ]
+}
+{% endschema %}

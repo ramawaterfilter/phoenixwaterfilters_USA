@@ -1,0 +1,474 @@
+<section
+  class="custom-accordion-tabs"
+  style="
+    --accordion-background: {{ section.settings.background_color }};
+    --accordion-text: {{ section.settings.text_color }};
+    --accordion-accent: {{ section.settings.accent_color }};
+    --accordion-border: {{ section.settings.border_color }};
+    --accordion-active-tab-background: {{ section.settings.active_tab_background_color }};
+    --accordion-active-tab-text: {{ section.settings.active_tab_text_color }};
+  "
+>
+  <div class="custom-accordion-tabs__container">
+    {% if section.settings.eyebrow != blank or section.settings.heading != blank %}
+      <div class="custom-accordion-tabs__header">
+        {% if section.settings.eyebrow != blank %}
+          <p class="custom-accordion-tabs__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="custom-accordion-tabs__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% assign tab_total = 0 %}
+    {% for block in section.blocks %}
+      {% if block.type == 'tab' %}
+        {% assign tab_total = tab_total | plus: 1 %}
+      {% endif %}
+    {% endfor %}
+
+    {% if tab_total > 0 %}
+      <div class="custom-accordion-tabs__tablist" role="tablist" aria-label="{{ section.settings.eyebrow | default: section.settings.heading | strip_html | escape }}">
+        {% assign tab_index = 0 %}
+        {% for block in section.blocks %}
+          {% if block.type == 'tab' %}
+            {% assign tab_index = tab_index | plus: 1 %}
+            <button
+              class="custom-accordion-tabs__tab{% if tab_index == 1 %} is-active{% endif %}"
+              type="button"
+              role="tab"
+              aria-selected="{% if tab_index == 1 %}true{% else %}false{% endif %}"
+              data-accordion-tab="{{ tab_index }}"
+              {{ block.shopify_attributes }}
+            >
+              {{ block.settings.tab_title | escape }}
+            </button>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% assign panel_index = 0 %}
+      {% for block in section.blocks %}
+        {% if block.type == 'tab' %}
+          {% assign panel_index = panel_index | plus: 1 %}
+          <div
+            class="custom-accordion-tabs__panel{% if panel_index == 1 %} is-active{% endif %}"
+            role="tabpanel"
+            data-accordion-panel="{{ panel_index }}"
+            {% unless panel_index == 1 %}hidden{% endunless %}
+          >
+            <div class="custom-accordion-tabs__items">
+
+              {% assign active_tab_index = 0 %}
+              {% for item_block in section.blocks %}
+                {% if item_block.type == 'tab' %}
+                  {% assign active_tab_index = active_tab_index | plus: 1 %}
+                {% elsif item_block.type == 'question_answer' %}
+                  {% if active_tab_index == panel_index %}
+                    <details class="custom-accordion-tabs__item" {{ item_block.shopify_attributes }}>
+                      <summary class="custom-accordion-tabs__summary">
+                        <span>{{ item_block.settings.question | escape }}</span>
+                        <span class="custom-accordion-tabs__icon" aria-hidden="true">+</span>
+                      </summary>
+
+                      {% if item_block.settings.answer != blank %}
+                        <div class="custom-accordion-tabs__answer rte">
+                          {{ item_block.settings.answer }}
+                        </div>
+                      {% endif %}
+                    </details>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+              {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .custom-accordion-tabs {
+    overflow: hidden;
+    background: var(--accordion-background);
+    color: var(--accordion-text);
+    padding: .8rem 0 2.4rem;
+  }
+
+  .custom-accordion-tabs__container {
+    width: min(100% - 2rem, 72rem);
+    margin: 0 auto;
+  }
+
+  /* .custom-accordion-tabs__header {
+    margin-bottom: 2.1rem;
+  } */
+
+  .custom-accordion-tabs__eyebrow {
+    margin: 0 0 .8rem;
+    color: var(--accordion-accent);
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .27rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .custom-accordion-tabs__heading {
+    margin: 0;
+    color: var(--accordion-text);
+    font-family: Georgia Pro Bold, Georgia, serif;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -.04rem;
+    line-height: 1.15;
+  }
+
+  .custom-accordion-tabs__heading strong {
+    color: var(--accordion-accent);
+  }
+
+  .custom-accordion-tabs__tablist {
+    display: flex;
+    gap: .8rem;
+    margin: 0 0 3.6rem;
+    overflow-x: auto;
+    padding-bottom: .2rem;
+    scrollbar-width: none;
+  }
+
+  .custom-accordion-tabs__tablist::-webkit-scrollbar {
+    display: none;
+  }
+
+  .custom-accordion-tabs__tab {
+    flex: 0 0 auto !important;
+    width: max-content !important;
+    max-width: none;
+    min-width: 10px;
+    min-height: 2.6rem;
+    padding: .6rem 1.2rem;
+    border: 1px solid #d9dde4;
+    border-radius: 99rem;
+    background: #fff;
+    color: var(--accordion-text);
+    cursor: pointer;
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    text-transform: none;
+    white-space: nowrap;
+  }
+
+  .custom-accordion-tabs__tab.is-active {
+    border-color: var(--accordion-active-tab-background);
+    background: var(--accordion-active-tab-background);
+    color: var(--accordion-active-tab-text);
+  }
+
+  .custom-accordion-tabs__panel[hidden] {
+    display: none;
+  }
+
+  .custom-accordion-tabs__items {
+    border-bottom: 1px solid var(--accordion-border);
+  }
+
+  .custom-accordion-tabs__item {
+    border-top: 1px solid var(--accordion-border);
+  }
+
+  .custom-accordion-tabs__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    min-height: 4.8rem;
+    padding: 1.2rem 0;
+    color: var(--accordion-text);
+    cursor: pointer;
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.25;
+    list-style: none;
+  }
+
+  .custom-accordion-tabs__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .custom-accordion-tabs__icon {
+    display: grid;
+    flex: 0 0 1.9rem;
+    width: 1.9rem;
+    height: 1.9rem;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--accordion-accent);
+    color: #fff;
+    font-family: Value Sans Bold, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .custom-accordion-tabs__item[open] .custom-accordion-tabs__icon {
+    transform: rotate(45deg);
+  }
+
+  .custom-accordion-tabs__answer {
+    padding: 0 3.5rem 1.6rem 0;
+    color: #526174;
+    font-family: Value Sans, sans-serif;
+    font-size: 1.3rem;
+    line-height: 1.55;
+  }
+
+  .custom-accordion-tabs__answer > :first-child {
+    margin-top: 0;
+  }
+
+  .custom-accordion-tabs__answer > :last-child {
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 750px) {
+    .custom-accordion-tabs {
+      padding: 5rem 0;
+    }
+
+    .custom-accordion-tabs__container {
+      width: min(100% - 6.4rem, 86rem);
+    }
+
+    .custom-accordion-tabs__heading {
+      font-size: 3rem;
+    }
+
+    .custom-accordion-tabs__tab {
+      min-width: 10px;
+      min-height: 3.3rem;
+      padding: .8rem 1.8rem;
+      font-size: 1.3rem;
+    }
+
+    .custom-accordion-tabs__summary {
+      min-height: 6rem;
+      font-size: 1.7rem;
+    }
+
+    .custom-accordion-tabs__icon {
+      flex-basis: 2.3rem;
+      width: 2.3rem;
+      height: 2.3rem;
+      font-size: 1.7rem;
+    }
+
+    .custom-accordion-tabs__answer {
+      font-size: 1.5rem;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('click', (event) => {
+    const tab = event.target.closest('[data-accordion-tab]');
+    if (!tab) return;
+
+    const section = tab.closest('.custom-accordion-tabs');
+    if (!section) return;
+
+    const tabId = tab.getAttribute('data-accordion-tab');
+
+    section.querySelectorAll('[data-accordion-tab]').forEach((item) => {
+      const isActive = item === tab;
+      item.classList.toggle('is-active', isActive);
+      item.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+
+    section.querySelectorAll('[data-accordion-panel]').forEach((panel) => {
+      const isActive = panel.getAttribute('data-accordion-panel') === tabId;
+      panel.classList.toggle('is-active', isActive);
+      panel.hidden = !isActive;
+    });
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Custom accordion tabs",
+  "tag": "section",
+  "class": "section-custom-accordion-tabs",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Got questions?"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "We've Got <strong>Answers</strong>"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#07182d"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#12736f"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Divider color",
+      "default": "#e6e9ee"
+    },
+    {
+      "type": "color",
+      "id": "active_tab_background_color",
+      "label": "Active tab background",
+      "default": "#071c2b"
+    },
+    {
+      "type": "color",
+      "id": "active_tab_text_color",
+      "label": "Active tab text",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_title",
+          "label": "Tab title",
+          "default": "Set Up"
+        }
+      ]
+    },
+    {
+      "type": "question_answer",
+      "name": "Question and answer",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How long will the POSTreat™ Filter Elements last?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Filter life depends on usage and source water quality. Replace elements according to the product instructions for best performance.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom accordion tabs",
+      "blocks": [
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Set Up"
+          }
+        },
+        {
+          "type": "question_answer",
+          "settings": {
+            "question": "How long will the POSTreat™ Filter Elements last?"
+          }
+        },
+        {
+          "type": "question_answer",
+          "settings": {
+            "question": "How often do I change filters?"
+          }
+        },
+        {
+          "type": "question_answer",
+          "settings": {
+            "question": "Can I assemble it myself?"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Filtration"
+          }
+        },
+        {
+          "type": "question_answer",
+          "settings": {
+            "question": "What does POSTreat™ reduce?"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Shipping"
+          }
+        },
+        {
+          "type": "question_answer",
+          "settings": {
+            "question": "How fast does shipping take?"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Warranty"
+          }
+        },
+        {
+          "type": "question_answer",
+          "settings": {
+            "question": "What is covered by warranty?"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Account"
+          }
+        },
+        {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do I need an account to order?"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

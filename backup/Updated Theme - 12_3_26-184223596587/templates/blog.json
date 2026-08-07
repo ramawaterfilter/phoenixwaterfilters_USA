@@ -1,0 +1,47 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "custom_code_section_e6TAVd": {
+      "type": "custom-code-section",
+      "disabled": true,
+      "name": "Custom Code Section",
+      "settings": {
+        "custom_html": "<div style=\"text-align:center; padding:20px;\">\n  <h2>My Custom Section</h2>\n  <p>Write your HTML here...</p>\n</div>",
+        "custom_css": "h2 { color: #1f1d36; }",
+        "custom_js": "console.log('Custom section loaded');"
+      }
+    },
+    "hero_tLttzP": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "",
+        "heading": "Blogs & Articles",
+        "content": "",
+        "sideimage": "shopify://shop_images/water-filter-blog.jpg",
+        "section_video_bg": "",
+        "buttonlink": "",
+        "buttontext": ""
+      }
+    },
+    "blog-index": {
+      "type": "blog-index",
+      "custom_css": [
+        ".blog-tile__img img {object-fit: fill;}"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero_tLttzP",
+    "custom_code_section_e6TAVd",
+    "blog-index"
+  ]
+}

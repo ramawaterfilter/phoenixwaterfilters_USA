@@ -1,0 +1,149 @@
+<section class="performance-section">
+  <div class="container">
+    <!--
+    {% if section.settings.heading != blank %}
+      <h2 class="performance-heading">{{ section.settings.heading }}</h2> 
+    {% endif %}
+    -->
+    <div class="icon-grid">
+      {% for block in section.blocks %}
+      <div class="icon-item">
+        <a href="{{ block.settings.link }}">
+          <div class="icon-circle">
+            {% if block.settings.icon != blank %}
+              <img src="{{ block.settings.icon | image_url }}" width="100" height="100" alt="{{ block.settings.label | escape }}" />
+            {% endif %}
+          </div>
+          <p>{{ block.settings.label }}</p>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+.performance-section {
+  background-color: #fcfcfc;
+  padding: 0px 20px 60px 20px;
+  text-align: center;
+}
+
+.performance-heading {
+   font-size: 30px;
+    font-weight: 500;
+  color: #153a5b;
+  margin-bottom: 40px;
+}
+
+.icon-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
+
+.icon-item {
+  flex: 1 1 150px;
+  max-width: 180px;
+}
+
+.icon-circle {
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-circle img {
+ max-width: 75%;
+  height: auto;
+}
+
+.icon-item p {
+ font-size: 21px;
+  color: #212529;
+  margin: 0;
+  line-height: 1.4;
+  text-decoration: none;
+}
+</style>
+
+{% schema %}
+{
+  "name": "Icon Links Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "We take our performance seriously."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "icon_link",
+      "name": "Icon Link",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label Text",
+          "default": "Icon Label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link URL"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Icon Links Grid",
+      "category": "Custom",
+      "blocks": [
+        {
+          "type": "icon_link",
+          "settings": {
+            "label": "Set up your filter",
+            "link": "/pages/set-up-your-filter"
+          }
+        },
+        {
+          "type": "icon_link",
+          "settings": {
+            "label": "How the filter works",
+            "link": "/pages/how-it-works"
+          }
+        },
+        {
+          "type": "icon_link",
+          "settings": {
+            "label": "FAQs",
+            "link": "/pages/faqs"
+          }
+        },
+        {
+          "type": "icon_link",
+          "settings": {
+            "label": "Get Support",
+            "link": "/pages/contact-us"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

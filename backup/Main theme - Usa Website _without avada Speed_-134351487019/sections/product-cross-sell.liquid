@@ -1,0 +1,124 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 text-center">
+      <h2>{{ section.settings.section_heading }}</h2>
+    </div>
+    <div class="col-md-10 col-lg-12 product-cross-sells" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=4&intent=complementary">
+
+      {% if recommendations.performed? %}
+        {% if recommendations.products.size > 3 %}
+          <div class="swiper-container cross-sell-slider collections-carousel-swiper">
+            <div class="swiper-wrapper">
+
+              {% for product in recommendations.products %}
+
+                <div class="swiper-slide">
+                  <div class="swiper-slide__inner">
+                    {% render 'product-tile'
+                      , product: product %}
+                  </div>
+                </div>
+
+              {% endfor %}
+
+            </div>
+
+            <div class="swiper-pagination"></div>
+          </div>
+        {% elsif recommendations.products.size > 0 %}
+          <div class="row justify-content-center">
+            {% for product in recommendations.products %}
+
+              <div class="col-sm-6 col-md-6 col-xl-4 mb-5">
+                {% render 'product-tile'
+                  , product: product %}
+              </div>
+            {% endfor %}
+          </div>
+
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+
+{% javascript %}
+  var loadProductRecommendationsIntoSection = function() {
+
+// Look for an element with class 'product-recommendations'
+    var productRecommendationsSection = document.querySelector(".product-cross-sells");
+
+    if (productRecommendationsSection === null) {
+      return;
+    }
+
+
+// Build request URL
+    var requestUrl = productRecommendationsSection.dataset.url;
+
+// Create request and submit it using Ajax
+    var request = new XMLHttpRequest();
+
+    request.open("GET", requestUrl);
+
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 300 && request.response !== "") {
+        var container = document.createElement("div");
+        container.innerHTML = request.response;
+
+        productRecommendationsSection.innerHTML = container.querySelector(".product-cross-sells").innerHTML;
+
+        if (document.querySelector(".product-cross-sells").textContent.trim() === "") {
+          document.querySelector(".product-cross-sells").closest('section').remove();
+        } else {
+          window.initSlider(document.querySelector('.cross-sell-slider'), 1, 'section');
+          window.globalQuickView();
+        }
+
+      } else {
+        window.initSlider(document.querySelector('.cross-sell-slider'), 1, 'section');
+      }
+    };
+
+    request.send();
+  };
+
+// If your section has theme settings, the theme editor
+// reloads the section as you edit those settings. When that happens, the
+// recommendations need to be fetched again.
+// See https://help.shopify.com/en/themes/development/sections/integration-with-theme-editor
+  document.addEventListener("shopify:section:load", function(event) {
+    if (event.detail.sectionId === "product-cross-sell") {
+      loadProductRecommendationsIntoSection();
+    }
+  });
+
+// Fetching the recommendations on page load
+  loadProductRecommendationsIntoSection();
+{% endjavascript %}
+
+{% schema %}
+
+  {
+    "name": "Cross Sell Products",
+    "tag": "section",
+    "class": "section-cross-sell",
+    "settings": [
+      {
+        "type": "text",
+        "id": "section_heading",
+        "label": "Section Heading",
+        "default": "Goes Well With These Products"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Cross Sell Products"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["product"]
+    }
+  }
+{% endschema %}

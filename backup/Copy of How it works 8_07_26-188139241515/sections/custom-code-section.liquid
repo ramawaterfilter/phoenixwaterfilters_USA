@@ -1,0 +1,42 @@
+{% schema %}
+{
+  "name": "Custom Code Section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "custom_html",
+      "label": "Custom HTML",
+      "default": "<div style='text-align:center; padding:20px;'>\n  <h2>My Custom Section</h2>\n  <p>Write your HTML here...</p>\n</div>"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_css",
+      "label": "Custom CSS",
+      "default": "h2 { color: #1f1d36; }"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_js",
+      "label": "Custom JavaScript",
+      "default": "console.log('Custom section loaded');"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Code Section"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="custom-code-section">
+  {{ section.settings.custom_html | raw }}
+</div>
+
+<style>
+  {{ section.settings.custom_css | raw }}
+</style>
+
+<script>
+  {{ section.settings.custom_js | raw }}
+</script>

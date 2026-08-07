@@ -1,0 +1,154 @@
+<div class="sticky-add-to-cart">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-12">
+        <div class="d-flex align-items-center justify-content-center justify-content-lg-between gap-3">
+
+          <!-- Product title on lg+ only -->
+          <p class="h4 d-none d-lg-block m-0">{{ product.title }}</p>
+
+          <!-- Price cluster -->
+          <div class="priceline sub-price d-flex align-items-baseline gap-2">
+            <!-- Live price (mirrors #base-price on PDP) -->
+            <span data-price toggle-price class="fw-bold">
+              {{ product.variants.first.price | money }}
+            </span>
+
+            <!-- Discount label (auto shown when compare_at > price) -->
+            {% comment %} <span get-data-price-discount toggle-discount class="sr-only small text-success"></span> {% endcomment %}
+
+            <!-- Compare-at -->
+            <span data-compare class="text-muted small" style="{% if product.variants.first.compare_at_price > product.variants.first.price %}{% else %}display:none;{% endif %}">
+              <s>
+                {% if product.variants.first.compare_at_price %}
+                  {{ product.variants.first.compare_at_price | money }}
+                {% endif %}
+              </s>
+            </span>
+          </div>
+
+          <!-- Your existing ATC partial -->
+          {% render 'basic-add-to-cart' %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticky price sync script -->
+  <script>
+    (function () {
+      function onReady(fn){ if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
+      onReady(function () {
+        // Elements inside sticky
+        const stickyRoot         = document.querySelector('.sticky-add-to-cart');
+        if (!stickyRoot) return;
+
+        const stickyPriceEl      = stickyRoot.querySelector('[data-price]');
+        const stickyCompareWrap  = stickyRoot.querySelector('[data-compare]');
+        const stickyCompareS     = stickyCompareWrap ? stickyCompareWrap.querySelector('s') : null;
+        const stickyDiscountEl   = stickyRoot.querySelector('[get-data-price-discount]');
+
+        // Elements on PDP (outside sticky) that already compute totals
+        const basePriceEl        = document.getElementById('base-price');   // <- your main PDP total (variant + addons)
+        const variantSelect      = document.getElementById('product-selectors'); // <- main variant selector
+
+        // Fallbacks
+        const productJSON = window.product || {{ product | json }};
+
+        // Shopify money formatter helper
+        function shopifyFormatMoney(cents) {
+          try {
+            if (window.Shopify && typeof Shopify.formatMoney === 'function') {
+              // Default to theme's money format when available
+              return Shopify.formatMoney(cents, window.theme && theme.moneyFormat ? theme.moneyFormat : '{{ shop.money_format | replace: "'", "\\'" }}');
+            }
+          } catch(e){}
+          // Graceful fallback using the symbol from base price text if present
+          const sample = basePriceEl ? (basePriceEl.textContent || '').trim() : '';
+          const symbol = (sample.match(/^[^\d-]+/) || [''])[0];
+          const value  = (Number(cents)/100).toFixed(2);
+          return symbol ? (symbol + Number(value).toLocaleString()) : Number(value).toLocaleString();
+        }
+
+        function getSelectedVariant() {
+          if (!productJSON || !productJSON.variants) return null;
+          if (variantSelect && variantSelect.value) {
+            const id = Number(variantSelect.value);
+            return productJSON.variants.find(v => Number(v.id) === id) || null;
+          }
+          // fallback to first available
+          return productJSON.variants.find(v => v.available) || productJSON.variants[0] || null;
+        }
+
+        function updateCompareAndDiscount(variant) {
+          if (!stickyCompareWrap || !stickyCompareS || !stickyDiscountEl) return;
+
+          if (variant && variant.compare_at_price && variant.compare_at_price > variant.price) {
+            stickyCompareWrap.style.display = '';
+            stickyCompareS.textContent = shopifyFormatMoney(variant.compare_at_price);
+
+            const pct = Math.round(((variant.compare_at_price - variant.price) / variant.compare_at_price) * 100);
+            stickyDiscountEl.textContent = `Save ${pct}%`;
+            stickyDiscountEl.classList.remove('sr-only');
+          } else {
+            stickyCompareS.textContent = '';
+            stickyCompareWrap.style.display = 'none';
+            stickyDiscountEl.textContent = '';
+            stickyDiscountEl.classList.add('sr-only');
+          }
+        }
+
+        function mirrorMainTotalIntoSticky() {
+          if (!stickyPriceEl) return;
+
+          // Prefer mirroring the PDP's already-computed total (includes add-ons)
+          const mainTotalText = basePriceEl ? (basePriceEl.textContent || '').trim() : '';
+          if (mainTotalText) {
+            stickyPriceEl.textContent = mainTotalText;
+          } else {
+            // Fallback to selected variant price if PDP total absent
+            const v = getSelectedVariant();
+            if (v) stickyPriceEl.textContent = shopifyFormatMoney(v.price);
+          }
+
+          // Compare/discount always from the selected variant
+          updateCompareAndDiscount(getSelectedVariant());
+        }
+
+        // Initial paint
+        mirrorMainTotalIntoSticky();
+
+        // Listen to variant selection
+        if (variantSelect) {
+          variantSelect.addEventListener('change', mirrorMainTotalIntoSticky);
+        }
+
+        // Common add-on controls (adjust selectors if yours differ)
+        const addonSelectors = [
+          '#addon-checkbox',                     // e.g., Vision Tap checkbox
+          'input[name="stand-addon"]',           // stand radio buttons
+          'input[name="filter-addon"]',          // POSTreat / filter-type radios
+          '.addon-card'                          // clickable cards
+        ];
+
+        addonSelectors.forEach(sel => {
+          document.querySelectorAll(sel).forEach(el => {
+            el.addEventListener('change', () => setTimeout(mirrorMainTotalIntoSticky, 30));
+            el.addEventListener('click',  () => setTimeout(mirrorMainTotalIntoSticky, 30));
+          });
+        });
+
+        // Also observe the PDP total (#base-price) for async changes
+        if (basePriceEl) {
+          const obs = new MutationObserver(mirrorMainTotalIntoSticky);
+          obs.observe(basePriceEl, { childList: true, characterData: true, subtree: true });
+        }
+      });
+    })();
+  </script>
+</div>
+
+
+
+

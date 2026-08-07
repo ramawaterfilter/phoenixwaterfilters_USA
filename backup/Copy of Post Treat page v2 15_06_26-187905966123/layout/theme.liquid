@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+  <style>
+    img, video, canvas {
+  overflow: clip !important;
+}
+  </style>
+<script>
+(()=>{
+try {
+var e = navigator
+, t = e.userAgent
+, r = 0
+, a = (e,t,r)=>e.setAttribute(t, r)
+, o = (e,t)=>e.removeAttribute(t)
+, d = "tagName"
+, n = "forEach"
+, l = "indexOf";
+(e.platform[l]("x86_64") > -1 && 0 > t[l]("CrOS") || t[l]("power") > -1 || t[l]("rix") > -1) && new MutationObserver((e=>{
+e[n]((({addedNodes: e})=>{
+e[n]((e=>{
+1 === e.nodeType && ("IFRAME" === e[d] && (a(e, "loading", "lazy"),
+a(e, "data-src", e.src),
+o(e, "src")),
+"IMG" === e[d] && r++ > 20 && a(e, "loading", "lazy"),
+"SCRIPT" === e[d] && (a(e, "data-src", e.src),
+o(e, "src"),
+e.type = "text/lazyload"))
+}
+))
+}
+))
+}
+)).observe(document.documentElement, {
+childList: !0,
+subtree: !0
+});
+var c = e=>document.querySelector(e)
+, s = ()=>Date.now()
+, i = s()
+, u = ()=>{
+if (!(s() - i > 500)) {
+if (!c("body>meta"))
+return setTimeout(u, 5);
+var e = c("head");
+document.querySelectorAll("meta,link:not([rel='stylesheet']),title")[n]((t=>e.append(t)))
+}
+}
+;
+u()
+} catch (m) {}
+}
+)();
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Phoenix Water Filters Reviews",
+  "url": "https://phoenixwaterfilters.com/pages/reviews",
+  "mainEntity": {
+    "@type": "Organization",
+    "name": "Phoenix Water Filters",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "bestRating": "5",
+      "worstRating": "1",
+      "reviewCount": "500"
+    }
+  }
+}
+</script>
+ <!--================================================ SEO selected page noindex start==================================================== -->
+{% assign robots_content = 'index, follow' %}
+{%- if template == 'page' -%}
+  {% assign noindex_pages = "breaking-news,bundles,collection-bundle,data-sharing-opt-out,faqs,home,set-up-your-filter,survey" | split: ',' %}
+  {% if noindex_pages contains page.handle %}
+    {% assign robots_content = 'noindex, nofollow' %}
+  {% endif %}
+{%- endif -%}
+
+{%- if current_page > 1 -%}
+  {% assign robots_content = 'noindex, follow' %}
+{%- endif -%}
+
+{%- if request.path == '/collections/vendors' and collection.all_products_count == 0 -%}
+  {% assign robots_content = 'noindex, follow' %}
+{%- endif -%}
+
+<meta name="robots" content="{{ robots_content }}">
+
+ <!--================================================ SEO selected page noindex end==================================================== -->
+
+
+
+<!-- ss schema start================================================ -->
+
+
+ <script type="application/ld+json"> 
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://phoenixwaterfilters.com/"
+  }]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Phoenix Water Filters",
+  "url": "https://phoenixwaterfilters.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://phoenixwaterfilters.com/search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+{% if template.name == 'index' 
+  or template.name == 'product' 
+  or template.name == 'article' %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Does Phoenix Water Filters remove PFAS from drinking water?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, Phoenix Water Filters are designed to help reduce PFAS and other harmful contaminants, improving the safety and quality of drinking water."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can Phoenix Water Filters remove lead and heavy metals?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Phoenix Water Filters help reduce lead, heavy metals, and other impurities, making water safer for everyday consumption."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How often should I replace Phoenix Water Filters?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Filter replacement depends on usage and water quality. In most cases, Phoenix Water Filters should be replaced every 6 to 12 months for optimal performance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why choose Phoenix Water Filters for home water filtration?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Phoenix Water Filters use advanced filtration technology and durable design to reduce contaminants such as PFAS, lead, and chlorine, helping provide cleaner and safer drinking water."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are Phoenix Water Filters suitable for areas with poor water quality?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, Phoenix Water Filters are designed to address various water quality issues, including chemical contaminants, heavy metals, and pollutants found in different regions."
+      }
+    }
+  ]
+}
+</script>
+
+{% endif %}
+  <!-- ss schema start================================================ -->
+
+
+
+
+  <!-- SEO brand name reapet start================================================ -->
+<title>{{ page_title }}{% if current_page != 1 %} - Page {{ current_page }}{% endif %}</title>
+<!-- SEO brand name reapet end================================================ -->
+
+
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "mwzb1zpl44");
+    </script>
+    <!-- Google Tag Manager -->
+    <script>
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-5R5ZN7D');
+    </script>
+
+ 
+
+    {% comment %} Do not remove BH unless requested - or ask Chelsea :) {% endcomment %}
+    <script
+      type="text/javascript"
+      src="https://www.bugherd.com/sidebarv2.js?apikey=fxhqegtyt2z9fnbx69l6tw"
+      async="true"
+    ></script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+
+ {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    {% if template != 'collection' %}
+      <link rel="canonical" href="{{ canonical_url }}">
+    {% else %}
+      <link rel="canonical" href="{{ shop.url }}{{ collection.url }}">
+    {% endif %}
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="{{ settings.favicon_32 | image_url: width: 32 }}"
+    >
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="{{ settings.favicon_16 | image_url: width: 16 }}"
+    >
+
+      {% if settings.favicon != blank %}
+  <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32 }}">
+{% endif %}
+
+
+    {{ content_for_header }}
+
+    {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+
+    {% if template contains 'customers' and shop.customer_accounts_enabled %}
+      {{ 'customer_area.js' | shopify_asset_url | script_tag }}
+    {% endif %}
+
+    {{ 'option_selection.js' | shopify_asset_url | script_tag }}
+
+    {{ 'main.css' | asset_url | stylesheet_tag }}
+    {{ 'style.css' | asset_url | stylesheet_tag }}
+    <script>
+      <!-- Changes By K -->
+
+
+      	window.enable_slide_cart = {{ settings.enable_slide_cart }};
+      	window.enable_ajax_cart = {{ settings.enable_ajax_cart }};
+      	window.show_exit_intent = {{ settings.show_exit_popup }};
+      	window.show_entry_popup = {{ settings.show_entry_popup }};
+      	window.enable_minmax_buys = {{ settings.enable_minmax_buys }};
+         window.min_buy_qty = {{ settings.min_buy_qty }};
+         window.max_buy_qty = {{ settings.max_buy_qty }}
+      	// for quickview and product page variant selector
+        		window.money_format = "{{ shop.money_format }}";
+        		window.variant_colours = "{{ settings.variant_colours }}".split(',');
+          window.inventory_text = {
+          	add_to_cart : '{{ 'products.product.add_to_cart' | t }}',
+          	sold_out : '{{ 'products.product.sold_out' | t }}',
+          	pre_order: '{{ 'products.product.pre_order' | t }}',
+          	in_stock_long: '{{ 'products.product.inventory_in_stock' | t }}',
+          	low_stock_long: '{{ 'products.product.inventory_low_stock' | t }}',
+          	sold_out_long: '{{ 'products.product.inventory_out_of_stock' | t }}'
+          };
+      	window.variantStock = [];
+    </script>
+
+    {% comment %} Remove Header And body padding on Article templates {% endcomment %}
+    {% unless template.suffix == 'article' %}
+      {% if settings.body_padding_desktop and settings.body_padding_mobile %}
+        <style>
+          body {
+            padding-top: {{ settings.body_padding_mobile }}px;
+          }
+
+          @media screen and (min-width: 992px) {
+            body {
+              padding-top:110px;
+            }
+          }
+        </style>
+      {% endif %}
+    {% else %}
+      <style>
+        body {
+          padding-top: 0;
+        }
+
+        @media screen and (min-width: 992px) {
+          body {
+            padding-top: 0;
+          }
+        }
+      </style>
+    {% endunless %}
+
+    <meta name="google-site-verification" content="_iHRKwOBqms8oovm_iHX6NI6y0Y6F4kLqakMqHk12Co">
+
+    <script defer type="text/javascript" src="//script.crazyegg.com/pages/scripts/0120/1668.js" async="async"></script>
+
+<script>
+  window.developer = atob("S2FsaWVzd2FyYW4gLSBXZWJzaXRlIERldmVsb3Blcg==");
+</script>
+    {% comment %} /////////////////////////////////////////////////////breadcrumbs schema start////////////////////////////////////////////////////// {% endcomment %}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "{{ shop.name | escape }}",
+        "url": "{{ shop.url }}",
+        "logo": "{{ shop.logo | img_url: '1000x' | prepend: 'https:' }}",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "{{ shop.phone | default: '1 (800) 917-0455' }}",
+          "contactType": "customer service",
+          "areaServed": "US",
+          "availableLanguage": "en"
+        }
+      }
+    </script>
+    {% if template == 'collection' %}
+      <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "{{ shop.url }}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "{{ collection.title | escape }}",
+              "item": "{{ shop.url }}{{ collection.url }}"
+            }
+          ]
+        }
+      </script>
+    {% endif %}
+
+{% if template.name == 'blog' %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "{{ shop.url }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "{{ blog.title | escape }}",
+        "item": "{{ shop.url }}{{ blog.url }}"
+      }
+    ]
+  }
+  </script>
+{% endif %}
+
+{% if template.name == 'article' %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "{{ shop.url }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "{{ blog.title | escape }}",
+        "item": "{{ shop.url }}{{ blog.url }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "{{ article.title | escape }}",
+        "item": "{{ shop.url }}{{ article.url }}"
+      }
+    ]
+  }
+  </script>
+{% endif %}
+
+    {% comment %} /////////////////////////////////////////////////////breadcrumbs schema end////////////////////////////////////////////////////// {% endcomment %}
+  
+{{ 'render.css' | asset_url | stylesheet_tag }}
+
+
+
+<style>
+  /* Timesact app ka empty H3 hide karo */
+  h3:empty {
+    display: none !important;
+  }
+</style>
+  </head>
+  <body
+    class="template-{{ template.name }}-{{ template.suffix }}"
+  >
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-5R5ZN7D"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+      ></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    {% unless template.suffix == 'article' %}
+      <header class="site-header">
+        {% sections 'header-group' %}
+      </header>
+    {% endunless %}
+
+    <main role="main">
+      {{ content_for_layout }}
+    </main>
+
+    {% unless template.suffix == 'article' %}
+      {% sections 'footer-group' %}
+      {% if template == 'index' and settings.show_entry_popup %}
+        {% render 'entry-popup' %}
+      {% endif %}
+    {% else %}
+      {% sections 'article-footer-group' %}
+    {% endunless %}
+
+    {% unless template.suffix == 'article' %}
+      {% if settings.show_exit_popup %}
+        {% render 'exit-popup' %}
+      {% endif %}
+
+      {% if settings.enable_slide_cart %}
+        {% render 'cart-slideout' %}
+      {% endif %}
+
+      {% render 'toast' %}
+
+      {% comment %} {% render 'quickview' %} {% endcomment %}
+      {% render 'afterpay-script' %}
+    {% endunless %}
+    <form class="kk-global d-none"></form>
+
+    {{ 'main.js' | asset_url | script_tag }}
+
+    <script defer src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
+
+    <script>
+    window.addEventListener('load', function() {
+    var _learnq = window._learnq || [];
+    function addedToCart() {
+      fetch(`${window.location.origin}/cart.js`)
+      .then(res => res.clone().json().then(data => {
+    var cart = {
+      total_price: data.total_price/100,
+      $value: data.total_price/100,
+      total_discount: data.total_discount,
+      original_total_price: data.original_total_price/100,
+      items: data.items
+    }
+    if (typeof item !== 'undefined' && item !== null) {
+      cart = Object.assign(cart, item)
+    }
+    if (klAjax) {
+        _learnq.push(['track', 'Added to Cart', cart]);
+        klAjax = false;
+      }
+      }))
+    };
+    (function (ns, fetch) {
+      ns.fetch = function() {
+    const response = fetch.apply(this, arguments);
+    response.then(res => {
+      if (`${window.location.origin}/cart/add.js`
+      	.includes(res.url)) {
+        	addedToCart()
+      }
+    });
+    return response
+      }
+    }(window, window.fetch));
+    var klAjax = true;
+    var atcButtons = document.querySelectorAll("form[action*='/cart/add'] button[type='submit']");
+    for (var i = 0; i < atcButtons.length; i++) {
+    atcButtons[i].addEventListener("click", function() {
+      if (klAjax) {
+        _learnq.push(['track', 'Added to Cart', item]);
+        klAjax = false;
+      }
+    })
+    }
+    });
+    </script>
+    {% include 'klaviyo-back-in-stock' %}
+
+    {% style %} #admin-bar-iframe {visibility: hidden;} {% endstyle %}
+
+     <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const spans = document.querySelectorAll(".essential_annoucement_bar_running_line_title_2e6862de-d0c0-4ae0-8f85-4edc49c3b78c span");
+
+        spans.forEach(span => {
+          let html = span.innerHTML;
+
+          // 60 Years of Pure Excellence
+          if (html.includes("60 Years of Pure Excellence")) {
+            html = html.replace(
+              /60 Years of Pure Excellence/,
+              '<span class="custom-excellence-text">60 Years of Pure Excellence</span>'
+            );
+          }
+
+          // Free Shipping on Orders $99+
+          if (html.includes("Free Shipping on Orders $99+")) {
+            html = html.replace(
+              /Free Shipping on Orders \$99\+/,
+              '<span class="custom-shipping-text">Free Shipping on Orders $99+</span>'
+            );
+          }
+
+          // NSF Certified
+          if (html.includes("NSF Certified")) {
+            html = html.replace(
+              /NSF Certified/,
+              '<span class="custom-nsf-text">NSF Certified</span>'
+            );
+          }
+
+              // NSF Certified
+          if (html.includes("PRE BLACK FRIDAY SALE")) {
+            html = html.replace(
+              /NSF Certified/,
+              '<span class="custom-pre-text">PRE BLACK FRIDAY SALE</span>'
+            );
+          }
+          // Questions? Call Us at...
+          if (html.includes("Questions? Call Us at")) {
+            html = html.replace(
+              /Questions\? Call Us at 1 \(800\) 917-0455/,
+              '<span class="custom-call-text">Questions? Call Us at 1 (800) 917-0455</span>'
+            );
+          }
+
+          span.innerHTML = html;
+        });
+      });
+
+
+      document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.disclosure__button').forEach(button => {
+    button.addEventListener('click', function() {
+      const list = button.nextElementSibling;
+      const expanded = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', !expanded);
+      list.hidden = expanded;
+    });
+  });
+});
+    </script> 
+    {{ 'render.js' | asset_url | script_tag }}
+
+
+
+
+     <script>
+document.addEventListener("DOMContentLoaded", () => {
+  function toggleSticky() {
+    const sticky = document.querySelector(".sticky-add-to-cart");
+    if (!sticky) return;
+
+    if (document.body.classList.contains("cart-open")) {
+      sticky.style.display = "none";
+    } else {
+      sticky.style.display = "block";
+    }
+  }
+
+  // Run once
+  toggleSticky();
+
+  // Detect class change efficiently
+  const observer = new MutationObserver(toggleSticky);
+  observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+});
+</script>
+    
+  </body>
+</html>

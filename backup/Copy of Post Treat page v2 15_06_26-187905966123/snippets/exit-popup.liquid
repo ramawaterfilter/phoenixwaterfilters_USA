@@ -1,0 +1,52 @@
+<div class="modal fade" id="exitPopup" role="dialog" aria-labelledby="exitPopup" aria-hidden="true">
+    <div tabindex="-1" data-micromodal-close>
+        <div role="dialog" aria-modal="true" aria-labelledby="exitPopup-title" class="modal__dialog">
+            <div id="exitPopup-content" class="modal__inner">
+            	<div class="modal__inner__image">
+        			{{ settings.exit_popup_image | image_url: width: 1500 | image_tag: loading: "lazy" }}
+				</div>
+				
+        		<div class="modal__inner__text">
+	                <span data-micromodal-close>
+	                    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+	                        <path d="M16.7071 1.70711C17.0976 1.31658 17.0976 0.683417 16.7071 0.292893C16.3166 -0.0976311 15.6834 -0.0976311 15.2929 0.292893L16.7071 1.70711ZM0.292893 15.2929C-0.0976311 15.6834 -0.0976311 16.3166 0.292893 16.7071C0.683417 17.0976 1.31658 17.0976 1.70711 16.7071L0.292893 15.2929ZM1.70711 0.292893C1.31658 -0.0976311 0.683417 -0.0976311 0.292893 0.292893C-0.0976311 0.683417 -0.0976311 1.31658 0.292893 1.70711L1.70711 0.292893ZM15.2929 16.7071C15.6834 17.0976 16.3166 17.0976 16.7071 16.7071C17.0976 16.3166 17.0976 15.6834 16.7071 15.2929L15.2929 16.7071ZM15.2929 0.292893L0.292893 15.2929L1.70711 16.7071L16.7071 1.70711L15.2929 0.292893ZM0.292893 1.70711L15.2929 16.7071L16.7071 15.2929L1.70711 0.292893L0.292893 1.70711Z" fill="black"/>
+	                    </svg>
+	                </span>
+
+					<p class="eyebrow mx-auto">
+						{{ settings.exit_popup_eyebrow }}
+					</p>
+
+					<h2 class="modal__title" id="exitPopup-title">
+						{{ settings.exit_popup_heading }}
+					</h2>
+
+					{{ settings.exit_popup_content }}
+
+					{% form 'customer', class:'kk-validation' %}
+						<div class="form-errors">
+							{{ form.errors | default_errors }}
+						</div>
+						
+						<div class="form-content contact-form">
+							<div class="form-group">
+								<input placeholder="Enter your name..." type="text" id="entryFormName" name="contact[name]" required />
+							</div>
+	                        <div class="form-group">
+	                            <img class="icon" src="{{ 'icon-email.svg' | asset_url }}" loading="lazy"/>
+								<input placeholder="Enter your email..." type="email" id="entryFormEmail" name="contact[email]" required />
+							</div>
+	                        <div class="form-group mb-4">
+	                            <input type="submit" value="GET MY 10% OFF" class="btn btn-secondary "/>
+								<small data-micromodal-close>{{ settings.exit_popup_nothanks }}</small>
+							</div>
+	                    </div>
+					{% endform %}
+
+					<small>{{ settings.exit_popup_disclaimer }}</small>
+					<small class="fineprint">{{ settings.exit_popup_fineprint }}</small>
+				</div>
+			</div>
+		</div>
+    </div>
+</div>

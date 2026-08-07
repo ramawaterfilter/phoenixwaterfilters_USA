@@ -1,0 +1,15 @@
+{% doc %}
+Renders a configurable product hero tag.
+@param {block} block - Product tag block.
+@example
+{% render 'product-hero-product-tag', block: block %}
+{% enddoc %}
+
+{% if block.settings.text != blank %}
+  <div
+    class="product-hero-tag"
+    style="--tag-background: {{ block.settings.background_color }}; --tag-color: {{ block.settings.text_color }};"
+  >
+    {{ block.settings.text | escape }}
+  </div>
+{% endif %}

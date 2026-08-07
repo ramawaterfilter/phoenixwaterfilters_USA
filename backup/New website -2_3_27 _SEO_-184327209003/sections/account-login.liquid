@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="row justify-content-center text-center">
+    <div class="col-12 col-lg-7">
+      <p>Please enter your email and password to sign in:</p>
+
+      {% form 'customer_login' %}
+
+        {{ form.errors | default_errors }}
+
+        <div class="form-group">
+          <input
+            type="email"
+            name="customer[email]"
+            id="customer_email"
+            placeholder="{{ 'customer.login_page.email' | t }}"
+            required>
+        </div>
+
+        <div class="form-group">
+          <input
+            type="password"
+            name="customer[password]"
+            id="customer_password"
+            placeholder="{{ 'customer.login_page.password' | t }}"
+            required>
+        </div>
+
+        <div class="form-group">
+          <button class="btn btn-primary mb-5" type="submit">
+            {{ 'customer.login_page.sign_in' | t }}
+          </button>
+        </div>
+
+        <div class="actions">
+          <a href="#" data-micromodal-trigger="resetPasswordModal">
+            {{ 'customer.login_page.forgot_password' | t }}
+          </a>
+          <a class="new-account" href="{{ routes.account_register_url }}">
+            {{ 'customer.login_page.sign_up_here' | t }}
+          </a>
+        </div>
+
+      {% endform %}
+    </div>
+  </div>
+</div>
+
+{% render 'reset-password' %}
+
+
+{% schema %}
+  {
+    "name": "Login",
+    "tag": "section",
+    "class": "section-login",
+    "enabled_on": {
+      "templates": ["customers/login"]
+    }
+  }
+{% endschema %}

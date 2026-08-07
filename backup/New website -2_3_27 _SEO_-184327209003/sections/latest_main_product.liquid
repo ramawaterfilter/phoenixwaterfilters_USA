@@ -1,0 +1,821 @@
+
+{% comment %}
+  Main Product
+{% endcomment %}
+
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-11 col-lg-6">
+      <div class="position-relative {% if product.images.size <= 0 %}h-100{% endif %}">
+        {% render 'product-badge'
+          , product: product %}
+
+        {% if product.images.size > 1 %}
+
+          <div
+            class="swiper-container swiper"
+            data-slidestoshow="1"
+            id="product-slider">
+            <div class="swiper-wrapper">
+              {% for media in product.media %}
+                {% assign thisVariantID = "" %}
+
+                {% for variant in product.variants %}
+                  {% if variant.featured_image == media.src %}
+                    {% assign thisVariantID = variant.id %}
+                  {% endif %}
+                {% endfor %}
+
+                {% if media.media_type == "image" %}
+                  <div
+                    class="swiper-slide"
+                    data-variant-id="{{ thisVariantID }}"
+                    data-slide-index="{{ forloop.index }}">
+                    <a
+                      data-fancybox="gallery"
+                      href="{{ media | image_url: width: 2560 }}"
+                      class="product-image d-block">
+                      {{ media | image_url: width: 1200 | image_tag }}
+                    </a>
+                  </div>
+                {% elsif media.media_type == "external_video" %}
+                  <div
+                    class="swiper-slide"
+                    data-variant-id="{{ thisVariantID }}"
+                    data-slide-index="{{ forloop.index }}">
+                    <a
+                      data-fancybox="gallery"
+                      href="{{ media | external_video_url: autoplay: 'true' }}"
+                      class="product-image product-image--video d-block">
+                      {{ media.preview_image | image_url: width: 1200 | image_tag }}
+                    </a>
+                  </div>
+                  {% elsif media.media_type == "video" %}
+                    <div class="swiper-slide">
+                      <a
+                        data-fancybox="gallery" aria-label="Play product video"
+                        href="{{ media.sources[1].url }}"
+                        class="product-image--video">
+                        {{ media.preview_image | image_url: width: 1200 | image_tag }}
+                      </a>
+                    </div>
+                  {% endif %}                  
+              {% endfor %}                
+            </div>
+          </div>
+          <div class="swiper-container swiper control {% if product.media.size == 3 %} control-three {% endif %} {% if product.media.size == 5 %}control-five {% else %}product-thumbnails{% endif %}" id="product-slider-nav">
+            <div class="swiper-wrapper {% if product.media.size == 3 or product.media.size == 5 %}wide{% endif %}">
+              {% for media in product.media %}
+                {% if media.media_type == "external_video" %}
+                  <div class="swiper-slide">
+                    {{ media.preview_image | image_url: width: 600 | image_tag }}
+                  </div>
+                {% elsif media.media_type == "image" %}
+                  <div class="swiper-slide">
+                    {{ media | image_url: width: 1200 | image_tag }}
+                  </div>
+                {% elsif media.media_type == "video" %}
+                  <div class="swiper-slide">
+                    {{ media.preview_image | image_url: width: 600 | image_tag }}
+                  </div>
+                {% endif %}
+              {% endfor %}
+              
+            </div>
+          </div>
+          <div class="swiper-nav">
+            <div class="swiper-button-prev swiper-prev"></div>
+            <div class="swiper-button-next swiper-next"></div>
+          </div>
+
+        {% elsif product.featured_image %}
+          <a
+            data-fancybox="gallery"
+            href="{{ product.featured_image | image_url: width: 2560 }}"
+            class="product-image d-block">
+            {{ product.featured_image | image_url: width: 1200 | image_tag }}
+          </a>
+        {% else %}
+
+          <div class="placeholder">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+
+        {% endif %}
+
+      </div>
+    </div>
+    <div class="col-11 col-lg-6 mt-3 mt-lg-0">
+
+      {% render 'product-hero-countdown'
+        , section: section %}
+
+      <h1>{{ product.title }}</h1>
+      <div class="product-rating">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when '@app' %}
+              {% render block %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+
+      {% comment %} {% render 'best-for-tag' %} {% endcomment %}
+
+      
+ 
+
+      {% if product.description != blank or product.metafields.custom.product_usps.value.size > 0 %}
+       <div class="product-description">
+          {{ product.description }}
+
+          {% if product.metafields.custom.product_usps.value.size > 0 %}
+            <ul class="product-description__usps">
+              {% for usp in product.metafields.custom.product_usps.value %}
+                <li>{{ usp }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div> 
+      {% endif %}
+
+      {% if settings.enable_minmax_buys %}
+        {% assign min_buy = settings.min_buy_qty %}
+        {% assign max_buy = settings.max_buy_qty %}
+      {% endif %}
+
+      {% if min_buy == nil %}
+        {% assign min_buy = 1 %}
+      {% endif %}
+
+      {% if product.available and product.variants.size > 1 %}
+
+                        <!-- Display Controllers -->
+            
+           <div id="product-variants" class="d-flex flex-column justify-content-start align-items-start">  
+
+            <!-- Loop through each option and display its name and values -->
+
+            {% for option in product.options_with_values %}
+                <div class="step step-{{ option.name | downcase | replace: ' ', '-' }} mb-3" style="justify-content: space-between; width: 100%;">
+                    <div style="display: flex; align-items: center; gap: 1rem;"> 
+                      <div class="step-number">{{ forloop.index }}</div>
+                      <div class="step-title">Select {{ option.name }}
+                        - 
+                        {% for value in option.values %}
+                          <span class="{{ value }}" style="display:{% if forloop.first %}unset;{% else %} none;{% endif %}">
+                            {% if option.name == 'Size' %}
+                              {% capture size_for_key %}size_for_{{ forloop.index }}{% endcapture %}
+                              {{ settings[size_for_key] }}
+                            {% else %}
+                              {{ value }}
+                            {% endif %}
+                          </span>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    {% if option.name contains 'Size' %}
+                  <!--    <span class="Size-Guide">Size Guide</span> -->
+                    {% endif %}
+                </div>
+
+                <div id="{{ option.name | downcase | replace: ' ', '-' }}-options" class="info-field-container d-flex flex-row radio-selectors mb-3">
+                   
+                  {% for value in option.values %}
+
+
+                    {% assign variant_match = false %}
+                    {% for variant in product.variants %}
+                      {% for option_index in (0..product.options.size) %}
+                        {% assign variant_option_name = product.options[option_index] %}
+                        {% assign variant_option_value = variant.options[option_index] %}
+                        {% if variant_option_name == option.name and variant_option_value == value %}
+                          {% assign variant_match = variant %}
+                        {% endif %}
+                      {% endfor %}
+                    {% endfor %}
+
+                    
+                    <div class="radio-option d-flex">
+                   
+                    <input type="radio" data-variant-id="{{ variant_match.id }}" id="{{ option.name | downcase | append: '-' | append: value }}" name="{{ option.name | downcase }}" value="{{ value }}"  {% if forloop.first %}checked{% endif %} aria-labelledby="label">
+                     
+                  {% if option.name == 'Filter Type' %}
+                      {% capture filter_image_key %}filter_image_{{ forloop.index }}{% endcapture %}
+              
+                      <div class="details product-image">
+                        <img src="{{ settings[filter_image_key]  | image_url: width: 180 }}" alt="size {{ forloop.index }}" class="size-icon" />
+                      </div>
+                    
+
+                  {% elsif option.name == 'Size' %}
+                      {% capture size_icon_key %}size_icon_{{ forloop.index }}{% endcapture %}
+                       {% capture size_content_key %}size_content_{{ forloop.index }}{% endcapture %}
+                     {% capture size_for_key %}size_for_{{ forloop.index }}{% endcapture %}
+     
+                      <div class="details h-100">
+                        <div class="product-icon">
+                          <img src="{{ settings[size_icon_key]  | image_url: width: 40 }}" alt="size {{ forloop.index }}" class="size-icon" />
+                        </div>
+                      <p><strong>{{ settings[size_for_key] }}</strong></p> 
+                      {{ settings[size_content_key] }}
+
+                      </div>
+
+                    {% else option.name == 'Stand' %}
+                     {% capture stand_key %}stand_{{ forloop.index }}{% endcapture %}
+              
+                      <div class="details product-image stand">
+                        <img src="{{ settings[stand_key]  | image_url: width: 180 }}" alt="size {{ forloop.index }}" class="size-icon" />
+                      </div>
+
+
+                      
+                  {% endif %}
+              </div>
+            {% endfor %}
+            </div>
+
+         
+          {% endfor %}
+          </div> 
+             
+    
+    {% endif %}
+
+      <form
+        action="/cart/add"
+        method="post"
+        enctype="multipart/form-data"
+        id="add-to-cart"
+        data-min="{{ min_buy }}"
+        data-max="{{ max_buy }}">
+
+
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when '@app' %}
+              {% render block %}
+          {% endcase %}
+        {% endfor %}
+
+  
+
+       
+        <input
+          type="hidden"
+          name="handle"
+          value="{{ product.handle }}">
+
+
+{% comment %} Selling Plans  {% endcomment %}
+
+ <div id="variants" class="info-field-container d-flex flex-column justify-content-start align-items-center">          
+        <div class="selector-wrap sr-only">
+                         <select  id="product-selectors" name="id" data-productid="{{ product.id }}" data-label="{% if product.options.size == 1 %}{{ product.options[0] }}{% endif %}" >
+                            {% for variant in product.variants %}
+                              {% if variant.available %}
+                               
+                                <option 
+                                  {% if variant == current_variant %} selected="selected" {% endif %} 
+                                  value="{{ variant.id }}" 
+                                  data-price="{{ variant.price | money_with_currency }}" 
+                                  name="id" 
+                                  id="variant_{{ variant.id }}"
+                                  
+                                
+                                  >
+                                  {{ variant.title }}
+                                </option>
+                              {% else %}
+                                <option disabled="disabled">{{ variant.title }} - {{ 'products.product.inventory_out_of_stock' | t }}</option>
+                              {% endif %}
+                            {% endfor %}
+                          </select>
+            <style>
+                #product-selectors{
+                    display: block !important;
+                }
+            </style>
+           </div>
+            </div>
+   
+ 
+     
+
+      
+
+        <div class="offers-container" style="display: none;">
+            <div class="offers-item">Get additional $10 OFF on 1.5 Gallon Water Filter System! Use Code "US10" at the checkout.</div>
+        </div>
+        
+        <div class="priceline my-5">
+            <span data-price class="product-dyn-price m-0">
+            {{ product.variants.first.price | money }}
+            </span>
+            <span data-compare>
+            <s>
+                {% if product.variants.first.compare_at_price %}
+                {{ product.variants.first.compare_at_price | money }} {{ shop.currency }}
+                {% endif %}
+            </s>
+            </span>
+            {% comment %}  {% endcomment %}    
+            <div class="sale-badge">WELLNESS SALE</div> 
+        </div>
+
+
+            {% if product.available %}
+              <div class="product-quantity mb-5" style="display: none;">
+                <div class="qty-container">
+                  <label for="Quantity">{{ 'products.product.quantity.label' | t }} &nbsp; </label>
+                  <span class="qty-btn decrease js-qty-update">-</span>
+                  <input type="number" id="Quantity" name="quantity" data-qtt-id value="{{ min_buy }}" min="{{ min_buy }}" max="{{ max_buy }}">
+                  <span class="qty-btn increase js-qty-update">+</span>
+                  
+                  
+                   {% comment %}
+                  {% if current_variant.inventory_quantity >= 5 %}
+                    <span class="stock-indicator instock">
+                      {{ 'products.product.inventory_in_stock' | t }}
+                    </span>
+                   {% endif %}
+                      
+                  {% elsif current_variant.inventory_quantity > 0 %}
+                    <span class="stock-indicator lowstock">
+                      {{ 'products.product.inventory_low_stock' | t }}
+                    </span>
+                  {% elsif current_variant.inventory_management != null %}
+                    <span class="stock-indicator outofstock">
+                      {{ 'products.product.inventory_out_of_stock' | t }}
+                    </span>
+                  {% endif %}
+           {% endcomment %}
+                  
+                </div>
+               
+    {% comment %}
+                <p style="font-size:18px;text-align: center;margin-bottom: -11px;">Seal the deal! Use coupon <b><i>XMAS20</i></b> to get an extra 20% Off. </p>{% endcomment %}
+ 
+                  
+              </div>
+              <p class="js-availability-notice product-availability disabled {% if product.variants.size > 1 %} invalid {% endif %}">
+                  There are only <strong class="js-availablilty">{{ current_variant.inventory_quantity }}</strong> {{ product.title }}
+                  {% if product.variants.size > 1 %}
+                    <span class="js-varient">({{ product.variants.first.title.title }})</span>
+                  {% endif %}
+                  available in stock.
+                </p>
+                 
+            {% else %}
+              <div class="select-product d-flex flex-row align-items-center mt-5 "> 
+                <input name="id" data-productid="{{ product.id }}" value="{{ product.variants.first.id }}" type="hidden" />
+                <button class="btn btn-large btn-primary btn-product" name="add" disabled type="submit">
+                  {{ 'products.product.sold_out' | t }}
+                </button>
+            {% endif %}
+
+ {% comment %}
+{% capture engrave_section %}
+    <style>
+        .engrave-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 20px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%;
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            z-index: 1000;
+        }
+
+        .engraved-text {
+            position: absolute;
+            top: 67%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 0.5);
+            text-shadow: 
+                -1px -1px 1px rgba(255, 255, 255, 0.8), 
+                1px 1px 1px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+        }
+    </style>
+
+    <div class="engrave-box" id="engrave-trigger">
+        <h3>Add Engraving</h3>
+        <p>Engrave a mix of emoji, text, and numbers to make it uniquely yours.</p>
+    </div>
+
+    <div class="popup-overlay" id="popup-overlay"></div>
+    <div class="popup" id="popup">
+        <span class="close-btn" id="close-btn">&times;</span>
+        <div class="container">
+            <div class="product">
+              <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/kitchen03_in-situ01.png" alt="Product" width="1200" height="100%">
+
+
+                <div class="engraved-text" id="preview-text">Enter Name</div>
+            </div>
+            <p>Your Name will be Displayed Here</p>
+            <input type="text" id="name-input" placeholder="Enter your name">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("engrave-trigger").addEventListener("click", function() {
+            document.getElementById("popup").style.display = "block";
+            document.getElementById("popup-overlay").style.display = "block";
+        });
+
+        document.getElementById("close-btn").addEventListener("click", function() {
+            document.getElementById("popup").style.display = "none";
+            document.getElementById("popup-overlay").style.display = "none";
+        });
+
+        document.getElementById("popup-overlay").addEventListener("click", function() {
+            document.getElementById("popup").style.display = "none";
+            document.getElementById("popup-overlay").style.display = "none";
+        });
+
+        document.getElementById("name-input").addEventListener("input", function() {
+            let text = this.value || "Enter Name";
+            document.getElementById("preview-text").textContent = text;
+        });
+    </script>
+{% endcapture %}
+
+{{ engrave_section }}
+ {% endcomment %}
+
+
+
+
+
+                
+
+        <div id="afterpay-element"></div>
+
+        {% if product.available %}
+            
+            {% if current_variant.inventory_quantity > 0 or current_variant.inventory_management == null %}
+              
+              <button
+                class="btn btn-large btn-secondary btn-product d-flex flex-row justify-content-center align-items-center carty"
+                type="submit"
+                name="add"
+                id="product-add-to-cart">
+                {{ 'products.product.add_to_cart' | t }} &nbsp;
+              </button>
+
+            {% comment %} Continue selling when out of stock is checked {% endcomment %}
+
+            
+
+            {% elsif current_variant.inventory_policy == "continue" %}
+            
+              <button
+                class="btn btn-large btn-primary  btn-product"
+                type="submit"
+                name="add"
+                id="product-add-to-cart">
+                {{ 'products.product.pre_order' | t }}
+              </button>
+            {% endif %}
+
+
+
+
+
+          
+
+              <div class="trust-badge">
+             
+    
+         </div>  
+          <div class="payment-icons d-flex justify-content-center align-items-center gap-3">
+           <img src="{{ 'visa.png' | asset_url }}" alt="visa" height="20.42" width="45.15" />
+            <img src="{{ 'mastercard.png' | asset_url }}" height="20.7" width="32.45" alt="mastercard" />
+            <img src="{{ 'paypal.png' | asset_url }}"  alt="paypal"   height="25.41" width="20.99" />
+            <img src="{{ 'amex.png' | asset_url }}" height="20.11" width="54.44"alt="amex" />
+          </div>
+          <div class="below-atc-icons">
+            <div>
+              <img src="{{ 'icon-truck.png' | asset_url }}" alt="Truck Icon">
+              <span>Free Shipping in the US Mainland</span>
+            </div>
+            <div>
+              <img src="{{ 'icon-tag.png' | asset_url }}" alt="Tag Icon">
+              <span>100 Day Trial</span>
+            </div>
+            <div>
+              <img src="{{ 'icon-award.png' | asset_url }}" alt="Award Icon">
+              <span>10 Year Warranty</span>
+            </div>
+            <div>
+              <img src="{{ 'icon-headset.png' | asset_url }}" alt="Headset Icon">
+              <span>Customer Support</span>
+            </div>
+             <div>
+              <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/product_warehouse.png" alt="Warehouse">
+              <span>Local Warehouse </span>
+            </div>
+            
+          </div>
+
+
+
+
+          
+          
+       
+
+
+
+
+          
+        {% else %}
+
+          <input
+            name="id"
+            data-productid="{{ product.id }}"
+            value="{{ product.variants.first.id }}"
+            type="hidden" />
+
+          <button
+            class="btn btn-primary  btn-product"
+            name="add"
+            disabled
+            type="submit">
+            {{ 'products.product.sold_out' | t }}
+          </button>
+
+        {% endif %}
+              
+      </form>
+              
+    </div>
+  </div>
+
+
+                    
+                    
+</div>
+ 
+ 
+ 
+
+{% render 'sticky-add-to-cart' %}
+
+ 
+{% unless product == empty %}
+	<script>
+	    window.product = {{ product | json }} || {};
+
+		// If product exists, add this metafield to to the product json.
+		{% if product.metafields.custom.product_badge_text.value != blank %}
+			if(typeof product !== "undefined"){
+				product['badge'] = "{{ product.metafields.custom.product_badge_text.value }}";
+			}
+		{% endif %}
+
+		let metaInfo = product.handle + '?view=metafields'
+
+		// Get the metaInfo and add it to the product json.
+		fetch(metaInfo)
+			.then(response => response.json())
+			.then(pageMeta => {
+				// Combine all the information to 1 object
+				window.product = Object.assign(product, pageMeta);
+
+				if( document.readyState !== 'loading' ) {
+					initProductScript(window.product, 'product-selectors', document);
+				} else {
+					document.addEventListener('DOMContentLoaded', function () {
+						initProductScript(window.product, 'product-selectors', document);
+					});
+				}
+
+			})
+			.catch(error => {
+				console.error('Error fetching page meta:', error);
+			});
+
+
+  ///  Variant Controller
+
+  const selectElement = document.querySelector("#product-selectors");
+  
+  document.addEventListener('DOMContentLoaded', function() {
+      
+  // General function to set up synchronization between radio button groups
+
+    function setupRadioSync(primarySelector, secondarySelector) {
+      const primaryRadioButtons = document.querySelectorAll(primarySelector);
+
+      // Function to update secondary radio buttons and dispatch a change event
+      const updateSecondaryRadios = (selectedValue) => {
+        const secondaryRadioButtons = document.querySelectorAll(secondarySelector);
+        let foundMatch = false;
+
+        secondaryRadioButtons.forEach(radio => {
+          if (radio.value === selectedValue) {
+            if (!radio.checked) {
+              radio.checked = true;
+              foundMatch = true;
+              // Dispatch the change event
+              radio.dispatchEvent(new Event('change', { 'bubbles': true }));
+              selectElement.dispatchEvent(new Event('change', { 'bubbles': true }));
+            }
+          } else {
+            if (radio.checked) {
+              radio.checked = false;
+              // Dispatch the change event for unchecked state as well if needed
+              radio.dispatchEvent(new Event('change', { 'bubbles': true }));
+              selectElement.dispatchEvent(new Event('change', { 'bubbles': true }));
+            }
+          }
+        });
+        if (!foundMatch) {
+          console.log('No match found in secondary radios for value:', selectedValue);
+        }
+      };
+
+      // Listen for changes on primary radio buttons
+
+      primaryRadioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+          if (radio.checked) {
+            updateSecondaryRadios(radio.value);
+          }
+        });
+      });
+    }
+
+    // Setup synchronization for both filter and size options
+
+    setupRadioSync('#filter-type-options input[type="radio"]', '.radio-selector__option input[name="filter-type-radio"]');
+    setupRadioSync('#size-options input[type="radio"]', '.radio-selector__option input[name="size-radio"]');
+    setupRadioSync('#stand-options input[type="radio"]', '.radio-selector__option input[name="stand-radio"]');
+  });
+
+
+  ///  Toggle Variant Titles
+
+document.addEventListener('DOMContentLoaded', function() {
+    // General function to handle changes in option containers
+    function handleOptionChange(containerId, stepClass) {
+      const container = document.getElementById(containerId);
+      if (container) {
+        container.addEventListener('change', function(event) {
+          if (event.target.type === 'radio' && event.target.name.split(" ").join("-") === stepClass.toLowerCase()) {
+            // Get all span elements in the specified .step class container
+            const spans = document.querySelectorAll(`.step.step-${stepClass} span`);
+            
+            // Hide all spans first
+            spans.forEach(span => {
+              span.style.display = 'none';
+            });
+  
+            // Construct a selector that matches the class attribute exactly
+            const optionValue = event.target.value;
+            const escapedOptionValue = optionValue.replace(/([\.\s])/g, "\\$1");
+            const selector = `.step.step-${stepClass} span[class="${escapedOptionValue}"]`;
+  
+            // Find the span that matches the value of the selected radio button and show it
+            const selectedSpan = document.querySelector(selector);
+            if (selectedSpan) {
+              selectedSpan.style.display = 'unset';  
+            }
+          }
+        });
+      } else {
+        console.log(`Container #${containerId} not found.`);
+      }
+    }
+  
+    // Setup listeners for 'Size' and 'Filter'
+   handleOptionChange('stand-options', 'stand');
+    handleOptionChange('size-options', 'size');
+    handleOptionChange('filter-type-options', 'filter-type');
+  });
+ 
+	</script>
+
+{% endunless %}
+
+ 
+
+
+{% schema %}
+  {
+    "name": "Product Hero OG Alt",
+    "tag": "section",
+    "class": "section-producthero og",
+    "settings": [
+      {
+        "type": "text",
+        "id": "countdown_text",
+        "label": "Countdown Text",
+        "info": "Use the [month] shortcode to output the current month, and the [time] shortcode to output the countdown timer."
+      }, {
+        "type": "text",
+        "id": "countdown_time",
+        "label": "Countdown Time",
+        "info": "Date, time and timezone in the format: YYYY-MM-DDTHH:mm:ss+10:00. OR for an evergreen timer, enter the number of minutes followed by the word 'minutes'. e.g. 15 minutes"
+      }, {
+        "type": "product_list",
+        "id": "countdown_products",
+        "label": "Show Countdown On Products",
+        "info": "Only show the countdown on these products. Leave blank to show on all."
+      }
+    ],
+    "blocks": [
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product Hero Alt"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["product"]
+    }
+  }
+{% endschema %}
+
+
+   <style>
+     
+ .offers-container {
+            border: 2px dashed #153a5b;
+            background-color: #98e4ff73;
+            padding: 15px;
+            width: fit-content;
+        }
+        .offers-item {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            color: #153a5b;
+          
+        }
+        .offers-divider {
+            border-top: 1px dashed #000;
+            margin: 10px 0;
+        }
+
+     
+       .sale-badge {
+     color: #fff;
+            padding:9px;
+            background-color: #dc2626;
+            display: inline-block;
+            font-weight: bold;
+            position: relative;
+            top: 0%;
+            left: 0%;
+         font-size: 15px;
+   
+}
+@media (min-width: 1200px) {
+  .section-producthero .control .swiper-slide {
+    padding-bottom: 8%;
+  }
+}
+@media only screen and (max-width: 575px) 
+{
+  .sale-badge {
+  top: 0;
+   left:0;
+}
+
+  .offers-container {
+    margin-bottom: 10px;
+}
+}
+    </style>
+   
+             

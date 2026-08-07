@@ -1,0 +1,2111 @@
+
+ {% assign description = product.metafields.custom.product_description %}
+{% assign specifications = product.metafields.custom.specifications %}
+
+
+
+
+{% assign return_policy = product.metafields.custom.product_return_policy %}
+{% if return_policy == blank %}
+  {% assign return_policy = shop['refund_policy'].body %}
+{% endif %}
+
+
+{% assign row_styles = 'row justify-content-center mb-5' %}
+{% assign column_styles = 'col-11 col-md-12' %}
+{% if section.settings.accordion_styles == 'center' %}
+  {% assign row_styles = 'row justify-content-center mb-5 accordion-padding' %}
+  {% assign column_styles = 'col-11 col-md-8' %}
+{% endif %}
+
+<div class="{{ section.settings.custom_class }}" id="{{ section.settings.custom_id }}">
+  <div class="container">
+
+    <div class="{{ row_styles }}">
+
+
+
+
+      
+      {% if section.settings.content != blank or section.settings.heading != blank %}
+        <div class="col-12 text-center">
+          {% if section.settings.heading %}
+            <h2>{{ section.settings.heading }}</h2>
+          {% endif %}
+          {{ section.settings.content }}
+        </div>
+      {% endif %}
+
+      <div class="{{ column_styles }}">
+        <dl class="accordion">
+
+          {% comment %} {% if description != blank %}
+            <div class="mb-4 accordion-item">
+              <dt>
+                {{ 'products.product.description' | t }}</dt>
+              <dd>
+                <div class="accordion-item__inner">
+                  {{ description | metafield_tag }}
+                </div>
+              </dd>
+            </div>
+          {% endif %} {% endcomment %}
+           {% if description != blank and product.handle != 'phoenix-gravity-carbon-filter-elements-this-product-not-for-sale' %}
+      <div class="mb-4 accordion-item">
+        <dt>{{ 'products.product.description' | t }}</dt>
+        <dd>
+          <div class="accordion-item__inner">
+            {{ description | metafield_tag }}
+          </div>
+        </dd>
+      </div>
+    {% endif %}
+
+
+<!-- add the specification for the Filter System -->
+
+{% if product.title contains 'Phoenix Gravity Water Filter System' %}
+<div class="mb-4 accordion-item">
+  <dt>Technical Specifications & Certifications</dt>
+  <dd class="mb-4 accordion-spec"  ><div class="tech-accordion-wrapper">
+
+  <!-- Variant 1 -->
+  <div class="tech-accordion" data-variant-id="41868949028907" style="display: flex;">
+    <div class="tech-accordion-content">
+      <table class="tech-accordion-table">
+        <tr><td>System Capacity</td><td>1.5 gallons</td></tr>
+        {% comment %} <tr><td>Dimensions</td><td>Height - 18.8 in<br>Diameter - 7.4 in <br>weight -12.46 Pounds</td></tr> {% endcomment %}
+       <tr class="tech-dimensions-row">
+  <td>Dimensions & Weight</td>
+  <td>
+    Height - 18.8 in<br>
+    Diameter - 7.4 in<br>
+    Weight - 12.46 Pounds
+  </td>
+</tr>
+
+        <tr class="tech-filter-lifespan-row"><td>Filter Lifespan</td><td>Up to 5,500 gallons per pair of Carbon Filter Elements</td></tr>
+        <tr><td>Filtration Rate</td><td>Up to 4.2 gallons per hour</td></tr>
+        <tr><td>Certifications</td><td>NSF/ANSI 42 - Chlorine, taste, and odor free <BR>  NSF/ANSI/CAN 372 - Lead-free</td></tr>
+
+      </table>
+    </div>
+    <div class="tech-accordion-image">
+      <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/1.5_gallon.png?v=1751522985" alt="1.5 Gallon System">
+    </div>
+  </div>
+
+  <!-- Variant 2 -->
+  <div class="tech-accordion" data-variant-id="41868949159979" style="display: none;">
+    <div class="tech-accordion-content">
+      <table class="tech-accordion-table">
+        <tr><td>System Capacity</td><td>2.25 gallons</td></tr>
+     <tr class="tech-dimensions-row">
+  <td>Dimensions & Weight</td>
+  <td>
+    Height - 19.2 in<br>
+    Diameter - 8.6 in<br>
+    Weight - 12.46 Pounds
+  </td>
+</tr>
+
+        <tr class="tech-filter-lifespan-row"><td>Filter Lifespan</td><td>Up to 5,500 gallons per pair of Carbon Filter Elements</td></tr>
+        <tr><td>Filtration Rate</td><td>Up to 4.2 gallons per hour</td></tr>
+        <tr><td>Certifications</td><td>NSF/ANSI 42 - Chlorine, taste, and odor free <BR>  NSF/ANSI/CAN 372 - Lead-free</td></tr>
+
+      </table>
+    </div>
+    <div class="tech-accordion-image">
+      <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/2.25_gallon.png?v=1751522985" alt="2.25 Gallon System">
+    </div>
+  </div>
+
+  <!-- Variant 3 -->
+  <div class="tech-accordion" data-variant-id="41868949291051" style="display: none;">
+    <div class="tech-accordion-content">
+      <table class="tech-accordion-table">
+        <tr><td>System Capacity</td><td>3.25 gallons</td></tr>
+        <tr class="tech-dimensions-row">
+  <td>Dimensions & Weight</td>
+  <td>
+    Height - 23.2 in<br>
+    Diameter - 9.4 in<br>
+    Weight - 12.46 Pounds
+  </td>
+</tr>
+        <tr class="tech-filter-lifespan-row"><td>Filter Lifespan</td><td>Up to 5,500 gallons per pair of Carbon Filter Elements</td></tr>
+        <tr><td>Filtration Rate</td><td>Up to 4.2 gallons per hour</td></tr>
+        <tr><td>Certifications</td><td>NSF/ANSI 42 - Chlorine, taste, and odor free <BR>  NSF/ANSI/CAN 372 - Lead-free</td></tr>
+
+      </table>
+    </div>
+    <div class="tech-accordion-image">
+      <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/3.25_gallons.png?v=1751522985" alt="3.25 Gallon System">
+    </div>
+  </div>
+</div>
+  </dd>
+</div>
+{% endif %}
+          
+{% if product.title contains 'Phoenix Gravity Water Filter System' 
+   or product.title contains 'Phoenix Gravity Carbon Filter Elements New'
+   or product.title contains 'Phoenix Gravity Carbon Filter Elements' %}
+<div class="mb-4 accordion-item">
+  <dt>Lab Report</dt>
+  <dd class="mb-4 accordion-spec">
+    <div class="tech-accordion-wrapper">
+      <div class="report-container">
+
+        <!-- PFOA / PFOS -->
+        <div class="report-item">
+          <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/9419215_2.avif?v=1773319944" alt="PFOA & PFOS">
+          <h3>PFOA PFOS LABORATORY TEST REPORT</h3>
+          <div class="link-wrapper">
+            <a href="https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_gravity_contaminants_lab_report_USA_Aug2024_2.pdf?v=1773321502"
+               download
+               class="text-link">
+              See more >
+            </a>
+          </div>
+        </div>
+
+        <!-- Pharmaceuticals -->
+         <div class="report-item">
+  <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/nsf-01_3_1.png?v=1775558599" alt="Pharmaceuticals">
+  <h3>NSF Certified</h3>
+  <div class="link-wrapper">
+    <a href="https://info.nsf.org/Certified/DWTU/Listings.asp?Company=C0799666&Standard=042"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="text-link">
+     See more >
+    </a>
+  </div>
+</div>
+
+        <!-- Heavy Metals -->
+        <div class="report-item">
+          <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/9402263_3.avif?v=1773319944" alt="Heavy Metals">
+          <h3>HEAVY METALS TEST REPORT</h3>
+          <div class="link-wrapper">
+            <a href="https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_gravity_contaminants_lab_report_USA_Aug2024_2.pdf?v=1773321502"
+               download
+               class="text-link">
+              See more >
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </dd>
+</div>
+{% endif %}
+
+<style>
+.report-container {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  border-top: 1px solid #ddd;
+  padding-top: 40px;
+}
+
+.report-item {
+  text-align: center;
+  max-width: 200px;
+}
+.text-link {
+  color: #08c1ff !important;
+}
+.report-item img {
+  width: 30px;
+  margin-bottom: 10px;
+}
+
+.report-item h3 {
+  font-size: 13px;
+  color: #143d66;
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+/* LINK ALIGNMENT */
+.link-wrapper {
+  text-align: center;
+}
+
+.text-link {
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* COLORS */
+.text-blue { color: #1e5aa8; }
+.text-green { color: #2e8b57; }
+.text-orange { color: #d97706; }
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .report-container {
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .report-item {
+    max-width: 110px;
+  }
+
+  .report-item h3 {
+    font-size: 10px;
+  }
+
+  .text-link {
+    font-size: 11px;
+  }
+}
+</style>
+<!-- eND OF THE SPECIFICATION --> 
+          
+{% if product.handle == 'stainless-steel-stand' %}
+  <!-- ✅ Stainless Steel Stand Content -->
+  <div class="mb-4 accordion-item">
+    <dt>Technical specifications</dt>
+    <dd >
+      <div class="accordion-item__inner">
+        <div class="variant-description">
+
+          <div class="accordion-stand" data-variant-id="41411643211819" style="display: none;">
+            <div class="accordion-cont">
+              <div class="accor-flex">
+                <div class="accor-cnt">
+                
+                    <div class="specs-text">
+   
+    <div class="spec-item">
+      <div class="spec-title">Material:</div>
+      <div class="spec-content">Made from AISI 304-grade stainless steel for a modern, corrosion-resistant finish.</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Load Capacity:</div>
+      <div class="spec-content">Supports up to 55 lbs.
+</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Compatibility:</div>
+      <div class="spec-content">Compatible with Phoenix Gravity, Berkey®, Waterdrop®, Purewell®, and similar gravity-fed water filter systems with a 7.5-inch base diameter.
+</div>
+    </div>
+     
+   </div>
+                </div>
+                <div class="accordion-imagss">
+                  <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/1.5_gallon_ss.png?v=1751529445" alt="Steel Stand">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-stand" data-variant-id="41411643244587" style="display: none;">
+            <div class="accordion-cont">
+              <div class="accor-flex">
+                <div class="accor-cnt">
+               <div class="specs-text">
+   
+    <div class="spec-item">
+      <div class="spec-title">Material:</div>
+      <div class="spec-content">Made from AISI 304-grade stainless steel for a modern, corrosion-resistant finish.</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Load Capacity:</div>
+      <div class="spec-content">Supports up to 55 lbs.
+</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Compatibility:</div>
+      <div class="spec-content">Compatible with Phoenix Gravity, Berkey®, Waterdrop®, Purewell®, and similar gravity-fed water filter systems with an 8.6-inch base diameter.
+</div>
+    </div>
+     
+   </div>
+                </div>
+                <div class="accordion-imagss">
+                  <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/2.25_gallons_ss.png?v=1751529445" alt="Steel Stand">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-stand" data-variant-id="41411643277355" style="display: none;">
+            <div class="accordion-cont">
+              <div class="accor-flex">
+                <div class="accor-cnt">
+                  <div class="specs-text">
+   
+    <div class="spec-item">
+      <div class="spec-title">Material:</div>
+      <div class="spec-content">Made from AISI 304-grade stainless steel for a modern, corrosion-resistant finish.</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Load Capacity:</div>
+      <div class="spec-content">Supports up to 55 lbs.
+</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Compatibility:</div>
+      <div class="spec-content">Compatible with Phoenix Gravity, Berkey®, Waterdrop®, Purewell®, and similar gravity-fed water filter systems with an 9.5-inch base diameter.
+</div>
+    </div>
+     
+   </div>
+                </div>
+                <div class="accordion-imagss">
+                  <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/3.25_gallons_ss.png?v=1751529445" alt="Steel Stand">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </dd>
+  </div>
+
+{% elsif product.handle == 'wooden-stand-for-gravity-water-filter-system' %}
+  <!-- ✅ Wooden Stand Content -->
+  <div class="mb-4 accordion-item">
+    <dt>Technical specifications</dt>
+    <dd >
+      <div class="accordion-item__inner">
+        <div class="variant-description">
+
+          <div class="accordion-stands" data-variant-id="41058263498795" style="display: none;">
+            <div class="accordion-cont">
+              <div class="accor-flex">
+                <div class="accor-cnt">
+                  <div class="specs-text">
+   
+    <div class="spec-item">
+      <div class="spec-title">Material:</div>
+      <div class="spec-content">Solid, premium teak wood for natural aesthetics and long-lasting durability.</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Load Capacity:</div>
+      <div class="spec-content">Supports up to 55 lbs.
+</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Compatibility:</div>
+      <div class="spec-content">Compatible with Phoenix Gravity, Berkey®, Waterdrop®, Purewell®, and similar gravity-fed water filter systems with a 7.5-inch base diameter.
+</div>
+    </div>
+     
+   </div>
+                </div>
+                <div class="accordion-imag">
+                  <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/1.5_gallon_ws_1.png?v=1751960942" alt="Wood Stand">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-stands" data-variant-id="41058263531563" style="display: none;">
+            <div class="accordion-cont">
+              <div class="accor-flex">
+                <div class="accor-cnt">
+                    <div class="specs-text">
+   
+    <div class="spec-item">
+      <div class="spec-title">Material:</div>
+      <div class="spec-content">Solid, premium teak wood for natural aesthetics and long-lasting durability.</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Load Capacity:</div>
+      <div class="spec-content">Supports up to 55 lbs.
+</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Compatibility:</div>
+      <div class="spec-content">Compatible with Phoenix Gravity, Berkey®, Waterdrop®, Purewell®, and similar gravity-fed water filter systems with an 8.6-inch base diameter.
+</div>
+    </div>
+     
+   </div>
+                </div>
+                <div class="accordion-imag">
+                  <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/2.25_gallon_ws_1.png?v=1751960942" alt="Wood Stand">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-stands" data-variant-id="41058263564331" style="display: none;">
+            <div class="accordion-cont">
+              <div class="accor-flex">
+                <div class="accor-cnt">
+                    <div class="specs-text">
+   
+    <div class="spec-item">
+      <div class="spec-title">Material:</div>
+      <div class="spec-content">Solid, premium teak wood for natural aesthetics and long-lasting durability.</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Load Capacity:</div>
+      <div class="spec-content">Supports up to 55 lbs.
+</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Compatibility:</div>
+      <div class="spec-content">Compatible with Phoenix Gravity, Berkey®, Waterdrop®, Purewell®, and similar gravity-fed water filter systems with a 9.5-inch base diameter.
+
+</div>
+    </div>
+     
+   </div>
+                </div>
+                <div class="accordion-imag">
+                  <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/3.25_gallons_ws_1.png?v=1751960942" alt="Wood Stand">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </dd>
+  </div>
+{% endif %}
+<!-- Below content for the specification for the spigot -->
+          {% if product.handle == 'phoenix-gravity-water-filter-system-0-26-gallon' %}
+  
+  <div class="mb-4 accordion-item">
+    <dt>Technical Specifications & Certifications</dt>
+    <dd >
+      <div class="custom-accessory-specs">
+  <div class="specs-text">
+   
+    <div class="spec-item">
+      <div class="spec-title">System capacity:</div>
+      <div class="spec-content">0.26 Gallon</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Dimension:</div>
+      <div class="spec-content">Height - 14.2 in <br>
+Diameter - 3.5 in  <br> Weight - 
+</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Filter lifespan:</div>
+      <div class="spec-content">Up to 2250 gallons for a Carbon filter element</div>
+    </div>
+      <div class="spec-item">
+      <div class="spec-title">Filtration rate:</div>
+      <div class="spec-content">Up to 2.1 gallon per hour</div>
+    </div>
+     <div class="spec-item">
+      <div class="spec-title">Certifiactions:</div>
+      <div class="spec-content">NSF/ANSI 42 - Chlorine, taste, and odor free <br> NSF/ANSI/CAN 372 - Lead-free</div>
+    </div>
+   </div>
+  <div class="specs-imagess">
+    <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/1G.png?v=1752566830" alt="phoenix-gravity-water-filter-system-0-26-gallon">
+  </div>
+</div>
+
+    </dd>
+  </div>
+{% endif %}
+
+<!-- Below content for the specification for the spigot -->
+          {% if product.handle == 'stainless-steel-spigot' %}
+  
+  <div class="mb-4 accordion-item">
+    <dt>Technical specifications</dt>
+    <dd >
+      <div class="accessory-spec-wrapper">
+ <div class="custom-accessory-specs">
+  <div class="specs-text">
+    <div class="spec-item">
+      <div class="spec-title">Compatibility:</div>
+      <div class="spec-content">Designed for Phoenix Gravity Water Filter Systems and fully compatible with Berkey®, Purewell®, Waterdrop®, and other standard gravity-fed systems.</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Material:</div>
+      <div class="spec-content">Crafted from AISI 304 food-grade stainless steel with durable silicone washers for a rust-resistant, long-lasting, and safe drinking water flow.</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Design & Construction:</div>
+      <div class="spec-content">Engineered with a drip-free, high-flow spout and leak-proof silicone seals for smooth operation and easy installation, no tools required.</div>
+    </div>
+  </div>
+  <div class="specs-image">
+    <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/SS_Tap.png?v=1752566831" alt="Steel Stand">
+  </div>
+</div>
+</div>
+    </dd>
+  </div>
+{% endif %}
+<!-- Below content for the specification for the spigot -->
+          {% if product.handle == 'carbon-filter-element' %}
+  
+  <div class="mb-4 accordion-item">
+    <dt>Technical specifications</dt>
+    <dd >
+      <div class="custom-accessory-specs">
+  <div class="specs-text">
+   
+    <div class="spec-item">
+      <div class="spec-title">Material:</div>
+      <div class="spec-content">Made from CTC‑60 premium coconut shell carbon.</div>
+    </div>
+     
+     <div class="spec-item">
+      <div class="spec-title">Weight:</div>
+      <div class="spec-content">1.65 Pounds</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Filtration Capacity:</div>
+      <div class="spec-content">Up to 5,500 gallons per pair.</div>
+    </div>
+      <div class="spec-item">
+      <div class="spec-title">Flow Rate:</div>
+      <div class="spec-content">4.2 gallon/hour per pair.</div>
+    </div>
+     {% comment %} <div class="spec-item">
+      <div class="spec-title">Micron Rating:</div>
+      <div class="spec-content"><1 micron.</div>
+    </div> {% endcomment %}
+   
+     <div class="spec-item">
+      <div class="spec-title">Compatibility:</div>
+      <div class="spec-content">Designed to seamlessly fit Phoenix Gravity, Berkey®, and other similar gravity-fed filtration systems.</div>
+    </div>
+  </div>
+  <div class="specs-images">
+    <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/carbon_candle.png?v=1752566831" alt="carbon candles">
+  </div>
+</div>
+
+    </dd>
+  </div>
+{% endif %}
+<!-- Below content for the specification for the spigot -->
+          {% if product.handle == 'fluoride-reduction-elements' %}
+  
+  <div class="mb-4 accordion-item">
+    <dt>Technical specifications</dt>
+    <dd >
+      <div class="custom-accessory-specs">
+  <div class="specs-text">
+   
+    <div class="spec-item">
+      <div class="spec-title">Material:</div>
+      <div class="spec-content">Casing made of High Grade AISI 304 stainless steel (rust-resistant and non leaching)</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Filtration Capacity:</div>
+      <div class="spec-content">Up to 1,100 gallons per pair</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-title">Compatibility:</div>
+      <div class="spec-content">Works with Phoenix Gravity Carbon filter Elements</div>
+    </div>
+      <div class="spec-item">
+      <div class="spec-title">Refill System:</div>
+      <div class="spec-content">Refillable design using POSTreat FluoRid refill Media
+(Recommended replacement: every 4 months)</div>
+    </div>
+     <div class="spec-item">
+      <div class="spec-title">Warranty:</div>
+      <div class="spec-content">10 Year Warranty on the stainless steel casing</div>
+    </div>
+   </div>
+  <div class="specs-images">
+    <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/Postreat.png?v=1752566831" alt="POSTreat Fluoride filter elements">
+  </div>
+</div>
+
+    </dd>
+  </div>
+{% endif %}
+  
+<!-- Below content for the specification for carbon and postreat-->
+   
+{% if product.handle == 'phoenix-gravity-carbon-filter-elements-this-product-not-for-sale' %}
+
+<div class="mb-4 accordion-item" id="accordion-desc">
+  <dt class="accordion-item__title">Description</dt>
+  <dd class="accordion-item__content">
+    <div class="accordion-item__inner">
+      <div class="variant-description">
+        {{ product.selected_or_first_available_variant.metafields.custom.short_description | metafield_tag }}
+      </div>
+    </div>
+  </dd>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const accordion = document.getElementById('accordion-desc');
+  if (!accordion) return;
+
+  const variantSelect = document.querySelector('select[name="id"]');
+  const variantDescription = accordion.querySelector('.variant-description');
+  if (!variantSelect || !variantDescription) return;
+
+  // Rendered HTML metafields for each variant
+  const variantData = {
+    {% for variant in product.variants %}
+      "{{ variant.id }}": `{{ variant.metafields.custom.short_description | metafield_tag | strip_newlines }}`,
+    {% endfor %}
+  };
+
+  function updateVariantBox() {
+    const selectedVariantId = variantSelect.value;
+    let newContent = variantData[selectedVariantId];
+
+    if (!newContent || newContent.trim() === '') {
+      newContent = '<p>No details available for this variant.</p>';
+    }
+
+    variantDescription.innerHTML = newContent;
+  }
+
+  updateVariantBox();
+  variantSelect.addEventListener('change', updateVariantBox);
+  document.addEventListener('product:variant-change', updateVariantBox);
+});
+</script>
+
+{% endif %}
+
+{% if product.handle == 'phoenix-gravity-carbon-filter-elements-this-product-not-for-sale' %}
+  <div id="tech-spec-1" class="mb-4 accordion-item">
+    <dt>Technical specifications</dt>
+    <dd>
+      <div class="custom-accessory-specs">
+        <div class="specs-text">
+          <div class="spec-item">
+            <div class="spec-title">Material:</div>
+            <div class="spec-content">Made from CTC-60 premium coconut shell carbon.</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-title">Weight:</div>
+            <div class="spec-content">1.65 Pounds</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-title">Filtration Capacity:</div>
+            <div class="spec-content">Up to 5,500 gallons per pair.</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-title">Flow Rate:</div>
+            <div class="spec-content">4.2 gallon/hour per pair.</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-title">Compatibility:</div>
+            <div class="spec-content">Designed to seamlessly fit Phoenix Gravity, Berkey®, and other similar gravity-fed filtration systems.</div>
+          </div>
+        </div>
+        <div class="specs-images">
+          <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/carbon_candle.png?v=1752566831" alt="carbon candles">
+        </div>
+      </div>
+    </dd>
+  </div>
+
+  <div id="tech-spec-2" class="mb-4 accordion-item" style="display:none;">
+    <dt>Technical specifications</dt>
+    <dd>
+      <div class="custom-accessory-specs">
+        <div class="specs-text">
+          <div class="spec-item">
+            <div class="spec-title">Material:</div>
+            <div class="spec-content">
+  <ul>
+    <li><strong>Carbon Filter:</strong> Made from premium CTC-60 coconut shell carbon.</li>
+    <li><strong>POSTreat Filter:</strong> AISI 304 food-grade stainless steel casing (rust-resistant and non-leaching).</li>
+  </ul>
+</div>
+
+          </div>
+          <div class="spec-item">
+            <div class="spec-title">Filtration Capacity:</div>
+         
+            <div class="spec-content">
+  <ul>
+    <li>Carbon Filters: Up to 5,500 gallons per pair</li>
+    <li>POSTreat Filters: Up to 1,100 gallons per pair</li>
+  </ul>
+</div>
+
+          </div>
+          <div class="spec-item">
+            <div class="spec-title">Flow Rate::</div>
+            <div class="spec-content">Carbon Filters: 4.2 gallons/hour per pair</div>
+          </div>
+        
+          <div class="spec-item">
+            <div class="spec-title">Warranty:</div>
+            
+                 <div class="spec-content">
+  <ul>
+    <li>10-Year Warranty on the stainless steel POSTreat casing</li>
+    <li>6 Months Warranty on Carbon Filter Elements</li>
+  </ul>
+</div>
+          </div>
+        </div>
+        <div class="specs-images">
+          <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/carbon_candle_copy.webp?v=1761656712" alt="POSTreat Fluoride filter elements">
+        </div>
+      </div>
+    </dd>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const variantSelect = document.querySelector('select[name="id"]');
+      const spec1 = document.getElementById('tech-spec-1');
+      const spec2 = document.getElementById('tech-spec-2');
+
+      if (!variantSelect || !spec1 || !spec2) return;
+
+      function updateSpecs() {
+        const selectedVariant = variantSelect.value;
+        if (selectedVariant === '42432542277675') {
+          spec1.style.display = 'none';
+          spec2.style.display = 'block';
+        } else {
+          spec1.style.display = 'block';
+          spec2.style.display = 'none';
+        }
+      }
+
+      // Initialize on load
+      updateSpecs();
+
+      // Update when variant changes
+      variantSelect.addEventListener('change', updateSpecs);
+      document.addEventListener('product:variant-change', updateSpecs);
+    });
+  </script>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+<!-- Below content for the specification for the spigot -->
+  
+ 
+ {% if product.handle == '7-inch-stainless-steel-vision-spigot' %}
+
+<div class="mb-4 accordion-item">
+  <dt>Technical specifications</dt>
+  <dd>
+    <div class="accordion-item__inner">
+      <div class="variant-description">
+
+        <!-- Variant 1 -->
+        <div class="accordion-stand" data-variant-id="41068359680043" style="display: none;">
+          <div class="accordion-cont">
+            <div class="accor-flex">
+              <div class="accor-cnt">
+                <div class="specs-text">
+                  <div class="spec-item">
+                    <div class="spec-title">Material:</div>
+                    <div class="spec-content">Made from AISI 304 food-grade stainless steel with durable silicone washers
+for rust resistance and safe, long-lasting use.</div>
+                  </div>
+                  <div class="spec-item">
+                    <div class="spec-title">Compatibility:</div>
+                    <div class="spec-content">Fits Phoenix Gravity Systems and compatible with Berkey®, Purewell®,
+Waterdrop®, and other gravity-fed filters.</div>
+                  </div>
+                  <div class="spec-item">
+                    <div class="spec-title">Design & Construction:</div>
+                    <div class="spec-content">Features a built-in water level viewing window for easy monitoring.
+Features a drip-free, high-flow spout with leak-proof silicone seals.
+Installs easily — no tools needed.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-imagss">
+                <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/Vision_Tap._292ee535-b92b-408d-bc30-2d835fe59984.png?v=1754027814" alt="Steel Stand">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!-- Variant 1 -->
+        <div class="accordion-stand" data-variant-id="41068359647275" style="display: none;">
+          <div class="accordion-cont">
+            <div class="accor-flex">
+              <div class="accor-cnt">
+                <div class="specs-text">
+                  <div class="spec-item">
+                    <div class="spec-title">Material:</div>
+                    <div class="spec-content">Made from AISI 304 food-grade stainless steel with durable silicone washers
+for rust resistance and safe, long-lasting use.</div>
+                  </div>
+                  <div class="spec-item">
+                    <div class="spec-title">Compatibility:</div>
+                    <div class="spec-content">Fits Phoenix Gravity Systems and compatible with Berkey®, Purewell®,
+Waterdrop®, and other gravity-fed filters.</div>
+                  </div>
+                  <div class="spec-item">
+                    <div class="spec-title">Design & Construction:</div>
+                    <div class="spec-content">Features a built-in water level viewing window for easy monitoring.
+Features a drip-free, high-flow spout with leak-proof silicone seals.
+Installs easily — no tools needed.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-imagss">
+                <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/Vision_Tap_1.png?v=1754027709" alt="Steel Stand">
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+              <!-- Variant 1 -->
+        <div class="accordion-stand" data-variant-id="41081551061035" style="display: none;">
+          <div class="accordion-cont">
+            <div class="accor-flex">
+              <div class="accor-cnt">
+                <div class="specs-text">
+                  <div class="spec-item">
+                    <div class="spec-title">Material:</div>
+                    <div class="spec-content">Made from AISI 304 food-grade stainless steel with durable silicone washers
+for rust resistance and safe, long-lasting use.</div>
+                  </div>
+                  <div class="spec-item">
+                    <div class="spec-title">Compatibility:</div>
+                    <div class="spec-content">Fits Phoenix Gravity Systems and compatible with Berkey®, Purewell®,
+Waterdrop®, and other gravity-fed filters.</div>
+                  </div>
+                  <div class="spec-item">
+                    <div class="spec-title">Design & Construction:</div>
+                    <div class="spec-content">Features a built-in water level viewing window for easy monitoring.
+Features a drip-free, high-flow spout with leak-proof silicone seals.
+Installs easily — no tools needed.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-imagss">
+                <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/Vision_Tap_1.png?v=1754027709" alt="Steel Stand">
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+  </dd>
+</div>
+{% endif %}
+
+      
+    <style>
+
+      .product-specs-section {
+  padding: 20px;
+}
+
+.product-specs-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.product-specs-details {
+  flex: 1;
+}
+
+.product-specs-image img {
+  max-width: 100%;
+  height: 350px;
+}
+
+.product-spec-item {
+  margin-bottom: 20px;
+}
+
+.product-spec-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.product-spec-text {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Desktop layout */
+@media (min-width: 768px) {
+  .product-specs-layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .product-specs-details {
+    width: 65%;
+    padding-right: 20px;
+  }
+
+  .product-specs-image {
+    width: 35%;
+  }
+}
+
+.custom-accessory-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 40px;
+   padding: 10px 20px;
+}
+
+.specs-text {
+  flex: 1 1 60%;
+}
+
+.spec-item {
+  margin-bottom: 20px;
+}
+
+.spec-title {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.spec-content {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+}
+.specs-images {
+  flex: 1 1 35%;
+  text-align: left;
+}
+
+.specs-images img {
+  max-width: 100%;
+  height: 400px;
+}
+
+.specs-images {
+  flex: 1 1 35%;
+  text-align: left;
+}
+.specs-imagess img {
+  max-width: 100%;
+  height: 460px;
+}
+
+.specs-image {
+  flex: 1 1 35%;
+  text-align: left;
+}
+.specs-image img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mobile responsive layout */
+@media screen and (max-width: 768px) {
+  .custom-accessory-specs {
+    flex-direction: column;
+  }
+
+  .specs-image {
+    text-align: center;
+    order: 2;
+  }
+
+  .specs-text {
+    order: 1;
+  }
+}
+
+      /* For This ACCESSORIES specification */
+      
+.accessory-spec-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  padding: 20px 0;
+  align-items: stretch;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+
+.accessory-spec-content,
+.accessory-spec-image {
+  flex: 1 1 50%;
+  max-width: 50%;
+  display: flex;
+  align-items: center;        
+  justify-content: center;    
+  min-height: 100%;            
+  text-align: left;
+  /* box-sizing: border-box; */
+}
+
+.accessory-spec-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0 auto;
+}
+.accessory-spec-content td {
+  
+ 
+  color: #333;
+  font-size: 24px;
+  border: none; /* Remove all borders */
+  border-bottom: 1px solid #ccc; /* Only bottom */
+}
+
+.accessory-spec-content tr:last-child td {
+  border-bottom: none !important; /* Remove bottom border from last row */
+}
+ 
+
+.accessory-spec-content td {
+    padding: 20px 0px 0px 20px ;
+    vertical-align: top;
+    color: #333;
+    font-size: 31px;
+ 
+   
+}
+.accessory-spec-image img {
+  max-width: 100%;
+  height: auto;
+  max-height: 320px;          
+  object-fit: contain;
+  display: block;
+}
+
+/* ✅ Mobile responsive layout */
+@media screen and (max-width: 768px) {
+  .accessory-spec-wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .accessory-spec-content,
+  .accessory-spec-image {
+    max-width: 100%;
+    flex: 1 1 100%;
+    justify-content: flex-start;   
+    align-items: flex-start;
+  }
+
+  .accessory-spec-content table {
+    font-size: 15px;
+  }
+
+  .accessory-spec-image img {
+    max-height: none;              
+  }
+}
+
+
+.accordion-cont {
+  width: 100% !important;
+}
+
+/* End For This ACCESSORIES specification  */
+      
+
+.accor-flex {
+  display: flex;
+ justify-content: space-around;
+  
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.accor-cnt {
+  width: 50%;
+}
+.accordion-imagss {
+  width: 50%;
+}
+
+.accordion-imagss img {
+  width: 80%;
+  height: 350px;
+  display: block;
+}
+.accordion-imag {
+  width: 50%;
+}
+
+.accordion-imag img {
+  width: 80%;
+  height: auto;
+  display: block;
+}
+
+/* ========== Table Styling ========== */
+..accor-cnt table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.accor-cnt tr:last-child td {
+  border-bottom: none !important;
+}
+
+.accor-cnt td {
+  padding: 30px 0;
+  border-bottom: 1px solid #ccc;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  vertical-align: top;
+  font-size: 25px;
+}
+
+/* ========== Responsive: stacked view ========== */
+@media screen and (max-width: 768px) {
+  .accor-flex {
+    flex-direction: column;
+  }
+
+  .accor-cnt,
+  .accordion-imag {
+    width: 100%;
+  }
+
+  .accordion-imag {
+    margin-top: 16px;
+  }
+}
+  .accordion-imag img {
+    max-width: 100%;
+    
+   
+  }
+
+    
+    </style>
+
+
+                    
+<!-- eND OF THE SPECIFICATION -->       
+
+
+{% comment %} ///  Accordian for the what in the box {% endcomment %}
+          
+  {% comment %} {% if product.handle == 'gravity-water-filter' %}
+            <div class="mb-4 accordion-item">
+              <dt>
+              What's in box</dt>
+              <dd>
+                <div class="accordion-item__inner">
+                 <div class="variant-description">
+<ul style="list-style-type: disc; padding-left: 20px;">
+  <li>1 x AISI 304 Stainless Steel 8k finish housing unit.</li>
+  <li>1 x AISI 304 Stainless Steel Spigot for easy-access hydration.</li>
+  <li>2 x Activated Carbon Filter Elements.</li>
+  <li class="postreat-item" style="display: none;">2 x POSTreat Fluoride Removal Filter Elements.</li>
+</ul>
+
+<p>The Phoenix Gravity System is easy to set up for any countertop in your home or workplace, no plumber or electricity required.</p>
+
+   </div> 
+                </div>
+              </dd>
+            </div>
+          {% endif %}  {% endcomment %}
+
+
+
+      {% comment %} ///  Accordian for the what in the box {% endcomment %}
+       {% if product.handle == 'gravity-water-filter' %}
+ <hr style="border: 0.5px solid #cecece;">
+
+<div class="mb-4 accordion-item" id="accordion-what-in-box">
+ <div class="mb-4 accordion-item" id="accordion-what-in-box">
+  <dt class="accordion-item__title">What's in box</dt>
+  <dd class="accordion-item__content">
+    <div class="accordion-item__inner">
+      <div class="variant-description">
+        {{ product.selected_or_first_available_variant.metafields.custom.what_in_box | rich_text }}
+      </div>
+    </div>
+  </dd>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const accordion = document.getElementById('accordion-what-in-box');
+  if (!accordion) return;
+
+  const variantSelect = document.querySelector('select[name="id"]');
+  const variantDescription = accordion.querySelector('.variant-description');
+  if (!variantSelect || !variantDescription) return;
+
+  const variantData = {
+    {% for variant in product.variants %}
+      "{{ variant.id }}": `{{ variant.metafields.custom.what_in_box | rich_text | strip_newlines }}`,
+    {% endfor %}
+  };
+
+  variantSelect.addEventListener('change', function() {
+    const selectedVariantId = this.value;
+    variantDescription.innerHTML = variantData[selectedVariantId] || '<p>No details available for this variant.</p>';
+  });
+});
+</script> 
+
+ {% endif %} 
+
+
+      {% comment %} ///  Accordian for the what in the box {% endcomment %}
+
+
+
+
+
+{% if product.handle == 'phoenix-gravity-carbon-filter-elements-this-product-not-for-sale' %}
+
+
+<div class="mb-4 accordion-item" id="accordion-what-in-box">
+  <dt class="accordion-item__title">What's in box</dt>
+  <dd class="accordion-item__content">
+    <div class="accordion-item__inner">
+      <div class="variant-description">
+        {{ product.selected_or_first_available_variant.metafields.custom.what_in_box | rich_text }}
+      </div>
+    </div>
+  </dd>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const accordion = document.getElementById('accordion-what-in-box');
+  if (!accordion) return;
+
+  const variantSelect = document.querySelector('select[name="id"]');
+  const variantDescription = accordion.querySelector('.variant-description');
+  if (!variantSelect || !variantDescription) return;
+
+  // Map each variant ID → its metafield HTML content
+  const variantData = {
+    {% for variant in product.variants %}
+      "{{ variant.id }}": `{{ variant.metafields.custom.what_in_box | rich_text | strip_newlines }}`,
+    {% endfor %}
+  };
+
+  // Your specific variant ID (optional — for fallback logic if needed)
+  const specialVariantId = "42432542277675";
+
+  function updateVariantBox() {
+    const selectedVariantId = variantSelect.value;
+    let newContent = variantData[selectedVariantId];
+
+    // If metafield is empty, show a default message
+    if (!newContent || newContent.trim() === '') {
+      newContent = '<p>No details available for this variant.</p>';
+    }
+
+    variantDescription.innerHTML = newContent;
+  }
+
+  // Initialize when page loads
+  updateVariantBox();
+
+  // Listen for dropdown variant changes
+  variantSelect.addEventListener('change', updateVariantBox);
+
+  // Also handle themes that trigger custom JS events
+  document.addEventListener('product:variant-change', updateVariantBox);
+});
+</script>
+{% endif %}
+
+
+
+{% comment %} 
+
+  {% if product.handle == 'carbon-filter-element' %}
+ <hr style="border: 1px solid #ddd; margin: 16px 0;">
+
+<div class="mb-4 accordion-item" id="accordion-what-in-box">
+ <div class="mb-4 accordion-item" id="accordion-what-in-box">
+  <dt class="accordion-item__title">What's in box</dt>
+  <dd class="accordion-item__content">
+    <div class="accordion-item__inner">
+      <div class="variant-description">
+        {{ product.selected_or_first_available_variant.metafields.custom.what_in_box | rich_text }}
+      </div>
+    </div>
+  </dd>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const accordion = document.getElementById('accordion-what-in-box');
+  if (!accordion) return;
+
+  const variantSelect = document.querySelector('select[name="id"]');
+  const variantDescription = accordion.querySelector('.variant-description');
+  if (!variantSelect || !variantDescription) return;
+
+  const variantData = {
+    {% for variant in product.variants %}
+      "{{ variant.id }}": `{{ variant.metafields.custom.what_in_box | rich_text | strip_newlines }}`,
+    {% endfor %}
+  };
+
+  variantSelect.addEventListener('change', function() {
+    const selectedVariantId = this.value;
+    variantDescription.innerHTML = variantData[selectedVariantId] || '<p>No details available for this variant.</p>';
+  });
+});
+</script> 
+
+ {% endif %}  {% endcomment %}
+{% comment %} /// End Accordian for the what in the box {% endcomment %}
+
+ {% comment %} ///  Accordian for the Technical Specifications & Certifications {% endcomment %}
+{% comment %} {% if product.handle == 'gravity-water-filter' %}
+<hr style="border: 1px solid #ddd; margin: 16px 0;">
+
+<div class="mb-4 accordion-item" id="accordion-tech-specs">
+  <dt class="accordion-item__title">Technical Specifications & Certifications</dt>
+  <dd class="accordion-item__content">
+    <div class="accordion-item__inner">
+      <div class="variant-description">
+        {{ product.selected_or_first_available_variant.metafields.custom.technical_specifications | rich_text }}
+      </div>
+    </div>
+  </dd>
+</div>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const accordion = document.getElementById('accordion-tech-specs');
+  if (!accordion) return;
+
+  const variantSelect = document.querySelector('select[name="id"]');
+  const variantDescription = accordion.querySelector('.variant-description');
+  if (!variantSelect || !variantDescription) return;
+
+  const variantData = {
+    {% for variant in product.variants %}
+      "{{ variant.id }}": `{{ variant.metafields.custom.technical_specifications | rich_text | strip_newlines }}`,
+    {% endfor %}
+  };
+
+  variantSelect.addEventListener('change', function() {
+    const selectedVariantId = this.value;
+    variantDescription.innerHTML = variantData[selectedVariantId] || '<p>No details available for this variant.</p>';
+  });
+});
+</script> {% endcomment %}
+
+
+{% comment %} /// End Accordian for the Technical Specifications & Certifications {% endcomment %}
+ {% if product.handle == 'fluoride-refill-media' %}
+            <div class="mb-4 accordion-item">
+               
+              <dt>
+              Compatibility</dt>
+              <dd>
+                <div class="accordion-item__inner">
+                 <div class="variant-description">
+POSTreat™ Fluoride & Removal Filters are precisely designed to work in tandem with our Premium Carbon Filter Elements. Please note that they are compatible only with PF-4 Filter Elements and not with filters from other brands.   </div> 
+                </div>
+              </dd>
+            </div>
+          {% endif %}
+{% if product.handle == 'carbon-filter-element' %}
+            <div class="mb-4 accordion-item">
+               
+              <dt>
+              Compatibility</dt>
+              <dd>
+                <div class="accordion-item__inner">
+                 <div class="variant-description">
+Phoenix Gravity Carbon Filter Elements are designed to seamlessly fit Berkey® and other similar gravity-fed systems, ensuring optimal filtration and ease of compatibility.
+   </div> 
+                </div>
+              </dd>
+            </div>
+          {% endif %}
+{% if product.handle == 'wooden-stand-for-gravity-water-filter-system' %}
+            <!-- <div class="mb-4 accordion-item">
+              <dt>
+              Compatibility</dt>
+              <dd>
+                <div class="accordion-item__inner">
+                 <div class="variant-description">
+<p><b>The PHOENIX GRAVITY Premium Wooden Stand</b>, crafted for gravity-fed water filtration systems. It is compatible with Berkey®, Waterdrop®, Purewell®, and similar filter systems.</p>
+
+<ul style="list-style-type: disc; padding-left: 20px;">
+  <li><b>1.5-gallon</b> – fits systems with a <b>7.5-inch diameter base</b></li>
+  <li><b>2.25-gallon</b> – fits systems with an <b>8.6-inch diameter base</b></li>
+  <li><b>3.25-gallon</b> – fits systems with a <b>9.5-inch diameter base</b></li>
+</ul>
+
+   </div> 
+                </div>
+              </dd>
+            </div> -->
+          {% endif %}
+
+
+
+          
+{% if product.handle == 'stainless-steel-stand' %}
+            <!-- <div class="mb-4 accordion-item">
+              <dt>
+              Compatibility</dt>
+              <dd>
+                <div class="accordion-item__inner">
+                 <div class="variant-description">
+                 <p><b>The PHOENIX GRAVITY Stainless Steel Stand</b>, crafted for gravity-fed water filtration systems. It is compatible with Berkey®, Waterdrop, Purewell, and similar filter systems.</p>
+
+<ul style="list-style-type: disc; padding-left: 20px;">
+  <li><b>1.5-gallon</b> – fits systems with a <b>7.5-inch diameter base</b></li>
+  <li><b>2.25-gallon</b> – fits systems with an <b>8.6-inch diameter base</b></li>
+  <li><b>3.25-gallon</b> – fits systems with a <b>9.5-inch diameter base</b></li>
+</ul>
+  
+            </div> 
+                </div>
+              </dd>
+            </div> -->
+          {% endif %}
+
+{% if product.handle == 'fluoride-reduction-elements' %}
+            <div class="mb-4 accordion-item">
+              <dt>
+              Compatibility</dt>
+              <dd>
+                <div class="accordion-item__inner">
+                 <div class="variant-description">
+POSTreat™ Fluoride & Removal Filters are precisely designed to work in tandem with our Premium Carbon Filter Elements. Please note: These are not compatible with other brands.
+
+                 </div> 
+                </div>
+              </dd>
+            </div>
+          {% endif %}
+          {% if product.handle == '2 Carbon Filters + POSTreat Fluoride and Arsenic Reduction Filter Elements' %}
+            <div class="mb-4 accordion-item">
+              <dt>
+              What's in box</dt>
+              <dd>
+                <div class="accordion-item__inner">
+                 <div class="variant-description">
+POSTreat™ Fluoride & Removal Filters are precisely designed to work in tandem with our Premium Carbon Filter Elements. Please note: These are not compatible with other brands.
+
+                 </div> 
+                </div>
+              </dd>
+            </div>
+            <div class="mb-4 accordion-item">
+              <dt>
+              Shipping and returns</dt>
+              <dd>
+                <div class="accordion-item__inner">
+                 <div class="variant-description">
+POSTreat™ Fluoride & Removal Filters are precisely designed to work in tandem with our Premium Carbon Filter Elements. Please note: These are not compatible with other brands.
+
+                 </div> 
+                </div>
+              </dd>
+            </div>
+          {% endif %}
+
+        
+ {% comment %} 
+          {% if return_policy != blank and section.settings.show_shipping %}
+            <div class="mb-4 accordion-item">
+              <dt>
+                {{ 'products.product.return_policy' | t }}</dt>
+              <dd>
+                <div class="accordion-item__inner">
+                  {{ return_policy }}
+                </div>
+              </dd>
+            </div>
+          {% endif %}
+ {% endcomment %} 
+          
+
+          {% if specifications != blank %}
+            <div class="mb-4 accordion-item">
+              <dt>
+                {{ 'products.product.specifications' | t }}</dt>
+              <dd>
+                <div class="accordion-item__inner">
+                  {{ specifications | metafield_tag }}
+                </div>
+              </dd>
+            </div>
+          {% endif %}
+
+ {% if specifications != blank %}
+            <div class="mb-4 accordion-item">
+              <dt>
+                {{ 'products.product.specifications' | t }}</dt>
+              <dd>
+                <div class="accordion-item__inner">
+                  {{ specifications | metafield_tag }}
+
+                </div>
+              </dd>
+            </div>
+          {% endif %}
+
+ 
+          
+       {% for block in section.blocks %}
+  {% if block.settings.question and block.settings.answer %}
+    <div class="mb-4 accordion-item">
+      <dt>{{ block.settings.question }}</dt>
+      <dd>
+        <div class="accordion-item__inner">
+
+          {% if block.settings.question == "Technical Specifications" %}
+            <div id="variant-specs-block"></div>
+          {% else %}
+            {{ block.settings.answer }}
+          {% endif %}
+
+        </div>
+      </dd>
+    </div>
+  {% endif %}
+{% endfor %}
+
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% if product.handle != 'gravity-water-filter' %}
+    <style>
+        .variant-description {
+            max-height: 10px !important;
+        }
+    </style>
+{% endif %}
+
+
+
+
+{% schema %}
+  {
+    "name": "Dropdown Accordion",
+    "tag": "section",
+    "class": "section-accordion p-0",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "content",
+        "label": "Content"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_shipping",
+        "label": "Show Shipping Details"
+      }, {
+        "type": "select",
+        "id": "accordion_styles",
+        "label": "Style",
+        "default": "full-width",
+        "options": [
+          {
+            "label": "Full Width",
+            "value": "full-width"
+          }, {
+            "label": "Centered",
+            "value": "center"
+          }
+        ]
+      }, {
+        "type": "header",
+        "content": "Custom Code",
+        "info": "Add classes or ID to the section"
+      }, {
+        "type": "text",
+        "id": "custom_id",
+        "label": "Custom ID"
+      }, {
+        "type": "text",
+        "id": "custom_class",
+        "label": "Custom Class"
+      }
+
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Accordion Item",
+        "settings": [
+          {
+            "type": "text",
+            "id": "question",
+            "label": "Question"
+          }, {
+            "type": "richtext",
+            "id": "answer",
+            "label": "Answer"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Dropdown Accordion"
+      }
+    ],
+    "disabled_on": {
+      "groups": ["header"]
+
+    }
+  }
+{% endschema %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const postreatItem = document.querySelector('.postreat-item');
+
+    function updatePostreatVisibility() {
+      // Variant IDs that include POSTreat
+      const postreatVariantIds = ['41868949291051']; // ← You can add more variant IDs here
+
+      const selectedRadio = document.querySelector('input[name="filter type"]:checked');
+
+      if (selectedRadio && postreatVariantIds.includes(selectedRadio.dataset.variantId)) {
+        postreatItem.style.display = 'list-item';
+      } else {
+        postreatItem.style.display = 'none';
+      }
+    }
+
+    // On page load
+    updatePostreatVisibility();
+
+    // Add change listener to radio buttons
+    document.querySelectorAll('input[name="filter type"]').forEach(function(radio) {
+      radio.addEventListener('change', updatePostreatVisibility);
+    });
+  });
+</script>
+
+{% comment %} <script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Get the selected variant ID
+  function getSelectedVariantId() {
+    const selectedRadio = document.querySelector('input[type="radio"][data-variant-id]:checked');
+    return selectedRadio ? selectedRadio.getAttribute("data-variant-id") : null;
+  }
+
+  // Get the selected filter name safely
+  function getSelectedFilterName() {
+    const selectedFilterRadio = document.querySelector('input[type="radio"][name="filter-type"]:checked');
+    return selectedFilterRadio ? selectedFilterRadio.getAttribute("data-filter-name") : "";
+  }
+
+  // Update accordion display and lifespan text
+  function updateAccordionAndLifespan() {
+    const selectedVariantId = getSelectedVariantId();
+    const selectedFilterName = getSelectedFilterName();
+
+    // Show/hide variant accordions
+    document.querySelectorAll(".variant-accordion").forEach(function (accordion) {
+      accordion.style.display = (accordion.dataset.variantId === selectedVariantId) ? "flex" : "none";
+    });
+
+    // Determine lifespan text based on selected filter
+    const isPostreat = selectedFilterName.includes("POSTreat Fluoride");
+
+    const lifespanText = isPostreat
+      ? "Up to 5,500 gallons per pair of Carbon Filter Elements & Up to 1060 gallons per pair of POSTreat Filter Elements"
+      : "Up to 5,500 gallons per pair of Carbon Filter Elements";
+
+    // Update all visible rows with .filter-lifespan-row
+    document.querySelectorAll(".variant-accordion").forEach(function (accordion) {
+      if (accordion.style.display !== "none") {
+        accordion.querySelectorAll(".filter-lifespan-row td:last-child").forEach(function (td) {
+          td.textContent = lifespanText;
+        });
+      }
+    });
+  }
+
+  // Initial update
+  updateAccordionAndLifespan();
+
+  // Event listeners for variant selection
+  document.querySelectorAll('input[type="radio"][data-variant-id]').forEach(function (radio) {
+    radio.addEventListener("change", updateAccordionAndLifespan);
+  });
+
+  // Event listeners for filter selection
+  document.querySelectorAll('input[type="radio"][name="filter-type"]').forEach(function (radio) {
+    radio.addEventListener("change", updateAccordionAndLifespan);
+  });
+});
+</script> {% endcomment %}
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  // Get the variant select element (Shopify default)
+  const variantSelect = document.querySelector('select[name="id"]');
+
+  // Function to show the correct "What's in Box" content
+  function updateWhatsInBoxAccordion() {
+    if (!variantSelect) return;
+    const selectedVariantId = variantSelect.value;
+
+    document.querySelectorAll(".my-variant-accordion .my-variant-container").forEach(container => {
+      if(container.dataset.variantId === selectedVariantId) {
+        container.style.display = "block"; // Show matching variant
+      } else {
+        container.style.display = "none";  // Hide others
+      }
+    });
+  }
+
+  // Run on page load
+  updateWhatsInBoxAccordion();
+
+  // Run whenever the variant changes
+  if(variantSelect) {
+    variantSelect.addEventListener("change", updateWhatsInBoxAccordion);
+  }
+
+});
+</script>
+
+
+{% comment %} 
+<style>
+  .variant-description {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .accordion-container {
+    display: flex;
+   
+    border-radius: 12px;
+    max-height: 400px;
+    /* overflow: hidden; */
+   
+  }
+
+  .accordion-content {
+    flex: 1;
+   
+  }
+
+  .accordion-image {
+    width: 40%;
+    max-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+.accordion-info-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.accordion-info-table tr {
+  border-bottom: 1px solid #ccc;
+}
+
+.accordion-info-table tr:last-child {
+  border-bottom: none !important;
+}
+
+.accordion-info-table td {
+  padding: 15px 12px;
+  vertical-align: top;
+  color: #333;
+}
+
+.accordion-info-table td:first-child {
+  font-weight: 200;
+  color: #111;
+  width: 40%;
+}
+  .accordion-image img {
+    max-width: 100%;
+    max-height: 360px;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
+  .accordion-info-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .accordion-info-table td {
+    padding: 15px 12px;
+    vertical-align: top;
+    color: #333;
+  }
+
+  .accordion-info-table td:first-child {
+    font-weight: 200;
+    color: #111;
+   idth: 100%;
+    margin-top: 20px;
+  }
+
+  .accordion-image img {
+    max-height: 280px;
+  }
+}
+
+</style>{% endcomment %}
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let currentId = null;
+
+    function updateAccordionContent() {
+      const select = document.querySelector('form[action*="/cart/add"] select[name="id"]');
+      const newId = select ? select.value : null;
+
+      if (newId !== currentId) {
+        currentId = newId;
+        document.querySelectorAll(".accordion-stand").forEach(el => {
+          const id = el.getAttribute("data-variant-id");
+          el.style.display = (id === currentId) ? "block" : "none";
+        });
+      }
+    }
+
+    setInterval(updateAccordionContent, 300); // Check every 300ms
+  });
+</script>
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let currentId = null;
+
+    function updateAccordionContent() {
+      const select = document.querySelector('form[action*="/cart/add"] select[name="id"]');
+      const newId = select ? select.value : null;
+
+      if (newId !== currentId) {
+        currentId = newId;
+
+        // Update stainless steel accordions
+        document.querySelectorAll(".accordion-stand").forEach(el => {
+          const id = el.getAttribute("data-variant-id");
+          el.style.display = (id === currentId) ? "block" : "none";
+        });
+
+        // Update wooden stand accordions
+        document.querySelectorAll(".accordion-stands").forEach(el => {
+          const id = el.getAttribute("data-variant-id");
+          el.style.display = (id === currentId) ? "block" : "none";
+        });
+      }
+    }
+
+    setInterval(updateAccordionContent, 300); // Poll every 300ms
+  });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const variantRadios = document.querySelectorAll('input[type="radio"][data-variant-id]');
+  const filterRadios = document.querySelectorAll('input[type="radio"][name="filter-type"]');
+  const accordions = document.querySelectorAll('.tech-accordion');
+
+  // Dimensions + Weight for each variant
+  const dimensions = {
+    "41868949028907": { height: "18.8 in", diameter: "7.4 in", weightNormal: "8.65 Pounds", weightPostreat: "10.47 Pounds" },
+    "41868949159979": { height: "19.2 in", diameter: "8.6 in", weightNormal: "10.41 Pounds", weightPostreat: "11.9 Pounds" },
+    "41868949291051": { height: "23.2 in", diameter: "9.4 in", weightNormal: "12.46 Pounds", weightPostreat: "14.2 Pounds" }
+  };
+
+  function updateAccordion() {
+    const selectedVariant = document.querySelector('input[type="radio"][data-variant-id]:checked');
+    const selectedId = selectedVariant ? selectedVariant.getAttribute('data-variant-id') : null;
+
+    const selectedFilter = document.querySelector('input[type="radio"][name="filter-type"]:checked');
+    const isPostreat = selectedFilter && selectedFilter.getAttribute('data-variant-id') === "41868949291051";
+
+    accordions.forEach(acc => {
+      acc.style.display = (acc.dataset.variantId === selectedId) ? 'flex' : 'none';
+    });
+
+    // Update Dimensions & Weight
+    document.querySelectorAll('.tech-accordion').forEach(acc => {
+      if (acc.style.display !== 'none' && dimensions[selectedId]) {
+        const dimCell = acc.querySelector('.tech-dimensions-row td:last-child');
+        dimCell.innerHTML = `
+          Height - ${dimensions[selectedId].height}<br>
+          Diameter - ${dimensions[selectedId].diameter}<br>
+          Weight - ${isPostreat ? dimensions[selectedId].weightPostreat : dimensions[selectedId].weightNormal}
+        `;
+
+        // Update Filter Lifespan
+        const lifespanCell = acc.querySelector('.tech-filter-lifespan-row td:last-child');
+        lifespanCell.innerHTML = isPostreat
+          ? `<ul style="margin:0; padding-left:20px;">
+              <li>Up to 5,500 gallons per pair of Carbon Filter Elements</li>
+              <li>Up to 1,060 gallons per pair of POSTreat Filter Elements</li>
+            </ul>`
+          : `<ul style="margin:0; padding-left:20px;">
+              <li>Up to 5,500 gallons per pair of Carbon Filter Elements</li>
+            </ul>`;
+      }
+    });
+  }
+
+  updateAccordion();
+  variantRadios.forEach(r => r.addEventListener('change', updateAccordion));
+  filterRadios.forEach(r => r.addEventListener('change', updateAccordion));
+});
+</script>
+
+
+
+
+<style>
+.tech-accordion-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tech-accordion {
+  display: flex;
+  align-items: stretch; /* ensures both sides (content & image) match in height */
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tech-accordion-content {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 16px; /* desktop default font size */
+  line-height: 1.6;
+}
+
+.tech-accordion-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tech-accordion-table tr {
+  border-bottom: 1px solid #ddd;
+}
+
+/* Remove border for the last row */
+.tech-accordion-table tr:last-child {
+  border-bottom: none;
+}
+
+.tech-accordion-table td {
+  padding: 12px;
+  color: #333;
+  vertical-align: top;
+  font-size: 15px; /* desktop font size */
+}
+
+.tech-accordion-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #111;
+}
+
+.tech-accordion-image {
+  width: 35%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tech-accordion-image img {
+  width: 75%;
+  height: 100%;
+  object-fit: cover; /* makes image fill height equal to content */
+  border-radius: 0;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  .tech-accordion {
+    flex-direction: column;
+  }
+
+  .tech-accordion-content {
+    font-size: 14px; /* smaller font for mobile */
+  }
+
+  .tech-accordion-table td {
+    font-size: 13px; /* smaller table text for mobile */
+  }
+
+  .tech-accordion-image {
+    width: 100%;
+    height: auto;
+    margin-top: 15px;
+  }
+
+  .tech-accordion-image img {
+    height: auto;
+    max-height: 320px;
+    object-fit: contain;
+  }
+}
+</style>
+

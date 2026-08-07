@@ -1,0 +1,31 @@
+<a href="{{ article.url }}" class="blog-tile">
+
+  {% assign article_cat = '' %}
+
+  {% for tag in article.tags %}
+    {% if tag.handle contains 'cat-' %}
+      {% assign article_cat = tag %}
+    {% endif %}
+  {% endfor %}
+
+  <div class="blog-tile__img">
+    {% if article.image.src %}
+      {{ article.image.src | image_url: width: 1500 | image_tag: loading: "lazy" }}
+    {% else %}
+      {{ 'image' | placeholder_svg_tag }}
+    {% endif %}
+  </div>
+
+  <div class="blog-tile__meta">
+    <div class="blog-tile__meta__top">
+      <span class="date">{{ article.published_at | date: "%B %d %Y" }}
+        {% for tag in article.tags %}
+          | {{ tag }}
+        {% endfor %}
+      </span>
+    </div>
+
+    <h4>{{ article.title }}</h4>
+
+  </div>
+</a>
