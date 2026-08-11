@@ -11,12 +11,6 @@
 .DS_Store
 Thumbs.db
 
-# Store/theme customizer data and content layouts.
-# Keep these out of pushes when deploying code-only changes.
-config/settings_data.json
-templates/*.json
-sections/*.json
-
 # Local generated files.
 tmp/
 Screenshot*.png

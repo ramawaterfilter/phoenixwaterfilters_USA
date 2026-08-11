@@ -45,9 +45,9 @@
         "text_6w8KE6": {
           "type": "text",
           "settings": {
-            "heading": "Contaminants",
+            "heading": "Chemical Contaminants",
             "copy": "<p>Can contaminate water via septic systems and sewers.</p>",
-            "icon": "shopify://shop_images/icon-bacteria.png",
+            "icon": "shopify://shop_images/Chemical_Reduction.png",
             "video_id": ""
           }
         },
@@ -64,8 +64,8 @@
           "type": "text",
           "settings": {
             "heading": "Toxins",
-            "copy": "<p>Can contaminate water through animal waste and cause serious illness</p>",
-            "icon": "shopify://shop_images/icon-parasites.png",
+            "copy": "<p>Can contaminate water through animal waste.</p>",
+            "icon": "shopify://shop_images/Coconut-2.png",
             "video_id": ""
           }
         },
@@ -87,9 +87,12 @@
         "text_C84ri6",
         "text_FadN6B"
       ],
+      "custom_css": [
+        ".col-lg-10 {width: 100%;}"
+      ],
       "settings": {
         "style": "white-cards",
-        "heading": "We remove 99.99% of harmful contaminants",
+        "heading": "We reduce up to 99.99% of chlorine, PFAS/PFOA-PFOS, heavy metals such as lead, and other chemical contaminants.",
         "paragraph": "",
         "section_bgimg": "shopify://shop_images/filter-background-white.jpg",
         "buttontext": "",
@@ -203,6 +206,7 @@
           "type": "text",
           "settings": {
             "video_id": "",
+            "link": "",
             "banner_image": "shopify://shop_images/water-filter-eCom1.png"
           }
         },
@@ -210,6 +214,7 @@
           "type": "text",
           "settings": {
             "video_id": "",
+            "link": "",
             "banner_image": "shopify://shop_images/water-filter-eCom2.jpg"
           }
         },
@@ -217,6 +222,7 @@
           "type": "text",
           "settings": {
             "video_id": "",
+            "link": "",
             "banner_image": "shopify://shop_images/water-filter-eCom3.png"
           }
         },
@@ -224,6 +230,7 @@
           "type": "text",
           "settings": {
             "video_id": "",
+            "link": "",
             "banner_image": "shopify://shop_images/water-filter-eCom4.png"
           }
         },
@@ -231,6 +238,7 @@
           "type": "text",
           "settings": {
             "video_id": "",
+            "link": "",
             "banner_image": "shopify://shop_images/water-filter-eCom_5.jpg"
           }
         }
@@ -293,7 +301,7 @@
         "feature_col_2_V6pQER"
       ],
       "settings": {
-        "heading": "We remove 99.99% of harmful contaminants",
+        "heading": "Reduces contaminants found in tap water",
         "content": "",
         "section_video_bg": "gshkwot1gv",
         "buttonlink": "",
@@ -537,7 +545,9 @@
       ],
       "name": "Custom Embed Video",
       "settings": {
-        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/jr37r9792m.js\" async type=\"module\"></script><style>wistia-player[media-id='jr37r9792m']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/jr37r9792m/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"jr37r9792m\" aspect=\"1.7777777777777777\"></wistia-player>"
+        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/jr37r9792m.js\" async type=\"module\"></script><style>wistia-player[media-id='jr37r9792m']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/jr37r9792m/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"jr37r9792m\" aspect=\"1.7777777777777777\"></wistia-player>",
+        "visibility": "always",
+        "variant_ids": ""
       }
     },
     "video_image_Bj4fB9": {
@@ -546,7 +556,8 @@
         "text_yUqCJV": {
           "type": "text",
           "settings": {
-            "video_id": "jr37r9792m"
+            "video_id": "jr37r9792m",
+            "link": ""
           }
         }
       },

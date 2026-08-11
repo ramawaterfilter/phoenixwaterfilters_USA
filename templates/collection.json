@@ -17,13 +17,15 @@
           "disabled": true,
           "settings": {
             "video_id": "",
+            "link": "",
             "banner_image": "shopify://shop_images/Christmas_Banner_ver_2.jpg"
           }
         },
         "text_3qPbkc": {
           "type": "text",
           "settings": {
-            "video_id": ""
+            "video_id": "",
+            "link": ""
           }
         }
       },
@@ -181,6 +183,7 @@
     },
     "read_more_less_agAqci": {
       "type": "read-more-less",
+      "disabled": true,
       "custom_css": [
         "button#toggleButton {padding: 0px; margin-top: 32px;}",
         "p {font-size: 20px;}",

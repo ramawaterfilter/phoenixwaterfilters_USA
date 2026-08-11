@@ -117,7 +117,7 @@
         "layout": "copy",
         "vertical_align": "align-items-center",
         "heading": "Pure innovation, pure water.",
-        "content": "<p>Step into the future with our cutting-edge dual filtration technology. The Phoenix Gravity Water Filter isn't just a product; it's an experience, crafted from the finest AISI 304 Stainless Steel, ensuring durability and elegance. Each drop of water is a symphony of purity, filtered through our revolutionary ‘Nano Adsorption’ technology, offering a taste that's crisp, clean, and invigorating.</p>",
+        "content": "<p>Step into the future with our cutting-edge dual filtration technology. The Phoenix Gravity Water Filter isn't just a product; it's an experience, crafted from the finest AISI 304 Stainless Steel, ensuring durability and elegance. A simple, affordable way to enjoy clean, great-tasting filtered water.</p>",
         "video_id": "",
         "large_image": "img_standard",
         "second_content": "",
@@ -196,7 +196,7 @@
         "layout": "copy",
         "vertical_align": "align-items-center",
         "heading": "Revolutionary ‘Nano Adsorption’ Filter Technology",
-        "content": "<p>Traditional filters simply trap unwanted pollutants, allowing them to accumulate and multiply, which turns them into a breeding ground for contaminants within just two weeks - instantly polluting any water that passes through. To solve this crucial problem, we’ve developed revolutionary Nano Adsorption technology.<br/><br/><strong>How does it work?</strong></p><p>First, we use granular activated carbon derived from natural coconut husks to remove chemicals, toxins, and heavy metals such as zinc and lead. Then, we impregnate every filter with carbon adsorbents to prevent contaminant growth inside the filter itself. This filtration process mimics nature and keeps oxygen and mineral content unchanged, giving the water a spring-like freshness and a wholesome taste that’s second to none.</p>",
+        "content": "<p>Ordinary filters can load up with trapped material over time, which can reduce flow and affect taste. To solve this crucial problem, we’ve developed revolutionary Nano Adsorption technology.<br/><br/><strong>How does it work?</strong></p><p>First, we use granular activated carbon derived from natural coconut husks to remove chemicals, toxins, and heavy metals such as zinc and lead. We use a dense, high-grade carbon structure engineered to maintain consistent flow and long filter life. This filtration process mimics nature and keeps oxygen and mineral content unchanged, giving the water a spring-like freshness and a wholesome taste that’s second to none.</p>",
         "video_id": "",
         "large_image": "img_standard",
         "second_content": "",
@@ -211,12 +211,27 @@
     },
     "custom_html_pHGFHQ": {
       "type": "custom-html",
+      "disabled": true,
       "custom_css": [
         "wistia-player {display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background-color: transparent; object-fit: cover; border: none; margin: 0; padding: 0; box-sizing: border-box; overflow: hidden;}"
       ],
       "name": "Custom Embed Video",
       "settings": {
-        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/jr37r9792m.js\" async type=\"module\"></script><style>wistia-player[media-id='jr37r9792m']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/jr37r9792m/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"jr37r9792m\" aspect=\"1.7777777777777777\"></wistia-player>"
+        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/jr37r9792m.js\" async type=\"module\"></script><style>wistia-player[media-id='jr37r9792m']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/jr37r9792m/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"jr37r9792m\" aspect=\"1.7777777777777777\"></wistia-player>",
+        "visibility": "always",
+        "variant_ids": ""
+      }
+    },
+    "custom_html_AHPeh8": {
+      "type": "custom-html",
+      "custom_css": [
+        "wistia-player {display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background-color: transparent; object-fit: cover; border: none; margin: 0; padding: 0; box-sizing: border-box; overflow: hidden;}"
+      ],
+      "name": "Custom Embed Video",
+      "settings": {
+        "embed_code": "<!-- Wistia player script -->\n<script src=\"https://fast.wistia.com/player.js\" async></script>\n\n<!-- Video embed script -->\n<script src=\"https://fast.wistia.com/embed/t5p83isk4k.js\" async type=\"module\"></script>\n\n<!-- Placeholder shown while the Wistia player loads -->\n<style>\n  wistia-player[media-id='t5p83isk4k']:not(:defined) {\n    background: center / contain no-repeat\n      url('https://fast.wistia.com/embed/medias/t5p83isk4k/swatch');\n    display: block;\n    filter: blur(5px);\n    padding-top: 56.25%;\n  }\n</style>\n\n<!-- Video player -->\n<wistia-player media-id=\"t5p83isk4k\" aspect=\"1.7777777777777777\"></wistia-player>",
+        "visibility": "always",
+        "variant_ids": ""
       }
     },
     "video_image_YzDWaM": {
@@ -348,7 +363,7 @@
           "type": "text",
           "settings": {
             "heading": "",
-            "copy": "<p>Dual filtration system filters up to 2.25 gallons of water per hour</p>",
+            "copy": "<p>Dual filtration system filters up to 4.2 gallons of water per hour</p>",
             "icon": "shopify://shop_images/icon-clean-water.svg",
             "video_id": ""
           }
@@ -357,8 +372,8 @@
           "type": "text",
           "settings": {
             "heading": "",
-            "copy": "<p>Removes 99.9% of contaminants and heavy metals</p>",
-            "icon": "shopify://shop_images/icon-bugs.svg",
+            "copy": "<p><em>Reduces up to 99.9% of tested chemical contaminants and heavy metals.</em></p>",
+            "icon": "shopify://shop_images/Chemical_Reduction.png",
             "video_id": ""
           }
         },
@@ -375,7 +390,7 @@
           "type": "text",
           "settings": {
             "heading": "",
-            "copy": "<p>Filters last up to 50% longer than leading brands and can purify 6 months</p>",
+            "copy": "<p>Filters last up to 50% longer than leading brands.</p>",
             "icon": "shopify://shop_images/icon-time.svg",
             "video_id": ""
           }
@@ -385,7 +400,7 @@
           "settings": {
             "heading": "",
             "copy": "<p>Granular activated carbon from natural coconut shells removes PFAS and other chemical toxins.</p>",
-            "icon": "shopify://shop_images/icon-bacteria.svg",
+            "icon": "shopify://shop_images/Coconut-2.png",
             "video_id": ""
           }
         }
@@ -569,7 +584,7 @@
           "type": "text",
           "settings": {
             "icon": "shopify://shop_images/icon-glass.svg",
-            "heading": "3. Safe To Drink!",
+            "heading": "3. Enjoy great-tasting water!",
             "copy": "<p>Pour yourself a glass – you’ll notice a clean, crisp taste you only get from filtered water that’s had all the nasty contaminants absorbed!</p>"
           }
         }
@@ -640,7 +655,7 @@
         "268fbfd8-392e-437f-b2bf-8b826c84550c": {
           "type": "text",
           "settings": {
-            "quote": "<p>I’m really happy that I made this choice after looking into purifying and distilling my water, I looked into electric ones and natural steam ones and found that both would cost a lot of time and energy waste by needing to purifying the water up to 4hrs at a time. I learned that the materials used in both options was of poor quality! </p>",
+            "quote": "<p>I’m really happy that I made this choice. I looked into electric ones and natural steam ones and found that both would cost a lot of time and energy waste by needing to purifying the water up to 4hrs at a time. I learned that the materials used in both options was of poor quality! </p>",
             "reviewer": "Victoria"
           }
         },
@@ -746,6 +761,7 @@
     "video_image_jidGAQ",
     "28959b57-8b54-48fd-8951-7862b83877da",
     "custom_html_pHGFHQ",
+    "custom_html_AHPeh8",
     "video_image_YzDWaM",
     "7d657438-e0bb-4aaa-b793-a41820ac1ea5",
     "copy_image_Ub4PQg",

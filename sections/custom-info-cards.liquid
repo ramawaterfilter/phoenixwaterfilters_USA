@@ -37,11 +37,10 @@
       <div class="custom-info-cards__grid">
         {% for block in section.blocks limit: cards_limit %}
           <article class="custom-info-card" {{ block.shopify_attributes }}>
+            {% assign desktop_image = block.settings.desktop_image | default: block.settings.mobile_image %}
+            {% assign mobile_image = block.settings.mobile_image | default: desktop_image %}
             {% if block.settings.desktop_image != blank or block.settings.mobile_image != blank %}
-              {% assign desktop_image = block.settings.desktop_image | default: block.settings.mobile_image %}
-              {% assign mobile_image = block.settings.mobile_image | default: desktop_image %}
-
-              <div class="custom-info-card__media">
+              <div class="custom-info-card__media{% if block.settings.enable_accordion_mobile %} custom-info-card__desktop-only{% endif %}">
                 <picture>
                   <source
                     media="(max-width: 749px)"
@@ -67,14 +66,64 @@
             {% endif %}
 
             <div class="custom-info-card__content">
-              {% if block.settings.heading != blank %}
-                <h3 class="custom-info-card__heading">{{ block.settings.heading }}</h3>
-              {% endif %}
+              {% liquid
+                assign accordion_enabled = false
+                if block.settings.heading != blank and block.settings.description != blank
+                  if block.settings.enable_accordion_mobile or block.settings.enable_accordion_desktop
+                    assign accordion_enabled = true
+                  endif
+                endif
+              %}
 
-              {% if block.settings.description != blank %}
-                <div class="custom-info-card__description rte">
-                  {{ block.settings.description }}
-                </div>
+              {% if accordion_enabled %}
+                {% if block.settings.enable_accordion_mobile != block.settings.enable_accordion_desktop %}
+                  <div class="{% if block.settings.enable_accordion_mobile %}custom-info-card__desktop-only{% else %}custom-info-card__mobile-only{% endif %}">
+                    {% if block.settings.heading != blank %}
+                      <h3 class="custom-info-card__heading">{{ block.settings.heading }}</h3>
+                    {% endif %}
+
+                    {% if block.settings.description != blank %}
+                      <div class="custom-info-card__description rte">
+                        {{ block.settings.description }}
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endif %}
+
+                <details class="custom-info-card__accordion{% if block.settings.enable_accordion_mobile != block.settings.enable_accordion_desktop %}{% if block.settings.enable_accordion_mobile %} custom-info-card__mobile-only{% else %} custom-info-card__desktop-only{% endif %}{% endif %}">
+                  <summary class="custom-info-card__summary">
+                    <h3 class="custom-info-card__heading">{{ block.settings.heading }}</h3>
+                  </summary>
+                  {% if block.settings.enable_accordion_mobile and mobile_image != blank %}
+                    <div class="custom-info-card__media custom-info-card__accordion-media custom-info-card__mobile-only">
+                      {{
+                        mobile_image
+                        | image_url: width: 960
+                        | image_tag:
+                          class: 'custom-info-card__image',
+                          loading: 'lazy',
+                          widths: '480, 720, 960',
+                          sizes: 'calc(100vw - 5.6rem)',
+                          alt: block.settings.image_alt
+                      }}
+                    </div>
+                  {% endif %}
+                  {% if block.settings.description != blank %}
+                    <div class="custom-info-card__description rte">
+                      {{ block.settings.description }}
+                    </div>
+                  {% endif %}
+                </details>
+              {% else %}
+                {% if block.settings.heading != blank %}
+                  <h3 class="custom-info-card__heading">{{ block.settings.heading }}</h3>
+                {% endif %}
+
+                {% if block.settings.description != blank %}
+                  <div class="custom-info-card__description rte">
+                    {{ block.settings.description }}
+                  </div>
+                {% endif %}
               {% endif %}
 
               {% if block.settings.tag != blank %}
@@ -181,6 +230,41 @@
     line-height: 1.25;
   }
 
+  .custom-info-card__summary {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .custom-info-card__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .custom-info-card__summary::after {
+    content: '+';
+    flex: 0 0 auto;
+    margin-left: auto;
+    color: var(--info-cards-accent);
+    font-family: Value Sans, sans-serif;
+    font-size: 2.4rem;
+    line-height: 1;
+  }
+
+  .custom-info-card__accordion[open] > .custom-info-card__summary::after {
+    content: '\2212';
+  }
+
+  .custom-info-card__summary:focus-visible {
+    outline: .2rem solid var(--info-cards-accent);
+    outline-offset: .4rem;
+  }
+
+  .custom-info-card__mobile-only {
+    display: none;
+  }
+
   .custom-info-card__description {
     margin-top: 1.2rem;
     color: var(--info-cards-text);
@@ -212,6 +296,14 @@
   }
 
   @media (max-width: 749px) {
+    .custom-info-card__desktop-only {
+      display: none;
+    }
+
+    .custom-info-card__mobile-only {
+      display: block;
+    }
+
     .custom-info-cards {
       padding: 3.2rem 0;
     }
@@ -257,6 +349,10 @@
 
     .custom-info-card__content {
       padding: 2rem 1.5rem 2.2rem;
+    }
+
+    .custom-info-card__accordion-media {
+      margin-top: 1.4rem;
     }
 
     .custom-info-card__heading {
@@ -389,6 +485,18 @@
           "id": "description",
           "label": "Description",
           "default": "<p>Emerging research has raised concerns about excessive fluoride exposure and potential health effects.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_accordion_mobile",
+          "label": "Enable accordion on mobile",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_accordion_desktop",
+          "label": "Enable accordion on desktop",
+          "default": false
         },
         {
           "type": "text",
