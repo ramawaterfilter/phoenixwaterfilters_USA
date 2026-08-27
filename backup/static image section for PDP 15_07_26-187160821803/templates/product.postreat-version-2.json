@@ -9,149 +9,103 @@
  */
 {
   "sections": {
-    "blocks_Xxkrh7": {
-      "type": "_blocks",
+    "custom_nice_product_v3_UeEpGE": {
+      "type": "custom-nice-product-v3",
       "blocks": {
-        "ai_gen_block_866760f_KQ87ic": {
-          "type": "ai_gen_block_866760f",
+        "title_94JFyj": {
+          "type": "title",
           "disabled": true,
           "settings": {
-            "custom_html": "<div class=\"trust-wrapper\">\n  <div class=\"trust-bar-inner\">\n\n    <!-- ORIGINAL ITEMS -->\n    <div class=\"trust-item\">\n<span>🏅</span> NSF/ANSI Certified</div>\n    <div class=\"trust-item\">\n<span>⭐</span> 4.8/5 — 2,400+ Reviews</div>\n    <div class=\"trust-item\">\n<span>🚚</span> Free Shipping $99+</div>\n    <div class=\"trust-item\">\n<span>🔄</span> 100-Day Money-Back Guarantee</div>\n    <div class=\"trust-item\">\n<span>🛡️</span> 10-Year Warranty</div>\n    <div class=\"trust-item\">\n<span>🌿</span> No Aluminum. No Plastic Waste.</div>\n    <div class=\"trust-item\">\n<span>📍</span> Ships from Austin, TX</div>\n\n    <!-- DUPLICATED ITEMS FOR SMOOTH LOOP -->\n    <div class=\"trust-item\">\n<span>🏅</span> NSF/ANSI Certified</div>\n    <div class=\"trust-item\">\n<span>⭐</span> 4.8/5 — 2,400+ Reviews</div>\n    <div class=\"trust-item\">\n<span>🚚</span> Free Shipping $99+</div>\n    <div class=\"trust-item\">\n<span>🔄</span> 100-Day Money-Back Guarantee</div>\n    <div class=\"trust-item\">\n<span>🛡️</span> 10-Year Warranty</div>\n    <div class=\"trust-item\">\n<span>🌿</span> No Aluminum. No Plastic Waste.</div>\n    <div class=\"trust-item\">\n<span>📍</span> Ships from Austin, TX</div>\n\n  </div>\n</div>",
-            "custom_css": "/* TRUST BAR */\n.trust-wrapper {\n  width: 100%;\n  background: #2B2B4E !important;\n  padding: 14px 0;\n  overflow: hidden;\n  border-top: 1px solid rgba(255,255,255,0.08);\n  border-bottom: 1px solid rgba(255,255,255,0.08);\n}\n\n/* MOVING CONTENT */\n.trust-bar-inner {\n  display: flex;\n  align-items: center;\n  gap: 30px;\n  width: max-content;\n  white-space: nowrap;\n  animation: marquee 28s linear infinite;\n}\n\n/* EACH ITEM */\n.trust-item {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  color: #ffffff;\n  font-size: 15px;\n  font-weight: 600;\n  flex-shrink: 0;\n}\n\n.trust-item span {\n  color: #5eead4;\n  font-size: 18px;\n}\n\n/* SCROLL ANIMATION */\n@keyframes marquee {\n  from {\n    transform: translateX(0);\n  }\n  to {\n    transform: translateX(-50%);\n  }\n}\n\n/* PAUSE ON HOVER */\n.trust-wrapper:hover .trust-bar-inner {\n  animation-play-state: paused;\n}\n\n/* MOBILE */\n@media (max-width: 768px) {\n  .trust-item {\n    font-size: 14px;\n  }\n\n  .trust-bar-inner {\n    gap: 32px;\n    animation-duration: 22s;\n  }\n}",
-            "custom_js": "",
-            "desktop_width_percent": 100
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_866760f_KQ87ic"
-      ],
-      "disabled": true,
-      "settings": {}
-    },
-    "product-hero": {
-      "type": "product-hero",
-      "blocks": {
-        "judge_me_reviews_preview_badge_4BPtgQ": {
-          "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "judge_me_reviews_preview_badge_4BPtgQ"
-      ],
-      "disabled": true,
-      "custom_css": [
-        ".below-atc-icons {display: none;}",
-        "@media (min-width: 1024px) {.section-producthero .control .swiper-slide {padding-bottom: 13%; } .pe-5 {padding-right: 0rem !important; }}",
-        "@media (min-width: 1200px) {.container {max-width: 1200px !important; }}",
-        "@media (max-width: 1024px) {.row > * {padding-left: 10px; }}",
-        ".product-countdown {background: #2b2b4e; color: #f8fafc !important;}"
-      ],
-      "settings": {
-        "countdown_text": "{{ product.metafields.custom.month_sale.value }}",
-        "countdown_time": "",
-        "countdown_products": [],
-        "product_boost": []
-      }
-    },
-    "custom_product_hero_nGb4VJ": {
-      "type": "custom_product-hero",
-      "blocks": {
-        "product_tag_FrybhW": {
-          "type": "product_tag",
-          "settings": {
-            "text": "WELLNESS SALE",
-            "background_color": "#f8f5f3",
-            "text_color": "#153a5b"
+            "show_vendor": false
           }
         },
-        "best_for_tag_6L9wt8": {
-          "type": "best_for_tag",
-          "settings": {}
-        },
-        "custom_code_DA7MmV": {
-          "type": "custom_code",
+        "custom_liquid_wx43j3": {
+          "type": "custom_liquid",
           "settings": {
-            "custom_code": "<section class=\"hero\">\n  <div class=\"content\">\n    <h1>\n      <span class=\"white\">The First Refillable</span><br>\n      <span class=\"blue\">Steel Fluoride Filter</span><br>\n      <span class=\"white\">for Home Gravity</span><br>\n      <span class=\"white\">Systems</span>\n    </h1>\n\n    <p>\n      Clinically studied. Aluminum-free. Removes\n      <strong>95%+ of fluoride and arsenic</strong>\n      — without stripping the minerals your body actually needs.\n    </p>\n  </div>\n</section>"
+            "custom_liquid": "<section class=\"hero\">\n  <div class=\"content\">\n    <h1>\n      <span class=\"white\">The First Refillable</span><br>\n      <span class=\"blue\">Steel Fluoride Filter</span><br>\n      <span class=\"white\">for Home Gravity</span><br>\n      <span class=\"white\">Systems</span>\n    </h1>\n\n    <!-- U.S. Tap Water Badge -->\n    <div class=\"us-water-badge\">\n      <img\n        src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/united-states-flag-icon.svg?v=1783937607\"\n        alt=\"United States Flag\"\n        class=\"us-water-badge__flag\"\n      >\n\n      <span class=\"us-water-badge__text\">\n        Designed for Universal Compatibility.\n      </span>\n    </div>\n\n    <p>\n      Clinically studied. Aluminum-free. Removes\n      <strong>95%+ of fluoride and arsenic</strong>\n      — without stripping the minerals your body actually needs.\n    </p>\n  </div>\n</section>\n\n<style>\n.us-water-badge {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 12px;\n\n  padding: 10px 18px;\n\n  background: #fff;\n  border: 2px solid #2D5CC7;\n  border-radius: 999px;\n\n  width: fit-content;\n  max-width: 100%;\n  box-sizing: border-box;\n\n  margin-bottom: 20px;\n}\n\n.us-water-badge__flag {\n  width: 34px;\n  height: auto;\n  flex-shrink: 0;\n  display: block;\n}\n\n.us-water-badge__text {\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 16px;\n  font-weight: 600;\n  color: #2f2f2f;\n  line-height: 1.2;\n  white-space: nowrap;\n}\n\n/* Tablet */\n@media screen and (max-width: 768px) {\n  .us-water-badge {\n    gap: 10px;\n    padding: 9px 16px;\n  }\n\n  .us-water-badge__flag {\n    width: 30px;\n  }\n\n  .us-water-badge__text {\n    font-size: 15px;\n  }\n}\n\n/* Mobile */\n@media screen and (max-width: 480px) {\n  .us-water-badge {\n    width: 100%;\n    justify-content: center;\n    padding: 10px 14px;\n    gap: 15px;\n  }\n\n  .us-water-badge__flag {\n    width: 26px;\n  }\n\n  .us-water-badge__text {\n    font-size: 12px;\n    white-space: normal;\n    text-align: left;\n    line-height: 1.3;\n  }\n}\n</style>"
           }
         },
-        "description_stats_ndKXjN": {
+        "rating_xUErbe": {
+          "type": "rating",
+          "settings": {}
+        },
+        "description_pgNPaH": {
+          "type": "description",
+          "disabled": true,
+          "settings": {
+            "show_usps": true
+          }
+        },
+        "description_stats_b9ptGa": {
           "type": "description_stats",
           "settings": {}
         },
-        "variant_picker_kBtiPY": {
-          "type": "variant_picker",
-          "settings": {}
-        },
-        "price_pPg9f7": {
+        "price_tcYngf": {
           "type": "price",
-          "settings": {}
+          "settings": {
+            "show_stock": true,
+            "show_tax": true
+          }
         },
-        "paypal_message_FPm8yN": {
-          "type": "paypal_message",
-          "settings": {}
+        "buy_buttons_BVEhY7": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false
+          }
         },
-        "availability_mqjCQP": {
-          "type": "availability",
-          "settings": {}
-        },
-        "add_to_cart_hdMx8G": {
-          "type": "add_to_cart",
-          "settings": {}
-        },
-        "scroll_button_BGp793": {
+        "scroll_button_XDxTmY": {
           "type": "scroll_button",
           "settings": {
             "label": "↓ See How It Works",
             "target_id": "shopify-section-template--26793387982891__custom_certificate_info_card_DnrNqY",
-            "padding_top": 24,
-            "padding_bottom": 8
+            "padding_top": 0,
+            "padding_bottom": 12
           }
         },
-        "custom_code_qYXwQP": {
-          "type": "custom_code",
+        "custom_liquid_MejtVB": {
+          "type": "custom_liquid",
           "settings": {
-            "custom_code": "<div class=\"shipping-notice\">\n  <span class=\"icon\">⚠</span>\n\n  <span class=\"text\">\n    Due to state-specific regulations, POSTreat®\n Filter Elements are currently\n    unavailable for shipping to <strong>California</strong> or\n    <strong>Iowa</strong>. Questions? Call\n    <strong>1 (800) 917-0455</strong>.\n  </span>\n</div>\n\n<style>\n.shipping-notice {\n  background: #f3efe3;\n  color: #9a6a00;\n  padding: 15px 20px;\n  display: flex;\n  align-items: flex-start;\n  gap: 15px;\n\n  font-family: Inter, system-ui, sans-serif;\n  font-size: 16px;\n  line-height: 1.75;\n}\n\n.icon {\n  color: #d4a017;\n  font-size: 16px;\n  line-height: 1;\n  margin-top: 5px;\n  flex-shrink: 0;\n}\n\n.text {\n  max-width: 900px;\n}\n\n.shipping-notice strong {\n  color: #7a5200;\n  font-weight: 700;\n}\n.product-hero-block.product-hero-block--custom_code {\n    padding-top: 15px;\n}\n</style>"
+            "custom_liquid": "<div class=\"shipping-notice\">\n  <span class=\"icon\">⚠</span>\n\n  <span class=\"text\">\n    Due to state-specific regulations, POSTreat®\n Filter Elements are currently\n    unavailable for shipping to <strong>California</strong> or\n    <strong>Iowa</strong>. Questions? Call\n    <strong>1 (800) 917-0455</strong>.\n  </span>\n</div>\n\n<style>\n.shipping-notice {\n  background: #f3efe3;\n  color: #9a6a00;\n  padding: 15px 20px;\n  display: flex;\n  align-items: flex-start;\n  gap: 15px;\n\n  font-family: Inter, system-ui, sans-serif;\n  font-size: 16px;\n  line-height: 1.75;\n}\n\n.icon {\n  color: #d4a017;\n  font-size: 16px;\n  line-height: 1;\n  margin-top: 5px;\n  flex-shrink: 0;\n}\n\n.text {\n  max-width: 900px;\n}\n\n.shipping-notice strong {\n  color: #7a5200;\n  font-weight: 700;\n}\n.product-hero-block.product-hero-block--custom_code {\n    padding-top: 15px;\n}\n</style>"
           }
         }
       },
       "block_order": [
-        "product_tag_FrybhW",
-        "best_for_tag_6L9wt8",
-        "custom_code_DA7MmV",
-        "description_stats_ndKXjN",
-        "variant_picker_kBtiPY",
-        "price_pPg9f7",
-        "paypal_message_FPm8yN",
-        "availability_mqjCQP",
-        "add_to_cart_hdMx8G",
-        "scroll_button_BGp793",
-        "custom_code_qYXwQP"
+        "title_94JFyj",
+        "custom_liquid_wx43j3",
+        "rating_xUErbe",
+        "description_pgNPaH",
+        "description_stats_b9ptGa",
+        "price_tcYngf",
+        "buy_buttons_BVEhY7",
+        "scroll_button_XDxTmY",
+        "custom_liquid_MejtVB"
       ],
       "custom_css": [
         "section {padding-top: 0px; padding-bottom: 0px;}",
-        ".row.justify-content-center.lk {margin-bottom: -40px;}"
+        ".row.justify-content-center.lk {margin-bottom: -40px;}",
+        ".product-hero-scroll-button {background-color: #153a5b !important; color: white; transition: 0.3s ease !important;}",
+        "@media (min-width: 992px) {.btn.btn-large, button.btn-large, input[type=\"submit\"].btn-large, input[type=\"button\"].btn-large {font-size: 1rem; font-size: 1.5rem; padding: 1.4rem 4rem; }}",
+        ".product-description-stats {padding: 0px; gap: 0px;}"
       ],
-      "name": "Custom Product Hero",
+      "name": "Custom main product V3",
       "settings": {
-        "countdown_text": "",
-        "countdown_time": "",
-        "countdown_products": [],
-        "product_boost": [],
+        "hide_variant_media": false,
+        "desktop_media_behavior": "static",
+        "desktop_sticky_top": 130,
         "show_description_stats": true,
-        "description_stats_background": "#173554",
-        "description_stats_value_color": "#4aaee8",
-        "description_stats_label_color": "#b8c3cf",
+        "description_stats_background": "#ffffff",
+        "description_stats_value_color": "#153a5b",
+        "description_stats_label_color": "#000000",
         "description_stat_1_value": "95%+",
         "description_stat_1_label": "Fluoride Removed",
-        "description_stat_2_value": "1,060",
+        "description_stat_2_value": "1,100",
         "description_stat_2_label": "Gallons Per Pair",
         "description_stat_3_value": "10yr",
         "description_stat_3_label": "Steel Casing Warranty",
         "description_stat_4_value": "2,400+",
-        "description_stat_4_label": "Customers Protected"
+        "description_stat_4_label": "Customers Protected",
+        "show_badge": true,
+        "badge_text": ""
       }
     },
     "feature_badges_RFczgh": {
@@ -390,7 +344,8 @@
       ],
       "custom_css": [
         "section {padding-top: 0px; padding-bottom: 0px;}",
-        ".custom-certificate-info-card__eyebrow {color: #153a5b;}"
+        ".custom-certificate-info-card__eyebrow {color: #153a5b;}",
+        ".custom-certificate-info-card__icon {border: 0.15rem solid color-mix(in srgb, var(--certificate-muted) 65%, transparent); height: 100%;}"
       ],
       "name": "Certificate info card",
       "settings": {
@@ -417,6 +372,8 @@
             "image_alt": "",
             "heading": "Reusable AISI 304 Steel Casing",
             "description": "<p>The stainless steel housing is engineered to last a decade or more. Backed by a full 10-year warranty, it won't rust, leach, or degrade — making this the most durable fluoride filter on the gravity filter market.</p>",
+            "enable_accordion_mobile": false,
+            "enable_accordion_desktop": false,
             "tag": "Subscribe & Save 5%"
           }
         },
@@ -426,6 +383,8 @@
             "image_alt": "",
             "heading": "FluoRid Media Refill — Every 4 Months",
             "description": "<p>Only the internal media needs replacing — not the whole filter. Subscribe and we'll track your replacement schedule automatically, shipping your FluoRid refill before you run dry. Subscribers also save 5% per order.</p>",
+            "enable_accordion_mobile": false,
+            "enable_accordion_desktop": false,
             "tag": "Subscribe & Save 5%"
           }
         }
@@ -450,6 +409,18 @@
         "accent_color": "#0b6b73"
       }
     },
+    "custom_html_mHqx8b": {
+      "type": "custom-html",
+      "custom_css": [
+        "wistia-player {display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background-color: transparent; object-fit: cover; border: none;}"
+      ],
+      "name": "Custom Embed Video",
+      "settings": {
+        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/m9o98r1ik2.js\" async type=\"module\"></script><style>wistia-player[media-id='m9o98r1ik2']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/m9o98r1ik2/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"m9o98r1ik2\" aspect=\"1.7777777777777777\"></wistia-player>",
+        "visibility": "always",
+        "variant_ids": ""
+      }
+    },
     "custom_info_cards_GaPaxf": {
       "type": "custom-info-cards",
       "blocks": {
@@ -460,6 +431,8 @@
             "image_alt": "",
             "heading": "Neurological Health",
             "description": "<p>Multiple peer-reviewed studies have identified associations between prolonged high-fluoride water consumption and cognitive effects — particularly in developing children. Reducing daily fluoride intake through filtered water is a meaningful precautionary step many families are taking today.</p>",
+            "enable_accordion_mobile": true,
+            "enable_accordion_desktop": false,
             "tag": ""
           }
         },
@@ -470,6 +443,8 @@
             "image_alt": "",
             "heading": "Hormonal Balance",
             "description": "<p>The thyroid regulates your metabolism, energy, and hormonal equilibrium. Research suggests prolonged fluoride exposure may interfere with thyroid activity — especially in people with iodine deficiency — making fluoride-reduced water an increasingly important wellness priority.</p>",
+            "enable_accordion_mobile": true,
+            "enable_accordion_desktop": false,
             "tag": ""
           }
         },
@@ -480,6 +455,8 @@
             "image_alt": "",
             "heading": "Bone & Joint Integrity",
             "description": "<p>While fluoride plays a role in dental strength at controlled levels, excess fluoride over time has been linked to skeletal fluorosis — a condition affecting bones and joints with symptoms ranging from stiffness to structural changes. Long-term reduction is your best insurance.</p>",
+            "enable_accordion_mobile": true,
+            "enable_accordion_desktop": false,
             "tag": ""
           }
         },
@@ -490,6 +467,8 @@
             "image_alt": "",
             "heading": "Pregnancy & Birth Outcomes",
             "description": "<p>Scientific literature has explored a potential association between elevated fluoride exposure during pregnancy and increased risks of low birth weight and preterm delivery. For expectant mothers, reducing fluoride in drinking water is a straightforward and proactive protective measure.</p>",
+            "enable_accordion_mobile": true,
+            "enable_accordion_desktop": false,
             "tag": ""
           }
         }
@@ -673,7 +652,8 @@
     "custom_add_to_cart_section_8zwyA3": {
       "type": "custom-addToCart-section",
       "custom_css": [
-        "section {padding-top: 0px; padding-bottom: 0px;}"
+        "section {padding-top: 0px; padding-bottom: 0px;}",
+        ".custom-add-to-cart-section__action {margin-top: 1.1rem;}"
       ],
       "name": "Custom add to cart",
       "settings": {
@@ -971,14 +951,13 @@
     }
   },
   "order": [
-    "blocks_Xxkrh7",
-    "product-hero",
-    "custom_product_hero_nGb4VJ",
+    "custom_nice_product_v3_UeEpGE",
     "feature_badges_RFczgh",
     "custom_product_details_tabular_form_GjzVpK",
     "custom_certificate_info_card_DnrNqY",
     "custom_certificate_info_card_D9WAmn",
     "custom_info_cards_Fc4P8x",
+    "custom_html_mHqx8b",
     "custom_info_cards_GaPaxf",
     "custom_tabular_comparison_table_v2_fjXJBL",
     "custom_add_to_cart_section_8zwyA3",

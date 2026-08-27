@@ -569,7 +569,7 @@
         "text_gLW6xT": {
           "type": "text",
           "settings": {
-            "feature_text": "Filters up to 12 months worth of water before replacement"
+            "feature_text": "Filters up to 6 months worth of water before replacement"
           }
         }
       },
@@ -1037,21 +1037,21 @@
           "type": "question_answer",
           "settings": {
             "question": "How Long Will My Carbon Filter Elements Last?",
-            "answer": "<p>We recommend replacing your Carbon Filter Elements every 12 months.</p>"
+            "answer": "<p>We recommend replacing your Carbon Filter Elements every 6 months.</p>"
           }
         },
         "question_answer_BnC9e4": {
           "type": "question_answer",
           "settings": {
             "question": "How Long Will The POSTreat Fluoride Removal Filter Elements  Last?",
-            "answer": "<p>Our POSTreat Fluoride Removal Filter Elements are made from AISI 304 Grade Stainless Steel and are designed to last for years - which is why we include a 1 year warranty with our products.</p><p>The proprietary FluoRid media will last for 1060 gallons and need replacing approximately 4 months. </p><p>We also offer a subscription service for replacement media - we’ll remind you when they’re due, so you don’t have to. </p>"
+            "answer": "<p>Our POSTreat Fluoride Removal Filter Elements are made from AISI 304 Grade Stainless Steel and are designed to last for years - which is why we include a 1 year warranty with our products.</p><p>The proprietary FluoRid media will last for 1060 gallons and need replacing approximately 3 months. </p><p>We also offer a subscription service for replacement media - we’ll remind you when they’re due, so you don’t have to. </p>"
           }
         },
         "question_answer_A9iNex": {
           "type": "question_answer",
           "settings": {
             "question": "How Long Will The FluoRid Media In The POSTreat Last?",
-            "answer": "<p>The lifespan of a pair of POSTreat Fluoride Removal Filter Elements are upto 1060 gallons. It is recommended to replace the \"FluoRid Media Refill\" every 4-6months.</p>"
+            "answer": "<p>The lifespan of a pair of POSTreat Fluoride Removal Filter Elements are upto 1060 gallons. It is recommended to replace the \"FluoRid Media Refill\" every 3 months.</p>"
           }
         },
         "question_answer_64UFaw": {
@@ -1072,7 +1072,7 @@
           "type": "question_answer",
           "settings": {
             "question": "How Frequently Do I Need To Change My Filters?",
-            "answer": "<p>This depends on the usage frequency and quality of your water input. As a guide, we recommend replacing them at the following milestones:</p><p>Carbon Filter Elements: 12 months.</p><p>POSTreat (and FluoRid Media Refill): 4 months</p><p>We also offer a subscription service, which also works out to 5% off each order. Let us remember when you need to change your filter, so you don’t have to!</p>"
+            "answer": "<p>This depends on the usage frequency and quality of your water input. As a guide, we recommend replacing them at the following milestones:</p><p>Carbon Filter Elements: 6 months.</p><p>POSTreat (and FluoRid Media Refill): 3 months</p><p>We also offer a subscription service, which also works out to 5% off each order. Let us remember when you need to change your filter, so you don’t have to!</p>"
           }
         },
         "tab_ppWrr4": {

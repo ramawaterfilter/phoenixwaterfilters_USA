@@ -87,8 +87,11 @@
       "settings": {
         "section_id": "banner-one",
         "banner_width": "full",
-        "bg_image_desktop": "shopify://shop_images/Background.png",
-        "bg_image_mobile": "shopify://shop_images/Background.png",
+        "bg_image_desktop": "shopify://shop_images/image_2_1_7a6e38e7-37e1-4985-8fc3-9ef7a328d279.png",
+        "bg_image_mobile": "shopify://shop_images/image_2_1_7a6e38e7-37e1-4985-8fc3-9ef7a328d279.png",
+        "image_overlay_opacity": 30,
+        "text_overlay_opacity": 0,
+        "text_overlay_radius": 0,
         "banner_height_desktop": "adapt",
         "height_desktop_small": 300,
         "height_desktop_medium": 500,
@@ -118,6 +121,9 @@
         "banner_width": "full",
         "bg_image_desktop": "shopify://shop_images/Glass_of_tap_water_being_filled_emphasizing_need_for_filtration.png",
         "bg_image_mobile": "shopify://shop_images/Glass_of_tap_water_being_filled_emphasizing_need_for_filtration.png",
+        "image_overlay_opacity": 0,
+        "text_overlay_opacity": 0,
+        "text_overlay_radius": 0,
         "banner_height_desktop": "adapt",
         "height_desktop_small": 300,
         "height_desktop_medium": 500,
@@ -531,7 +537,6 @@
       "settings": {
         "heading": "Frequently Asked Questions About New York Water",
         "content": "",
-        "show_shipping": false,
         "accordion_styles": "full-width",
         "custom_id": "",
         "custom_class": ""

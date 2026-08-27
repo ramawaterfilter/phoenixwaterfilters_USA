@@ -1,4 +1,6 @@
 {% assign section_id = section.settings.section_id | default: section.id %}
+{% assign image_overlay_alpha = section.settings.image_overlay_opacity | divided_by: 100.0 %}
+{% assign text_overlay_alpha = section.settings.text_overlay_opacity | divided_by: 100.0 %}
 
 <section id="banner-{{ section_id }}" class="custom-banner {{ section.settings.banner_width }} height-desktop-{{ section.settings.banner_height_desktop }} height-mobile-{{ section.settings.banner_height_mobile }}">
   <div class="banner-inner">
@@ -21,20 +23,28 @@
       </div>
     {% endif %}
 
+    <!-- Overlay 1: covers the FULL image / banner -->
+    <div class="banner-image-overlay" aria-hidden="true"></div>
+
     <div class="banner-content">
-      {% if section.settings.heading != blank %}
-        <h1 class="banner-heading">{{ section.settings.heading }}</h1>
-      {% endif %}
+      <!-- Overlay 2: sits ONLY behind the text/content block -->
+      <div class="banner-text-overlay" aria-hidden="true"></div>
 
-      {% if section.settings.text != blank %}
-        <p class="banner-text">{{ section.settings.text }}</p>
-      {% endif %}
+      <div class="banner-content-inner">
+        {% if section.settings.heading != blank %}
+          <h1 class="banner-heading">{{ section.settings.heading }}</h1>
+        {% endif %}
 
-      {% if section.settings.button_label != blank %}
-        <a href="{{ section.settings.button_link }}" class="banner-btn">
-          {{ section.settings.button_label }}
-        </a>
-      {% endif %}
+        {% if section.settings.text != blank %}
+          <p class="banner-text">{{ section.settings.text }}</p>
+        {% endif %}
+
+        {% if section.settings.button_label != blank %}
+          <a href="{{ section.settings.button_link }}" class="banner-btn">
+            {{ section.settings.button_label }}
+          </a>
+        {% endif %}
+      </div>
     </div>
 
   </div>
@@ -112,6 +122,34 @@
   position: relative;
 }
 
+/* ══════════════════════════════════════════
+   OVERLAY 1 — full image / banner black overlay
+   ══════════════════════════════════════════ */
+#banner-{{ section_id }} .banner-image-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, {{ image_overlay_alpha }});
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ══════════════════════════════════════════
+   OVERLAY 2 — black overlay behind text area only
+   ══════════════════════════════════════════ */
+#banner-{{ section_id }} .banner-text-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, {{ text_overlay_alpha }});
+  border-radius: {{ section.settings.text_overlay_radius | default: 0 }}px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#banner-{{ section_id }} .banner-content-inner {
+  position: relative;
+  z-index: 2;
+}
+
 
 /* ── DESKTOP TYPOGRAPHY ── */
 @media(min-width: 769px){
@@ -129,6 +167,7 @@
   max-width: 55%;
   color: {{ section.settings.text_color }};
   padding: 0 {{ section.settings.padding_top }}px;
+  position: relative;
 }
   /* ── Width ── */
 #banner-{{ section_id }} .banner-inner {
@@ -216,6 +255,7 @@ section#banner-banner-one .banner-content {
   margin: 0 auto;
   color: {{ section.settings.text_color }};
   padding: 0 {{ section.settings.padding_top }}px;
+  position: relative;
 }
   /* ── Width ── */
 #banner-{{ section_id }} .banner-inner {
@@ -289,6 +329,40 @@ section#banner-banner-one .banner-content {
       "type": "image_picker",
       "id": "bg_image_mobile",
       "label": "Mobile Image"
+    },
+    {
+      "type": "header",
+      "content": "Overlay Settings"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity",
+      "label": "Full Image Overlay Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "text_overlay_opacity",
+      "label": "Text Area Overlay Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "text_overlay_radius",
+      "label": "Text Overlay Corner Radius",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 0,
+      "unit": "px"
     },
     {
       "type": "header",
