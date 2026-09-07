@@ -195,8 +195,36 @@
         "question_answer_YYELLq": {
           "type": "question_answer",
           "settings": {
-            "question": "What’s Your Return And Exchange Policy?",
-            "answer": "<p>We'll be able to accept returns initiated within 30 days of purchase. You will be responsible for the safe return of the item, which must arrive in a resealable condition in the original packaging.</p><p>Once we accept the return we’ll refund you via the original payment method within 10 working days. We also offer a 100 Day Money-back Guarantee on our complete Gravity Water Filter Systems.</p>"
+            "question": "What is covered by the 30-day return policy?",
+            "answer": "<p>Filters, replacement parts, and accessories are eligible for return when the return is initiated within <strong>30 days of purchase</strong>, provided the item is undamaged and in resalable condition.</p>"
+          }
+        },
+        "question_answer_fezPUd": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Who pays for return shipping?",
+            "answer": "<p>If the return is required because <strong>we made an error</strong>, such as sending the wrong item or an incorrect order, we will cover the return shipping costs. For returns that are not due to an error on our part, <strong>the customer is responsible for return shipping costs.</strong></p>"
+          }
+        },
+        "question_answer_qftnbh": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How do I start a return?",
+            "answer": "<p>Please contact our customer support team at <strong>hello@phoenixwaterfilters.com </strong>with your order details and the reason for your return. We’ll provide the return instructions and any information needed to complete the process.</p>"
+          }
+        },
+        "question_answer_kDkGWK": {
+          "type": "question_answer",
+          "settings": {
+            "question": "When will I receive my refund?",
+            "answer": "<p>Once we receive and approve your return, we’ll issue the refund to your <strong>original payment method within 10 business days</strong>. Please note that your bank or payment provider may require additional time to post the refund to your account.</p>"
+          }
+        },
+        "question_answer_KWt8DG": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Does the 100-Day Money-Back Guarantee apply to filters and accessories?",
+            "answer": "<p>No. The <strong>100-Day Money-Back Guarantee applies to complete Gravity Water Filter Systems only</strong>. Filters, replacement parts, and accessories are covered by our <strong>30-day return policy</strong>.</p>"
           }
         },
         "question_answer_XC8FL8": {
@@ -287,6 +315,10 @@
         "tab_DX8HUi",
         "question_answer_pa6Fg7",
         "question_answer_YYELLq",
+        "question_answer_fezPUd",
+        "question_answer_qftnbh",
+        "question_answer_kDkGWK",
+        "question_answer_KWt8DG",
         "question_answer_XC8FL8",
         "tab_dzULad",
         "question_answer_XkkHfV",

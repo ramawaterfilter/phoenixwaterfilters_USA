@@ -129,14 +129,6 @@
     "9600faf5-31b8-4d01-817d-b44b276a1d60": {
       "type": "accordion",
       "blocks": {
-        "text_cx7Qkt": {
-          "type": "text",
-          "disabled": true,
-          "settings": {
-            "question": "What's in the box",
-            "answer": "<ul><li>1 x AISI 304 Stainless Steel 8k finish housing unit.</li><li>1 x AISI 304 Stainless Steel Spigot for easy-access hydration.</li><li>2 x Activated Carbon Filter Elements.</li><li>(Optional) 2 x POSTreat Fluoride Removal Filter Elements.</li></ul><p></p><p>The Phoenix Gravity System is easy to set up for any countertop in your home or workplace, no plumber or electricity required.</p>"
-          }
-        },
         "text_3pC3Fj": {
           "type": "text",
           "settings": {
@@ -144,27 +136,11 @@
             "answer": "<p>Worried the Phoenix Gravity Water Filter sounds too good to be true? Not sure it will really remove as many contaminants as we promise? We stand behind our product 100% - so you can try it in your own home for 100 days. <br/><br/>If you’re not completely satisfied with the purity of your water, simply return it within 100 days for a full refund, no questions asked! <br/><br/>Terms apply</p>"
           }
         },
-        "text_rWr6i4": {
-          "type": "text",
-          "disabled": true,
-          "settings": {
-            "question": "Maintenance & Care",
-            "answer": "{{ product.metafields.custom.maintenance_care | metafield_tag }}"
-          }
-        },
-        "text_9wn3cB": {
-          "type": "text",
-          "disabled": true,
-          "settings": {
-            "question": "Powerful Filtration, Pure Water",
-            "answer": "<ul><li>Removes chlorine, heavy metals, drug residues, estrogens, and microplastics</li><li>Retains essential minerals like magnesium and calcium</li><li>Does not alter TDS – Total Dissolved Solids remain unchanged</li><li>Enhances the taste and odor of tap water</li><li>Fast and efficient filtration process</li><li>Easy-to-replace filters</li><li>Compatible with all water sources</li></ul>"
-          }
-        },
         "text_WJ7Gm4": {
           "type": "text",
           "settings": {
-            "question": "Warranty",
-            "answer": "<p>We provide a 10-year warranty on our Stainless Steel Gravity Water Filter housings, ensuring they are fully protected against defects in materials and workmanship. The Phoenix Gravity <strong>Stainless Steel Spigot comes with a 1-year warranty, and the Carbon Filter Elements come with a 3-month warranty</strong>, covering any defects in materials and workmanship. All other parts and accessories are backed by a 6-month warranty.<br/><br/>With these warranties, you’re protected against any defects in materials and workmanship.<br/></p>"
+            "question": "Warranty & Protection",
+            "answer": "<p>We stand behind the quality and craftsmanship of every Phoenix Gravity system.</p><ul><li><strong>Stainless Steel Gravity Filter Housings:</strong> 10-year warranty against defects in materials and workmanship.<br/></li><li><strong>Stainless Steel Spigot:</strong> 1-year warranty against defects in materials and workmanship.<br/></li><li><strong>Carbon Filter Elements:</strong> 3-month warranty against defects in materials and workmanship.<br/></li><li><strong>All Other Parts & Accessories:</strong> 6-month warranty against defects in materials and workmanship.<br/></li></ul><p></p><p><strong>Transit Damage ? </strong></p><p>If your order arrives damaged, report it within <strong>30 days of delivery</strong>, and we’ll provide a free replacement. Our warranty is designed to give you added confidence in the quality, durability, and workmanship of your Phoenix Gravity water filter.<br/><br/></p>"
           }
         },
         "text_4aC3aG": {
@@ -173,24 +149,12 @@
             "question": "Shipping & Returns",
             "answer": "<p><strong>Shipping :</strong></p><p>NOTE: Most orders will be processed and shipped within 3-7 business days. We appreciate your patience.</p><p>We Ship Anywhere! Within the USA. Phoenix Gravity’s free shipping offer applies to retail customer orders with a minimum amount of $99.99 shipped domestically (within the US). Orders are normally shipped via UPS ground service, USPS Priority Mail, or USPS First Class mail. Please note that UPS does not ship to PO Boxes or Military Addresses. </p><p><strong>Return Process :</strong></p><p>To initiate a return, customers must contact our customer support team and provide valid website order details. Once the details are validated, the support team will approve the return and share detailed instructions on how and where to send the product.</p><p><strong>Orders & Damaged Goods:</strong></p><p>If your order was damaged or defective during delivery, or there was an error in your order, ex. If the filters are broken or the size of the filter system is incorrect, please contact our Customer Service within 14 days of delivery receipt at 1 (800) 917-0455 or email us at <a href=\"mailto:hello@phoenixwaterfilters.com\" title=\"hello@phoenixwaterfilters.com\">hello@phoenixwaterfilters.com</a>. We will make every effort to correct your order. If you were shipped an incorrect item, Phoenix Gravity will pay for the return via standard shipping to the registered address. Please make sure you include your order ID and order date.</p><p><strong>Cancellation Policy:</strong></p><p>Cancel within 24 hours of ordering for a full refund. After shipment, use our 100-Day Trial for returns. Shipped orders will be notified via registered email IDs.<br/></p><p><strong>Important Notes :</strong></p><ul><li>Products returned without prior authorization will not be accepted.</li><li>Products must be returned in their original packaging and must be free from any damage.</li></ul>"
           }
-        },
-        "text_XhjfjF": {
-          "type": "text",
-          "disabled": true,
-          "settings": {
-            "question": "Tech",
-            "answer": "<p>&lcub;&lcub; product.selected_or_first_available_variant.metafields.my_fields.accordion_content &rcub;</p>"
-          }
         }
       },
       "block_order": [
-        "text_cx7Qkt",
         "text_3pC3Fj",
-        "text_rWr6i4",
-        "text_9wn3cB",
         "text_WJ7Gm4",
-        "text_4aC3aG",
-        "text_XhjfjF"
+        "text_4aC3aG"
       ],
       "custom_css": [
         ".tech-lifespan-list {padding-left: 0px;}",
@@ -694,7 +658,7 @@
         "layout": "image-copy",
         "vertical_align": "align-items-center",
         "heading": "WARNING: Drinking tap water makes 7.2 million americans sick every year!",
-        "content": "<p>Every year, millions of Americans fall ill from ingesting harmful chemicals in tap water. Phoenix Gravity is designed to improve taste and reduce certain non-microbiological contaminants in municipally treated tap water. It is not a microbiological purifier.<br/><br/>These contaminants have been linked to a range of serious health issues, including liver and kidney damage, thyroid disease, cancer, and even “blue baby syndrome” in infants.<br/><br/>Phoenix Gravity Water Filters use activated carbon filtration technology to remove 99.9% of contaminants from tap water, making it safe to drink no matter where you live in the U.S.</p>",
+        "content": "<p>Every year, millions of Americans fall ill from ingesting harmful chemicals in tap water. Phoenix Gravity is designed to improve taste and reduce certain non-microbiological contaminants in municipally treated tap water. It is not a microbiological purifier.<br/><br/>These contaminants have been linked to a range of serious health issues, including liver and kidney damage, thyroid disease, cancer, and even “blue baby syndrome” in infants.<br/><br/>Phoenix Gravity Water Filters use activated carbon filtration technology to remove 99.9% of contaminants from tap water.</p>",
         "video_id": "",
         "large_image": "img-lrg",
         "second_content": "",
@@ -1181,8 +1145,43 @@
         "question_answer_m8Tx6L": {
           "type": "question_answer",
           "settings": {
-            "question": "What’s Your Return And Exchange Policy?",
-            "answer": "<p>We'll be able to accept returns initiated within 30 days of purchase. You will be responsible for the safe return of the item, which must arrive in a resealable condition in the original packaging.</p><p>Once we accept the return we’ll refund you via the original payment method within 10 working days. We also offer a 100 Day Money-back Guarantee on our complete Gravity Water Filter Systems.</p>"
+            "question": "What is your return policy?",
+            "answer": "<p>We offer a <strong>100-day money-back guarantee on complete Gravity Water Filter Systems</strong>, starting from the date your order is delivered. For <strong>filters, replacement parts, and accessories</strong>, we accept returns initiated within <strong>30 days of purchase</strong>. All returned items must be <strong>undamaged and in resalable condition</strong>. Where applicable, items should be returned in their original packaging.</p>"
+          }
+        },
+        "question_answer_VDiHpM": {
+          "type": "question_answer",
+          "settings": {
+            "question": "What is covered by the 30-day return policy?",
+            "answer": "<p>Filters, replacement parts, and accessories are eligible for return when the return is initiated within <strong>30 days of purchase</strong>, provided the item is undamaged and in resalable condition.</p>"
+          }
+        },
+        "question_answer_mNmd7Y": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Who pays for return shipping?",
+            "answer": "<p>If the return is required because <strong>we made an error</strong>, such as sending the wrong item or an incorrect order, we will cover the return shipping costs. For returns that are not due to an error on our part, <strong>the customer is responsible for return shipping costs.</strong></p>"
+          }
+        },
+        "question_answer_MQLdPj": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How do I start a return?",
+            "answer": "<p>Please contact our customer support team at <strong>hello@phoenixwaterfilters.com </strong>with your order details and the reason for your return. We’ll provide the return instructions and any information needed to complete the process.</p>"
+          }
+        },
+        "question_answer_GGQmzd": {
+          "type": "question_answer",
+          "settings": {
+            "question": "When will I receive my refund?",
+            "answer": "<p>Once we receive and approve your return, we’ll issue the refund to your <strong>original payment method within 10 business days</strong>. Please note that your bank or payment provider may require additional time to post the refund to your account.</p>"
+          }
+        },
+        "question_answer_nz9qQ8": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Does the 100-Day Money-Back Guarantee apply to filters and accessories?",
+            "answer": "<p>No. The <strong>100-Day Money-Back Guarantee applies to complete Gravity Water Filter Systems only</strong>. Filters, replacement parts, and accessories are covered by our <strong>30-day return policy</strong>.</p>"
           }
         },
         "question_answer_ptLkai": {
@@ -1273,6 +1272,11 @@
         "tab_gWaeJ9",
         "question_answer_3ahAVy",
         "question_answer_m8Tx6L",
+        "question_answer_VDiHpM",
+        "question_answer_mNmd7Y",
+        "question_answer_MQLdPj",
+        "question_answer_GGQmzd",
+        "question_answer_nz9qQ8",
         "question_answer_ptLkai",
         "tab_ECHmz8",
         "question_answer_PBrxJH",
