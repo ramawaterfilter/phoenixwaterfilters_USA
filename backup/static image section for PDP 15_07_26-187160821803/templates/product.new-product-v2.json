@@ -126,6 +126,130 @@
         "badge_text": ""
       }
     },
+    "custom_nice_product_v3_WYRtM7": {
+      "type": "custom-nice-product-v3",
+      "blocks": {
+        "title_NiY4Ck": {
+          "type": "title",
+          "settings": {
+            "show_vendor": false
+          }
+        },
+        "rating_pzLL4G": {
+          "type": "rating",
+          "settings": {}
+        },
+        "description_gACY67": {
+          "type": "description",
+          "settings": {
+            "show_usps": true
+          }
+        },
+        "description_stats_mWKxtV": {
+          "type": "description_stats",
+          "settings": {}
+        },
+        "variant_picker_Rk6CPq": {
+          "type": "variant_picker",
+          "settings": {
+            "show_step_numbers": true,
+            "label_prefix": "Select",
+            "show_size_guide": true,
+            "size_guide_label": "Size Guide"
+          }
+        },
+        "price_YL7C4w": {
+          "type": "price",
+          "settings": {
+            "show_stock": true,
+            "show_tax": true
+          }
+        },
+        "buy_buttons_UHV7U6": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false
+          }
+        },
+        "scroll_button_YkjxnT": {
+          "type": "scroll_button",
+          "settings": {
+            "label": "Learn more",
+            "target_id": "",
+            "padding_top": 0,
+            "padding_bottom": 0
+          }
+        },
+        "shipping_YiVqjm": {
+          "type": "shipping",
+          "settings": {
+            "text": "Ships in 3–7 business days via UPS/USPS | Free on orders $99+",
+            "alignment": "center"
+          }
+        },
+        "payment_icons_WT8q87": {
+          "type": "payment_icons",
+          "settings": {
+            "heading": "",
+            "accessibility_label": "Accepted payment methods",
+            "icon_limit": 8
+          }
+        },
+        "trust_badges_yQwNam": {
+          "type": "trust_badges",
+          "settings": {
+            "columns_desktop": 3,
+            "columns_mobile": 2,
+            "badge_1_text": "Free Shipping in the US Mainland",
+            "badge_1_link": "",
+            "badge_2_text": "100 Day Trial",
+            "badge_2_link": "",
+            "badge_3_text": "10 Year Warranty",
+            "badge_3_link": "",
+            "badge_4_text": "Customer Support",
+            "badge_4_link": "",
+            "badge_5_text": "NSF Certified",
+            "badge_5_link": "",
+            "badge_6_text": "US-Based Warehouse Shipping",
+            "badge_6_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "title_NiY4Ck",
+        "rating_pzLL4G",
+        "description_gACY67",
+        "description_stats_mWKxtV",
+        "variant_picker_Rk6CPq",
+        "price_YL7C4w",
+        "buy_buttons_UHV7U6",
+        "scroll_button_YkjxnT",
+        "shipping_YiVqjm",
+        "payment_icons_WT8q87",
+        "trust_badges_yQwNam"
+      ],
+      "disabled": true,
+      "name": "Custom main product V3",
+      "settings": {
+        "hide_variant_media": false,
+        "desktop_media_behavior": "static",
+        "desktop_sticky_top": 130,
+        "show_description_stats": true,
+        "description_stats_background": "#173554",
+        "description_stats_value_color": "#4aaee8",
+        "description_stats_label_color": "#b8c3cf",
+        "description_stat_1_value": "95%+",
+        "description_stat_1_label": "Fluoride Removed",
+        "description_stat_2_value": "1,100",
+        "description_stat_2_label": "Gallons Per Pair",
+        "description_stat_3_value": "10yr",
+        "description_stat_3_label": "Steel Casing Warranty",
+        "description_stat_4_value": "2,400+",
+        "description_stat_4_label": "Customers Protected",
+        "show_badge": true,
+        "badge_text": ""
+      }
+    },
     "9600faf5-31b8-4d01-817d-b44b276a1d60": {
       "type": "accordion",
       "blocks": {
@@ -1362,6 +1486,7 @@
   },
   "order": [
     "custom_nice_product_v2_JjCEBd",
+    "custom_nice_product_v3_WYRtM7",
     "9600faf5-31b8-4d01-817d-b44b276a1d60",
     "secondary_details_qTHLFy",
     "blocks_iFaweq",

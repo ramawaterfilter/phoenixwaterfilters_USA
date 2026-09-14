@@ -1,5 +1,4 @@
 {% assign row_settings = 'justify-content-start align-items-center image-header' %}
-{% assign column_settings = 'col-12 col-md-10 col-lg-6 copy-col' %}
 
 {% if section.settings.sideimage == blank and section.settings.section_video_bg == blank %} 
     {% assign row_settings = 'justify-content-center align-items-center text-center standard-header' %}
@@ -29,13 +28,8 @@
         {% endif %}
    
 
-    {%if section.settings.section_video_bg != blank %}
-             <div class="video-preview-container view-animation fade-up" data-wistia-vid-id="{{ section.settings.section_video_bg }}"></div>
-            {% comment %} <div class="video-preview-container">
-
-<script src="https://fast.wistia.com/embed/medias/{{ section.settings.section_video_bg }}.jsonp" async></script></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_embed wistia_async_{{ section.settings.section_video_bg }} seo=true videoFoam=true" style="height:100%;position:relative;width:100%"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/{{ section.settings.section_video_bg }}/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;" /></div></div></div></div>
-
- </div> {% endcomment %}
+    {% if section.settings.section_video_bg != blank %}
+        <div class="video-preview-container view-animation fade-up" data-wistia-vid-id="{{ section.settings.section_video_bg }}"></div>
     {% endif %}
      </div>
 
@@ -68,8 +62,9 @@
                         {% endif %}
 
                         {% render 'button' %}
-                  
+
                     {% endif %}
+                </div>
 
             {% else %}
 
@@ -87,23 +82,39 @@
                     {% if section.settings.content != blank %}
                      {{ section.settings.content }}
                     {% endif %}
-                    {% if section.settings.sideimage != blank %}
-                        {{ section.settings.sideimage | image_url: width: 1200 | image_tag: class: 'd-block pb-5 d-lg-none' }}
-                    {% endif %}
+                    {{ section.settings.sideimage | image_url: width: 1200 | image_tag: class: 'd-block pb-5 d-lg-none' }}
                     {% if section.settings.buttontext != blank and section.settings.buttonlink != blank  %}
                         {% render 'button', class: 'ms-lg-0 mt-5' %}
                     {% endif %}
                 </div>
 
-                {% if section.settings.sideimage != blank %}
-                    <div class="col-12 col-lg-6 image-col d-none d-lg-block">
-                        {{ section.settings.sideimage | image_url: width: 1200 | image_tag }}
-                    </div>
-                {% endif %}
+                <div class="col-12 col-lg-6 image-col d-none d-lg-block">
+                    {{ section.settings.sideimage | image_url: width: 1200 | image_tag }}
+                </div>
             {% endif %}
+
         </div>
     </div>
+
+    {% for block in section.blocks %}
+        {% if block.type == 'custom_code' and block.settings.custom_code != blank %}
+            {% assign style_open = '<' | append: 'style>' %}
+            {% assign style_close = '</' | append: 'style>' %}
+            {% capture custom_style_open %}{{ style_open }}@scope (#hero-custom-code-{{ block.id }}) { {% endcapture %}
+            {% capture custom_style_close %} } {{ style_close }}{% endcapture %}
+            <div id="hero-custom-code-{{ block.id }}" class="hero-custom-code" {{ block.shopify_attributes }}>
+                {{ block.settings.custom_code | replace: style_open, custom_style_open | replace: style_close, custom_style_close }}
+            </div>
+        {% endif %}
+    {% endfor %}
 </div>
+
+{% stylesheet %}
+    .section-hero .hero-custom-code {
+        position: relative;
+        width: 100%;
+    }
+{% endstylesheet %}
 
 {% schema %}
 {
@@ -153,15 +164,24 @@
         },
          
         {
-            "type": "header",
-            "content": "Custom Code",
-            "info": "Add classes/ID to the section"
-        },
-        {
             "type": "image_picker",
             "id": "section_bgimg",
             "label": "Background Image"
-        } 
+        }
+    ],
+    "blocks": [
+        {
+            "type": "custom_code",
+            "name": "Custom code",
+            "settings": [
+                {
+                    "type": "liquid",
+                    "id": "custom_code",
+                    "label": "HTML, CSS, JS, or Liquid code",
+                    "info": "Use style and script tags when adding CSS or JavaScript."
+                }
+            ]
+        }
     ],
     "presets": [
         {

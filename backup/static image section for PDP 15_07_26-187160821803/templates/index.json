@@ -9,36 +9,50 @@
  */
 {
   "sections": {
-    "video_image_PtLiFX": {
-      "type": "video-image",
+    "hero_yhTqNC": {
+      "type": "hero",
       "blocks": {
-        "text_wEPwy4": {
-          "type": "text",
+        "custom_code_G9FEK7": {
+          "type": "custom_code",
           "settings": {
-            "video_id": "",
-            "link": "shopify://products/gravity-water-filter",
-            "banner_image": "shopify://shop_images/USA_Website.jpg"
+            "custom_code": "<section class=\"wellness-hero\" aria-label=\"Wellness Sale\">\n\n  <!-- VIDEO BACKGROUND -->\n  <video\n    class=\"wellness-video\"\n    src=\"https://cdn.shopify.com/videos/c/o/v/a45ee002798d4e069b28162e1d4b4e87.mp4\"\n    autoplay\n    muted\n    loop\n    playsinline\n    aria-hidden=\"true\">\n  </video>\n\n  <!-- VIDEO OVERLAY -->\n  <div class=\"wellness-overlay\" aria-hidden=\"true\"></div>\n\n  <!-- LEFT SIDE CONTENT -->\n  <div class=\"wellness-content\">\n\n    <h1 class=\"wellness-title\">\n      Wellness Sale\n    </h1>\n\n    <p class=\"wellness-sub\">\n      55% off Subscriptions\n    </p>\n\n    <div class=\"wellness-bottom\">\n\n      <div class=\"wellness-reviews\">\n        <span class=\"wellness-stars\">★★★★★</span>\n\n        <span class=\"wellness-review-text\">\n          Over 1000+ 5-star ratings\n        </span>\n      </div>\n\n      <a\n        href=\"https://phoenixwaterfilters.com/products/gravity-water-filter\"\n        class=\"wellness-btn\">\n\n        <span>Shop Now</span>\n\n        <span class=\"wellness-arrow\">→</span>\n\n      </a>\n\n    </div>\n\n  </div>\n\n</section>\n\n\n<style>\n\n/* ========================================\n   RESET\n======================================== */\n\n* {\n  box-sizing: border-box;\n}\n\n\n/* ========================================\n   HERO\n======================================== */\n\n.wellness-hero {\n  position: relative;\n\n  width: 100%;\n  min-height: 540px;\n\n  display: flex;\n  align-items: center;\n\n  padding: 64px 48px;\n\n  overflow: hidden;\n\n  font-family: 'DM Sans', Arial, Helvetica, sans-serif;\n}\n\n\n/* ========================================\n   VIDEO BACKGROUND\n======================================== */\n\n.wellness-video {\n  position: absolute;\n\n  inset: 0;\n\n  width: 100%;\n  height: 100%;\n\n  object-fit: cover;\n\n  z-index: 0;\n\n  pointer-events: none;\n}\n\n\n/* ========================================\n   VIDEO OVERLAY\n======================================== */\n\n.wellness-overlay {\n  position: absolute;\n\n  inset: 0;\n\n  background:\n    linear-gradient(\n      53deg,\n      rgba(255, 255, 255, 0.49) 0%,\n      rgba(14, 26, 52, 0) 45%,\n      rgba(14, 26, 52, 0) 100%\n    );\n\n  z-index: 1;\n\n  pointer-events: none;\n}\n\n\n/* ========================================\n   LEFT CONTENT\n======================================== */\n\n.wellness-content {\n  position: relative;\n\n  z-index: 2;\n\n  width: 100%;\n  max-width: 560px;\n\n  margin-left: 5.5vw;\n\n  text-align: left;\n\n  color: #344263;\n}\n/* ========================================\n   MAIN TITLE\n======================================== */\n\n.wellness-title {\n  margin: 0 0 14px;\n\n  font-family: 'DM Serif Display',\n               Georgia,\n               serif;\n\n  font-size: clamp(55px, 5.2vw, 104px);\n\n  line-height: .95;\n\n  font-weight: 700;\n\n  letter-spacing: -2px;\n\n  color: #344263;\n\n  text-align: left;\n}\n\n\n/* ========================================\n   SUBTITLE\n======================================== */\n\n.wellness-sub {\n  margin: 28px 0 30px;\n\n  font-size: clamp(28px, 2.5vw, 50px);\n\n  line-height: 1.1;\n\n  font-weight: 400;\n\n  color: #344263;\n\n  text-align: left;\n}\n\n\n/* ========================================\n   REVIEWS + BUTTON\n======================================== */\n\n.wellness-bottom {\n  display: flex;\n\n  align-items: center;\n\n  justify-content: flex-start;\n\n  gap: 25px;\n\n  flex-wrap: wrap;\n}\n\n\n/* ========================================\n   REVIEWS\n======================================== */\n\n.wellness-reviews {\n  display: flex;\n\n  align-items: center;\n\n  gap: 14px;\n\n  white-space: nowrap;\n}\n\n.wellness-stars {\n  font-size: 28px;\n\n  letter-spacing: 2px;\n\n  line-height: 1;\n\n  color: #FBBF24;\n}\n\n.wellness-review-text {\n  font-size: clamp(16px, 1.2vw, 24px);\n\n  font-weight: 400;\n\n  color: #344263;\n}\n\n\n/* ========================================\n   SHOP BUTTON\n======================================== */\n\n.wellness-btn {\n  display: inline-flex;\n\n  align-items: center;\n\n  justify-content: center;\n\n  gap: 15px;\n\n  min-width: 175px;\n\n  padding: 13px 22px;\n\n  background: #344263;\n\n  color: #fff;\n\n  border-radius: 35px;\n\n  font-size: 22px;\n\n  line-height: 1;\n\n  font-weight: 500;\n\n  text-decoration: none !important;\n\n  transition: all .25s ease;\n}\n\n.wellness-btn:hover {\n  background: #26334f;\n\n  color: #fff;\n\n  transform: translateY(-2px);\n\n  box-shadow:\n    0 8px 24px rgba(52, 66, 99, .22);\n}\n\n\n/* ========================================\n   ARROW\n======================================== */\n\n.wellness-arrow {\n  font-size: 34px;\n\n  line-height: 18px;\n\n  font-weight: 300;\n\n  display: inline-block;\n\n  transition: transform .25s ease;\n}\n\n.wellness-btn:hover .wellness-arrow {\n  transform: translateX(4px);\n}\n\n\n/* ========================================\n   TABLET\n======================================== */\n\n@media (max-width: 1100px) {\n\n  .wellness-content {\n    max-width: 60%;\n\n    margin-left: 2vw;\n  }\n\n  .wellness-sub {\n    margin-bottom: 40px;\n  }\n\n  .wellness-bottom {\n    gap: 18px;\n  }\n\n  .wellness-reviews {\n    gap: 10px;\n  }\n\n  .wellness-stars {\n    font-size: 23px;\n  }\n\n  .wellness-btn {\n    min-width: 155px;\n\n    padding: 12px 18px;\n\n    font-size: 19px;\n  }\n}\n\n\n/* ========================================\n   MOBILE\n======================================== */\n\n@media (max-width: 767px) {\n\n  .wellness-hero {\n    min-height: 520px;\n\n    padding: 44px 24px 48px;\n\n    align-items: center;\n  }\n\n  .wellness-content {\n    width: 100%;\n\n    max-width: 100%;\n\n    margin-left: 0;\n\n    text-align: left;\n  }\n\n  .wellness-title {\n    font-size: clamp(38px, 9vw, 70px);\n\n    letter-spacing: -2px;\n\n    line-height: 1;\n\n    text-align: left;\n  }\n\n  .wellness-sub {\n    margin: 20px 0 35px;\n\n    font-size: clamp(25px, 7vw, 38px);\n\n    text-align: left;\n  }\n\n  .wellness-bottom {\n    flex-direction: column;\n\n    align-items: flex-start;\n\n    justify-content: flex-start;\n\n    gap: 22px;\n  }\n\n  .wellness-reviews {\n    justify-content: flex-start;\n\n    flex-wrap: wrap;\n\n    white-space: normal;\n\n    gap: 8px;\n  }\n\n  .wellness-stars {\n    font-size: 24px;\n  }\n\n  .wellness-review-text {\n    font-size: 16px;\n  }\n\n  .wellness-btn {\n    min-width: 165px;\n\n    padding: 14px 20px;\n\n    font-size: 19px;\n  }\n}\n\n\n/* ========================================\n   SMALL MOBILE\n======================================== */\n\n@media (max-width: 400px) {\n\n  .wellness-hero {\n    min-height: 500px;\n\n    padding: 40px 18px;\n  }\n\n  .wellness-title {\n    font-size: 46px;\n  }\n\n  .wellness-sub {\n    font-size: 26px;\n  }\n\n  .wellness-stars {\n    font-size: 21px;\n  }\n\n  .wellness-review-text {\n    font-size: 14px;\n  }\n}\n\n\n/* ========================================\n   SHOPIFY THEME FIXES\n======================================== */\n\n.container {\n  margin-left: 0;\n}\n\n.row.justify-content-center a {\n  color: #fff;\n  font-weight: normal;\n}\n\n</style>"
           }
         }
       },
       "block_order": [
-        "text_wEPwy4"
+        "custom_code_G9FEK7"
       ],
-      "custom_css": [],
-      "settings": {
-        "is_posttreat": true
-      }
-    },
-    "hero": {
-      "type": "hero",
-      "custom_css": [],
+      "custom_css": [
+        ".col-12.col-md-10.col-lg-7.hero-copy {display: none;}"
+      ],
       "settings": {
         "eyebrow": "",
+        "heading": "",
+        "content": "",
+        "section_video_bg": "",
+        "buttonlink": "",
+        "buttontext": ""
+      }
+    },
+    "copy_image_dF9LbH": {
+      "type": "copy-image",
+      "custom_css": [],
+      "settings": {
+        "style": "bg-white",
+        "layout": "copy",
+        "vertical_align": "align-items-center",
         "heading": "Redefine your water experience with a Phoenix Gravity Water Filter",
         "content": "<p>A new age of filtration is here. Enjoy crisp drinking water at home from just less than 5 cents per gallon.</p>",
-        "section_video_bg": "xcf0ojhbr2",
+        "video_id": "",
+        "large_image": "img_standard",
+        "second_content": "",
         "buttonlink": "shopify://products/gravity-water-filter",
-        "buttontext": "TRY IT WITH OUR 100-DAY MONEY-BACK GUARANTEE"
+        "buttontext": "TRY IT WITH OUR 100-DAY MONEY-BACK GUARANTEE",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "bg_image_style": "contain",
+        "section_randoimg_position": "top"
       }
     },
     "features_3cPHFm": {
@@ -754,8 +768,8 @@
     }
   },
   "order": [
-    "video_image_PtLiFX",
-    "hero",
+    "hero_yhTqNC",
+    "copy_image_dF9LbH",
     "features_3cPHFm",
     "09662284-e8a5-4a4d-a1bd-7f26c20ba274",
     "video_image_jidGAQ",
