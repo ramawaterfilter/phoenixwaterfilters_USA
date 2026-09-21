@@ -1,0 +1,547 @@
+{%- comment -%}
+  Campaign restyling for the FOUR REUSED theme sections on the
+  product.kk.free-w-shipping template: testimonials, cards, accordion-tabs, gallery.
+
+  Why this section exists
+  -----------------------
+  Items 9, 10, 12 and 13 reuse existing theme sections, which we are not permitted to edit.
+  The normal way to restyle a reused section is the template JSON's `custom_css` array, but
+  Shopify caps that setting at ~500 characters (the largest `custom_css` anywhere else in this
+  theme is 472 chars) and these four need 1,000-4,000 each. Anything over the cap risks being
+  truncated the moment a merchant opens and re-saves Custom CSS in the theme editor.
+
+  So the CSS lives here instead, in this file's stylesheet block, which has no length limit.
+  Every rule is scoped with an [id$="__<key>"] attribute selector. NOTE: Shopify does NOT id a
+  template section `shopify-section-<key>` — it prefixes it, e.g.
+  `shopify-section-template--27299203416107__kk_fws_faq`. The theme id varies per theme, so a
+  literal `#shopify-section-<key>` selector matches nothing. The suffix match is stable.
+
+  This section renders no markup. If items 9/10/12/13 are ever rebuilt as real kk-fws-*
+  sections, delete this file.
+{%- endcomment -%}
+
+{% stylesheet %}
+  /* ---------------------------------------------------------------------
+     Item 9 - testimonials  ([id$="__kk_fws_testimonials"])
+     Desktop: heading left / CTA pill right on one row, review count beneath,
+     hairline under the slider.
+     --------------------------------------------------------------------- */
+  [id$="__kk_fws_testimonials"] .container {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 13.5rem;
+    row-gap: 3rem;
+  }
+
+  [id$="__kk_fws_testimonials"] .container > .row {
+    margin: 0;
+    width: 100%;
+  }
+
+  [id$="__kk_fws_testimonials"] .container > .row:not(.flex-row) {
+    grid-area: 1 / 1;
+  }
+
+  [id$="__kk_fws_testimonials"] .container > .row.align-items-center {
+    display: contents;
+  }
+
+  [id$="__kk_fws_testimonials"] .container > .row.align-items-center > div:first-child {
+    grid-area: 2 / 1 / 3 / -1;
+  }
+
+  /* The CTA column only exists when button_url is set. `:not(:first-child)` keeps this
+     from also matching the review-count column when the CTA is absent. */
+  [id$="__kk_fws_testimonials"] .container > .row.align-items-center > div:last-child:not(:first-child) {
+    grid-area: 1 / 2;
+    justify-self: end;
+  }
+
+  [id$="__kk_fws_testimonials"] .container > .row.justify-space {
+    grid-area: 3 / 1 / 4 / -1;
+    border-bottom: 1px solid #e6e6e6;
+  }
+
+  [id$="__kk_fws_testimonials"] .col-11 {
+    width: 100%;
+    max-width: 100%;
+    flex: 1;
+    padding: 0;
+  }
+
+  [id$="__kk_fws_testimonials"] h2 {
+    font-size: 5.2rem;
+    line-height: 1.1;
+    color: #153a5b;
+    margin: 0;
+  }
+
+  [id$="__kk_fws_testimonials"] .review-totals {
+    font-size: 1.4rem;
+    letter-spacing: 0.14rem;
+  }
+
+  [id$="__kk_fws_testimonials"] .btn-container {
+    margin: 0;
+  }
+
+  /* .btn-primary has no rule anywhere in the theme - the base .btn is an outlined
+     navy button, so this solid fill is load-bearing, not cosmetic. */
+  [id$="__kk_fws_testimonials"] .btn.btn-primary {
+    margin: 0 !important;
+    width: max-content;
+    background: #153a5b;
+    color: #ffffff;
+    border-color: #153a5b;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.138rem;
+    line-height: 1.15;
+    padding: 2.3rem 3rem;
+  }
+
+  [id$="__kk_fws_testimonials"] .testimonial-tile {
+    padding: 3.5rem;
+    gap: 2.2rem;
+  }
+
+  [id$="__kk_fws_testimonials"] .testimonial-quote p {
+    font-size: 2.2rem;
+    line-height: 1.4;
+    color: #26303a;
+    margin: 0;
+  }
+
+  [id$="__kk_fws_testimonials"] .testimonial-reviewer {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-size: 2.2rem;
+    line-height: 2rem;
+    letter-spacing: 0.15rem;
+    text-transform: uppercase;
+    color: #153a5b;
+    margin: 0;
+  }
+
+  @media (max-width: 989px) {
+    [id$="__kk_fws_testimonials"] .container {
+      grid-template-columns: 1fr;
+      row-gap: 2rem;
+    }
+
+    [id$="__kk_fws_testimonials"] .container > .row.align-items-center > div:first-child {
+      grid-area: 3 / 1;
+    }
+
+    [id$="__kk_fws_testimonials"] .container > .row.align-items-center > div:last-child:not(:first-child) {
+      grid-area: 2 / 1;
+      justify-self: stretch;
+    }
+
+    [id$="__kk_fws_testimonials"] .container > .row.justify-space {
+      grid-area: 4 / 1;
+    }
+
+    [id$="__kk_fws_testimonials"] h2 {
+      font-size: 2.8rem;
+    }
+
+    [id$="__kk_fws_testimonials"] .btn.btn-primary {
+      width: 100%;
+      font-size: 1.5rem;
+      letter-spacing: 0.1rem;
+      padding: 1.8rem 3rem;
+    }
+
+    [id$="__kk_fws_testimonials"] .testimonial-tile {
+      padding: 2rem;
+      gap: 1.6rem;
+      border-radius: 1.2rem;
+    }
+
+    [id$="__kk_fws_testimonials"] .testimonial-quote p {
+      font-size: 1.6rem;
+    }
+
+    [id$="__kk_fws_testimonials"] .testimonial-reviewer {
+      font-size: 1.8rem;
+      letter-spacing: 0.1rem;
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     Item 10 - cards  ([id$="__kk_fws_cards"])
+     Centred heading, 905px inner grid, navy CTA pill beneath.
+     --------------------------------------------------------------------- */
+  [id$="__kk_fws_cards"] h2 {
+    font-size: 5.2rem;
+    line-height: 1.1;
+    color: #153a5b;
+    text-align: center;
+    width: 100%;
+    max-width: 84.3rem;
+    margin: 0 auto;
+  }
+
+  [id$="__kk_fws_cards"] .cards {
+    width: 100%;
+    max-width: 90.5rem;
+    margin: 0 auto;
+    gap: 1.9rem;
+    padding: 0;
+  }
+
+  [id$="__kk_fws_cards"] .cards .card {
+    padding: 2.7rem;
+    gap: 1.2rem;
+    max-width: none;
+  }
+
+  [id$="__kk_fws_cards"] .cards .card__icon img {
+    height: 6rem;
+    max-width: 6rem;
+    margin-bottom: 0;
+  }
+
+  [id$="__kk_fws_cards"] .cards .card__content {
+    gap: 1.2rem;
+  }
+
+  [id$="__kk_fws_cards"] .cards .card__content__title {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-size: 1.8rem;
+    line-height: 1.4;
+    color: #26303a;
+  }
+
+  [id$="__kk_fws_cards"] .cards .card__content__description {
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: #26303a;
+  }
+
+  [id$="__kk_fws_cards"] .btn-container {
+    align-items: center;
+    width: 100%;
+  }
+
+  [id$="__kk_fws_cards"] .btn.btn-primary {
+    margin: 0 auto !important;
+    background: #153a5b;
+    color: #ffffff;
+    border-color: #153a5b;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-size: 1.7rem;
+    letter-spacing: 0.1rem;
+    line-height: 1.14;
+    padding: 2.2rem 6.8rem;
+    min-width: 55.2rem;
+    max-width: 100%;
+  }
+
+  @media (max-width: 989px) {
+    [id$="__kk_fws_cards"] h2 {
+      font-size: 2.8rem;
+    }
+
+    [id$="__kk_fws_cards"] .cards {
+      gap: 1.6rem;
+    }
+
+    [id$="__kk_fws_cards"] .cards .card {
+      padding: 2rem;
+      gap: 1.6rem;
+    }
+
+    [id$="__kk_fws_cards"] .cards .card__icon img {
+      height: 5rem;
+    }
+
+    [id$="__kk_fws_cards"] .btn.btn-primary {
+      min-width: 0;
+      width: 100%;
+      padding: 2.2rem 3rem;
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     Item 12 - accordion-tabs FAQ  ([id$="__kk_fws_faq"])
+     The 43/57 desktop split also corrects a latent theme bug: the section
+     markup uses col-xl-5 + col-xl-8 (13 of 12 columns), which wraps at >=1200px.
+     --------------------------------------------------------------------- */
+  [id$="__kk_fws_faq"] .section-accordion.section-tabs {
+    background: #ffffff;
+    padding: 6rem 0 8rem;
+    margin-bottom: 0;
+  }
+
+  [id$="__kk_fws_faq"] .container {
+    width: min(100% - 3.2rem, 114rem);
+    max-width: none;
+  }
+
+  [id$="__kk_fws_faq"] .col-md-8.text-center > h2 {
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 5.2rem;
+    line-height: 1.1;
+    color: #153a5b;
+    text-align: center;
+    margin: 0;
+  }
+
+  @media (min-width: 992px) {
+    [id$="__kk_fws_faq"] .tabs-navigaton {
+      flex: 0 0 auto;
+      width: 43%;
+      max-width: 43%;
+    }
+
+    [id$="__kk_fws_faq"] .tabs__content {
+      flex: 0 0 auto;
+      width: 57%;
+      max-width: 57%;
+      padding: 0;
+    }
+  }
+
+  [id$="__kk_fws_faq"] .tabs-navigaton ul.tabs__nav li.tabs__nav__item {
+    width: 100%;
+    max-width: 31.9rem;
+    padding: 0.95rem 2.45rem;
+    margin: 0 0 1.1rem;
+  }
+
+  [id$="__kk_fws_faq"] .tabs-navigaton ul.tabs__nav li.tabs__nav__item a {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.8rem;
+    line-height: 1.667;
+    color: #153a5b;
+  }
+
+  [id$="__kk_fws_faq"] .tabs-navigaton ul.tabs__nav li.tabs__nav__item.active a {
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    color: #ffffff;
+  }
+
+  [id$="__kk_fws_faq"] .tabs__content .tabs__content__pane > h2 {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.5;
+    color: #153a5b;
+    text-transform: uppercase;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid #e6e6e6;
+    margin: 0 0 3rem;
+  }
+
+  [id$="__kk_fws_faq"] .tabs__content .accordion .accordion-item {
+    padding: 0 0 3rem;
+  }
+
+  [id$="__kk_fws_faq"] .tabs__content .accordion .accordion-item + .accordion-item {
+    border-top: 1px solid #e6e6e6;
+    padding-top: 3rem;
+  }
+
+  [id$="__kk_fws_faq"] .tabs__content .accordion dt {
+    padding: 0 4rem 0 0;
+  }
+
+  [id$="__kk_fws_faq"] .tabs__content .accordion dt h3 {
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.8rem;
+    line-height: 1.4;
+    letter-spacing: -0.018rem;
+    color: #153a5b;
+    padding-right: 0;
+  }
+
+  [id$="__kk_fws_faq"] .tabs__content .accordion .accordion-item.active dt {
+    border-bottom: none;
+  }
+
+  [id$="__kk_fws_faq"] .tabs__content .accordion .accordion-item.active dt h3 {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+  }
+
+  [id$="__kk_fws_faq"] .tabs__content .accordion dt:after {
+    content: '';
+    top: 1rem;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 7px 7px 0 7px;
+    border-color: #153a5b transparent transparent transparent;
+  }
+
+  [id$="__kk_fws_faq"] .tabs__content .accordion .accordion-item.active dt:after {
+    content: '';
+    border-width: 0 7px 7px 7px;
+    border-color: transparent transparent #153a5b transparent;
+  }
+
+  [id$="__kk_fws_faq"] .tabs__content .accordion dd .accordion-item__inner {
+    padding: 2rem 0 0;
+  }
+
+  [id$="__kk_fws_faq"] .tabs__content .accordion dd .accordion-item__inner p {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: #26303a;
+    margin: 0 0 1.4rem;
+  }
+
+  [id$="__kk_fws_faq"] .tabs__content .accordion dd .accordion-item__inner p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Mobile: swap the theme's "Sort By" <select> for the stacked tab list the
+     design shows. The list markup is already in the DOM (d-none d-lg-block) and
+     src/js/navTabs.js binds its click handlers with no viewport guard, so
+     unhiding it genuinely works rather than only looking right. */
+  @media (max-width: 991px) {
+    [id$="__kk_fws_faq"] .section-accordion.section-tabs {
+      padding: 4rem 0;
+    }
+
+    [id$="__kk_fws_faq"] .col-md-8.text-center > h2 {
+      font-size: 2.8rem;
+    }
+
+    [id$="__kk_fws_faq"] .sorting {
+      display: none;
+    }
+
+    [id$="__kk_fws_faq"] .tabs-navigaton {
+      display: block !important;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    [id$="__kk_fws_faq"] .tabs-navigaton ul.tabs__nav {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    [id$="__kk_fws_faq"] .tabs-navigaton ul.tabs__nav li.tabs__nav__item {
+      max-width: 100%;
+      padding: 0.8rem 2rem;
+      margin: 0;
+    }
+
+    [id$="__kk_fws_faq"] .tabs__content {
+      padding: 1.8rem 0 0;
+    }
+
+    [id$="__kk_fws_faq"] .tabs__content .tabs__content__pane > h2 {
+      font-size: 1.8rem;
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    [id$="__kk_fws_faq"] .tabs__content .accordion .accordion-item {
+      padding-bottom: 2rem;
+    }
+
+    [id$="__kk_fws_faq"] .tabs__content .accordion .accordion-item + .accordion-item {
+      padding-top: 2rem;
+    }
+
+    [id$="__kk_fws_faq"] .container {
+      width: min(100% - 4rem, 54rem);
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     Item 13 - gallery  ([id$="__kk_fws_gallery"])
+     Full-bleed 4x2 grid, zero gutter, square cells.
+     Mobile CONFIRMED against Figma 7511:590/7511:593: a full-bleed 2-column x 4-row
+     grid of 187.5px squares at 375px wide. Desktop is 4 x 2. Breakpoints aligned to the
+     campaign's 749/750 pair rather than Bootstrap's 576.
+     --------------------------------------------------------------------- */
+  [id$="__kk_fws_gallery"] .section-gallery {
+    padding-top: 4rem;
+    padding-bottom: 0;
+  }
+
+  [id$="__kk_fws_gallery"] .call-out {
+    margin-bottom: 0;
+  }
+
+  [id$="__kk_fws_gallery"] .call-out h2 {
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 3.6rem;
+    line-height: 1.42;
+    color: #153a5b;
+    text-align: center;
+    max-width: 47.6rem;
+    margin: 0 auto;
+  }
+
+  [id$="__kk_fws_gallery"] .container-fluid.mt-5 {
+    margin-top: 4rem !important;
+  }
+
+  [id$="__kk_fws_gallery"] .grid-container {
+    gap: 0 !important;
+    max-width: none;
+    width: 100%;
+  }
+
+  [id$="__kk_fws_gallery"] .grid-container img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+  }
+
+  [id$="__kk_fws_gallery"] .grid-container img.full-width {
+    grid-column: auto;
+  }
+
+  @media (min-width: 750px) {
+    [id$="__kk_fws_gallery"] .grid-container {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @media (max-width: 749px) {
+    [id$="__kk_fws_gallery"] .grid-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    [id$="__kk_fws_gallery"] .call-out h2 {
+      font-size: 2.8rem;
+    }
+
+    [id$="__kk_fws_gallery"] .section-gallery {
+      padding-top: 3rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Reused Styles",
+  "tag": "div",
+  "class": "kk-fws-reused-styles",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Renders nothing. Carries the campaign restyling for the four reused theme sections (testimonials, cards, FAQ, gallery), which is too long for Shopify's per-section Custom CSS limit. Keep this section on the template."
+    }
+  ]
+}
+{% endschema %}

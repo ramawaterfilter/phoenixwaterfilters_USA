@@ -1,0 +1,1043 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "kk_fws_offer_bar": {
+      "type": "kk-fws-offer-bar",
+      "settings": {
+        "text": "limited [month] offer - claim your free filter system today",
+        "link": "#kk-fws-offer",
+        "background_color": "#153a5b",
+        "text_color": "#ffffff"
+      }
+    },
+    "kk_fws_header": {
+      "type": "kk-fws-header",
+      "blocks": {
+        "link_why": {
+          "type": "link",
+          "settings": {
+            "label": "why it works",
+            "link": "#kk-fws-why-switched",
+            "position": "start"
+          }
+        },
+        "link_build": {
+          "type": "link",
+          "settings": {
+            "label": "Build Your System",
+            "link": "#kk-fws-offer",
+            "position": "start"
+          }
+        },
+        "link_reviews": {
+          "type": "link",
+          "settings": {
+            "label": "reviews",
+            "link": "#kk-fws-testimonials",
+            "position": "end"
+          }
+        },
+        "link_faq": {
+          "type": "link",
+          "settings": {
+            "label": "FAQ",
+            "link": "#kk-fws-faq",
+            "position": "end"
+          }
+        }
+      },
+      "block_order": [
+        "link_why",
+        "link_build",
+        "link_reviews",
+        "link_faq"
+      ],
+      "settings": {
+        "brand_text": "Phoenix Gravity",
+        "show_menu_icon": true,
+        "menu_label": "Menu",
+        "menu_close_label": "Close menu",
+        "nav_label_start": "Campaign navigation",
+        "nav_label_end": "Campaign navigation secondary",
+        "background_color": "#f5f3f1",
+        "text_color": "#153a5b",
+        "divider_color": "#e2e2e2"
+      }
+    },
+    "kk_fws_hero": {
+      "type": "kk-fws-hero",
+      "blocks": {
+        "micro_shipping": {
+          "type": "micro_trust",
+          "settings": {
+            "icon": "shipping",
+            "text": "Pay only shipping today"
+          }
+        },
+        "micro_trial": {
+          "type": "micro_trust",
+          "settings": {
+            "icon": "trial",
+            "text": "100-day trial"
+          }
+        },
+        "micro_cancel": {
+          "type": "micro_trust",
+          "settings": {
+            "icon": "cancel",
+            "text": "Cancel any time"
+          }
+        },
+        "badge_nsf": {
+          "type": "badge",
+          "settings": {
+            "icon": "nsf",
+            "text": "NSF",
+            "text_secondary": "Certified"
+          }
+        },
+        "badge_reviews": {
+          "type": "badge",
+          "settings": {
+            "icon": "reviews",
+            "text": "1,092",
+            "text_secondary": "Reviews"
+          }
+        },
+        "badge_trial": {
+          "type": "badge",
+          "settings": {
+            "icon": "trial",
+            "text": "100-day",
+            "text_secondary": "Trial"
+          }
+        },
+        "badge_warranty": {
+          "type": "badge",
+          "settings": {
+            "icon": "warranty",
+            "text": "10-Year",
+            "text_secondary": "Warranty"
+          }
+        }
+      },
+      "block_order": [
+        "micro_shipping",
+        "micro_trial",
+        "micro_cancel",
+        "badge_nsf",
+        "badge_reviews",
+        "badge_trial",
+        "badge_warranty"
+      ],
+      "settings": {
+        "eyebrow": "Limited [month] offer for American families:",
+        "heading": "Get An NSF Certified Water Filter Tower Shipped Direct To You - Completely FREE!",
+        "subheading": "Join over 12,219+ American families who've already made the switch to clean, fresh and delicious water. Get your FREE water filter tower today, just cover shipping!",
+        "button_label": "Claim my free Water filter TOWER",
+        "button_link": "#kk-fws-offer",
+        "background_color": "#ffffff",
+        "eyebrow_background_color": "#f8f5f3",
+        "heading_color": "#153a5b",
+        "text_color": "#26303a",
+        "button_background_color": "#153a5b",
+        "button_text_color": "#ffffff",
+        "line_color": "#e6e6e6"
+      }
+    },
+    "kk_fws_rating_strip": {
+      "type": "kk-fws-rating-strip",
+      "blocks": {
+        "quote_1": {
+          "type": "quote",
+          "settings": {
+            "text": "“Tastes like bottled water, straight from the tap”"
+          }
+        },
+        "quote_2": {
+          "type": "quote",
+          "settings": {
+            "text": "“Set it up myself in five minutes flat”"
+          }
+        },
+        "quote_3": {
+          "type": "quote",
+          "settings": {
+            "text": "“We cancelled our bottled water delivery”"
+          }
+        }
+      },
+      "block_order": [
+        "quote_1",
+        "quote_2",
+        "quote_3"
+      ],
+      "settings": {
+        "score": "4.8",
+        "review_count": "1,092 verified reviews",
+        "background_color": "#f5f3f1",
+        "score_color": "#153a5b",
+        "text_color": "#26303a",
+        "line_color": "#e6e6e6"
+      }
+    },
+    "kk_fws_why_switched": {
+      "type": "kk-fws-why-switched",
+      "blocks": {
+        "feature_contaminants": {
+          "type": "feature",
+          "settings": {
+            "icon": "contaminants",
+            "heading": "Removes 150+ Contaminants",
+            "text": "Independently tested to reduce lead, chlorine, microplastics, PFAS and more. What reaches your glass is water the way it should taste"
+          }
+        },
+        "feature_certified": {
+          "type": "feature",
+          "settings": {
+            "icon": "certified",
+            "heading": "NSF/ANSI Certified",
+            "text": "Verified against NSF/ANSI standards 42 and 53 by an accredited third party. Not a marketing claim you can look up. a certification"
+          }
+        },
+        "feature_setup": {
+          "type": "feature",
+          "settings": {
+            "icon": "setup",
+            "heading": "5-Minute Setup, No Plumber",
+            "text": "No drilling, no fittings, no electricity. Stack it, fill it, and pour your first glass before the kettle boils."
+          }
+        },
+        "feature_savings": {
+          "type": "feature",
+          "settings": {
+            "icon": "savings",
+            "heading": "Pennies Per Gallon",
+            "text": "A family that switches off bottled water typically saves hundreds each year. The system pays for itself then keeps paying you back."
+          }
+        }
+      },
+      "block_order": [
+        "feature_contaminants",
+        "feature_certified",
+        "feature_setup",
+        "feature_savings"
+      ],
+      "settings": {
+        "heading": "Why 12,000+ Families Switched Off Tap Water For Good",
+        "subheading": "Independent certification, effortless setup, and water that pays for itself",
+        "show_media": true,
+        "background_color": "#ffffff",
+        "heading_color": "#153a5b",
+        "text_color": "#26303a",
+        "card_background_color": "#ffffff",
+        "line_color": "#e7e7e7"
+      }
+    },
+    "kk_fws_video": {
+      "type": "kk-fws-video",
+      "settings": {
+        "media_id": "t5p83isk4k",
+        "video_title": "Phoenix Gravity Water Filter System | Clean & Healthy Water",
+        "crop_mobile": true,
+        "background_color": "#ffffff"
+      }
+    },
+    "kk_fws_how_it_works": {
+      "type": "kk-fws-how-it-works",
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "number": "1",
+            "title": "Choose the Family Protection Plan",
+            "body": "Subscribe to the replacement Star plan at $99 / 6 months That's everything your household needs to stay protected"
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "number": "2",
+            "title": "We Ship You the Full Tower...Free",
+            "body": "Your complete $249 stainless steel housing unit arrives at your door. You pay nothing for It-just cover shipping"
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "number": "3",
+            "title": "Fresh Filters, Delivered Automatically",
+            "body": "New filters arrive every 6 months, right on schedule. reminders, no reordering your water just stays clean."
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3"
+      ],
+      "settings": {
+        "heading": "Here's Exactly How the Free Tower Works",
+        "show_pricing_bar": true,
+        "plan_a_label": "Buy outright",
+        "plan_a_price": "$249 upfront",
+        "plan_a_price_note": "+ $129 every 6 months",
+        "plan_b_label": "free system plan",
+        "plan_b_price": "$0 upfront",
+        "plan_b_price_note": "+ $99 / 6 months",
+        "savings_text": "you save $30 every cycle",
+        "background_color": "#f5f3f1",
+        "card_background_color": "#ffffff",
+        "heading_color": "#153a5b",
+        "text_color": "#26303a",
+        "number_background_color": "#153a5b",
+        "number_text_color": "#ffffff",
+        "bar_background_color": "#153a5b",
+        "bar_text_color": "#ffffff",
+        "pill_background_color": "#f8f5f3",
+        "pill_text_color": "#26303a",
+        "bar_line_color": "#315472"
+      }
+    },
+    "kk_fws_offer": {
+      "type": "kk-fws-offer",
+      "blocks": {
+        "size_1": {
+          "type": "size_details",
+          "settings": {
+            "size_value": "1.5 Gallon",
+            "description": "1-2 People",
+            "badge": "Free"
+          }
+        },
+        "size_2": {
+          "type": "size_details",
+          "settings": {
+            "size_value": "2.25 Gallon",
+            "description": "2-3 People",
+            "badge": "+ $30"
+          }
+        },
+        "size_3": {
+          "type": "size_details",
+          "settings": {
+            "size_value": "3.25 Gallon",
+            "description": "3-4 People",
+            "badge": "+ $60"
+          }
+        },
+        "plan_standard": {
+          "type": "plan",
+          "settings": {
+            "filter_value": "2 Carbon Filter Elements",
+            "label": "Family Protection",
+            "ribbon": "Most popular",
+            "price": "$99",
+            "price_note": "/ 6 months",
+            "compare_price": "$129",
+            "features": "150+ contaminants removed\nPair of carbon fitter elements\nReplaced every & months"
+          }
+        },
+        "plan_plus": {
+          "type": "plan",
+          "settings": {
+            "filter_value": "2 Carbon Filters + POSTreat Fluoride and Arsenic Reduction Filter Elements",
+            "label": "Family Protection Plus",
+            "ribbon": "Max protection",
+            "price": "$149",
+            "price_note": "/ 6 months",
+            "compare_price": "$249",
+            "features": "Fluoride + 150 contaminants removed\nIncludes & months of fluoride media\nSteal fluoride-reduction elements"
+          }
+        },
+        "trust_1": {
+          "type": "trust",
+          "settings": {
+            "icon": "shipping",
+            "text": "Pay only shipping today"
+          }
+        },
+        "trust_2": {
+          "type": "trust",
+          "settings": {
+            "icon": "trial",
+            "text": "100-day trial"
+          }
+        },
+        "trust_3": {
+          "type": "trust",
+          "settings": {
+            "icon": "cancel",
+            "text": "Cancel any time"
+          }
+        }
+      },
+      "block_order": [
+        "size_1",
+        "size_2",
+        "size_3",
+        "plan_standard",
+        "plan_plus",
+        "trust_1",
+        "trust_2",
+        "trust_3"
+      ],
+      "settings": {
+        "eyebrow": "BUILD YOUR own system in minutes",
+        "heading": "Prefer to Customize? Configure Your System.",
+        "subheading": "Pick your size, your protection, and how you pay. Your price updates live - and the free-system offer still applies on every subscription.",
+        "size_legend": "Choose Your Tower Size",
+        "size_option_name": "Size",
+        "plan_legend": "Choose Your Protection Plan",
+        "filter_option_name": "Filter Type",
+        "stand_option_name": "Stand",
+        "stand_option_value": "No Stand",
+        "media_limit": 4,
+        "button_label": "send me my free TOWER"
+      }
+    },
+    "kk_fws_tap_warning": {
+      "type": "kk-fws-tap-warning",
+      "blocks": {
+        "paragraph_intro": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>Every year, millions of Americans fall sick by ingesting harmful chemicals through tap water. In Baltimore, they recently detected a parasite in the drinking water… in California’s Coachella Valley, they found water from fast-food soda fountains contained salmonella… and in Iowa, they identified unsafe amounts of nitrate and alachlor.</p>"
+          }
+        },
+        "paragraph_effects": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>These chemicals have been linked to a range of dangerous side effects - liver and kidney damage, thyroid disease, cancer and even “blue baby syndrome” in infants. Phoenix Gravity Water Filters use a powerful Nano Toxin filter technology to remove 99.9% of contaminants from tap water, making it safe to drink in any city in America!</p>"
+          }
+        }
+      },
+      "block_order": [
+        "paragraph_intro",
+        "paragraph_effects"
+      ],
+      "settings": {
+        "heading": "WARNING: Drinking Tap Water Makes 7.2 million Americans Sick Every Year!",
+        "background_color": "#ffffff",
+        "heading_color": "#153a5b",
+        "text_color": "#26303a",
+        "fade_color": "#ffffff"
+      }
+    },
+    "kk_fws_comparison": {
+      "type": "kk-fws-comparison",
+      "blocks": {
+        "feature_affordable": {
+          "type": "feature",
+          "settings": {
+            "feature": "Affordable",
+            "phoenix": true,
+            "in_home": false,
+            "bottled": false,
+            "pitchers": true
+          }
+        },
+        "feature_portable": {
+          "type": "feature",
+          "settings": {
+            "feature": "Portable",
+            "phoenix": true,
+            "in_home": false,
+            "bottled": true,
+            "pitchers": true
+          }
+        },
+        "feature_durable": {
+          "type": "feature",
+          "settings": {
+            "feature": "Durable Stainless Steel",
+            "phoenix": true,
+            "in_home": true,
+            "bottled": false,
+            "pitchers": false
+          }
+        },
+        "feature_trial": {
+          "type": "feature",
+          "settings": {
+            "feature": "100-day Risk-Free Trial",
+            "phoenix": true,
+            "in_home": false,
+            "bottled": false,
+            "pitchers": false
+          }
+        },
+        "feature_maintain": {
+          "type": "feature",
+          "settings": {
+            "feature": "Easy To Maintain",
+            "phoenix": true,
+            "in_home": false,
+            "bottled": true,
+            "pitchers": true
+          }
+        },
+        "feature_capacity": {
+          "type": "feature",
+          "settings": {
+            "feature": "Large Capacity",
+            "phoenix": true,
+            "in_home": true,
+            "bottled": false,
+            "pitchers": false
+          }
+        },
+        "feature_plumbing": {
+          "type": "feature",
+          "settings": {
+            "feature": "No Plumbing Required",
+            "phoenix": true,
+            "in_home": false,
+            "bottled": true,
+            "pitchers": true
+          }
+        }
+      },
+      "block_order": [
+        "feature_affordable",
+        "feature_portable",
+        "feature_durable",
+        "feature_trial",
+        "feature_maintain",
+        "feature_capacity",
+        "feature_plumbing"
+      ],
+      "settings": {
+        "heading": "The most convenient and affordable way to enjoy pure, clean drinking in your home",
+        "feature_column_label": "Feature",
+        "column_phoenix_label": "Phoenix Water Filter",
+        "column_in_home_label": "In-Home System",
+        "column_bottled_label": "Bottled Water",
+        "column_pitchers_label": "Pitchers",
+        "table_label": "Phoenix Water Filter compared with in-home systems, bottled water and pitchers",
+        "toggles_label": "Choose a product to compare",
+        "yes_label": "Yes",
+        "no_label": "No",
+        "button_label": "Send Me My Free Tower",
+        "button_link": "#kk-fws-offer",
+        "background_color": "#f5f3f1",
+        "heading_color": "#153a5b",
+        "feature_background_color": "#f5f3f1",
+        "highlight_color": "#ffffff",
+        "highlight_label_color": "#153a5b",
+        "button_background_color": "#153a5b",
+        "button_text_color": "#ffffff"
+      }
+    },
+    "kk_fws_anchor_testimonials": {
+      "type": "kk-fws-anchor",
+      "settings": {
+        "anchor_id": "kk-fws-testimonials"
+      }
+    },
+    "kk_fws_testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "text_GAWGWC": {
+          "type": "text",
+          "settings": {
+            "quote": "<p>I’m really happy that I made this choice after looking into purifying and distilling my water, I looked into electric ones and natural steam ones and found that both would cost a lot of time and energy <em>waste</em> by needing to purifying the water up to 4hrs at a time. I learned that the materials used in both options was of poor quality!</p>",
+            "reviewer": "Victoria"
+          }
+        },
+        "text_VmcM3T": {
+          "type": "text",
+          "settings": {
+            "quote": "<p>We were looking for a solid filter that would be easy to maintain, easy to build, long lasting, and effective. Meets the mark on all accounts!</p>",
+            "reviewer": "Andrew Narduzzi"
+          }
+        },
+        "text_9jBUht": {
+          "type": "text",
+          "settings": {
+            "quote": "<p>Bought one from Amazon and I must say I had the other well named one from another company and Phoenix is better, the other company is terribly bad at customer services and rude and don’t care if you have a problem like when I ordered things that didn’t come and they literally said I was wrong and I got my things but I didn’t and called me a thief….very rude and unprofessional.</p>",
+            "reviewer": "David"
+          }
+        }
+      },
+      "block_order": [
+        "text_GAWGWC",
+        "text_VmcM3T",
+        "text_9jBUht"
+      ],
+      "settings": {
+        "layout": "style-1",
+        "heading": "🇺🇸 Americans Have Trusted Our Water Filters For Over 50 Years",
+        "paragraph": "",
+        "sub_header": "Based on 7495 Reviews",
+        "button_text": "",
+        "button_url": "",
+        "button_aftertext": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "kk_fws_cards": {
+      "type": "cards",
+      "blocks": {
+        "text_hyBUkK": {
+          "type": "text",
+          "settings": {
+            "heading": "Filter Out 99.9% Of Contaminants",
+            "copy": "<p>304 stainless steel is lightweight, rust-resistant, and durable</p>",
+            "icon": "shopify://shop_images/icon-water.svg",
+            "video_id": ""
+          }
+        },
+        "text_4XRwdm": {
+          "type": "text",
+          "settings": {
+            "heading": "Save A Fortune On Bottles Or A Whole-Home System",
+            "copy": "<p>Why spend $1,000s on bottled water or buy an expensive in-home system when you can enjoy safe, delicious water for a fraction of the cost?</p>",
+            "icon": "shopify://shop_images/icon-bottle_ff07ad97-f9a4-42a8-a9bb-ee0b172d9458.svg",
+            "video_id": ""
+          }
+        },
+        "text_BzeGeE": {
+          "type": "text",
+          "settings": {
+            "heading": "Lightweight And Easy To Move Or Carry Around",
+            "copy": "<p>Phoenix Water Filters are lightweight and portable – you can carry them from home, to work, to camping trips and back!</p>",
+            "icon": "shopify://shop_images/icon-scales_bbf132a3-2ee0-4790-b250-ec80e2bd5d7f.svg",
+            "video_id": ""
+          }
+        },
+        "text_6fa9wW": {
+          "type": "text",
+          "settings": {
+            "heading": "Built To Last Up To 10 Years Or More",
+            "copy": "<p>Made from quality 304 stainless steel, Phoenix Gravity Water Filters are backed by a 10-year warranty to give you added peace of mind!</p>",
+            "icon": "shopify://shop_images/icon-time_22302494-3a88-4cf5-b70b-b40949aed71d.svg",
+            "video_id": ""
+          }
+        },
+        "text_bA9cTL": {
+          "type": "text",
+          "settings": {
+            "heading": "Backed By 50+ Years Of Experience",
+            "copy": "<p>We’ve been manufacturing industry-leading water filters for decades, and all of our products are backed by thousands of hours of research and development!</p>",
+            "icon": "shopify://shop_images/icon-approval.svg",
+            "video_id": ""
+          }
+        },
+        "text_b79geA": {
+          "type": "text",
+          "settings": {
+            "heading": "Enjoy Delicious-Tasting Water Every Day",
+            "copy": "<p>Sick of water that tastes gross, or smells like chlorine and other chemicals? Enjoy pure water that’s so delicious you’ll never want to drink anything else!</p>",
+            "icon": "shopify://shop_images/icon-glass_902848fa-b2f9-4cf7-ac7c-231521a3b76b.svg",
+            "video_id": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_hyBUkK",
+        "text_4XRwdm",
+        "text_BzeGeE",
+        "text_6fa9wW",
+        "text_bA9cTL",
+        "text_b79geA"
+      ],
+      "settings": {
+        "style": "light-cards",
+        "heading": "It’s Never Been This Easy to Enjoy Safe, Delicious Drinking Water Every Single Day of the Year!",
+        "paragraph": "",
+        "section_bgimg": "shopify://shop_images/filter-background-light.jpg",
+        "buttontext": "Claim Free System",
+        "buttonlink": "#kk-fws-offer",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "kk_fws_video_2": {
+      "type": "kk-fws-video",
+      "settings": {
+        "media_id": "t5p83isk4k",
+        "video_title": "Phoenix Gravity Water Filter System | Clean & Healthy Water",
+        "crop_mobile": true,
+        "background_color": "#ffffff"
+      }
+    },
+    "kk_fws_anchor_faq": {
+      "type": "kk-fws-anchor",
+      "settings": {
+        "anchor_id": "kk-fws-faq"
+      }
+    },
+    "kk_fws_faq": {
+      "type": "accordion-tabs",
+      "blocks": {
+        "tab_setup_kkf": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Set Up & Maintenance"
+          }
+        },
+        "qa_prime_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Is It Essential To Prime The Carbon Cartridges?",
+            "answer": "<p>Priming the Carbon Cartridges is the first step to ensuring your cartridges are completely free from any residuals from the manufac-turing process. The residuals are completely normal and safe but can lead to cloudy water if the cartridges are not correctly primed. We recommend priming your Carbon Cartridges for at least 3 minutes. If not primed correctly, we advise discarding up to the first four rounds of filtered water.</p><p>For full priming instructions, click here.</p>"
+          }
+        },
+        "qa_cloudy_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Why Is My Water Cloudy?",
+            "answer": "<p>Don’t worry, cloudy water after initial installation is normal and completely harmless. It’s simply safe residual dust from the manufacturing process. It can occur if the filters are not correctly primed - and we recommend priming filters fully (see above).</p><p>If it is not primed, it can take about four rounds of filtered water to clear.</p>"
+          }
+        },
+        "qa_postreat_life_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Long Will The POSTreat Fluoride Removal Filters Last?",
+            "answer": "<p>Our POSTreat Fluoride Removal Filter Elements are made from AISI 304 Grade Stainless Steel and are designed to last for years - which is why we include a 1 year warranty with our products.</p><p>The proprietary FluoRid media will last for 1060 gallons and need replacing approximately 4 months. </p><p>We also offer a subscription service for replacement media - we’ll remind you when they’re due, so you don’t have to. </p>"
+          }
+        },
+        "qa_fluorid_media_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Long Will The FluoRide Media In The POSTreat Last?",
+            "answer": "<p>The lifespan of a pair of POSTreat Fluoride Removal Filter Elements are upto 1060 gallons. It is recommended to replace the \"FluoRid Media Refill\" every 4-6months.</p>"
+          }
+        },
+        "qa_assemble_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Will I Be Able To Assemble My System And Change My Cartridges Myself?",
+            "answer": "<p>Yes! Our systems are designed to be extremely easy to assemble and everything you need will be included. You can do it yourself with just your hands - there’s no specialist tools, plumbers or electricians required.</p><p>We include full instructions with every unit and we’re always here to help. </p>"
+          }
+        },
+        "qa_dripping_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "My Phoenix Gravity Water Filter Has Water Dripping In Between The Upper And Lower Chambers, What Does This Mean?",
+            "answer": "<p>This will be from over-filling the Water Filter System. Careful use can help prevent overfilling by checking how much water is in the lower chamber before filling the upper chamber.</p><p>Once you get to know your usage rates the re-filling process will become second nature!</p><p>We also sell a Stainless Steel Spigot With Water Level Gauge which will enable you to see the water level from the outside.  </p>"
+          }
+        },
+        "qa_change_freq_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Frequently Do I Need To Change My Cartridges?",
+            "answer": "<p>This depends on the usage frequency and quality of your water input. As a guide, we recommend replacing them at the following milestones:</p><p>Carbon Filter Elements: 12 months.</p><p>POSTreat (and FluoRid Media Refill): 4 months</p><p>We also offer a subscription service, which also works out to 5% off each order. Let us remember when you need to change your filter, so you don’t have to!</p>"
+          }
+        },
+        "tab_filtration_kkf": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Filtration"
+          }
+        },
+        "qa_how_work_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Do Your Filters Work?",
+            "answer": "<p>We use the highest grade AISI 304 Grade Stainless Steel, natural coconut carbon and other natural materials. Plus the mighty force of gravity! Our advanced filtration system removes up to 99.99% of commonly occurring contaminants and retains up to 100% of nutrients.</p>"
+          }
+        },
+        "qa_really_remove_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "What Do Your Filters Really Remove?",
+            "answer": "<p>Phoenix Gravity Carbon Filter Elements are made from pure coconut shells, which are a sustainable and renewable resource. The carbon in the filters is activated, which means that it has a high surface area and is very porous. This allows it to trap a wide range of contaminants, including chlorine, heavy metals, and other impurities. </p><p>Phoenix Gravity Carbon Filters are designed to provide clean, odorless water with a great taste. They do not release any harmful chemicals or by-products into the water, and they are very effective at removing chlorine and other volatile organic compounds. A pair of carbon filter elements can filter gallons of water by providing safe and healthy drinking water.</p>"
+          }
+        },
+        "qa_pharma_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do Phoenix Gravity Filters Remove Residual Pharmaceutical Waste?",
+            "answer": "<p>Yes, up to 99.99%! our primary Carbon Filter Elements have been independently tested to reduce PFAS and pharmaceutical residues based on third-party testing.</p>"
+          }
+        },
+        "qa_fluoride_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do Your Filters Remove Fluoride?",
+            "answer": "<p>Yes ! We’ve designed a specialist fluoride removal filter called the POSTreat to remove over 95% of fluoride from your tap water.</p><p>Made from the AISI 304 Grade Stainless Steel, it’s completely reusable and refillable, with our POSTreat FluoRid Media Refill. The POSTtreat can be used in conjunction with primary Carbon Filter Elements.</p>"
+          }
+        },
+        "qa_carbon_cart_fluoride_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do The Phoenix Carbon Cartridges Remove Fluoride",
+            "answer": "<p>Yes ! We’ve designed a specialist fluoride cartridge called the POSTreat to remove over 95% of fluoride from your tap water.</p><p>Made from the highest grade stainless steel, it’s completely reusable and refillable, with our POSTreat FluoRid Refill. The POSTtreat can be used in conjunction with primary Carbon Cartridges.</p>"
+          }
+        },
+        "qa_phthalates_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do Phoenix Carbon Elements Eliminate Phthalates From Water?",
+            "answer": "<p>While we have not specifically tested for the removal of phthalates, our Phoenix Carbon Filter Elements are made with highest grade activated coconut carbon, which is known for its effectiveness in adsorbing phthalates from water. We are constantly improving and testing our filters.</p>"
+          }
+        },
+        "qa_estrogen_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do Phoenix Gravity Filters Remove Estrogen?",
+            "answer": "<p>While we have not specifically tested for the removal of estrogen, our Phoenix Carbon Filters are made with activated coconut carbon, which is known for its effectiveness in adsorbing estrogen from water. We are constantly improving and testing our filters.</p>"
+          }
+        },
+        "qa_compare_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Do Your Gravity Filters And Filter Elements Compare To Others?",
+            "answer": "<p>We are one of the leaders in advanced Gravity Filtration. With over 50 plus years’ experience of manufacturing in-house, we have complete control over the process and the quality of our filters and filter elements. We are enormously proud of the effort it has taken us to become a leading manufacturer of Gravity Water Filters.</p>"
+          }
+        },
+        "qa_berkey_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Are Your Filters As Comprehensive As Berkey?",
+            "answer": "<p>Absolutely! We have run extensive and independent tests on our filters for a variety of chemical contaminants such as Lead, chlorine, chromium, Volatile organic compounds and 100 more.</p><p>What’s more, with over 50 plus years’ experience of in-house manufacturing - we’re one of the leading global manufacturers of AISI 304 Grade Stainless Steel gravity filtration systems. We also have complete control over the process and the quality of our filters and replacement filter elements. We are enormously proud of the effort it has taken us to become the world’s leading manufacturer of Gravity Water Filters.</p>"
+          }
+        },
+        "qa_tds_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do Phoenix Gravity Filters Lower The TDS?",
+            "answer": "<p>TDS stands for Total Dissolved Solids and is measured in parts per million (ppm) or parts per billion (ppb). It’s a measure of the water’s organic and inorganic content including minerals and nutrients.</p><p>Natural water will have a TDS reading from minerals and nutrients picked up from the rocks and ground it flows through. It’s generally accepted that 300 ppm is a good mineral content. We purposely do not bring our TDS to zero, because we’re all about preserving the natural vitamins and minerals your body needs</p>"
+          }
+        },
+        "qa_box_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "What Is Inside The Cartridge Box?",
+            "answer": "<p>Phoenix Gravity Carbon Filter Elements includes the following accessories, 1) Filter elements pre-fitted with wingnut and washers 2) AISI 304 Grade Stainless steel spigot  3) Lid Knob 4) A single spare set of Washers and wingnut in case the existing filter washer and wing nut are damaged or misplaced 5) A spare hole blockers 6) instruction manual</p>"
+          }
+        },
+        "qa_hardness_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Will Phoenix Gravity Filters Remove Water Hardness?",
+            "answer": "<p>No. Phoenix Carbon Filter Elements are designed to remove up to 99.99% of chlorine, lead and over 100 other unwanted substances from your drinking water.</p>"
+          }
+        },
+        "tab_shipping_kkf": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Shipping & Returns"
+          }
+        },
+        "qa_ship_to_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Where Does Phoenix Gravity Ship To?",
+            "answer": "<p>We currently ship to the US. We’re working on shipping to more locations.</p>"
+          }
+        },
+        "qa_returns_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "What’s Your Return And Exchange Policy?",
+            "answer": "<p>We'll be able to accept returns initiated within 30 days of purchase. You will be responsible for the safe return of the item, which must arrive in a resealable condition in the original packaging.</p><p>Once we accept the return we’ll refund you via the original payment method within 10 working days. We also offer a 100 Day Money-back Guarantee on our complete Gravity Water Filter Systems.</p>"
+          }
+        },
+        "qa_damaged_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "My Item Has Arrived Damaged Or Incorrect, What Can I Do?",
+            "answer": "<p>Please send a photograph of your full order including the packaging along with your order number to our support team at hello@phoenixwaterfilters.com, and we’ll get back to you as a matter of priority within 24 hours.</p>"
+          }
+        },
+        "tab_warranty_kkf": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Warranty & 100-Day Trial"
+          }
+        },
+        "qa_100day_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Does The 100-Day Money-Back Guarantee Work?",
+            "answer": "<p>The 100-Day Money Back Guarantee is applicable only to the Phoenix Gravity Systems purchased with the AISI 304 Grade Stainless Steel housings housings, via our website. The trial is not applicable for replacement filters and accessories purchased separately. </p><p><strong>Here’s how it works:</strong></p><p>Purchase your Phoenix Gravity Water Filter System via our website. Once it arrives, start using it straight away.</p><p>If you don’t fall in love with your Phoenix Gravity System within 100 days of use from the date of delivery, contact our support team to initiate a return. The return must be initiated within 100 days from the date of delivery.</p><p>The system must be returned complete with all original parts and packaging. The AISI 304 Grade Stainless Steel housing should not be dented or otherwise damaged. The filter elements must not be cracked or damaged upon our receipt of the return.</p><p>Upon safe receipt of the system and inspection of condition, we will be in touch to initiate a full refund to your original payment method. This process may take up to 10 business days to complete.</p><p><a href=\"/pages/contact-us\" title=\"Contact Us\">Talk To Us About The 100-Day Money Back Guarantee.</a></p>"
+          }
+        },
+        "qa_amazon_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Is The 100-Day Return Policy Valid If I Order From Amazon?",
+            "answer": "<p>No. Your Phoenix Gravity Filter system must be purchased via our website to qualify for our 100-day money back guarantee.</p>"
+          }
+        },
+        "qa_warranty_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Does The Warranty Work?",
+            "answer": "<p>We offer a 1 year warranty on Phoenix Gravity 304 Grade Stainless Steel Spigots and Carbon Elements. You’re protected against any defects in material and workmanship.</p><p>We offer a 6 month warranty on all other parts and accessories. You’re protected against any defects in material and workmanship.</p>"
+          }
+        },
+        "tab_account_kkf": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Your Account And Subscriptions"
+          }
+        },
+        "qa_sub_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Can I Get A Subscription On My Elements?",
+            "answer": "<p>Yes, we offer a subscription to replace your elements to save you time and headspace.</p>"
+          }
+        },
+        "qa_sub_change_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "How Do I Make Changes To My Subscription?",
+            "answer": "<p>Your subscription can be amended and updated from your Phoenix Gravity Account. Once you’ve logged into your account, click on subscriptions to make any changes.</p><p>If you need any further help, please don’t hesitate to contact us.</p>"
+          }
+        },
+        "qa_sub_cancel_kkf": {
+          "type": "question_answer",
+          "settings": {
+            "question": "Can I Skip Or Cancel My Subscription?",
+            "answer": "<p>Yes, you can make changes to frequency or cancel your subscription at any time.</p><p>Please note that cancelling your subscription will forfeit any special pricing on your subscription, so if you wish to re-subscribe after canceling, you may not be able to recover the same special pricing you had previously.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "tab_setup_kkf",
+        "qa_prime_kkf",
+        "qa_cloudy_kkf",
+        "qa_postreat_life_kkf",
+        "qa_fluorid_media_kkf",
+        "qa_assemble_kkf",
+        "qa_dripping_kkf",
+        "qa_change_freq_kkf",
+        "tab_filtration_kkf",
+        "qa_how_work_kkf",
+        "qa_really_remove_kkf",
+        "qa_pharma_kkf",
+        "qa_fluoride_kkf",
+        "qa_carbon_cart_fluoride_kkf",
+        "qa_phthalates_kkf",
+        "qa_estrogen_kkf",
+        "qa_compare_kkf",
+        "qa_berkey_kkf",
+        "qa_tds_kkf",
+        "qa_box_kkf",
+        "qa_hardness_kkf",
+        "tab_shipping_kkf",
+        "qa_ship_to_kkf",
+        "qa_returns_kkf",
+        "qa_damaged_kkf",
+        "tab_warranty_kkf",
+        "qa_100day_kkf",
+        "qa_amazon_kkf",
+        "qa_warranty_kkf",
+        "tab_account_kkf",
+        "qa_sub_kkf",
+        "qa_sub_change_kkf",
+        "qa_sub_cancel_kkf"
+      ],
+      "settings": {
+        "heading": "Got questions? we’ve got answers…",
+        "content": ""
+      }
+    },
+    "kk_fws_gallery": {
+      "type": "gallery",
+      "blocks": {
+        "gallery_images_block_PfRCFJ": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-01.jpg"
+          }
+        },
+        "gallery_images_block_CCJWT7": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-02.jpg"
+          }
+        },
+        "gallery_images_block_qX3Fqd": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-03.jpg"
+          }
+        },
+        "gallery_images_block_w7gYzt": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-04.jpg"
+          }
+        },
+        "gallery_images_block_qRpxPB": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-05.jpg"
+          }
+        },
+        "gallery_images_block_TFAfTb": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-06.jpg"
+          }
+        },
+        "gallery_images_block_AHBK7Y": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-07.jpg"
+          }
+        },
+        "gallery_images_block_TKg4Uz": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/water-filter-08.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "gallery_images_block_PfRCFJ",
+        "gallery_images_block_CCJWT7",
+        "gallery_images_block_qX3Fqd",
+        "gallery_images_block_w7gYzt",
+        "gallery_images_block_qRpxPB",
+        "gallery_images_block_TFAfTb",
+        "gallery_images_block_AHBK7Y",
+        "gallery_images_block_TKg4Uz"
+      ],
+      "settings": {
+        "gallery_heading": "Enjoy safe drinking water for the whole family!",
+        "gallery_content": ""
+      }
+    },
+    "kk_fws_reused_styles": {
+      "type": "kk-fws-reused-styles",
+      "settings": {}
+    }
+  },
+  "order": [
+    "kk_fws_offer_bar",
+    "kk_fws_header",
+    "kk_fws_hero",
+    "kk_fws_rating_strip",
+    "kk_fws_why_switched",
+    "kk_fws_video",
+    "kk_fws_how_it_works",
+    "kk_fws_offer",
+    "kk_fws_tap_warning",
+    "kk_fws_comparison",
+    "kk_fws_anchor_testimonials",
+    "kk_fws_testimonials",
+    "kk_fws_cards",
+    "kk_fws_video_2",
+    "kk_fws_anchor_faq",
+    "kk_fws_faq",
+    "kk_fws_gallery",
+    "kk_fws_reused_styles"
+  ]
+}

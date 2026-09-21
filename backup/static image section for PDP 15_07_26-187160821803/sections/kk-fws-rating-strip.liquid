@@ -1,0 +1,339 @@
+{%- liquid
+  assign quote_blocks = section.blocks | where: 'type', 'quote'
+  assign stars_image = section.settings.custom_stars
+-%}
+
+<section
+  class="kk-fws-rating-strip"
+  style="
+    --kk-fws-rating-strip-background: {{ section.settings.background_color }};
+    --kk-fws-rating-strip-score: {{ section.settings.score_color }};
+    --kk-fws-rating-strip-text: {{ section.settings.text_color }};
+    --kk-fws-rating-strip-line: {{ section.settings.line_color }};
+  "
+>
+  <div class="kk-fws-rating-strip__container">
+    <div class="kk-fws-rating-strip__rating">
+      {%- if section.settings.score != blank -%}
+        <p class="kk-fws-rating-strip__score">{{ section.settings.score }}</p>
+      {%- endif -%}
+
+      <div class="kk-fws-rating-strip__rating-detail">
+        {%- if stars_image != blank -%}
+          {{
+            stars_image
+            | image_url: width: 240
+            | image_tag: loading: 'lazy', class: 'kk-fws-rating-strip__stars', alt: ''
+          }}
+        {%- else -%}
+          <img
+            class="kk-fws-rating-strip__stars"
+            src="{{ 'kk-fws-icon-stars-5.svg' | asset_url }}"
+            alt=""
+            width="120"
+            height="22"
+            loading="lazy"
+          >
+        {%- endif -%}
+
+        {%- if section.settings.review_count != blank -%}
+          <p class="kk-fws-rating-strip__count">{{ section.settings.review_count }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if quote_blocks.size > 0 -%}
+      <span class="kk-fws-rating-strip__rule" aria-hidden="true"></span>
+
+      <ul class="kk-fws-rating-strip__quotes">
+        {%- for block in quote_blocks -%}
+          {%- assign reverse_order = quote_blocks.size | minus: forloop.index0 -%}
+          <li
+            class="kk-fws-rating-strip__quote"
+            style="--kk-fws-rating-strip-quote-order: {{ reverse_order }};"
+            {{ block.shopify_attributes }}
+          >
+            {{- block.settings.text -}}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .kk-fws-rating-strip {
+    background: var(--kk-fws-rating-strip-background, #f5f3f1);
+    padding: 3.528rem 0;
+  }
+
+  .kk-fws-rating-strip__container {
+    width: min(100% - 3.2rem, 114rem);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 6rem;
+  }
+
+  .kk-fws-rating-strip__rating {
+    display: flex;
+    align-items: center;
+    gap: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .kk-fws-rating-strip__score {
+    margin: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 4.8rem;
+    line-height: 1.105;
+    white-space: nowrap;
+    color: var(--kk-fws-rating-strip-score, #153a5b);
+  }
+
+  .kk-fws-rating-strip__rating-detail {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    width: 16.8rem;
+  }
+
+  .kk-fws-rating-strip__stars {
+    display: block;
+    width: 12rem;
+    height: 2.2387rem;
+    object-fit: contain;
+  }
+
+  .kk-fws-rating-strip__count {
+    margin: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.8rem;
+    line-height: 1.4;
+    color: var(--kk-fws-rating-strip-text, #26303a);
+  }
+
+  .kk-fws-rating-strip__rule {
+    display: block;
+    flex-shrink: 0;
+    width: 0;
+    height: 7.2747rem;
+    border-left: 1px solid var(--kk-fws-rating-strip-line, #e6e6e6);
+  }
+
+  .kk-fws-rating-strip__quotes {
+    display: flex;
+    align-items: center;
+    gap: 5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-rating-strip__quote {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 2rem;
+    line-height: 1.4;
+    color: var(--kk-fws-rating-strip-text, #26303a);
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  /* Figma column widths for the three preset quotes. */
+  .kk-fws-rating-strip__quote:nth-child(1) {
+    flex-basis: 31.6825rem;
+  }
+
+  .kk-fws-rating-strip__quote:nth-child(2) {
+    flex-basis: 20.6892rem;
+  }
+
+  .kk-fws-rating-strip__quote:nth-child(3) {
+    flex-basis: 22.444rem;
+  }
+
+  @media (max-width: 989px) {
+    .kk-fws-rating-strip__container {
+      gap: 3rem;
+    }
+
+    .kk-fws-rating-strip__score {
+      font-size: 4rem;
+    }
+
+    .kk-fws-rating-strip__quotes {
+      gap: 2.4rem;
+    }
+
+    .kk-fws-rating-strip__quote {
+      font-size: 1.7rem;
+      line-height: 1.35;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .kk-fws-rating-strip {
+      padding: 4rem 0;
+    }
+
+    .kk-fws-rating-strip__container {
+      width: min(100% - 4rem, 54rem);
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      gap: 1.8rem;
+    }
+
+    .kk-fws-rating-strip__rating {
+      width: 100%;
+    }
+
+    .kk-fws-rating-strip__score {
+      font-size: 4rem;
+    }
+
+    .kk-fws-rating-strip__rating-detail {
+      gap: 0.2rem;
+    }
+
+    .kk-fws-rating-strip__stars {
+      width: 9.4rem;
+      height: 1.7536rem;
+    }
+
+    .kk-fws-rating-strip__count {
+      font-size: 1.6rem;
+    }
+
+    .kk-fws-rating-strip__rule {
+      width: 100%;
+      height: 0;
+      border-left: 0;
+      border-top: 1px solid var(--kk-fws-rating-strip-line, #e6e6e6);
+    }
+
+    .kk-fws-rating-strip__quotes {
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 2rem;
+      width: 100%;
+    }
+
+    /* Mobile reverses the quote order (see Figma 7511:105). */
+    .kk-fws-rating-strip__quote {
+      order: var(--kk-fws-rating-strip-quote-order, 0);
+      font-size: 1.6rem;
+      line-height: 1.3;
+    }
+
+    .kk-fws-rating-strip__quote,
+    .kk-fws-rating-strip__quote:nth-child(1) {
+      flex: 0 1 25rem;
+    }
+
+    .kk-fws-rating-strip__quote:nth-child(2) {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .kk-fws-rating-strip__quote:nth-child(3) {
+      flex: 0 0 16.8rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Rating Strip",
+  "tag": "div",
+  "class": "section-kk-fws-rating-strip",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "score",
+      "label": "Rating score",
+      "default": "4.8"
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Review count",
+      "default": "1,092 verified reviews"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_stars",
+      "label": "Custom star graphic",
+      "info": "Overrides the built-in 5-star graphic."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f5f3f1"
+    },
+    {
+      "type": "color",
+      "id": "score_color",
+      "label": "Rating score",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text",
+      "default": "#26303a"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Divider",
+      "default": "#e6e6e6"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "quote",
+      "name": "Quote",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Quote",
+          "default": "“Set it up myself in five minutes flat”"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Rating Strip",
+      "blocks": [
+        {
+          "type": "quote",
+          "settings": { "text": "“Tastes like bottled water, straight from the tap”" }
+        },
+        {
+          "type": "quote",
+          "settings": { "text": "“Set it up myself in five minutes flat”" }
+        },
+        {
+          "type": "quote",
+          "settings": { "text": "“We cancelled our bottled water delivery”" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

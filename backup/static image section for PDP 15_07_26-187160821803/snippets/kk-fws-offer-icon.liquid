@@ -1,0 +1,29 @@
+{%- comment -%}
+  Renders one trust icon for the KK FWS offer section.
+
+  Accepts:
+  - block: {Object} Block with an `icon` select setting and an optional `custom_icon` image.
+
+  Usage:
+  {% render 'kk-fws-offer-icon', block: block %}
+{%- endcomment -%}
+
+{%- assign icon_width = 24 -%}
+
+{%- if block.settings.custom_icon != blank -%}
+  {{
+    block.settings.custom_icon
+    | image_url: width: icon_width
+    | image_tag: class: 'kk-fws-offer__trust-icon', loading: 'lazy', alt: ''
+  }}
+{%- else -%}
+  {%- assign icon_asset = 'kk-fws-icon-' | append: block.settings.icon | append: '.svg' -%}
+  <img
+    class="kk-fws-offer__trust-icon"
+    src="{{ icon_asset | asset_url }}"
+    alt=""
+    width="{{ icon_width }}"
+    height="{{ icon_width }}"
+    loading="lazy"
+  >
+{%- endif -%}

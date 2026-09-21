@@ -1,0 +1,4101 @@
+{%- comment -%}
+  KK FWS Offer — PHASES 1, 2a and 2b (steps 1-3 + order summary).
+
+  Built, and matched to the real Figma nodes (desktop `7420:1104` heading, `7420:1106`
+  gallery, `7423:1590` step 1 size cards, `7423:1612` step 2 plan cards,
+  `7423:1666` step 3 pay cards, `7422:145` CTA + trust row; mobile `7511:207`, step 2 at
+  `7511:259`, step 3 at `7511:313`): section shell, eyebrow/heading/subheading, step 1
+  (tower size), step 2 (protection plan), step 3 (pay mode), the order summary and the gallery — 1:1 slides,
+  square edge-flush arrows, a four-across thumbnail strip, and video media as click-to-play
+  posters.
+
+  STEP 2 IS THE PRODUCT'S `Filter Type` OPTION. "Family Protection" and "Family Protection
+  Plus" are marketing names for the two Filter Type values; each `plan` block names the
+  option value it maps to. Size and plan together resolve one variant — see the matrix
+  below.
+
+  STEP 3 IS THE SELLING PLAN. "Subscribe & Save" posts the selected variant's Appstle
+  selling plan; "One-Time Purchase" posts none. Appstle now carries one plan group per
+  variant (six groups, one "Monthly Subscription" plan each, six-month cadence), so the
+  allocation price is the design's subscription price exactly — $99 on every Family
+  Protection tower, $149 on every Family Protection Plus. Step 2's card price is therefore
+  DERIVED — the allocation price while subscribing, the variant price while paying once —
+  and the authored `price` / `compare_price` block settings are only the fallback for a
+  product whose variants carry no allocation. (This supersedes the merchandising gap in
+  KK-FWS-CONVENTIONS.md §12: the design's $99/$149 were subscription prices all along.)
+
+  THE ORDER SUMMARY follows the Figma frames that agree with what Shopify actually charges.
+  The designer drew fourteen summary variants and they do not agree with each other; the
+  reconciliation, and which frames are stale, is documented at the summary's data block
+  below. Tower value and shipping are authored settings — neither figure exists in the
+  product data.
+
+  Stubbed (do not build here): the product accordion (mobile `7511:363`, desktop
+  `7423:203`+).
+
+  This section owns the `#kk-fws-offer` anchor. Five CTAs across the campaign page
+  (offer bar, hero, header "Build Your System", comparison CTA, cards CTA) point at it.
+  Do not remove the id, and do not change the root `<section>` element to a `<div>` —
+  the theme's slider initialiser (`src/js/sliders.js`) calls
+  `el.closest("section, aside").querySelector(...)` with no null check, so a missing
+  `<section>` ancestor throws and breaks every slider on the page.
+{%- endcomment -%}
+
+{%- liquid
+  assign size_option_name = section.settings.size_option_name | default: 'Size'
+  assign filter_option_name = section.settings.filter_option_name | default: 'Filter Type'
+  assign stand_option_name = section.settings.stand_option_name | default: 'Stand'
+
+  assign pinned_stand = section.settings.stand_option_value
+
+  comment
+    Locate each option by name so the section survives a different campaign product
+    with the options in a different order.
+  endcomment
+  assign size_index = -1
+  assign filter_index = -1
+  assign stand_index = -1
+
+  for option_name in product.options
+    if option_name == size_option_name
+      assign size_index = forloop.index0
+    elsif option_name == filter_option_name
+      assign filter_index = forloop.index0
+    elsif option_name == stand_option_name
+      assign stand_index = forloop.index0
+    endif
+  endfor
+
+  if size_index == -1
+    assign size_index = 0
+  endif
+
+  comment
+    Distinct size values, in variant order. Derived from the variants rather than
+    `options_with_values` so the values are always plain strings.
+  endcomment
+  assign size_seen = '~~'
+  for variant in product.variants
+    assign size_value = variant.options[size_index]
+    assign size_token = size_value | append: '~~'
+    unless size_seen contains size_token
+      assign size_seen = size_seen | append: size_token
+    endunless
+  endfor
+  assign size_list = size_seen | remove_first: '~~' | split: '~~'
+
+  comment
+    Protection plan values, in the author's block order — the design's two cards are the
+    product's two Filter Type values under marketing names, so the block order IS the card
+    order. Falls back to the option's own values (then to a single unnamed plan) so the
+    section still resolves a variant on a product whose plans have not been authored yet.
+  endcomment
+  assign filter_seen = '~~'
+  for block in section.blocks
+    if block.type == 'plan' and block.settings.filter_value != blank
+      assign filter_token = block.settings.filter_value | append: '~~'
+      unless filter_seen contains filter_token
+        assign filter_seen = filter_seen | append: filter_token
+      endunless
+    endif
+  endfor
+
+  if filter_seen == '~~' and filter_index >= 0
+    for variant in product.variants
+      assign filter_value = variant.options[filter_index]
+      assign filter_token = filter_value | append: '~~'
+      unless filter_seen contains filter_token
+        assign filter_seen = filter_seen | append: filter_token
+      endunless
+    endfor
+  endif
+
+  if filter_seen == '~~'
+    assign filter_seen = '~~*~~'
+  endif
+
+  assign filter_list = filter_seen | remove_first: '~~' | split: '~~'
+
+  comment
+    The (size x plan) variant matrix. Both pickers are user-facing now, so a variant is
+    resolved from the pair rather than from size alone with the filter pinned. Stand — an
+    option the campaign product does not even have — stays pinned; `stand_index == -1`
+    makes that a no-op.
+
+    Each row also carries the variant's Appstle selling plan and both price faces, because
+    step 3 switches between them. The campaign product's plan groups are one-plan-per-
+    variant ("Monthly Subscription", delivered every 6 months), so `.first` is not a guess —
+    there is exactly one allocation per variant. A variant with no allocation yields '0',
+    which step 3 reads as "this pair cannot be subscribed to".
+
+    Encoded as
+      size~~filter~~variant_id~~available~~selling_plan_id~~sub_price~~sub_compare~~once_price
+      ~~once_compare~~sub_recurring~~sub_upgrade
+    where `sub_price` is the JOINING price (what checkout charges) and `sub_recurring` is the
+    renewal price — equal on a one-cycle plan.
+    with '0' for an unresolvable id and '-' for a money value the product does not carry.
+    '-' rather than '' because Liquid's `split` silently drops empty segments and would
+    shift every field after the gap.
+  endcomment
+  assign matrix = ''
+  for size_value in size_list
+    for filter_value in filter_list
+      assign row_id = '0'
+      assign row_available = '0'
+      assign row_plan_id = '0'
+      assign row_sub_price = '-'
+      assign row_sub_recurring = '-'
+      assign row_sub_recurring_cents = '0'
+      assign row_sub_upgrade = '-'
+      assign row_sub_compare = '-'
+      assign row_once_price = '-'
+      assign row_once_compare = '-'
+
+      for variant in product.variants
+        assign is_match = true
+
+        unless variant.options[size_index] == size_value
+          assign is_match = false
+        endunless
+
+        if is_match and filter_index >= 0 and filter_value != '*'
+          unless variant.options[filter_index] == filter_value
+            assign is_match = false
+          endunless
+        endif
+
+        if is_match and stand_index >= 0 and pinned_stand != blank
+          unless variant.options[stand_index] == pinned_stand
+            assign is_match = false
+          endunless
+        endif
+
+        if is_match
+          assign row_id = variant.id
+          if variant.available
+            assign row_available = '1'
+          endif
+
+          assign row_once_price = variant.price | money_without_trailing_zeros
+          if variant.compare_at_price > variant.price
+            assign row_once_compare = variant.compare_at_price | money_without_trailing_zeros
+          endif
+
+          assign allocation = variant.selling_plan_allocations | first
+          if allocation != blank
+            assign row_plan_id = allocation.selling_plan.id
+
+            comment
+              TWO-CYCLE PRICING. Appstle plans take an `appstleCycles` list, so a plan can
+              charge one price on the joining order and another on every renewal — the
+              mechanism behind "pay the size upgrade up front, then $99 forever".
+
+              `allocation.price` is what Shopify charges AT CHECKOUT, so it is always the
+              due-today figure. The RENEWAL price is the LAST entry of
+              `allocation.price_adjustments`: Shopify caps that array at two entries, so
+              `last` is the joining price on a one-cycle plan and the recurring price on a
+              two-cycle one. That is the whole fallback — a plan with a single cycle yields
+              recurring == joining, an upgrade of zero, and exactly the behaviour this
+              section had before two-cycle pricing existed.
+            endcomment
+            assign allocation_first_cents = allocation.price
+            assign allocation_recurring_cents = allocation.price
+            if allocation.price_adjustments.size > 0
+              assign last_adjustment = allocation.price_adjustments | last
+              assign allocation_recurring_cents = last_adjustment.price
+            endif
+
+            assign row_sub_price = allocation_first_cents | money_without_trailing_zeros
+            assign row_sub_recurring = allocation_recurring_cents | money_without_trailing_zeros
+            assign row_sub_recurring_cents = allocation_recurring_cents
+
+            comment
+              The joining premium the summary breaks out as "Size Upgrade" on a subscription.
+              Zero on a one-cycle plan, which hides the row.
+            endcomment
+            assign upgrade_cents = allocation_first_cents | minus: allocation_recurring_cents
+            if upgrade_cents > 0
+              assign row_sub_upgrade = upgrade_cents | money_without_trailing_zeros
+            endif
+
+            comment
+              The struck-through price beside the subscription price is the ONE-TIME price
+              of the same variant ($99 vs $129) — that is the saving the design is showing,
+              not the variant's own compare-at. Compared against the RECURRING price, since
+              that is the number the card displays.
+            endcomment
+            if variant.price > allocation_recurring_cents
+              assign row_sub_compare = variant.price | money_without_trailing_zeros
+            endif
+          endif
+
+          break
+        endif
+      endfor
+
+      assign matrix = matrix | append: size_value | append: '~~' | append: filter_value | append: '~~' | append: row_id | append: '~~' | append: row_available | append: '~~' | append: row_plan_id | append: '~~' | append: row_sub_price | append: '~~' | append: row_sub_compare | append: '~~' | append: row_once_price | append: '~~' | append: row_once_compare | append: '~~' | append: row_sub_recurring | append: '~~' | append: row_sub_upgrade | append: '~~' | append: row_sub_recurring_cents | append: '||'
+    endfor
+  endfor
+  assign matrix_rows = matrix | split: '||'
+
+  comment
+    A size is offered when at least one plan resolves for it; a plan is offered when at
+    least one size does. Encoded as "value~~available".
+  endcomment
+  assign resolved = ''
+  assign selectable_count = 0
+  assign first_selectable = ''
+  for size_value in size_list
+    assign row_available = '0'
+    for row in matrix_rows
+      assign parts = row | split: '~~'
+      if parts[0] == size_value and parts[2] != '0' and parts[3] == '1'
+        assign row_available = '1'
+        break
+      endif
+    endfor
+    if row_available == '1'
+      assign selectable_count = selectable_count | plus: 1
+      if first_selectable == ''
+        assign first_selectable = size_value
+      endif
+    endif
+    assign resolved = resolved | append: size_value | append: '~~' | append: row_available | append: '||'
+  endfor
+  assign resolved_rows = resolved | split: '||'
+
+  assign plan_resolved = ''
+  assign first_plan = ''
+  for filter_value in filter_list
+    assign row_available = '0'
+    for row in matrix_rows
+      assign parts = row | split: '~~'
+      if parts[1] == filter_value and parts[2] != '0' and parts[3] == '1'
+        assign row_available = '1'
+        break
+      endif
+    endfor
+    if row_available == '1' and first_plan == ''
+      assign first_plan = filter_value
+    endif
+    assign plan_resolved = plan_resolved | append: filter_value | append: '~~' | append: row_available | append: '||'
+  endfor
+  assign plan_rows = plan_resolved | split: '||'
+
+  comment
+    Figma `7423:1592` carries a designer annotation: "On page load, the below configuration
+    should be selected by default: 1.5 Gallon Tower / Family Protection Plan / Subscribe &
+    Save." The first size block and the first plan block are that default, so honouring
+    block order honours the annotation without hardcoding the values here. A ?variant=
+    in the URL still wins, so shared links keep working.
+  endcomment
+  assign preferred_size = ''
+  assign preferred_plan = ''
+  if product.selected_variant != blank
+    assign preferred_size = product.selected_variant.options[size_index]
+    if filter_index >= 0
+      assign preferred_plan = product.selected_variant.options[filter_index]
+    endif
+  endif
+
+  assign default_size = first_selectable
+  if preferred_size != blank
+    for row in resolved_rows
+      assign parts = row | split: '~~'
+      if parts[0] == preferred_size and parts[1] == '1'
+        assign default_size = preferred_size
+        break
+      endif
+    endfor
+  endif
+
+  assign default_plan = first_plan
+  if preferred_plan != blank
+    for row in plan_rows
+      assign parts = row | split: '~~'
+      if parts[0] == preferred_plan and parts[1] == '1'
+        assign default_plan = preferred_plan
+        break
+      endif
+    endfor
+  endif
+
+  comment
+    The variant the form posts before any JS runs. Falls back to the first resolvable pair
+    for the default size so the button is never dead.
+  endcomment
+  assign default_variant_id = '0'
+  for row in matrix_rows
+    assign parts = row | split: '~~'
+    if parts[0] == default_size and parts[1] == default_plan and parts[2] != '0'
+      assign default_variant_id = parts[2]
+      break
+    endif
+  endfor
+  if default_variant_id == '0'
+    for row in matrix_rows
+      assign parts = row | split: '~~'
+      if parts[0] == default_size and parts[2] != '0' and parts[3] == '1'
+        assign default_variant_id = parts[2]
+        assign default_plan = parts[1]
+        break
+      endif
+    endfor
+  endif
+
+  comment
+    STEP 3 — how the customer pays. "Subscribe & Save" posts the pair's selling plan;
+    "One-Time Purchase" posts no `selling_plan` at all. There is no third state, so this is
+    a mode rather than a list of plans, and the same Figma annotation that pins 1.5 Gallon /
+    Family Protection pins Subscribe & Save as the default.
+
+    Subscribing is only offerable when the default pair actually has an allocation, so a
+    product with no plans yet falls back to one-time and the step still renders honestly.
+  endcomment
+  assign default_row_sub_price = '-'
+  assign default_row_sub_compare = '-'
+  assign default_row_once_price = '-'
+  assign default_row_once_compare = '-'
+  assign default_selling_plan_id = '0'
+  for row in matrix_rows
+    assign parts = row | split: '~~'
+    if parts[2] == default_variant_id
+      assign default_selling_plan_id = parts[4]
+      assign default_row_sub_price = parts[5]
+      assign default_row_sub_compare = parts[6]
+      assign default_row_once_price = parts[7]
+      assign default_row_once_compare = parts[8]
+      break
+    endif
+  endfor
+
+  assign subscription_offered = false
+  for row in matrix_rows
+    assign parts = row | split: '~~'
+    if parts[4] != '0'
+      assign subscription_offered = true
+      break
+    endif
+  endfor
+
+  assign default_pay = 'subscribe'
+  if default_selling_plan_id == '0'
+    assign default_pay = 'onetime'
+  endif
+
+  comment
+    ORDER SUMMARY figures (desktop `7423:1692` / `7423:2426` / `7423:2692`, mobile
+    `7511:336`).
+
+    The Figma frames disagree with each other on the arithmetic, so this follows the set
+    that matches what Shopify will actually charge:
+
+      Subscribe — tower FREE, plan at the allocation price, shipping.
+                  Due today = allocation price + shipping ($108.95 / $158.95).
+      One-time  — plan at the CHEAPEST size's price, the size delta broken out as
+                  "Size Upgrade", shipping. No tower row.
+                  Due today = variant price + shipping ($138.95 … $318.95).
+
+    The frames showing "due today = size upgrade + shipping" ($39.95 / $69.95) would defer
+    the first subscription payment, which this product cannot do: every Appstle allocation
+    reports `checkout_charge` = 100%, so Shopify charges the full $99/$149 at checkout. The
+    two 1.5 Gallon one-time frames ($387.95 / $507.95) bill the tower and the plan as
+    separate lines, which double-counts a single variant price. Both are stale explorations.
+
+    Tower value and shipping are AUTHORED — neither exists in the product data. There is no
+    separate tower SKU (one variant price covers tower + filters), and real shipping is
+    calculated by Shopify at checkout, so the shipping line here is a stated promise, not a
+    quote. Held in cents so the totals are integer maths, then formatted once.
+  endcomment
+  assign shipping_cents = section.settings.shipping_cents
+  assign tower_value_cents = section.settings.tower_value_cents
+
+  comment
+    The one-time summary shows the plan at its BASE price with the size premium on its own line
+    ("Family Protection $129" + "Size Upgrade + $30" for a 2.25 Gallon).
+
+    The base is the SMALLEST TOWER's variant, not the cheapest one. The design's premium is
+    "+$30 for a bigger tower", which is relative to the smallest size — not to whichever variant
+    happens to be cheapest. Using the cheapest broke twice: it let an un-repriced size supply the
+    base for an already-repriced plan (a 1.5 Gallon at $378 showed a $159 plan component, because
+    the untouched 2.25 Gallon was still $159), and it would invert every premium if a larger
+    tower ever went on sale below a smaller one.
+  endcomment
+  assign base_size_value = size_list[0]
+  assign plan_base = ''
+  for filter_value in filter_list
+    assign base_cents = 0
+    for variant in product.variants
+      assign counts = true
+      unless variant.options[size_index] == base_size_value
+        assign counts = false
+      endunless
+      if counts and filter_index >= 0 and filter_value != '*'
+        unless variant.options[filter_index] == filter_value
+          assign counts = false
+        endunless
+      endif
+      if counts and stand_index >= 0 and pinned_stand != blank
+        unless variant.options[stand_index] == pinned_stand
+          assign counts = false
+        endunless
+      endif
+      if counts
+        assign base_cents = variant.price
+        break
+      endif
+    endfor
+    assign plan_base = plan_base | append: filter_value | append: '~~' | append: base_cents | append: '||'
+  endfor
+  assign plan_base_rows = plan_base | split: '||'
+
+  comment
+    DOES THE ONE-TIME PRICE INCLUDE THE TOWER?
+
+    Ruled by the user: a one-time purchase pays for the tower, a subscription does not. So the
+    variant price is tower + filters + size premium, and the summary itemises all three.
+
+    Decided PER PLAN, not for the product as a whole: the test is whether the cheapest variant
+    for that plan is dearer than the tower. When it is, the tower is part of the price and gets
+    its own priced row, and the plan component is the remainder. When it is not, charging a tower
+    on top would exceed the variant price, so the tower stays subscribe-only and the plan
+    component is the whole variant price.
+
+    Per plan matters because the plans are repriced one at a time. A single product-wide flag let
+    an already-repriced plan answer for one that had not been touched yet, and the untouched plan
+    rendered a NEGATIVE component (`Family Protection $-90`). Observed live, not theoretical.
+
+    Encoded as "filter~~once_plan_cents~~tower_charged", tower_charged being '1' or '0'.
+  endcomment
+  assign plan_once = ''
+  for row in plan_base_rows
+    assign parts = row | split: '~~'
+    assign candidate_base = parts[1] | plus: 0
+    assign candidate_plan = candidate_base
+    assign candidate_charged = '0'
+    if candidate_base > tower_value_cents
+      assign candidate_plan = candidate_base | minus: tower_value_cents
+      assign candidate_charged = '1'
+    endif
+    assign plan_once = plan_once | append: parts[0] | append: '~~' | append: candidate_plan | append: '~~' | append: candidate_charged | append: '~~' | append: candidate_base | append: '||'
+  endfor
+  assign plan_once_rows = plan_once | split: '||'
+
+  comment
+    Marketing name for each Filter Type value, so the summary's plan row reads "Family
+    Protection" rather than the raw option value.
+  endcomment
+  assign plan_names = ''
+  for block in section.blocks
+    if block.type == 'plan' and block.settings.filter_value != blank
+      assign plan_label = block.settings.label | default: block.settings.filter_value
+      assign plan_names = plan_names | append: block.settings.filter_value | append: '~~' | append: plan_label | append: '||'
+    endif
+  endfor
+  assign plan_name_rows = plan_names | split: '||'
+
+  comment
+    Gallery media. The campaign product's media are NOT associated per variant
+    (only one image is attached to any variant, and it is the same image for all of
+    them), so `variant.featured_media` cannot drive the gallery. Per-size media is
+    therefore author-controlled: each "Size details" block may name the product media
+    positions for that size. When no block names any, every size shares one media set
+    and the sync is a no-op — which is the truth for the current product data.
+  endcomment
+  assign media_limit = section.settings.media_limit
+  assign default_positions_raw = ''
+  assign default_count = 0
+  for media in product.media
+    if media.media_type == 'image' or media.media_type == 'video' or media.media_type == 'external_video'
+      if media_limit > 0 and default_count >= media_limit
+        break
+      endif
+      assign default_positions_raw = default_positions_raw | append: media.position | append: ','
+      assign default_count = default_count | plus: 1
+    endif
+  endfor
+  assign default_positions = default_positions_raw | split: ','
+
+  assign media_varies = false
+  for block in section.blocks
+    if block.type == 'size_details' and block.settings.media_positions != blank
+      assign media_varies = true
+      break
+    endif
+  endfor
+
+  comment
+    Flatten every (size, media position) pair the gallery will render into one list, so
+    the slides and the thumbnail strip are generated from a single source of truth and
+    cannot drift out of index alignment. Encoded as "size~~position".
+  endcomment
+  assign slide_pairs = ''
+  for row in resolved_rows
+    assign parts = row | split: '~~'
+    assign size_value = parts[0]
+
+    assign positions = default_positions
+
+    if media_varies
+      for block in section.blocks
+        if block.type == 'size_details' and block.settings.size_value == size_value and block.settings.media_positions != blank
+          assign positions = block.settings.media_positions | replace: ' ', '' | split: ','
+          break
+        endif
+      endfor
+    endif
+
+    for position in positions
+      assign media_index = position | plus: 0 | minus: 1
+      assign media = product.media[media_index]
+      if media != blank
+        if media.media_type == 'image' or media.media_type == 'video' or media.media_type == 'external_video'
+          assign slide_pairs = slide_pairs | append: size_value | append: '~~' | append: position | append: '||'
+        endif
+      endif
+    endfor
+
+    unless media_varies
+      break
+    endunless
+  endfor
+  assign slide_list = slide_pairs | split: '||'
+-%}
+
+<section
+  id="kk-fws-offer"
+  class="kk-fws-offer"
+  data-kk-fws-pay-mode="{{ default_pay }}"
+  style="
+    --kk-fws-offer-background: {{ section.settings.background_color }};
+    --kk-fws-offer-heading: {{ section.settings.heading_color }};
+    --kk-fws-offer-text: {{ section.settings.text_color }};
+    --kk-fws-offer-card-background: {{ section.settings.card_background_color }};
+    --kk-fws-offer-card-border: {{ section.settings.card_border_color }};
+    --kk-fws-offer-card-selected-background: {{ section.settings.card_selected_background_color }};
+    --kk-fws-offer-card-selected-border: {{ section.settings.card_selected_border_color }};
+    --kk-fws-offer-button-background: {{ section.settings.button_background_color }};
+    --kk-fws-offer-button-text: {{ section.settings.button_text_color }};
+    --kk-fws-offer-line: {{ section.settings.line_color }};
+    --kk-fws-offer-eyebrow-background: {{ section.settings.eyebrow_background_color }};
+    --kk-fws-offer-nav-background: {{ section.settings.nav_background_color }};
+    --kk-fws-offer-thumb-border: {{ section.settings.thumb_border_color }};
+    --kk-fws-offer-badge-background: {{ section.settings.badge_background_color }};
+    --kk-fws-offer-badge-text: {{ section.settings.badge_text_color }};
+    --kk-fws-offer-step-background: {{ section.settings.step_background_color }};
+    --kk-fws-offer-step-text: {{ section.settings.step_text_color }};
+    --kk-fws-offer-compare: {{ section.settings.compare_price_color }};
+  "
+>
+  <div class="kk-fws-offer__container">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="kk-fws-offer__eyebrow">
+        {{- section.settings.eyebrow | replace: '[month]', '<span class="dyn-month"></span>' -}}
+      </p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="kk-fws-offer__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="kk-fws-offer__subheading">
+        {{- section.settings.subheading | replace: '[month]', '<span class="dyn-month"></span>' -}}
+      </p>
+    {%- endif -%}
+
+    {%- if product == blank -%}
+      <p class="kk-fws-offer__notice">
+        This section needs a product. Preview it on a product template.
+      </p>
+    {%- else -%}
+      <div class="kk-fws-offer__layout">
+        <div class="kk-fws-offer__media">
+          <div
+            id="product-slider"
+            class="swiper-container swiper kk-fws-offer__slider"
+            data-slidestoshow="1"
+            aria-label="{{ product.title | escape }} media gallery"
+          >
+            <div class="swiper-wrapper">
+              {%- for pair in slide_list -%}
+                {%- liquid
+                  assign slide_parts = pair | split: '~~'
+                  assign size_value = slide_parts[0]
+                  assign media_index = slide_parts[1] | plus: 0 | minus: 1
+                  assign media = product.media[media_index]
+                  assign media_alt = media.alt | default: product.title
+                -%}
+                <div
+                  class="swiper-slide kk-fws-offer__slide"
+                  {% if media_varies %}data-kk-fws-size="{{ size_value | escape }}"{% endif %}
+                >
+                  {%- if media.media_type == 'image' -%}
+                    {{
+                      media.preview_image
+                      | image_url: width: 1140
+                      | image_tag:
+                        class: 'kk-fws-offer__slide-image',
+                        loading: 'lazy',
+                        widths: '375, 570, 750, 1140',
+                        sizes: '(max-width: 749px) calc(100vw - 4rem), 569px',
+                        alt: media_alt
+                    }}
+                  {%- else -%}
+                    {%- comment -%}
+                      Video media render as their poster with a play affordance. The player is
+                      only injected on click (see the gallery script) so a gallery of videos
+                      does not load several players up front.
+                    {%- endcomment -%}
+                    <div
+                      class="kk-fws-offer__video"
+                      data-kk-fws-video
+                      {% if media.media_type == 'external_video' %}
+                        data-kk-fws-video-embed="{{ media | external_video_url: autoplay: 'true' | escape }}"
+                      {% else %}
+                        data-kk-fws-video-src="{{ media.sources.last.url | escape }}"
+                      {% endif %}
+                    >
+                      {{
+                        media.preview_image
+                        | image_url: width: 1140
+                        | image_tag:
+                          class: 'kk-fws-offer__slide-image',
+                          loading: 'lazy',
+                          widths: '375, 570, 750, 1140',
+                          sizes: '(max-width: 749px) calc(100vw - 4rem), 569px',
+                          alt: media_alt
+                      }}
+                      <button class="kk-fws-offer__play" type="button">
+                        <span class="sr-only">Play video</span>
+                      </button>
+                    </div>
+                  {%- endif -%}
+                </div>
+              {%- else -%}
+                <div class="swiper-slide kk-fws-offer__slide">
+                  {{ 'product-1' | placeholder_svg_tag: 'kk-fws-offer__slide-image' }}
+                </div>
+              {%- endfor -%}
+            </div>
+
+            <button
+              class="swiper-prev kk-fws-offer__nav kk-fws-offer__nav--prev"
+              type="button"
+              aria-label="Previous image"
+            >
+              <img
+                class="kk-fws-offer__nav-icon"
+                src="{{ 'kk-fws-icon-chevron.svg' | asset_url }}"
+                alt=""
+                width="12"
+                height="21"
+                aria-hidden="true"
+              >
+            </button>
+            <button
+              class="swiper-next kk-fws-offer__nav kk-fws-offer__nav--next"
+              type="button"
+              aria-label="Next image"
+            >
+              <img
+                class="kk-fws-offer__nav-icon"
+                src="{{ 'kk-fws-icon-chevron.svg' | asset_url }}"
+                alt=""
+                width="12"
+                height="21"
+                aria-hidden="true"
+              >
+            </button>
+          </div>
+
+          {%- comment -%}
+            The thumbnail strip is a plain grid, NOT a `.control` Swiper. The theme's
+            `.control` branch in src/js/sliders.js forces a 2-column, 2-row grid at >=768px
+            (and `control-five` a 2x3), none of which is the design's single 4-across row.
+            Driving `window.sliders['product-slider'].slideTo()` directly is both simpler
+            and exact. The class must not be `control`, or initSlider would adopt it.
+          {%- endcomment -%}
+          {%- if slide_list.size > 1 -%}
+            <div class="kk-fws-offer__thumbs" data-kk-fws-thumbs role="tablist" aria-label="Gallery thumbnails">
+              {%- for pair in slide_list -%}
+                {%- liquid
+                  assign slide_parts = pair | split: '~~'
+                  assign size_value = slide_parts[0]
+                  assign media_index = slide_parts[1] | plus: 0 | minus: 1
+                  assign media = product.media[media_index]
+                -%}
+                <button
+                  class="kk-fws-offer__thumb"
+                  type="button"
+                  role="tab"
+                  data-kk-fws-thumb="{{ forloop.index0 }}"
+                  {% if media_varies %}data-kk-fws-size="{{ size_value | escape }}"{% endif %}
+                  aria-label="Show image {{ forloop.index }}"
+                  aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                >
+                  {{
+                    media.preview_image
+                    | image_url: width: 300
+                    | image_tag:
+                      class: 'kk-fws-offer__thumb-image',
+                      loading: 'lazy',
+                      widths: '150, 300',
+                      sizes: '135px',
+                      alt: ''
+                  }}
+                  {%- unless media.media_type == 'image' -%}
+                    <span class="kk-fws-offer__thumb-play" aria-hidden="true"></span>
+                  {%- endunless -%}
+                </button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="kk-fws-offer__panel">
+          {%- if selectable_count == 0 -%}
+            <p class="kk-fws-offer__notice">
+              {{ section.settings.unavailable_text }}
+            </p>
+          {%- else -%}
+            {%- form 'product', product, id: 'kk-fws-offer-form', class: 'kk-fws-offer__form', novalidate: 'novalidate' -%}
+              {%- comment -%}
+                The posted variant. Size and plan are two separate radio groups that
+                together identify one variant, so neither can be `name="id"` on its own.
+                Rendered with the default pair already resolved server-side, so the form
+                adds the right variant even before the picker script runs.
+              {%- endcomment -%}
+              <input type="hidden" name="id" value="{{ default_variant_id }}" data-kk-fws-variant-id>
+
+              {%- comment -%}
+                STEP 3's posted value. A DISABLED input is not submitted at all, which is
+                exactly the "One-Time Purchase" state — there is no selling_plan value that
+                means "no subscription", so the field has to disappear from the payload
+                rather than post an empty string (Shopify rejects `selling_plan=`).
+
+                `data-kk-fws-selling-plan` also marks this input as OURS, so the Appstle
+                guard below can neutralise the app's injected radios without touching it.
+              {%- endcomment -%}
+              <input
+                type="hidden"
+                name="selling_plan"
+                value="{{ default_selling_plan_id }}"
+                data-kk-fws-selling-plan
+                {% if default_pay != 'subscribe' or default_selling_plan_id == '0' %}disabled{% endif %}
+              >
+
+              <fieldset class="kk-fws-offer__sizes">
+                <legend class="kk-fws-offer__step">
+                  <span class="kk-fws-offer__step-number" aria-hidden="true">1</span>
+                  <span class="kk-fws-offer__step-title">{{ section.settings.size_legend }}</span>
+                </legend>
+
+                <div class="kk-fws-offer__size-list">
+                  {%- for row in resolved_rows -%}
+                    {%- liquid
+                      assign parts = row | split: '~~'
+                      assign size_value = parts[0]
+                      assign is_available = false
+                      if parts[1] == '1'
+                        assign is_available = true
+                      endif
+
+                      assign size_label = size_value
+                      assign size_description = ''
+                      assign size_badge = ''
+
+                      for block in section.blocks
+                        if block.type == 'size_details' and block.settings.size_value == size_value
+                          if block.settings.label != blank
+                            assign size_label = block.settings.label
+                          endif
+                          assign size_description = block.settings.description
+                          assign size_badge = block.settings.badge
+                          break
+                        endif
+                      endfor
+                    -%}
+
+                    <label class="kk-fws-offer__size">
+                      <input
+                        class="kk-fws-offer__size-input"
+                        type="radio"
+                        name="kk-fws-size"
+                        value="{{ size_value | escape }}"
+                        data-kk-fws-size="{{ size_value | escape }}"
+                        {% if size_value == default_size %}checked{% endif %}
+                        {% unless is_available %}disabled{% endunless %}
+                      >
+                      <span class="kk-fws-offer__size-card">
+                        <img
+                          class="kk-fws-offer__size-tick"
+                          src="{{ 'kk-fws-icon-size-selected.svg' | asset_url }}"
+                          alt=""
+                          width="23"
+                          height="23"
+                          aria-hidden="true"
+                          loading="lazy"
+                        >
+                        <span class="kk-fws-offer__size-text">
+                          <span class="kk-fws-offer__size-name">{{ size_label }}</span>
+                          {%- if size_description != blank -%}
+                            <span class="kk-fws-offer__size-description">{{ size_description }}</span>
+                          {%- endif -%}
+                        </span>
+                        {%- if size_badge != blank -%}
+                          <span class="kk-fws-offer__size-badge">{{ size_badge }}</span>
+                        {%- endif -%}
+                        {%- unless is_available -%}
+                          <span class="kk-fws-offer__size-unavailable">
+                            {{ section.settings.sold_out_text }}
+                          </span>
+                        {%- endunless -%}
+                      </span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+
+              {%- comment -%}
+                STEP 2 — the protection plan, i.e. the product's Filter Type option under
+                marketing names (Figma desktop `7423:1612`, mobile `7511:259`). Two cards
+                side by side at every breakpoint; mobile narrows them rather than stacking.
+                Prices are authored per block — see the note at the top of this file.
+              {%- endcomment -%}
+              {%- assign plan_blocks = section.blocks | where: 'type', 'plan' -%}
+              {%- if plan_blocks.size > 0 -%}
+                <fieldset class="kk-fws-offer__plans">
+                  <legend class="kk-fws-offer__step">
+                    <span class="kk-fws-offer__step-number" aria-hidden="true">2</span>
+                    <span class="kk-fws-offer__step-title">{{ section.settings.plan_legend }}</span>
+                  </legend>
+
+                  <div class="kk-fws-offer__plan-list">
+                    {%- for block in plan_blocks -%}
+                      {%- liquid
+                        assign filter_value = block.settings.filter_value
+                        assign is_available = false
+                        for row in plan_rows
+                          assign parts = row | split: '~~'
+                          if parts[0] == filter_value and parts[1] == '1'
+                            assign is_available = true
+                            break
+                          endif
+                        endfor
+
+                        assign features = block.settings.features | newline_to_br | split: '<br />'
+
+                        comment
+                          Both price faces for this plan at the DEFAULT size, so the card is
+                          already correct before the picker script runs. The subscription
+                          price is size-invariant on this product ($99 / $149 for every
+                          tower), which is why the design can show one number per plan; the
+                          one-time price is not, so JS rewrites these on every change.
+                          Authored `price` / `compare_price` remain the fallback for a
+                          product whose variants carry no allocation.
+                        endcomment
+                        assign card_sub_price = '-'
+                        assign card_sub_recurring = '-'
+                        assign card_sub_recurring_cents = 0
+                        assign card_sub_compare = '-'
+                        assign card_once_price = '-'
+                        assign card_once_compare = '-'
+                        for matrix_row in matrix_rows
+                          assign card_parts = matrix_row | split: '~~'
+                          if card_parts[0] == default_size and card_parts[1] == filter_value
+                            assign card_sub_price = card_parts[5]
+                            assign card_sub_compare = card_parts[6]
+                            assign card_once_price = card_parts[7]
+                            assign card_once_compare = card_parts[8]
+                            assign card_sub_recurring = card_parts[9]
+                            assign card_sub_recurring_cents = card_parts[11] | plus: 0
+                            break
+                          endif
+                        endfor
+
+                        comment
+                          Step 2 is about the PLAN, so both faces use the plan component rather
+                          than the whole system price: the renewal price while subscribing, the
+                          plan's one-time price while paying once, and the latter struck through
+                          on the subscribe face. That is exactly what Figma prints ($99 / $129).
+                        endcomment
+                        assign card_once_plan = '-'
+                        assign card_once_plan_cents = 0
+                        comment
+                          Step 2 prints ONE number per plan, so it uses the plan price at the
+                          base size — the canonical figure, independent of which size is selected.
+                        endcomment
+                        for base_row in plan_once_rows
+                          assign base_parts = base_row | split: '~~'
+                          if base_parts[0] == filter_value
+                            assign card_once_plan_cents = base_parts[1] | plus: 0
+                            assign card_once_plan = card_once_plan_cents | money_without_trailing_zeros
+                            break
+                          endif
+                        endfor
+
+                        if default_pay == 'subscribe' and card_sub_recurring != '-'
+                          assign card_price = card_sub_recurring
+                          assign card_cadence = block.settings.price_note
+                          comment
+                            Strike the one-time plan price only when it is genuinely higher than
+                            the renewal price. A strikethrough BELOW the price reads as a price
+                            rise, and a misconfigured tower value can produce exactly that.
+                          endcomment
+                          assign card_compare = ''
+                          if card_once_plan_cents > card_sub_recurring_cents
+                            assign card_compare = card_once_plan
+                          endif
+                        elsif card_once_plan != '-'
+                          assign card_price = card_once_plan
+                          assign card_cadence = ''
+                          assign card_compare = ''
+                        else
+                          assign card_price = block.settings.price
+                          assign card_cadence = block.settings.price_note
+                          assign card_compare = block.settings.compare_price
+                        endif
+
+                        if card_compare == '-'
+                          assign card_compare = ''
+                        endif
+                      -%}
+
+                      <label class="kk-fws-offer__plan" {{ block.shopify_attributes }}>
+                        <input
+                          class="kk-fws-offer__plan-input"
+                          type="radio"
+                          name="kk-fws-plan"
+                          value="{{ filter_value | escape }}"
+                          data-kk-fws-plan="{{ filter_value | escape }}"
+                          {% if filter_value == default_plan %}checked{% endif %}
+                          {% unless is_available %}disabled{% endunless %}
+                        >
+                        <span class="kk-fws-offer__plan-card">
+                          {%- if block.settings.ribbon != blank -%}
+                            <span class="kk-fws-offer__plan-ribbon">{{ block.settings.ribbon }}</span>
+                          {%- endif -%}
+
+                          <span class="kk-fws-offer__plan-body">
+                            <span class="kk-fws-offer__plan-name">
+                              <span class="kk-fws-offer__plan-radio" aria-hidden="true"></span>
+                              <span class="kk-fws-offer__plan-label">{{ block.settings.label | default: filter_value }}</span>
+                            </span>
+
+                            {%- if card_price != blank -%}
+                              {%- comment -%}
+                                The three price nodes are always present (hidden, not
+                                removed, when empty) so step 3 can rewrite them without
+                                having to build DOM.
+                              {%- endcomment -%}
+                              <span
+                                class="kk-fws-offer__plan-price"
+                                data-kk-fws-plan-price
+                                data-cadence="{{ block.settings.price_note | escape }}"
+                                data-once-plan="{{ card_once_plan | escape }}"
+                              >
+                                <span class="kk-fws-offer__plan-amount" data-kk-fws-plan-amount>
+                                  {{- card_price -}}
+                                </span>
+                                <span
+                                  class="kk-fws-offer__plan-cadence"
+                                  data-kk-fws-plan-cadence
+                                  {% if card_cadence == blank %}hidden{% endif %}
+                                >
+                                  {{- card_cadence -}}
+                                </span>
+                                <s
+                                  class="kk-fws-offer__plan-compare"
+                                  data-kk-fws-plan-compare
+                                  {% if card_compare == blank %}hidden{% endif %}
+                                >
+                                  {{- card_compare -}}
+                                </s>
+                              </span>
+                            {%- endif -%}
+
+                            {%- if features.size > 0 -%}
+                              <span class="kk-fws-offer__plan-features">
+                                {%- for feature in features -%}
+                                  {%- assign feature_text = feature | strip_newlines | strip -%}
+                                  {%- if feature_text != blank -%}
+                                    <span class="kk-fws-offer__plan-feature">
+                                      <img
+                                        class="kk-fws-offer__plan-check"
+                                        src="{{ 'kk-fws-icon-check.svg' | asset_url }}"
+                                        alt=""
+                                        width="13"
+                                        height="9"
+                                        aria-hidden="true"
+                                        loading="lazy"
+                                      >
+                                      <span class="kk-fws-offer__plan-feature-text">{{ feature_text }}</span>
+                                    </span>
+                                  {%- endif -%}
+                                {%- endfor -%}
+                              </span>
+                            {%- endif -%}
+
+                            {%- unless is_available -%}
+                              <span class="kk-fws-offer__plan-unavailable">
+                                {{ section.settings.sold_out_text }}
+                              </span>
+                            {%- endunless -%}
+                          </span>
+                        </span>
+                      </label>
+                    {%- endfor -%}
+                  </div>
+                </fieldset>
+              {%- endif -%}
+
+              {%- comment -%}
+                STEP 3 — how would you like to pay? (Figma desktop `7423:1666`, mobile
+                `7511:313`.) Two cards, same visual language as step 2 but shorter: ribbon,
+                radio, name, one line of copy, no price and no feature list.
+
+                Rendered only when the product actually has selling plans. With none, there
+                is no choice to offer — every purchase is one-time — and showing a dead
+                toggle would be worse than showing nothing.
+              {%- endcomment -%}
+              {%- if subscription_offered -%}
+                <fieldset class="kk-fws-offer__pays">
+                  <legend class="kk-fws-offer__step">
+                    <span class="kk-fws-offer__step-number" aria-hidden="true">3</span>
+                    <span class="kk-fws-offer__step-title">{{ section.settings.pay_legend }}</span>
+                  </legend>
+
+                  <div class="kk-fws-offer__pay-list">
+                    <label class="kk-fws-offer__pay">
+                      <input
+                        class="kk-fws-offer__pay-input"
+                        type="radio"
+                        name="kk-fws-pay"
+                        value="subscribe"
+                        data-kk-fws-pay="subscribe"
+                        {% if default_pay == 'subscribe' %}checked{% endif %}
+                      >
+                      <span class="kk-fws-offer__pay-card">
+                        {%- if section.settings.subscribe_ribbon != blank -%}
+                          <span class="kk-fws-offer__pay-ribbon">{{ section.settings.subscribe_ribbon }}</span>
+                        {%- endif -%}
+
+                        <span class="kk-fws-offer__pay-body">
+                          <span class="kk-fws-offer__pay-name">
+                            <span class="kk-fws-offer__pay-radio" aria-hidden="true"></span>
+                            <span class="kk-fws-offer__pay-label">{{ section.settings.subscribe_label }}</span>
+                          </span>
+
+                          {%- if section.settings.subscribe_description != blank -%}
+                            <span class="kk-fws-offer__pay-description">
+                              {{- section.settings.subscribe_description -}}
+                            </span>
+                          {%- endif -%}
+
+                          {%- comment -%}
+                            Only reachable when the selected size/plan pair has no allocation
+                            while some other pair does — the card stays visible and greys out
+                            rather than vanishing, matching how step 2 handles the same case.
+                          {%- endcomment -%}
+                          <span class="kk-fws-offer__pay-unavailable">
+                            {{ section.settings.pay_unavailable_text }}
+                          </span>
+                        </span>
+                      </span>
+                    </label>
+
+                    <label class="kk-fws-offer__pay">
+                      <input
+                        class="kk-fws-offer__pay-input"
+                        type="radio"
+                        name="kk-fws-pay"
+                        value="onetime"
+                        data-kk-fws-pay="onetime"
+                        {% if default_pay != 'subscribe' %}checked{% endif %}
+                      >
+                      <span class="kk-fws-offer__pay-card">
+                        {%- if section.settings.onetime_ribbon != blank -%}
+                          <span class="kk-fws-offer__pay-ribbon">{{ section.settings.onetime_ribbon }}</span>
+                        {%- endif -%}
+
+                        <span class="kk-fws-offer__pay-body">
+                          <span class="kk-fws-offer__pay-name">
+                            <span class="kk-fws-offer__pay-radio" aria-hidden="true"></span>
+                            <span class="kk-fws-offer__pay-label">{{ section.settings.onetime_label }}</span>
+                          </span>
+
+                          {%- if section.settings.onetime_description != blank -%}
+                            <span class="kk-fws-offer__pay-description">
+                              {{- section.settings.onetime_description -}}
+                            </span>
+                          {%- endif -%}
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                </fieldset>
+              {%- endif -%}
+
+              {%- comment -%}
+                ORDER SUMMARY — desktop `7423:1692`, mobile `7511:336`. Every figure is
+                rendered server-side for the default configuration and rewritten by the
+                picker script; nothing here is a static number.
+              {%- endcomment -%}
+              {%- if section.settings.show_summary -%}
+                {%- liquid
+                  assign summary_variant = nil
+                  for variant in product.variants
+                    comment
+                      `default_variant_id` came out of the matrix as a string, and Liquid's
+                      `if` cannot take a filter, so the cast needs its own assign.
+                    endcomment
+                    assign variant_id_string = variant.id | append: ''
+                    if variant_id_string == default_variant_id
+                      assign summary_variant = variant
+                      break
+                    endif
+                  endfor
+
+                  assign summary_plan_label = default_plan
+                  for row in plan_name_rows
+                    assign parts = row | split: '~~'
+                    if parts[0] == default_plan
+                      assign summary_plan_label = parts[1]
+                      break
+                    endif
+                  endfor
+
+                  assign summary_base_cents = summary_variant.price
+                  for row in plan_base_rows
+                    assign parts = row | split: '~~'
+                    if parts[0] == default_plan
+                      assign summary_base_cents = parts[1] | plus: 0
+                      break
+                    endif
+                  endfor
+
+                  assign summary_upgrade_cents = summary_variant.price | minus: summary_base_cents
+                  assign summary_subscribing = false
+                  if default_pay == 'subscribe' and default_selling_plan_id != '0'
+                    assign summary_subscribing = true
+                  endif
+
+                  if summary_subscribing
+                    assign summary_allocation = summary_variant.selling_plan_allocations | first
+                    assign summary_first_cents = summary_allocation.price
+                    assign summary_recurring_cents = summary_allocation.price
+                    if summary_allocation.price_adjustments.size > 0
+                      assign summary_last_adjustment = summary_allocation.price_adjustments | last
+                      assign summary_recurring_cents = summary_last_adjustment.price
+                    endif
+
+                    assign summary_plan_amount = summary_recurring_cents | money_without_trailing_zeros
+                    assign summary_total_cents = summary_first_cents | plus: shipping_cents
+                    assign summary_upgrade_cents = summary_first_cents | minus: summary_recurring_cents
+                    assign summary_note = section.settings.subscribe_note | replace: '[price]', summary_plan_amount
+                    assign summary_footnote = section.settings.subscribe_footnote | replace: '[value]', section.settings.tower_value_cents | money_without_trailing_zeros
+                  else
+                    comment
+                      Same split as the per-variant data below — see the note there.
+                    endcomment
+                    if summary_upgrade_cents < 0
+                      assign summary_upgrade_cents = 0
+                    endif
+                    assign summary_once_plan_cents = summary_variant.price | minus: summary_upgrade_cents
+                    assign summary_tower_charged = false
+                    if summary_once_plan_cents > tower_value_cents
+                      assign summary_once_plan_cents = summary_once_plan_cents | minus: tower_value_cents
+                      assign summary_tower_charged = true
+                    endif
+                    assign summary_plan_amount = summary_once_plan_cents | money_without_trailing_zeros
+                    assign summary_total_cents = summary_variant.price | plus: shipping_cents
+                    assign summary_note = section.settings.onetime_note
+                    assign summary_footnote = section.settings.onetime_footnote
+                  endif
+
+                  comment
+                    The tower row is priced on a one-time purchase and FREE on a subscription.
+                    It is hidden entirely only when a one-time purchase does not carry the tower
+                    (the pre-reprice fallback) AND the customer is paying once.
+                  endcomment
+                  assign show_tower_row = true
+                  unless summary_subscribing
+                    unless summary_tower_charged
+                      assign show_tower_row = false
+                    endunless
+                  endunless
+                -%}
+
+                <div class="kk-fws-offer__summary" data-kk-fws-summary>
+                  <p class="kk-fws-offer__summary-title">{{ section.settings.summary_legend }}</p>
+
+                  <div class="kk-fws-offer__summary-rows">
+                    {%- comment -%}
+                      Tower row — subscription only. On a one-time purchase the tower is not
+                      free, and the variant price already covers it, so the row would be
+                      double-counting (the mistake the two stale 1.5 Gallon frames make).
+                    {%- endcomment -%}
+                    <div
+                      class="kk-fws-offer__summary-row"
+                      data-kk-fws-summary-row="tower"
+                      {% unless show_tower_row %}hidden{% endunless %}
+                    >
+                      <span class="kk-fws-offer__summary-label">
+                        {{ section.settings.tower_label }} -
+                        <span data-kk-fws-summary-size>{{ default_size }}</span>
+                      </span>
+                      <span class="kk-fws-offer__summary-value">
+                        {%- comment -%}
+                          Subscribing strikes the tower value and reads FREE; paying once shows
+                          the same figure as a real charge. One row, two faces.
+                        {%- endcomment -%}
+                        <s
+                          class="kk-fws-offer__summary-strike"
+                          data-kk-fws-summary-tower-strike
+                          {% unless summary_subscribing %}hidden{% endunless %}
+                        >
+                          {{- tower_value_cents | money_without_trailing_zeros -}}
+                        </s>
+                        <span class="kk-fws-offer__summary-amount" data-kk-fws-summary-tower-amount>
+                          {%- if summary_subscribing -%}
+                            {{- section.settings.tower_free_text -}}
+                          {%- else -%}
+                            {{- tower_value_cents | money_without_trailing_zeros -}}
+                          {%- endif -%}
+                        </span>
+                      </span>
+                    </div>
+
+                    {%- comment -%}
+                      Size upgrade, directly under the tower it applies to (Figma `7423:2426`).
+                      On a ONE-TIME purchase this is the variant price above the base size. On a SUBSCRIPTION it is the joining premium — the gap
+                      between what checkout charges and what renewals cost. Either way the row
+                      appears only when there is something to charge, so a one-cycle plan
+                      (where joining == recurring) hides it exactly as before.
+                    {%- endcomment -%}
+                    <div
+                      class="kk-fws-offer__summary-row"
+                      data-kk-fws-summary-row="upgrade"
+                      {% if summary_upgrade_cents <= 0 %}hidden{% endif %}
+                    >
+                      <span class="kk-fws-offer__summary-label">
+                        {{- section.settings.size_upgrade_label -}}
+                      </span>
+                      <span class="kk-fws-offer__summary-value">
+                        <span class="kk-fws-offer__summary-amount" data-kk-fws-summary-upgrade>
+                          + {{ summary_upgrade_cents | money_without_trailing_zeros }}
+                        </span>
+                      </span>
+                    </div>
+
+                    <div class="kk-fws-offer__summary-row" data-kk-fws-summary-row="plan">
+                      <span class="kk-fws-offer__summary-label" data-kk-fws-summary-plan-label>
+                        {{- summary_plan_label -}}
+                      </span>
+                      <span class="kk-fws-offer__summary-value">
+                        <span class="kk-fws-offer__summary-amount" data-kk-fws-summary-plan-amount>
+                          {{- summary_plan_amount -}}
+                        </span>
+                        <span
+                          class="kk-fws-offer__summary-cadence"
+                          data-kk-fws-summary-plan-cadence
+                          {% unless summary_subscribing %}hidden{% endunless %}
+                        >
+                          {{- section.settings.summary_cadence -}}
+                        </span>
+                      </span>
+                    </div>
+
+                    <div class="kk-fws-offer__summary-row" data-kk-fws-summary-row="shipping">
+                      <span class="kk-fws-offer__summary-label">
+                        {{- section.settings.shipping_label -}}
+                      </span>
+                      <span class="kk-fws-offer__summary-value">
+                        <span class="kk-fws-offer__summary-amount">
+                          {{- shipping_cents | money_without_trailing_zeros -}}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="kk-fws-offer__summary-due">
+                    <div class="kk-fws-offer__summary-due-text">
+                      <p class="kk-fws-offer__summary-due-label">
+                        {{- section.settings.due_today_label -}}
+                      </p>
+                      <p class="kk-fws-offer__summary-note" data-kk-fws-summary-note>
+                        {{- summary_note -}}
+                      </p>
+                    </div>
+                    <p class="kk-fws-offer__summary-total" data-kk-fws-summary-total>
+                      {{- summary_total_cents | money_without_trailing_zeros -}}
+                    </p>
+                  </div>
+
+                  <p class="kk-fws-offer__summary-footnote">
+                    <img
+                      class="kk-fws-offer__summary-footnote-icon"
+                      src="{{ 'kk-fws-icon-check-circle.svg' | asset_url }}"
+                      alt=""
+                      width="14"
+                      height="14"
+                      aria-hidden="true"
+                      loading="lazy"
+                    >
+                    <span data-kk-fws-summary-footnote>{{ summary_footnote }}</span>
+                  </p>
+                </div>
+              {%- endif -%}
+
+              <button class="kk-fws-offer__button" type="submit" name="add">
+                {{- section.settings.button_label -}}
+              </button>
+
+              {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+              {%- if trust_blocks.size > 0 -%}
+                <ul class="kk-fws-offer__trust-list">
+                  {%- for block in trust_blocks -%}
+                    <li class="kk-fws-offer__trust" {{ block.shopify_attributes }}>
+                      {%- render 'kk-fws-offer-icon', block: block -%}
+                      <span class="kk-fws-offer__trust-text">{{ block.settings.text }}</span>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            {%- endform -%}
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{%- comment -%}
+  Appstle guard. The app injects its own `selling_plan` radios into every product form on the
+  page and pre-checks one of them. Left alone, the form posts whichever plan the app decided
+  on instead of the one step 3 resolved. Confirmed in the browser, not theoretical.
+
+  Now that step 3 exists this no longer means "never subscribe" — it means the ONLY control
+  allowed to set `selling_plan` is this section's own hidden input. Appstle's radios are
+  disabled (never submitted) rather than removed, so the app's own scripts still find their
+  nodes. Re-runs on mutation because the app injects asynchronously and can re-inject.
+
+  This block is deliberately OUTSIDE the `media_varies` conditional below — it must run on
+  every render, not only when the gallery sync happens to be emitted.
+{%- endcomment -%}
+<script>
+  (function () {
+    var root = document.getElementById('kk-fws-offer');
+    var form = root && root.querySelector('form[action*="/cart/add"]');
+
+    if (!form) {
+      return;
+    }
+
+    function neutraliseSellingPlan() {
+      // `:not([data-kk-fws-selling-plan])` is the whole point of this selector now: step 3
+      // owns a real selling_plan input, and this guard must not switch it off.
+      var planInputs = form.querySelectorAll('[name="selling_plan"]:not([data-kk-fws-selling-plan])');
+
+      for (var i = 0; i < planInputs.length; i++) {
+        planInputs[i].checked = false;
+        planInputs[i].disabled = true;
+      }
+    }
+
+    neutraliseSellingPlan();
+    document.addEventListener('DOMContentLoaded', neutraliseSellingPlan);
+    window.addEventListener('load', neutraliseSellingPlan);
+
+    if (window.MutationObserver) {
+      new MutationObserver(neutraliseSellingPlan).observe(form, {
+        childList: true,
+        subtree: true,
+      });
+    }
+  })();
+</script>
+
+{%- comment -%}
+  Size x plan -> variant, and (size x plan x pay mode) -> selling plan and price.
+
+  The three pickers are separate radio groups (none can be `name="id"` alone), so this keeps
+  the form's hidden `id` and hidden `selling_plan` in step with them, greys out any plan that
+  has no variant for the selected size, and rewrites step 2's prices when the pay mode
+  changes. The server already rendered the default triple, so with JS off the form still
+  adds a real, correctly priced variant on the default subscription.
+{%- endcomment -%}
+<script type="application/json" data-kk-fws-variants>
+  [
+    {%- for row in matrix_rows -%}
+      {%- assign parts = row | split: '~~' -%}
+      {
+        "size": {{ parts[0] | json }},
+        "plan": {{ parts[1] | json }},
+        "id": {{ parts[2] | json }},
+        "available": {% if parts[3] == '1' %}true{% else %}false{% endif %},
+        "sellingPlan": {{ parts[4] | json }},
+        "subPrice": {{ parts[5] | json }},
+        "subCompare": {{ parts[6] | json }},
+        "oncePrice": {{ parts[7] | json }},
+        "onceCompare": {{ parts[8] | json }},
+        "subRecurring": {{ parts[9] | json }},
+        "subUpgrade": {{ parts[10] | json }},
+        "subRecurringCents": {{ parts[11] | plus: 0 }}
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+</script>
+
+{%- comment -%}
+  ORDER SUMMARY figures per variant. Keyed by variant id so the picker script can look them
+  up straight from the matrix row it already resolved, rather than re-deriving prices in JS
+  where the money format would have to be reimplemented.
+{%- endcomment -%}
+<script type="application/json" data-kk-fws-summary-data>
+  {
+    {%- assign summary_first = true -%}
+    {%- for variant in product.variants -%}
+      {%- liquid
+        assign include_variant = true
+        if stand_index >= 0 and pinned_stand != blank
+          unless variant.options[stand_index] == pinned_stand
+            assign include_variant = false
+          endunless
+        endif
+      -%}
+      {%- if include_variant -%}
+        {%- liquid
+          assign v_filter = ''
+          if filter_index >= 0
+            assign v_filter = variant.options[filter_index]
+          endif
+
+          assign v_plan_label = v_filter
+          for row in plan_name_rows
+            assign parts = row | split: '~~'
+            if parts[0] == v_filter
+              assign v_plan_label = parts[1]
+              break
+            endif
+          endfor
+
+          assign v_base_cents = variant.price
+          for row in plan_base_rows
+            assign parts = row | split: '~~'
+            if parts[0] == v_filter
+              assign v_base_cents = parts[1] | plus: 0
+              break
+            endif
+          endfor
+
+          assign v_once_total = variant.price | plus: shipping_cents
+
+          comment
+            SPLIT THE ONE-TIME PRICE: tower + plan + size premium, derived so the three ALWAYS
+            add back up to the variant price. That invariant is what keeps the summary's rows
+            summing to due-today in every state, including a half-finished reprice.
+
+              premium = variant price - base size's price, floored at zero
+              plan    = variant price - premium          (i.e. the base size's price)
+              tower   = charged only when the plan still clears the tower value, and then
+                        deducted from the plan
+
+            Flooring the premium matters while a reprice is in flight: an un-repriced size can
+            cost LESS than the repriced base, which would otherwise yield a negative premium and
+            a plan component that no longer reconciles. Deducting the tower only when the plan
+            exceeds it is what keeps the component positive without a separate clamp.
+          endcomment
+          assign v_upgrade_cents = variant.price | minus: v_base_cents
+          if v_upgrade_cents < 0
+            assign v_upgrade_cents = 0
+          endif
+
+          assign v_once_plan_cents = variant.price | minus: v_upgrade_cents
+          assign v_tower_charged = false
+          if v_once_plan_cents > tower_value_cents
+            assign v_once_plan_cents = v_once_plan_cents | minus: tower_value_cents
+            assign v_tower_charged = true
+          endif
+
+          comment
+            Subscribe side. `price` is the joining charge (due today); the last price
+            adjustment is the renewal. See the two-cycle note in the matrix above.
+          endcomment
+          assign v_allocation = variant.selling_plan_allocations | first
+          assign v_sub_amount = ''
+          assign v_sub_upgrade = ''
+          assign v_sub_total = ''
+          if v_allocation != blank
+            assign v_first_cents = v_allocation.price
+            assign v_recurring_cents = v_allocation.price
+            if v_allocation.price_adjustments.size > 0
+              assign v_last_adjustment = v_allocation.price_adjustments | last
+              assign v_recurring_cents = v_last_adjustment.price
+            endif
+
+            comment
+              The plan row shows the RENEWAL price, which is the number the design puts on
+              the card ($99 / 6 months). The joining premium goes on its own Size Upgrade
+              row so the rows still sum to due today.
+            endcomment
+            assign v_sub_amount = v_recurring_cents | money_without_trailing_zeros
+            assign v_sub_total = v_first_cents | plus: shipping_cents | money_without_trailing_zeros
+
+            assign v_sub_upgrade_cents = v_first_cents | minus: v_recurring_cents
+            if v_sub_upgrade_cents > 0
+              assign v_sub_upgrade = v_sub_upgrade_cents | money_without_trailing_zeros
+            endif
+          endif
+
+          assign v_tower_value = tower_value_cents | money_without_trailing_zeros
+          assign v_sub_note = section.settings.subscribe_note | replace: '[price]', v_sub_amount
+          assign v_sub_footnote = section.settings.subscribe_footnote | replace: '[value]', v_tower_value
+        -%}
+        {%- unless summary_first %},{% endunless -%}
+        {%- assign summary_first = false -%}
+        {%- comment -%}
+          `append: ''` before `json` so the key is a quoted string — `variant.id | json` on a
+          number emits a bare numeric key, which is not valid JSON.
+        {%- endcomment -%}
+        {{ variant.id | append: '' | json }}: {
+          "size": {{ variant.options[size_index] | json }},
+          "planLabel": {{ v_plan_label | json }},
+          "base": {{ v_once_plan_cents | money_without_trailing_zeros | json }},
+          "towerCharged": {{ v_tower_charged | json }},
+          "towerValue": {{ tower_value_cents | money_without_trailing_zeros | json }},
+          "upgrade": {% if v_upgrade_cents > 0 %}{{ v_upgrade_cents | money_without_trailing_zeros | json }}{% else %}""{% endif %},
+          "subAmount": {{ v_sub_amount | json }},
+          "subUpgrade": {{ v_sub_upgrade | json }},
+          "subTotal": {{ v_sub_total | json }},
+          "onceTotal": {{ v_once_total | money_without_trailing_zeros | json }},
+          "subNote": {{ v_sub_note | json }},
+          "onceNote": {{ section.settings.onetime_note | json }},
+          "subFootnote": {{ v_sub_footnote | json }},
+          "onceFootnote": {{ section.settings.onetime_footnote | json }}
+        }
+      {%- endif -%}
+    {%- endfor -%}
+  }
+</script>
+
+<script>
+  (function () {
+    var root = document.getElementById('kk-fws-offer');
+
+    if (!root) {
+      return;
+    }
+
+    // The matrix script block is a sibling of the section, not a descendant of it — like every
+    // other script in this file it is emitted after the closing section tag.
+    var data = document.querySelector('[data-kk-fws-variants]');
+    var target = root.querySelector('[data-kk-fws-variant-id]');
+    var button = root.querySelector('.kk-fws-offer__button');
+
+    if (!data || !target) {
+      return;
+    }
+
+    var rows;
+
+    try {
+      rows = JSON.parse(data.textContent);
+    } catch (error) {
+      return;
+    }
+
+    var sizeInputs = [].slice.call(root.querySelectorAll('.kk-fws-offer__size-input'));
+    var planInputs = [].slice.call(root.querySelectorAll('.kk-fws-offer__plan-input'));
+    var payInputs = [].slice.call(root.querySelectorAll('.kk-fws-offer__pay-input'));
+    var sellingPlanTarget = root.querySelector('[data-kk-fws-selling-plan]');
+
+    var summaryCard = root.querySelector('[data-kk-fws-summary]');
+    var summaryData = document.querySelector('[data-kk-fws-summary-data]');
+    var summary = null;
+
+    // The authored "FREE" label, read off whatever Liquid rendered so the string stays in the
+    // schema rather than being duplicated here. Only meaningful when the server rendered the
+    // subscribe face, hence the letters test and the hard default.
+    var towerFreeText = 'FREE';
+    var towerAmountNode = summaryCard && summaryCard.querySelector('[data-kk-fws-summary-tower-amount]');
+
+    if (towerAmountNode && /[a-z]/i.test(towerAmountNode.textContent)) {
+      towerFreeText = towerAmountNode.textContent.trim();
+    }
+
+    if (summaryCard && summaryData) {
+      try {
+        summary = JSON.parse(summaryData.textContent);
+      } catch (error) {
+        summary = null;
+      }
+    }
+
+    function checkedValue(inputs) {
+      for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].checked) {
+          return inputs[i].value;
+        }
+      }
+      return null;
+    }
+
+    function find(size, plan) {
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].size === size && rows[i].plan === plan) {
+          return rows[i];
+        }
+      }
+      return null;
+    }
+
+    // '-' is the Liquid side's "this product has no such price", not a value to render.
+    function money(value) {
+      return value && value !== '-' ? value : '';
+    }
+
+    // Step 2's price is the SELECTED pay mode's price. Subscribing shows the allocation
+    // price with the cadence and the one-time price struck through; paying once shows the
+    // variant price with no cadence. A plan whose pair has no allocation keeps whatever
+    // the server rendered rather than being blanked.
+    function paintPlanPrice(input, size, pay) {
+      var card = input.nextElementSibling;
+      var wrap = card && card.querySelector('[data-kk-fws-plan-price]');
+
+      if (!wrap) {
+        return;
+      }
+
+      var row = find(size, input.value);
+
+      if (!row) {
+        return;
+      }
+
+      var subscribing = pay === 'subscribe' && row.sellingPlan !== '0';
+
+      // Step 2 is about the PLAN, so both faces use the plan component: the renewal price
+      // while subscribing, the plan's one-time price while paying once. That one-time plan
+      // price is constant per plan, so it rides on the wrapper as a data attribute rather
+      // than being looked up per variant.
+      var oncePlan = wrap.getAttribute('data-once-plan') || '';
+      oncePlan = oncePlan === '-' ? '' : oncePlan;
+
+      var amount = subscribing
+        ? money(row.subRecurring) || money(row.subPrice)
+        : oncePlan || money(row.oncePrice);
+
+      if (!amount) {
+        return;
+      }
+
+      var cadence = subscribing ? wrap.getAttribute('data-cadence') || '' : '';
+      // Struck through on the subscribe face only: plan-vs-plan, the saving the design shows.
+      // Suppressed when it is not actually a saving — a strikethrough below the price reads as
+      // a price rise, which a misconfigured tower value can produce.
+      var compare = '';
+
+      if (subscribing) {
+        var oncePlanCents = oncePlan ? Math.round(parseFloat(oncePlan.replace(/[^0-9.]/g, '')) * 100) : 0;
+
+        if (oncePlanCents > (row.subRecurringCents || 0)) {
+          compare = oncePlan;
+        } else if (!oncePlan) {
+          compare = money(row.subCompare);
+        }
+      }
+
+      var amountNode = wrap.querySelector('[data-kk-fws-plan-amount]');
+      var cadenceNode = wrap.querySelector('[data-kk-fws-plan-cadence]');
+      var compareNode = wrap.querySelector('[data-kk-fws-plan-compare]');
+
+      if (amountNode) {
+        amountNode.textContent = amount;
+      }
+
+      if (cadenceNode) {
+        cadenceNode.textContent = cadence;
+        cadenceNode.hidden = !cadence;
+      }
+
+      if (compareNode) {
+        compareNode.textContent = compare;
+        compareNode.hidden = !compare;
+      }
+    }
+
+    // Order summary. Mirrors the Liquid that rendered the default state, so the server and
+    // the client can never disagree about the arithmetic — both read the same per-variant
+    // figures out of [data-kk-fws-summary-data].
+    function paintSummary(match, pay) {
+      if (!summary || !match) {
+        return;
+      }
+
+      var figures = summary[match.id];
+
+      if (!figures) {
+        return;
+      }
+
+      var subscribing = pay === 'subscribe' && match.sellingPlan !== '0' && !!figures.subTotal;
+
+      function row(name) {
+        return summaryCard.querySelector('[data-kk-fws-summary-row="' + name + '"]');
+      }
+
+      function text(hook, value) {
+        var node = summaryCard.querySelector('[data-kk-fws-summary-' + hook + ']');
+
+        if (node) {
+          node.textContent = value;
+        }
+      }
+
+      var towerRow = row('tower');
+      var upgradeRow = row('upgrade');
+      var cadence = summaryCard.querySelector('[data-kk-fws-summary-plan-cadence]');
+
+      // Tower: FREE on a subscription, a real charge on a one-time purchase. Hidden only when
+      // paying once on a product whose one-time price does not carry the tower.
+      if (towerRow) {
+        towerRow.hidden = !subscribing && !figures.towerCharged;
+
+        var strike = summaryCard.querySelector('[data-kk-fws-summary-tower-strike]');
+
+        if (strike) {
+          strike.hidden = !subscribing;
+        }
+
+        text('tower-amount', subscribing ? towerFreeText : figures.towerValue);
+      }
+
+      // Size premium. One-time: the variant price above the cheapest size. Subscribe: the
+      // joining premium, i.e. what checkout charges above the renewal price. Shown only when
+      // there is something to charge — a one-cycle plan has no subscribe-side premium, which
+      // keeps the row hidden on subscribe exactly as before two-cycle pricing.
+      if (upgradeRow) {
+        var upgrade = subscribing ? figures.subUpgrade : figures.upgrade;
+
+        upgradeRow.hidden = !upgrade;
+
+        if (upgrade) {
+          text('upgrade', '+ ' + upgrade);
+        }
+      }
+
+      if (cadence) {
+        cadence.hidden = !subscribing;
+      }
+
+      text('size', figures.size);
+      text('plan-label', figures.planLabel);
+      text('plan-amount', subscribing ? figures.subAmount : figures.base);
+      text('total', subscribing ? figures.subTotal : figures.onceTotal);
+      text('note', subscribing ? figures.subNote : figures.onceNote);
+      text('footnote', subscribing ? figures.subFootnote : figures.onceFootnote);
+    }
+
+    function sync() {
+      var size = checkedValue(sizeInputs);
+      var plan = planInputs.length ? checkedValue(planInputs) : null;
+
+      // A plan with no variant for the selected size is disabled, not hidden — the card
+      // is part of the offer's argument even when one size can't take it.
+      for (var i = 0; i < planInputs.length; i++) {
+        var row = find(size, planInputs[i].value);
+        var usable = !!(row && row.id !== '0' && row.available);
+
+        planInputs[i].disabled = !usable;
+        planInputs[i].closest('.kk-fws-offer__plan').classList.toggle('is-unavailable', !usable);
+
+        if (!usable && planInputs[i].checked) {
+          planInputs[i].checked = false;
+          plan = null;
+        }
+      }
+
+      if (planInputs.length && !plan) {
+        for (var j = 0; j < planInputs.length; j++) {
+          if (!planInputs[j].disabled) {
+            planInputs[j].checked = true;
+            plan = planInputs[j].value;
+            break;
+          }
+        }
+      }
+
+      var match = find(size, plan);
+      var pay = payInputs.length ? checkedValue(payInputs) : 'onetime';
+
+      // Step 3, same rule as step 2: a pair with no allocation cannot be subscribed to, so
+      // "Subscribe & Save" greys out and the choice falls back to one-time.
+      var subscribable = !!(match && match.sellingPlan && match.sellingPlan !== '0');
+
+      for (var k = 0; k < payInputs.length; k++) {
+        if (payInputs[k].value !== 'subscribe') {
+          continue;
+        }
+
+        payInputs[k].disabled = !subscribable;
+        payInputs[k].closest('.kk-fws-offer__pay').classList.toggle('is-unavailable', !subscribable);
+
+        if (!subscribable && payInputs[k].checked) {
+          payInputs[k].checked = false;
+          pay = null;
+        }
+      }
+
+      if (payInputs.length && !pay) {
+        for (var m = 0; m < payInputs.length; m++) {
+          if (!payInputs[m].disabled) {
+            payInputs[m].checked = true;
+            pay = payInputs[m].value;
+            break;
+          }
+        }
+      }
+
+      for (var n = 0; n < planInputs.length; n++) {
+        paintPlanPrice(planInputs[n], size, pay);
+      }
+
+      paintSummary(match, pay);
+
+      // Step 1's badges are the ONE-TIME size deltas, and the user ruled they must not show on
+      // a one-time purchase now that the tower is charged there. Reflected as state on the root
+      // so the hiding is one CSS rule rather than per-node DOM work.
+      root.setAttribute('data-kk-fws-pay-mode', pay === 'subscribe' ? 'subscribe' : 'onetime');
+
+      // One-time is the ABSENCE of a selling_plan, so the input is disabled rather than
+      // emptied — see the note on the input itself.
+      if (sellingPlanTarget) {
+        if (pay === 'subscribe' && subscribable) {
+          sellingPlanTarget.value = match.sellingPlan;
+          sellingPlanTarget.disabled = false;
+        } else {
+          sellingPlanTarget.disabled = true;
+        }
+      }
+
+      if (match && match.id !== '0' && match.available) {
+        target.value = match.id;
+        target.disabled = false;
+
+        if (button) {
+          button.disabled = false;
+        }
+
+        return;
+      }
+
+      // Nothing resolves: disabling the input rather than posting a stale id means the
+      // form cannot silently add the previously selected variant.
+      target.disabled = true;
+
+      if (button) {
+        button.disabled = true;
+      }
+    }
+
+    for (var i = 0; i < sizeInputs.length; i++) {
+      sizeInputs[i].addEventListener('change', sync);
+    }
+
+    for (var j = 0; j < planInputs.length; j++) {
+      planInputs[j].addEventListener('change', sync);
+    }
+
+    for (var k = 0; k < payInputs.length; k++) {
+      payInputs[k].addEventListener('change', sync);
+    }
+
+    sync();
+  })();
+</script>
+
+{%- comment -%}
+  Gallery behaviour: thumbnail strip, video slides, and (when the author has given each
+  size its own media positions) keeping the visible slides inside the selected size's group.
+
+  Swiper is an ES module inside assets/main.js and is NOT a global, so this cannot construct
+  or configure the instance. The theme's initialiser registers it at
+  window.sliders['product-slider']; everything here drives that public instance.
+{%- endcomment -%}
+<script>
+  (function () {
+    var root = document.getElementById('kk-fws-offer');
+
+    if (!root) {
+      return;
+    }
+
+    var slider = root.querySelector('.kk-fws-offer__slider');
+
+    if (!slider) {
+      return;
+    }
+
+    var slides = [].slice.call(slider.querySelectorAll('.swiper-wrapper > .swiper-slide'));
+    var thumbs = [].slice.call(root.querySelectorAll('[data-kk-fws-thumb]'));
+    var groupsEnabled = {% if media_varies %}true{% else %}false{% endif %};
+
+    var reduced =
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // The theme initialises its sliders on DOM ready; this script runs inline, so the
+    // instance may not exist yet. Poll briefly rather than racing it.
+    function whenReady(callback) {
+      var attempts = 0;
+
+      (function poll() {
+        var instance = window.sliders ? window.sliders[slider.id] : null;
+
+        if (instance && typeof instance.slideTo === 'function') {
+          callback(instance);
+          return;
+        }
+
+        if (++attempts > 60) {
+          return;
+        }
+
+        window.setTimeout(poll, 100);
+      })();
+    }
+
+    function currentSize() {
+      var checked = root.querySelector('.kk-fws-offer__size-input:checked');
+      return checked ? checked.getAttribute('data-kk-fws-size') : null;
+    }
+
+    // Inclusive [first, last] slide indices belonging to the selected size. Without
+    // grouping every slide is in range.
+    function groupBounds() {
+      if (!groupsEnabled) {
+        return [0, slides.length - 1];
+      }
+
+      var size = currentSize();
+      var first = -1;
+      var last = -1;
+
+      for (var i = 0; i < slides.length; i++) {
+        if (slides[i].getAttribute('data-kk-fws-size') === size) {
+          if (first < 0) {
+            first = i;
+          }
+          last = i;
+        }
+      }
+
+      return first < 0 ? [0, slides.length - 1] : [first, last];
+    }
+
+    function syncThumbs(activeIndex) {
+      var bounds = groupBounds();
+
+      for (var i = 0; i < thumbs.length; i++) {
+        var index = parseInt(thumbs[i].getAttribute('data-kk-fws-thumb'), 10);
+        var inGroup = index >= bounds[0] && index <= bounds[1];
+
+        thumbs[i].hidden = !inGroup;
+        thumbs[i].setAttribute('aria-selected', index === activeIndex ? 'true' : 'false');
+        thumbs[i].classList.toggle('is-active', index === activeIndex);
+      }
+    }
+
+    whenReady(function (instance) {
+      syncThumbs(instance.activeIndex);
+
+      for (var i = 0; i < thumbs.length; i++) {
+        thumbs[i].addEventListener('click', function (event) {
+          var index = parseInt(event.currentTarget.getAttribute('data-kk-fws-thumb'), 10);
+          instance.slideTo(index, reduced ? 0 : 400);
+        });
+      }
+
+      instance.on('slideChange', function () {
+        // Slides for every size live in one wrapper (hiding them fights Swiper's layout),
+        // so a swipe can run past the selected size's images into the next size's. Snap
+        // back to the nearest in-group slide instead of letting the two sets bleed.
+        var bounds = groupBounds();
+        var index = instance.activeIndex;
+
+        if (index < bounds[0]) {
+          instance.slideTo(bounds[0], 0);
+          return;
+        }
+
+        if (index > bounds[1]) {
+          instance.slideTo(bounds[1], 0);
+          return;
+        }
+
+        syncThumbs(index);
+      });
+
+      if (groupsEnabled) {
+        var inputs = root.querySelectorAll('.kk-fws-offer__size-input');
+
+        for (var j = 0; j < inputs.length; j++) {
+          inputs[j].addEventListener('change', function (event) {
+            if (!event.target.checked) {
+              return;
+            }
+
+            instance.slideTo(groupBounds()[0], reduced ? 0 : 400);
+            syncThumbs(groupBounds()[0]);
+          });
+        }
+      }
+    });
+
+    // Video slides render as a poster; the player is only built when asked for.
+    root.addEventListener('click', function (event) {
+      var trigger = event.target.closest ? event.target.closest('.kk-fws-offer__play') : null;
+
+      if (!trigger) {
+        return;
+      }
+
+      var holder = trigger.closest('[data-kk-fws-video]');
+
+      if (!holder || holder.querySelector('video, iframe')) {
+        return;
+      }
+
+      var embed = holder.getAttribute('data-kk-fws-video-embed');
+      var src = holder.getAttribute('data-kk-fws-video-src');
+      var player;
+
+      if (embed) {
+        player = document.createElement('iframe');
+        player.setAttribute('src', embed);
+        player.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+        player.setAttribute('allowfullscreen', 'allowfullscreen');
+        player.setAttribute('title', 'Product video');
+      } else if (src) {
+        player = document.createElement('video');
+        player.setAttribute('src', src);
+        player.setAttribute('controls', 'controls');
+        player.setAttribute('playsinline', 'playsinline');
+        player.setAttribute('autoplay', 'autoplay');
+      } else {
+        return;
+      }
+
+      player.className = 'kk-fws-offer__video-player';
+      holder.appendChild(player);
+      trigger.hidden = true;
+    });
+  })();
+</script>
+
+{% stylesheet %}
+  .kk-fws-offer {
+    background: var(--kk-fws-offer-background, #ffffff);
+    padding: 10rem 0;
+  }
+
+  .kk-fws-offer__container {
+    width: min(100% - 3.2rem, 114rem);
+    margin: 0 auto;
+  }
+
+  .kk-fws-offer__eyebrow {
+    display: table;
+    margin: 0 auto;
+    padding: 0.8rem 2.16rem;
+    border-radius: 0.3rem;
+    background: var(--kk-fws-offer-eyebrow-background, #f8f5f3);
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: normal;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  .kk-fws-offer__heading {
+    max-width: 55.3rem;
+    margin: 2rem auto 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 5.2rem;
+    line-height: 1.1;
+    text-align: center;
+    text-transform: none;
+    color: var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__subheading {
+    max-width: 70rem;
+    margin: 2rem auto 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 2.2rem;
+    line-height: 1.4;
+    text-align: center;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  /* PHASE 1: hide the Appstle subscription widget inside this section.
+     The app injects its own "Purchase Options" UI (Subscribe / One Time Purchase, with
+     its own prices and a 55%-off badge) into every product form. Those numbers are the
+     evergreen PDP's, not the campaign's, and they contradict item 5's offer two sections
+     above. Its inputs are also disabled by the script at the foot of this file, so leaving
+     the widget visible would show controls that look selectable but do nothing.
+     Hiding is NOT sufficient alone - a hidden input still submits, which is why the script
+     disables them too. Both are required.
+     Scoped to this section; the widget still works everywhere else on the site.
+     PHASE 2: remove this and the script when the real plan picker lands. */
+  .kk-fws-offer [class*='appstle'],
+  .kk-fws-offer [id*='appstle'] {
+    display: none !important;
+  }
+
+  .kk-fws-offer__layout {
+    display: grid;
+    /* minmax(0, 1fr) not 1fr: a grid item defaults to min-width:auto, so the Swiper
+       track (a flex row of square slides) can force its column far wider than 1fr.
+       Without this the media column measured 27018px wide in the browser. */
+    /* 569px gallery + 541px panel + 30.9px gutter = the 1140px campaign container. */
+    grid-template-columns: minmax(0, 569fr) minmax(0, 541fr);
+    column-gap: 3.1rem;
+    align-items: start;
+    margin-top: 4rem;
+  }
+
+  .kk-fws-offer__media {
+    position: relative;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .kk-fws-offer__slider {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .kk-fws-offer__slide {
+    display: flex;
+    max-width: 100%;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    background: var(--kk-fws-offer-nav-background, #f5f3f1);
+  }
+
+  .kk-fws-offer__slide-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  /* Square nav buttons flush to the image edges, vertically centred — Figma 7420:1080/1084.
+     Deliberately NOT `.swiper-button-prev/next`: those classes pull in Swiper's own 27x44
+     styling and its ::after icon font. The theme wires navigation off `.swiper-prev` /
+     `.swiper-next`, which is all Swiper actually needs. */
+  /* Scoped with the section root for specificity, not for readability: Swiper sets the
+     `disabled` attribute on <button> nav elements at the ends of a non-looping slider, and
+     the theme's `button[disabled]` rule in main.css (0,1,1) would otherwise beat a single
+     class and strip the fill and border off whichever arrow is currently at the end. */
+  .kk-fws-offer .kk-fws-offer__nav {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.687rem;
+    height: 4.687rem;
+    margin: 0;
+    padding: 0;
+    transform: translateY(-50%);
+    border: 0;
+    border-radius: 0;
+    background: var(--kk-fws-offer-nav-background, #f5f3f1);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .kk-fws-offer .kk-fws-offer__nav--prev {
+    left: 0;
+  }
+
+  .kk-fws-offer .kk-fws-offer__nav--next {
+    right: 0;
+  }
+
+  .kk-fws-offer__nav-icon {
+    display: block;
+    width: 2.0603rem;
+    height: 1.2232rem;
+  }
+
+  .kk-fws-offer .kk-fws-offer__nav--prev .kk-fws-offer__nav-icon {
+    transform: rotate(-90deg);
+  }
+
+  .kk-fws-offer .kk-fws-offer__nav--next .kk-fws-offer__nav-icon {
+    transform: rotate(90deg);
+  }
+
+  .kk-fws-offer .kk-fws-offer__nav.swiper-button-disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .kk-fws-offer .kk-fws-offer__nav.swiper-button-lock {
+    display: none;
+  }
+
+  .kk-fws-offer__video {
+    position: relative;
+    width: 100%;
+  }
+
+  .kk-fws-offer .kk-fws-offer__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 7.2rem;
+    height: 7.2rem;
+    margin: 0;
+    padding: 0;
+    transform: translate(-50%, -50%);
+    border: 0;
+    border-radius: 50%;
+    background: var(--kk-fws-offer-nav-background, #f5f3f1);
+    cursor: pointer;
+  }
+
+  .kk-fws-offer .kk-fws-offer__play::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 54%;
+    width: 0;
+    height: 0;
+    transform: translate(-50%, -50%);
+    border-top: 1.2rem solid transparent;
+    border-bottom: 1.2rem solid transparent;
+    border-left: 2rem solid var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__video-player {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 0;
+    object-fit: cover;
+  }
+
+  /* Four-across thumbnail row — Figma 7420:1105 (desktop) / 7511:222 (mobile). */
+  .kk-fws-offer__thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.0852rem;
+    margin-top: 1.0852rem;
+  }
+
+  .kk-fws-offer .kk-fws-offer__thumb {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--kk-fws-offer-thumb-border, #efefef);
+    border-radius: 0;
+    background: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  .kk-fws-offer .kk-fws-offer__thumb[hidden] {
+    display: none;
+  }
+
+  .kk-fws-offer .kk-fws-offer__thumb.is-active {
+    border-color: var(--kk-fws-offer-card-selected-border, #153a5b);
+  }
+
+  .kk-fws-offer .kk-fws-offer__thumb:focus-visible {
+    outline: 2px solid var(--kk-fws-offer-card-selected-border, #153a5b);
+    outline-offset: 2px;
+  }
+
+  .kk-fws-offer__thumb-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  .kk-fws-offer__thumb-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2.4rem;
+    height: 2.4rem;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--kk-fws-offer-nav-background, #f5f3f1);
+  }
+
+  .kk-fws-offer__thumb-play::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 55%;
+    width: 0;
+    height: 0;
+    transform: translate(-50%, -50%);
+    border-top: 0.5rem solid transparent;
+    border-bottom: 0.5rem solid transparent;
+    border-left: 0.8rem solid var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 2.6rem;
+  }
+
+  .kk-fws-offer__form {
+    display: flex;
+    flex-direction: column;
+    gap: 2.6rem;
+    margin: 0;
+  }
+
+  .kk-fws-offer__sizes {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  /* Numbered step header — Figma 7423:1585 / 7423:1613 (desktop), 7511:235 / 7511:260
+     (mobile). A <legend> so the radio group keeps its accessible name; `display: flex`
+     on a legend is fine in every browser this theme targets. */
+  .kk-fws-offer__step {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 0 0 2rem;
+    padding: 0;
+  }
+
+  .kk-fws-offer__step-number {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: var(--kk-fws-offer-step-background, #153a5b);
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.5;
+    color: var(--kk-fws-offer-step-text, #ffffff);
+  }
+
+  .kk-fws-offer__step-title {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.5;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  .kk-fws-offer__plans {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  /* Two cards across at EVERY breakpoint — mobile narrows them (163.5px each, 8px gap in
+     a 335px container) rather than stacking. Figma 7511:265. */
+  .kk-fws-offer__plan-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+    align-items: stretch;
+  }
+
+  .kk-fws-offer__plan {
+    display: block;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .kk-fws-offer__plan-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .kk-fws-offer__plan-card {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 26.3897rem;
+    padding: 3.1rem 2.5rem 2.4rem;
+    /* Transparent rather than absent so selecting a card does not resize it. */
+    border: 0.3068rem solid transparent;
+    border-radius: 0.8181rem;
+    background: var(--kk-fws-offer-card-background, #f5f3f1);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .kk-fws-offer__plan-input:checked + .kk-fws-offer__plan-card {
+    border-color: var(--kk-fws-offer-card-selected-border, #153a5b);
+    background: var(--kk-fws-offer-card-selected-background, #ffffff);
+  }
+
+  .kk-fws-offer__plan-input:focus-visible + .kk-fws-offer__plan-card {
+    outline: 2px solid var(--kk-fws-offer-card-selected-border, #153a5b);
+    outline-offset: 2px;
+  }
+
+  .kk-fws-offer__plan.is-unavailable,
+  .kk-fws-offer__plan-input:disabled + .kk-fws-offer__plan-card {
+    cursor: not-allowed;
+  }
+
+  .kk-fws-offer__plan-input:disabled + .kk-fws-offer__plan-card {
+    opacity: 0.5;
+  }
+
+  /* Ribbon sits on the card's top-right corner. Absolute offsets resolve against the
+     padding box, so the border width has to be added back to reach the border box. */
+  .kk-fws-offer__plan-ribbon {
+    position: absolute;
+    top: -0.3068rem;
+    right: -0.3068rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 2.0327rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0 0.9rem 0 0.9rem;
+    background: var(--kk-fws-offer-badge-background, #153a5b);
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.2rem;
+    line-height: normal;
+    letter-spacing: 0.12rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--kk-fws-offer-badge-text, #ffffff);
+  }
+
+  .kk-fws-offer__plan-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  /* Top-aligned, not centred: the plan name wraps to two lines in the narrow half of the
+     two-column band and on mobile, and a centred radio would then float beside the gap
+     between the lines instead of sitting against the first one. */
+  .kk-fws-offer__plan-name {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  /* The radio mark is two concentric circles, so it is drawn in CSS rather than committed
+     as an icon — it has no glyph to get wrong, and this way it follows the colour settings. */
+  .kk-fws-offer__plan-radio {
+    position: relative;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 1.6691rem;
+    height: 1.6691rem;
+    /* Optically centres the dot on the first line of the name (23.4px line box). */
+    margin-top: 0.34rem;
+    border: 0.13rem solid var(--kk-fws-offer-card-selected-border, #153a5b);
+    border-radius: 50%;
+    background: #ffffff;
+  }
+
+  .kk-fws-offer__plan-input:checked + .kk-fws-offer__plan-card .kk-fws-offer__plan-radio::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60%;
+    height: 60%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--kk-fws-offer-card-selected-border, #153a5b);
+  }
+
+  /* Wraps at every width. Figma fits "Family Protection Plus" on one line at 1366px, but
+     the card is narrower than that through the whole two-column band, so forcing one line
+     overflows the card there — the design's single line is a 1366px-only coincidence. */
+  .kk-fws-offer__plan-label {
+    min-width: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+    color: var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__plan-price {
+    display: flex;
+    align-items: center;
+    gap: 0.44rem;
+    flex-wrap: wrap;
+  }
+
+  .kk-fws-offer__plan-amount {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 2.8rem;
+    line-height: 1.5;
+    color: var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__plan-cadence {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.3;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  .kk-fws-offer__plan-compare {
+    margin-left: 0.56rem;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    text-decoration: line-through;
+    color: var(--kk-fws-offer-compare, #c4c4c4);
+  }
+
+  .kk-fws-offer__plan-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .kk-fws-offer__plan-feature {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .kk-fws-offer__plan-check {
+    display: block;
+    flex-shrink: 0;
+    width: 1.3222rem;
+    height: 0.85rem;
+    object-fit: contain;
+  }
+
+  .kk-fws-offer__plan-feature-text {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.3;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  .kk-fws-offer__plan-unavailable {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  /* STEP 3 — pay mode. Same card language as step 2 (Figma 7423:1672 / 7511:319) but a
+     third the height: no price row and no feature list, just a name and one line of copy.
+     Kept as its own block rather than sharing step 2's selectors because the two steps
+     diverge on height, padding and type scale at both breakpoints. */
+  .kk-fws-offer__pays {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .kk-fws-offer__pay-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+    align-items: stretch;
+  }
+
+  .kk-fws-offer__pay {
+    display: block;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .kk-fws-offer__pay-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .kk-fws-offer__pay-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 13.1rem;
+    padding: 3.1rem 2.8rem 2.4rem;
+    /* Transparent rather than absent so selecting a card does not resize it. */
+    border: 0.3068rem solid transparent;
+    border-radius: 0.8181rem;
+    background: var(--kk-fws-offer-card-background, #f5f3f1);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .kk-fws-offer__pay-input:checked + .kk-fws-offer__pay-card {
+    border-color: var(--kk-fws-offer-card-selected-border, #153a5b);
+    background: var(--kk-fws-offer-card-selected-background, #ffffff);
+  }
+
+  .kk-fws-offer__pay-input:focus-visible + .kk-fws-offer__pay-card {
+    outline: 2px solid var(--kk-fws-offer-card-selected-border, #153a5b);
+    outline-offset: 2px;
+  }
+
+  .kk-fws-offer__pay.is-unavailable,
+  .kk-fws-offer__pay-input:disabled + .kk-fws-offer__pay-card {
+    cursor: not-allowed;
+  }
+
+  .kk-fws-offer__pay-input:disabled + .kk-fws-offer__pay-card {
+    opacity: 0.5;
+  }
+
+  /* Ribbon sits on the card's top-right corner. Absolute offsets resolve against the
+     padding box, so the border width has to be added back to reach the border box. */
+  .kk-fws-offer__pay-ribbon {
+    position: absolute;
+    top: -0.3068rem;
+    right: -0.3068rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 2.0327rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0 0.9rem 0 0.9rem;
+    background: var(--kk-fws-offer-badge-background, #153a5b);
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.2rem;
+    line-height: normal;
+    letter-spacing: 0.12rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--kk-fws-offer-badge-text, #ffffff);
+  }
+
+  .kk-fws-offer__pay-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    width: 100%;
+  }
+
+  /* Top-aligned for the same reason as step 2: "One-Time Purchase" wraps to two lines in
+     the narrow half of the two-column band and on mobile. */
+  .kk-fws-offer__pay-name {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .kk-fws-offer__pay-radio {
+    position: relative;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 1.6691rem;
+    height: 1.6691rem;
+    /* Optically centres the dot on the first line of the name (23.4px line box). */
+    margin-top: 0.34rem;
+    border: 0.13rem solid var(--kk-fws-offer-card-selected-border, #153a5b);
+    border-radius: 50%;
+    background: #ffffff;
+  }
+
+  .kk-fws-offer__pay-input:checked + .kk-fws-offer__pay-card .kk-fws-offer__pay-radio::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60%;
+    height: 60%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--kk-fws-offer-card-selected-border, #153a5b);
+  }
+
+  .kk-fws-offer__pay-label {
+    min-width: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+    color: var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__pay-description {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.3;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  /* Only ever shown on the subscribe card, and only when the selected size/plan pair has
+     no allocation — otherwise it would read as a permanent disclaimer. */
+  .kk-fws-offer__pay-unavailable {
+    display: none;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  .kk-fws-offer__pay-input:disabled + .kk-fws-offer__pay-card .kk-fws-offer__pay-unavailable {
+    display: block;
+  }
+
+  /* ORDER SUMMARY — desktop `7423:1692`, mobile `7511:336`. Dividers are inset from the card
+     edge on desktop (Figma insets them by the 26.93px gutter) and full-bleed on mobile
+     (`7511:344` spans the card), so they are row borders rather than separate elements. */
+  .kk-fws-offer__summary {
+    box-sizing: border-box;
+    overflow: hidden;
+    /* 2.05rem, not Figma's 2.35rem: the design's 23.52px is measured from the frame's outer
+       edge, which includes the 3.068px border. */
+    padding: 2.05rem 0 1.8rem;
+    border: 0.3068rem solid var(--kk-fws-offer-card-background, #f5f3f1);
+    border-radius: 0.8181rem;
+    background: var(--kk-fws-offer-card-selected-background, #ffffff);
+  }
+
+  .kk-fws-offer__summary-title {
+    margin: 0 0 0.9rem;
+    padding: 0 2.693rem;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: normal;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__summary-rows {
+    padding: 0 2.693rem;
+  }
+
+  .kk-fws-offer__summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    padding: 2rem 0;
+  }
+
+  /* `hidden` alone loses to `display: flex`. */
+  .kk-fws-offer__summary-row[hidden] {
+    display: none;
+  }
+
+  /* Between rows only — Figma has no rule between the last row and the due-today band. The
+     sibling selector also means a hidden row takes its divider with it. */
+  .kk-fws-offer__summary-row + .kk-fws-offer__summary-row:not([hidden]) {
+    border-top: 1px solid var(--kk-fws-offer-line, #efefef);
+  }
+
+  .kk-fws-offer__summary-label {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.3;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  .kk-fws-offer__summary-value {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 1rem;
+    text-align: right;
+  }
+
+  .kk-fws-offer__summary-amount {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1.3;
+    white-space: nowrap;
+    color: var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  /* Sits tight against the amount rather than in the row's 1rem gap — Figma renders
+     "$99 / 6 months" as one phrase (`7423:1703`). */
+  .kk-fws-offer__summary-cadence {
+    margin-left: -0.6rem;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.8rem;
+    line-height: 1.3;
+    white-space: nowrap;
+    color: var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__summary-cadence[hidden] {
+    display: none;
+  }
+
+  .kk-fws-offer__summary-strike {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    text-decoration: line-through;
+    white-space: nowrap;
+    color: var(--kk-fws-offer-compare, #c4c4c4);
+  }
+
+  /* Full-bleed band: the card clips overflow, so negative insets are not needed — the row
+     simply has no side padding of its own beyond the gutter. */
+  .kk-fws-offer__summary-due {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    /* No margin: the last row's own 2rem padding-bottom is already the gap Figma shows
+       between the shipping line and the band (22px). */
+    padding: 1.64rem 2.693rem;
+    background: var(--kk-fws-offer-card-background, #f5f3f1);
+  }
+
+  .kk-fws-offer__summary-due-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .kk-fws-offer__summary-due-label {
+    margin: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: normal;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__summary-note {
+    margin: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.3;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  .kk-fws-offer__summary-total {
+    margin: 0;
+    flex-shrink: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 3.2rem;
+    line-height: 1.5;
+    white-space: nowrap;
+    color: var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__summary-footnote {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0 0;
+    padding: 0 2.693rem;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.3;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  .kk-fws-offer__summary-footnote-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 1.3804rem;
+    height: 1.3804rem;
+  }
+
+  .kk-fws-offer__size-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.9rem;
+  }
+
+  .kk-fws-offer__size {
+    display: block;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .kk-fws-offer__size-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .kk-fws-offer__size-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4053rem;
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 11.0873rem;
+    padding: 1.6rem 1.2rem;
+    /* Transparent rather than absent so selecting a card does not resize it. */
+    border: 0.2215rem solid transparent;
+    border-radius: 0.8106rem;
+    background: var(--kk-fws-offer-card-background, #f5f3f1);
+    text-align: center;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .kk-fws-offer__size-input:checked + .kk-fws-offer__size-card {
+    border-color: var(--kk-fws-offer-card-selected-border, #153a5b);
+    background: var(--kk-fws-offer-card-selected-background, #ffffff);
+  }
+
+  .kk-fws-offer__size-text {
+    display: block;
+  }
+
+  /* Tick badge straddles the card's top-right corner (Figma 7423:1593). */
+  .kk-fws-offer__size-tick {
+    position: absolute;
+    /* Absolute offsets resolve against the padding box, so the card's border has to be
+       added back to land the tick on the border-box corner as Figma has it. */
+    top: calc(-1.13rem - 0.2215rem);
+    right: calc(-1.13rem - 0.2215rem);
+    display: none;
+    width: 2.2594rem;
+    height: 2.2594rem;
+  }
+
+  .kk-fws-offer__size-input:checked + .kk-fws-offer__size-card .kk-fws-offer__size-tick {
+    display: block;
+  }
+
+  .kk-fws-offer__size-input:focus-visible + .kk-fws-offer__size-card {
+    outline: 2px solid var(--kk-fws-offer-card-selected-border, #153a5b);
+    outline-offset: 2px;
+  }
+
+  .kk-fws-offer__size-input:disabled + .kk-fws-offer__size-card {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Step 1's badges are the ONE-TIME size deltas (Free / +$30 / +$60). Ruled by the user: they
+     do not show on a one-time purchase, where the tower is charged and nothing is free. The
+     attribute is set server-side and kept in step by the picker script, so there is no flash of
+     the wrong state on load. */
+  .kk-fws-offer[data-kk-fws-pay-mode='onetime'] .kk-fws-offer__size-badge {
+    display: none;
+  }
+
+  .kk-fws-offer__size-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.443rem 0.8861rem;
+    border-radius: 0.5538rem;
+    background: var(--kk-fws-offer-badge-background, #153a5b);
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    color: var(--kk-fws-offer-badge-text, #ffffff);
+  }
+
+  .kk-fws-offer__size-name {
+    display: block;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1.8rem;
+    color: var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__size-description {
+    display: block;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.8rem;
+    color: var(--kk-fws-offer-heading, #153a5b);
+  }
+
+  .kk-fws-offer__size-unavailable {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  .kk-fws-offer__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 6.542rem;
+    padding: 1.2rem 4.4rem;
+    box-sizing: border-box;
+    border: 0;
+    background: var(--kk-fws-offer-button-background, #153a5b);
+    border-radius: 23.027rem;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 2.4rem;
+    line-height: 1.14;
+    letter-spacing: 0.138rem;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--kk-fws-offer-button-text, #ffffff);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .kk-fws-offer__button:hover,
+  .kk-fws-offer__button:focus-visible {
+    opacity: 0.9;
+    color: var(--kk-fws-offer-button-text, #ffffff);
+  }
+
+  .kk-fws-offer__trust-list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.763rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-offer__trust {
+    display: flex;
+    align-items: center;
+    gap: 0.921rem;
+  }
+
+  .kk-fws-offer__trust-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    object-fit: contain;
+  }
+
+  .kk-fws-offer__trust-text {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  .kk-fws-offer__notice {
+    margin: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.8rem;
+    line-height: 1.4;
+    color: var(--kk-fws-offer-text, #26303a);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kk-fws-offer__size-card,
+    .kk-fws-offer__plan-card,
+    .kk-fws-offer__button,
+    .kk-fws-offer__nav,
+    .kk-fws-offer__thumb {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 989px) {
+    .kk-fws-offer {
+      padding: 6rem 0;
+    }
+
+    .kk-fws-offer__heading {
+      font-size: 4rem;
+    }
+
+    .kk-fws-offer__subheading {
+      font-size: 1.8rem;
+    }
+
+    .kk-fws-offer__layout {
+      grid-template-columns: 1fr;
+      row-gap: 3.2rem;
+    }
+
+    .kk-fws-offer .kk-fws-offer__nav {
+      width: 3.6rem;
+      height: 3.6rem;
+    }
+
+    .kk-fws-offer__nav-icon {
+      width: 1.6rem;
+      height: 0.95rem;
+    }
+
+    .kk-fws-offer__button {
+      font-size: 1.9rem;
+      letter-spacing: 0.1rem;
+    }
+
+    .kk-fws-offer__trust-list {
+      gap: 1.6rem;
+    }
+
+    .kk-fws-offer__plan-list {
+      gap: 1.6rem;
+    }
+
+    .kk-fws-offer__plan-card {
+      padding: 2.8rem 1.8rem 2rem;
+    }
+
+    .kk-fws-offer__plan-amount {
+      font-size: 2.4rem;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .kk-fws-offer {
+      padding: 4rem 0;
+    }
+
+    .kk-fws-offer__container {
+      width: min(100% - 4rem, 54rem);
+    }
+
+    .kk-fws-offer__eyebrow {
+      padding: 0.6rem 1.6rem;
+      font-size: 1.2rem;
+      letter-spacing: 0.12rem;
+    }
+
+    .kk-fws-offer__heading {
+      max-width: none;
+      margin-top: 1.6rem;
+      font-size: 2.8rem;
+    }
+
+    .kk-fws-offer__subheading {
+      max-width: none;
+      margin-top: 1.2rem;
+      font-size: 1.6rem;
+    }
+
+    .kk-fws-offer .kk-fws-offer__nav {
+      width: 2.7595rem;
+      height: 2.7595rem;
+    }
+
+    .kk-fws-offer__nav-icon {
+      width: 1.213rem;
+      height: 0.7202rem;
+    }
+
+    .kk-fws-offer__thumbs {
+      gap: 0.6389rem;
+      margin-top: 0.8rem;
+    }
+
+    .kk-fws-offer .kk-fws-offer__play {
+      width: 5.2rem;
+      height: 5.2rem;
+    }
+
+    .kk-fws-offer .kk-fws-offer__play::after {
+      border-top-width: 0.9rem;
+      border-bottom-width: 0.9rem;
+      border-left-width: 1.5rem;
+    }
+
+    .kk-fws-offer__layout {
+      margin-top: 2.4rem;
+      row-gap: 2.4rem;
+    }
+
+    .kk-fws-offer__panel,
+    .kk-fws-offer__form {
+      gap: 1.8rem;
+    }
+
+    .kk-fws-offer__size-list {
+      gap: 1.2rem;
+    }
+
+    .kk-fws-offer__size-card {
+      min-height: 9rem;
+      padding: 1.2rem 0.6rem;
+      border-width: 0.2rem;
+    }
+
+    .kk-fws-offer__size-name {
+      font-size: 1.6rem;
+      line-height: 1.8rem;
+    }
+
+    .kk-fws-offer__size-description {
+      font-size: 1.4rem;
+      line-height: 1.8rem;
+    }
+
+    .kk-fws-offer__size-badge {
+      padding: 0.4rem 0.8rem;
+      font-size: 1.2rem;
+    }
+
+    .kk-fws-offer__size-tick {
+      top: calc(-0.9rem - 0.2rem);
+      right: calc(-0.9rem - 0.2rem);
+      width: 1.8rem;
+      height: 1.8rem;
+    }
+
+    .kk-fws-offer__button {
+      min-height: 0;
+      padding: 1.2rem 2rem;
+      font-size: 1.7rem;
+      line-height: 1.14;
+      letter-spacing: 0.1rem;
+    }
+
+    .kk-fws-offer__trust-list {
+      flex-wrap: wrap;
+      gap: 1.2rem;
+    }
+
+    .kk-fws-offer__trust-text {
+      font-size: 1.4rem;
+    }
+
+    /* Mobile step + plan cards — Figma 7511:259/7511:265. The cards stay two-across and
+       narrow to 163.5px; they do not stack. */
+    .kk-fws-offer__step {
+      gap: 1.2rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .kk-fws-offer__step-number {
+      width: 3.2rem;
+      height: 3.2rem;
+      font-size: 1.6rem;
+    }
+
+    .kk-fws-offer__step-title {
+      font-size: 1.6rem;
+    }
+
+    .kk-fws-offer__plan-list {
+      gap: 0.8rem;
+    }
+
+    .kk-fws-offer__plan-card {
+      min-height: 25.5rem;
+      padding: 3.2rem 1.2rem 1.6rem;
+      border-width: 0.2rem;
+    }
+
+    .kk-fws-offer__plan-ribbon {
+      top: -0.2rem;
+      right: -0.2rem;
+      min-height: 2.2rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      letter-spacing: 0.1rem;
+    }
+
+    .kk-fws-offer__plan-body {
+      gap: 1.2rem;
+    }
+
+    .kk-fws-offer__plan-name {
+      gap: 0.6rem;
+    }
+
+    .kk-fws-offer__plan-radio {
+      width: 1.2rem;
+      height: 1.2rem;
+      margin-top: 0.31rem;
+      border-width: 0.1rem;
+    }
+
+    .kk-fws-offer__plan-label {
+      font-size: 1.4rem;
+    }
+
+    .kk-fws-offer__plan-amount {
+      font-size: 1.8rem;
+    }
+
+    .kk-fws-offer__plan-cadence {
+      font-size: 1.2rem;
+    }
+
+    /* No extra margin here: "$149 / 6 months $249" needs 136.9px of the 135.5px available
+       at 375px, and the row's own 4.4px gap is enough separation. Figma 7511:296 has the
+       three on one line with ~1.5px to spare. */
+    .kk-fws-offer__plan-compare {
+      margin-left: 0;
+      font-size: 1.4rem;
+    }
+
+    .kk-fws-offer__plan-features {
+      gap: 1.2rem;
+    }
+
+    .kk-fws-offer__plan-feature-text {
+      font-size: 1.2rem;
+      line-height: 1.4rem;
+    }
+
+    .kk-fws-offer__plan-unavailable {
+      font-size: 1.2rem;
+    }
+
+    /* Mobile step 3 — Figma 7511:319. Two across like step 2; 16px padding, 12px copy. */
+    .kk-fws-offer__pay-list {
+      gap: 0.8rem;
+    }
+
+    .kk-fws-offer__pay-card {
+      min-height: 0;
+      padding: 3.2rem 1.6rem 1.6rem;
+      border-width: 0.2rem;
+    }
+
+    .kk-fws-offer__pay-ribbon {
+      top: -0.2rem;
+      right: -0.2rem;
+      min-height: 2.2rem;
+      padding: 0.4rem 1.2rem;
+      font-size: 1rem;
+      letter-spacing: 0.1rem;
+    }
+
+    .kk-fws-offer__pay-name {
+      gap: 0.6rem;
+    }
+
+    .kk-fws-offer__pay-radio {
+      width: 1.2rem;
+      height: 1.2rem;
+      margin-top: 0.31rem;
+      border-width: 0.1rem;
+    }
+
+    .kk-fws-offer__pay-label {
+      font-size: 1.6rem;
+      line-height: 1.2;
+    }
+
+    .kk-fws-offer__pay-description {
+      font-size: 1.2rem;
+      line-height: 1.2;
+    }
+
+    .kk-fws-offer__pay-unavailable {
+      font-size: 1.2rem;
+    }
+
+    /* Mobile order summary — Figma 7511:336. 20px gutter, 16px rhythm, smaller type, and
+       the dividers run the full width of the card rather than being inset. */
+    .kk-fws-offer__summary {
+      padding: 2rem 0;
+      border-width: 0.15rem;
+      border-radius: 0.8rem;
+    }
+
+    .kk-fws-offer__summary-title {
+      margin-bottom: 0;
+      padding: 0 2rem;
+      font-size: 1.6rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .kk-fws-offer__summary-rows {
+      padding: 0;
+    }
+
+    .kk-fws-offer__summary-row {
+      gap: 1.2rem;
+      padding: 1.6rem 2rem;
+    }
+
+    .kk-fws-offer__summary-label {
+      font-size: 1.4rem;
+      line-height: 1.2;
+    }
+
+    .kk-fws-offer__summary-value {
+      gap: 2rem;
+    }
+
+    .kk-fws-offer__summary-amount {
+      font-size: 1.4rem;
+      line-height: 1.2;
+    }
+
+    .kk-fws-offer__summary-cadence {
+      margin-left: -1.6rem;
+      font-size: 1.4rem;
+      line-height: 1.2;
+    }
+
+    .kk-fws-offer__summary-strike {
+      font-size: 1.6rem;
+    }
+
+    .kk-fws-offer__summary-due {
+      gap: 1.2rem;
+      margin-top: 0;
+      padding: 1.6rem 2rem;
+    }
+
+    .kk-fws-offer__summary-due-label {
+      font-size: 1.6rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .kk-fws-offer__summary-note {
+      font-size: 1.4rem;
+      line-height: 1.2;
+    }
+
+    .kk-fws-offer__summary-total {
+      font-size: 2.4rem;
+    }
+
+    .kk-fws-offer__summary-footnote {
+      margin-top: 1.6rem;
+      padding: 0 2rem;
+      font-size: 1.4rem;
+      line-height: 1.2;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Offer",
+  "tag": "div",
+  "class": "section-kk-fws-offer",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "BUILD YOUR own system in minutes"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Prefer to Customize? Configure Your System."
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Pick your size, your protection, and how you pay. Your price updates live - and the free-system offer still applies on every subscription."
+    },
+    {
+      "type": "header",
+      "content": "Size picker"
+    },
+    {
+      "type": "text",
+      "id": "size_legend",
+      "label": "Step 1 heading",
+      "default": "Choose Your Tower Size"
+    },
+    {
+      "type": "text",
+      "id": "size_option_name",
+      "label": "Size option name",
+      "default": "Size",
+      "info": "Must match the product option name exactly. Falls back to the first option."
+    },
+    {
+      "type": "text",
+      "id": "sold_out_text",
+      "label": "Unavailable size text",
+      "default": "Sold out"
+    },
+    {
+      "type": "text",
+      "id": "unavailable_text",
+      "label": "No orderable size text",
+      "default": "This configuration is not available right now.",
+      "info": "Shown instead of the form when no size resolves to an available variant."
+    },
+    {
+      "type": "header",
+      "content": "Protection plan (step 2)",
+      "info": "The protection plan IS the product's Filter Type option. Each plan block names the option value it maps to; size and plan together resolve the variant."
+    },
+    {
+      "type": "text",
+      "id": "plan_legend",
+      "label": "Step 2 heading",
+      "default": "Choose Your Protection Plan"
+    },
+    {
+      "type": "text",
+      "id": "filter_option_name",
+      "label": "Filter type option name",
+      "default": "Filter Type",
+      "info": "Must match the product option name exactly."
+    },
+    {
+      "type": "header",
+      "content": "Payment method (step 3)",
+      "info": "Subscribe & Save posts the variant's Appstle selling plan; One-Time Purchase posts none. The step is hidden entirely when the product has no selling plans."
+    },
+    {
+      "type": "text",
+      "id": "pay_legend",
+      "label": "Step 3 heading",
+      "default": "How Would You Like to Pay?"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_label",
+      "label": "Subscription card name",
+      "default": "Subscribe & Save"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_description",
+      "label": "Subscription card copy",
+      "default": "Just cover the protection plan and shipping today"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_ribbon",
+      "label": "Subscription corner ribbon",
+      "default": "Free system",
+      "info": "Leave blank for no ribbon."
+    },
+    {
+      "type": "text",
+      "id": "onetime_label",
+      "label": "One-time card name",
+      "default": "One-Time Purchase"
+    },
+    {
+      "type": "text",
+      "id": "onetime_description",
+      "label": "One-time card copy",
+      "default": "Pay in full - today no subscription"
+    },
+    {
+      "type": "text",
+      "id": "onetime_ribbon",
+      "label": "One-time corner ribbon",
+      "info": "The design has no ribbon here. Leave blank."
+    },
+    {
+      "type": "text",
+      "id": "pay_unavailable_text",
+      "label": "Unavailable subscription text",
+      "default": "Not available on this configuration",
+      "info": "Shown on the Subscribe & Save card when the selected size and plan have no selling plan."
+    },
+    {
+      "type": "header",
+      "content": "Pinned options",
+      "info": "Any option the design does not expose is pinned to a fixed value. The campaign product has no Stand option, which makes this a no-op there."
+    },
+    {
+      "type": "text",
+      "id": "stand_option_name",
+      "label": "Stand option name",
+      "default": "Stand"
+    },
+    {
+      "type": "text",
+      "id": "stand_option_value",
+      "label": "Stand value",
+      "default": "No Stand"
+    },
+    {
+      "type": "header",
+      "content": "Gallery"
+    },
+    {
+      "type": "range",
+      "id": "media_limit",
+      "label": "Maximum images per size",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "default": 4,
+      "info": "The design shows a four-across thumbnail row. 0 shows every product image and the row wraps. Only applies when a size has no media positions of its own."
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "send me my free TOWER",
+      "info": "Plain text only — the theme's ajax cart replaces the button text while adding."
+    },
+    {
+      "type": "header",
+      "content": "Order summary",
+      "info": "Tower value and shipping are authored — neither exists in the product data. One variant price covers tower + filters, and Shopify calculates real shipping at checkout, so the shipping line is a stated promise rather than a quote."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_summary",
+      "label": "Show order summary",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "summary_legend",
+      "label": "Summary heading",
+      "default": "Your order"
+    },
+    {
+      "type": "text",
+      "id": "tower_label",
+      "label": "Tower row label",
+      "default": "Stainless Steel Tower",
+      "info": "The selected size is appended, e.g. \"Stainless Steel Tower - 1.5 Gallon\"."
+    },
+    {
+      "type": "number",
+      "id": "tower_value_cents",
+      "label": "Tower value (cents)",
+      "default": 24900,
+      "info": "Struck through on the tower row and used in the saving line. 24900 = $249."
+    },
+    {
+      "type": "text",
+      "id": "tower_free_text",
+      "label": "Tower row value",
+      "default": "FREE"
+    },
+    {
+      "type": "text",
+      "id": "size_upgrade_label",
+      "label": "Size upgrade row label",
+      "default": "Size Upgrade",
+      "info": "Shown on a one-time purchase only, and only when the selected size costs more than the cheapest."
+    },
+    {
+      "type": "text",
+      "id": "summary_cadence",
+      "label": "Plan row cadence",
+      "default": "/ 6 months",
+      "info": "Hidden on a one-time purchase. Liquid cannot read the interval from Appstle — see the note in the section file."
+    },
+    {
+      "type": "text",
+      "id": "shipping_label",
+      "label": "Shipping row label",
+      "default": "Shipping"
+    },
+    {
+      "type": "number",
+      "id": "shipping_cents",
+      "label": "Shipping (cents)",
+      "default": 995,
+      "info": "995 = $9.95. Display only — Shopify charges its own calculated rate at checkout."
+    },
+    {
+      "type": "text",
+      "id": "due_today_label",
+      "label": "Due today label",
+      "default": "Due today"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_note",
+      "label": "Due today note (subscription)",
+      "default": "Then [price] / 6 months - cancel anytime",
+      "info": "[price] is replaced with the subscription price."
+    },
+    {
+      "type": "text",
+      "id": "onetime_note",
+      "label": "Due today note (one-time)",
+      "default": "One-time payment - yours to keep forever"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_footnote",
+      "label": "Footnote (subscription)",
+      "default": "You save [value] on the Stainless Steel Tower today",
+      "info": "[value] is replaced with the tower value."
+    },
+    {
+      "type": "text",
+      "id": "onetime_footnote",
+      "label": "Footnote (one-time)",
+      "default": "Own it outright - no subscription"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Headings",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text",
+      "default": "#26303a"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_background_color",
+      "label": "Eyebrow pill background",
+      "default": "#f8f5f3"
+    },
+    {
+      "type": "color",
+      "id": "nav_background_color",
+      "label": "Gallery arrow background",
+      "default": "#f5f3f1"
+    },
+    {
+      "type": "color",
+      "id": "thumb_border_color",
+      "label": "Gallery thumbnail border",
+      "default": "#efefef"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Size card background",
+      "default": "#f5f3f1"
+    },
+    {
+      "type": "color",
+      "id": "badge_background_color",
+      "label": "Size badge background",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Size badge text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Size card border",
+      "default": "#e7e7e7"
+    },
+    {
+      "type": "color",
+      "id": "step_background_color",
+      "label": "Step number background",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "step_text_color",
+      "label": "Step number text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "compare_price_color",
+      "label": "Struck-through price",
+      "default": "#c4c4c4"
+    },
+    {
+      "type": "color",
+      "id": "card_selected_background_color",
+      "label": "Selected size background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_selected_border_color",
+      "label": "Selected size border",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Button background",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Divider",
+      "default": "#e6e6e6"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "size_details",
+      "name": "Size details",
+      "settings": [
+        {
+          "type": "text",
+          "id": "size_value",
+          "label": "Size option value",
+          "default": "1.5 Gallon",
+          "info": "Must match the product's Size option value exactly."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Display label",
+          "info": "Defaults to the option value."
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Capacity line",
+          "info": "Second line inside the card, e.g. \"1-2 People\"."
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "info": "Price delta pill, e.g. \"Free\" or \"+ $30\". Authored copy — it is not derived from the variant's real price."
+        },
+        {
+          "type": "text",
+          "id": "media_positions",
+          "label": "Media positions",
+          "info": "Comma-separated product media positions to show for this size, e.g. 1,4,7. Leave blank to share the default images. The gallery only syncs to the selected size once at least one size names its own positions."
+        }
+      ]
+    },
+    {
+      "type": "plan",
+      "name": "Protection plan",
+      "settings": [
+        {
+          "type": "text",
+          "id": "filter_value",
+          "label": "Filter type option value",
+          "default": "2 Carbon Filter Elements",
+          "info": "Must match the product's Filter Type option value exactly. This is what the plan maps to in the cart."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Plan name",
+          "default": "Family Protection",
+          "info": "Defaults to the option value."
+        },
+        {
+          "type": "text",
+          "id": "ribbon",
+          "label": "Corner ribbon",
+          "info": "e.g. \"Most popular\". Leave blank for no ribbon."
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "$99",
+          "info": "Authored copy — it is not derived from the variant's real price."
+        },
+        {
+          "type": "text",
+          "id": "price_note",
+          "label": "Billing cadence",
+          "default": "/ 6 months"
+        },
+        {
+          "type": "text",
+          "id": "compare_price",
+          "label": "Struck-through price",
+          "default": "$129"
+        },
+        {
+          "type": "textarea",
+          "id": "features",
+          "label": "Feature list",
+          "default": "150+ contaminants removed\nPair of carbon fitter elements\nReplaced every & months",
+          "info": "One feature per line. Each gets a check mark."
+        }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "shipping", "label": "Shipping" },
+            { "value": "trial", "label": "Trial" },
+            { "value": "cancel", "label": "Cancel any time" },
+            { "value": "nsf", "label": "NSF certified" },
+            { "value": "reviews", "label": "Reviews" },
+            { "value": "warranty", "label": "Warranty" }
+          ],
+          "default": "shipping"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon",
+          "info": "Overrides the icon selected above."
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Pay only shipping today"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Offer",
+      "blocks": [
+        {
+          "type": "size_details",
+          "settings": { "size_value": "1.5 Gallon", "description": "1-2 People", "badge": "Free" }
+        },
+        {
+          "type": "size_details",
+          "settings": { "size_value": "2.25 Gallon", "description": "2-3 People", "badge": "+ $30" }
+        },
+        {
+          "type": "size_details",
+          "settings": { "size_value": "3.25 Gallon", "description": "3-4 People", "badge": "+ $60" }
+        },
+        {
+          "type": "plan",
+          "settings": {
+            "filter_value": "2 Carbon Filter Elements",
+            "label": "Family Protection",
+            "ribbon": "Most popular",
+            "price": "$99",
+            "price_note": "/ 6 months",
+            "compare_price": "$129",
+            "features": "150+ contaminants removed\nPair of carbon fitter elements\nReplaced every & months"
+          }
+        },
+        {
+          "type": "plan",
+          "settings": {
+            "filter_value": "2 Carbon Filters + POSTreat Fluoride and Arsenic Reduction Filter Elements",
+            "label": "Family Protection Plus",
+            "ribbon": "Max protection",
+            "price": "$149",
+            "price_note": "/ 6 months",
+            "compare_price": "$249",
+            "features": "Fluoride + 150 contaminants removed\nIncludes & months of fluoride media\nSteal fluoride-reduction elements"
+          }
+        },
+        { "type": "trust", "settings": { "icon": "shipping", "text": "Pay only shipping today" } },
+        { "type": "trust", "settings": { "icon": "trial", "text": "100-day trial" } },
+        { "type": "trust", "settings": { "icon": "cancel", "text": "Cancel any time" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

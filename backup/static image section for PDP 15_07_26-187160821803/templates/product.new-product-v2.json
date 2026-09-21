@@ -377,7 +377,7 @@
           "type": "ai_gen_block_866760f",
           "name": "Custom code",
           "settings": {
-            "custom_html": "<p class=\"marquee-qualification\">\n    <span aria-hidden=\"true\">*</span>Chlorine removal NSF/ANSI 42\n    certified. Other contaminants independently lab-tested — <a href=\"https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_gravity_contaminants_lab_report_USA_Aug2024.pdf?v=1724757203\" target=\"_tab\">View full report</a>.\n  </p>",
+            "custom_html": "<p class=\"marquee-qualification\">\n    <span aria-hidden=\"true\">*</span>Chlorine removal NSF/ANSI 42\n    certified. Other contaminants independently lab-tested — <a href=\"https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_Gravity_USA_Report.pdf?v=1789408627\" target=\"_tab\">View full report</a>.\n  </p>",
             "custom_css": ".marquee-qualification {\n      margin: 6px 12px 0;\n      color: #555;\n      font-size: 17px;\n      line-height: 1.4;\n      text-align: center;\n    }\n\n    .marquee-qualification a {\n      color: inherit;\n      font-weight: 600;\n      text-decoration: underline;\n      text-underline-offset: 2px;\n    }",
             "custom_js": "",
             "desktop_width_percent": 100
