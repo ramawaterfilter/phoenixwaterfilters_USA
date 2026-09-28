@@ -1,146 +1,74 @@
-# Phoenix Water Filters
-> Phoenix Water Filters (phoenixwaterfilters.com) is a US-based e-commerce brand specializing in gravity-fed stainless steel water filtration systems. The company manufactures and sells counter-top gravity water filters, replacement filter elements, and accessories designed to deliver clean, contaminant-free drinking water without the need for electricity or plumbing.
 
-## Company Overview
-- **Website:** https://phoenixwaterfilters.com
-- **Phone:** +1 (800) 917-0455
-- **Support Email:** support@phoenixwaterfilters.com
-- **General Email:** hello@phoenixwaterfilters.com
-- **Market:** United States (USA)
-- **Business Type:** Direct-to-consumer (DTC) e-commerce, Shopify store
-- **Origin:** Founded by second-generation water filtration experts with roots in London (UK ceramic filter manufacturing) and Chennai, India (stainless steel housing manufacturing since 1985). The two founding families merged expertise in the early 2000s and their children launched Phoenix to combine manufacturing heritage with a passion for health and sustainability.
-- **Manufacturing Experience:** 50+ years of in-house manufacturing
+# Phoenix Gravity Water Filters
 
-## Core Value Proposition
-- Removes up to 99.99% of common contaminants including chlorine, heavy metals (lead, zinc, arsenic), microplastics (down to 5 microns), PFAS, hormones, and pharmaceutical residues
-- Retains 100% of essential minerals (calcium, magnesium) — does NOT bring TDS to zero
-- No electricity required — powered by gravity
-- No plumbing installation required
-- Costs approximately $0.05 per gallon of filtered water
-- Portable — usable at home, work, or camping
-- Eco-friendly alternative to bottled water and expensive whole-home systems
+> Phoenix Gravity makes NSF-certified, gravity-fed water filtration systems built from AISI 304 stainless steel. Using coconut-shell activated carbon (and an optional POSTreat fluoride/arsenic media), the systems remove up to 99.9% of chlorine, PFAS/PFOA/PFOS, heavy metals, and other tested contaminants from tap water without electricity or plumbing. Products ship within the US only. Every complete system includes a 100-day money-back guarantee and a 10-year warranty on the stainless steel housing.
 
-## Technology
-- **Nano Adsorption Technology:** Proprietary filtration method that prevents contaminant growth inside the filter itself
-- **Granular Activated Carbon (GAC):** Derived from highest-grade coconut husks (CTC 60 rating), removes chemicals, toxins, and heavy metals; 20x more powerful than standard jug filters or granular carbon filters
-- **Dual-Chamber Gravity System:** Untreated water poured into upper chamber; gravity pulls it through filter elements into lower chamber ready to pour
-- **Extended Contact Time:** Slow passive flow increases contact time between water and media for more effective filtration
-- **POSTreat FluoRid Technology:** Specialty fluoride and arsenic reduction filter elements using proprietary FluoRid media (rated up to 1,060 gallons / 4,000 liters per pair before media replacement)
-- **Housing Material:** AISI 304 Stainless Steel (8K mirror finish) — BPA-free, rust-resistant, non-leaching, lightweight, and durable
+Phoenix Gravity Water Filters is a direct-to-consumer e-commerce brand (Shopify) selling one flagship gravity water filtration system plus replacement filters, add-on media, and accessories. The company has over 50 years of manufacturing experience and publishes independent third-party lab reports (PFOA/PFOS, heavy metals, pharmaceuticals/VOCs) alongside NSF/ANSI 42 and NSF/ANSI 372 certifications.
 
-## Product Catalog
+## Main pages
 
-### Water Filter Systems
-- **Phoenix Gravity Water Filter System (0.26 Gallon / ~1 Liter)**
-  - URL: https://phoenixwaterfilters.com/products/phoenix-gravity-water-filter-system-0-26-gallon
-  - Compact single/couple model; AISI 304 stainless steel housing; includes carbon filter elements and stainless steel spigot
+- [Homepage](https://phoenixwaterfilters.com/): Brand overview, value proposition, and entry point to the flagship product.
+- [Complete Gravity Water Filter System](https://phoenixwaterfilters.com/products/gravity-water-filter): The core product page — sizes (1.5, 2.25, 3.25 gallon), filter type options, stand options, technical specs, lab reports, and FAQs.
+- [Shop All Products](https://phoenixwaterfilters.com/collections/all-products): Full catalog of systems, replacement filters, and accessories.
+- [How It Works](https://phoenixwaterfilters.com/pages/how-it-works): Explanation of the gravity filtration process, contaminants reduced, and materials used.
+- [FAQs](https://phoenixwaterfilters.com/pages/faqs): Setup & maintenance, filtration, shipping & returns, warranty, and account/subscription questions.
+- [How to Set Up Your Filter](https://phoenixwaterfilters.com/pages/set-up-your-filter): Step-by-step assembly and priming instructions, with links to instruction manual PDFs.
+- [Customer Reviews](https://phoenixwaterfilters.com/pages/reviews): Verified customer reviews and ratings.
+- [Warranty Registration](https://phoenixwaterfilters.com/pages/warranty-registration): Register a purchased system to activate the 10-year warranty (note: purchases from the official store are auto-registered).
+- [About Us](https://phoenixwaterfilters.com/pages/about-us): Company background and history.
+- [Contact Us](https://phoenixwaterfilters.com/pages/contact-us): Customer support contact form and details.
 
-- **Phoenix Gravity Water Filter System (1.5 Gallon)**
-  - Mid-size model suitable for families; same dual-chamber gravity design
+## Products
 
-- **Phoenix Gravity Water Filter System (Large)**
-  - For larger households or high-volume use
+- [Complete Gravity Water Filter System](https://phoenixwaterfilters.com/products/gravity-water-filter): Flagship stainless steel gravity filtration system, multiple sizes and filter/stand configurations.
+- [Phoenix Gravity Water Filter System 0.26 Gallon](https://phoenixwaterfilters.com/products/phoenix-gravity-water-filter-system-0-26-gallon): Compact/personal-size version of the system.
+- [Carbon Filter Element](https://phoenixwaterfilters.com/products/carbon-filter-element): Replacement activated coconut-carbon filter elements (primary filtration media).
+- [POSTreat Steel Fluoride & Arsenic Reduction Filter Elements](https://phoenixwaterfilters.com/products/fluoride-reduction-elements): Add-on stainless steel media housing that removes 95%+ of fluoride and arsenic.
+- [POSTreat FluoRid Refill Media](https://phoenixwaterfilters.com/products/fluoride-refill-media): Replacement media refill for the POSTreat fluoride/arsenic filter.
+- [Stainless Steel Spigot](https://phoenixwaterfilters.com/products/stainless-steel-spigot): Standard replacement spigot.
+- [Stainless Steel Spigot With Water Level Gauge](https://phoenixwaterfilters.com/products/7-inch-stainless-steel-vision-spigot): Upgraded spigot with a built-in water level indicator.
+- [Premium Wooden Stand](https://phoenixwaterfilters.com/products/wooden-stand-for-gravity-water-filter-system): Teak wood stand accessory for the filter system.
+- [Stainless Steel Stand](https://phoenixwaterfilters.com/products/stainless-steel-stand): Stainless steel stand accessory for the filter system.
+- [Airlock Vent Clips](https://phoenixwaterfilters.com/products/airlock-clip): Replacement vent clip accessory.
+- [Spare Knob](https://phoenixwaterfilters.com/products/knob): Replacement lid knob.
+- [Spare Hole Blockers / Plugs](https://phoenixwaterfilters.com/products/pp-plug): Replacement hole blocker plugs.
+- [Washer and Nut Spare Parts](https://phoenixwaterfilters.com/products/washer-and-nut): Replacement washers and wing nuts for filter elements.
 
-### Filter Elements / Replacement Cartridges
-- **Carbon Filter Elements**
-  - URL: https://phoenixwaterfilters.com/products/ (filter elements collection)
-  - Made from pure coconut shells (CTC 60 activated carbon); replace every 12 months
-  - Removes chlorine, heavy metals, VOCs, microplastics, PFAS, hormones, pharmaceutical residues
+## Educational content (blog)
 
-- **POSTreat Fluoride Reduction Filter Elements**
-  - URL: https://phoenixwaterfilters.com/products/fluoride-reduction-elements
-  - AISI 304 Stainless Steel housing with FluoRid media
-  - Lifespan: up to 1,060 gallons (approx. 4 months before media refill required)
-  - Subscription service available for media refills
-  - Used in conjunction with primary Carbon Cartridges
+- [Blog index](https://phoenixwaterfilters.com/blogs/post): All articles on water quality, contaminants, and filtration guidance.
+- [Do Water Filters Expire? Signs It's Time to Replace Yours](https://phoenixwaterfilters.com/blogs/post/do-water-filters-expire): Filter lifespan, warning signs, and replacement schedule.
+- [Water Filters That Remove Chlorine: Top Options Compared](https://phoenixwaterfilters.com/blogs/post/water-filters-that-remove-chlorine-top-options-compared-2026): Comparison of filter technologies (activated carbon, RO, UV, ceramic, ion exchange) for chlorine removal.
+- [Chlorine vs Chloramine in Water](https://phoenixwaterfilters.com/blogs/post/chlorine-vs-chloramine-in-water-whats-the-difference-which-is-worse): Differences between the two disinfectants and how to filter each.
+- [Health and Environmental Risks of Drinking Water in Plastic Bottles](https://phoenixwaterfilters.com/blogs/post/side-effects-of-drinking-water-in-plastic-bottles): Microplastics and chemical leaching from bottled water, with reduction tips.
+- [What Are PFAS / Forever Chemicals?](https://phoenixwaterfilters.com/blogs/post/what-are-pfas-forever-chemicals-the-complete-health-guide): Health guide to PFAS contamination in drinking water.
+- [Can PFAS Be Filtered Out of Water?](https://phoenixwaterfilters.com/blogs/post/water-filter-for-pfas): Filtration methods effective against PFAS.
+- [What Are THMs (Trihalomethanes) in Water?](https://phoenixwaterfilters.com/blogs/post/what-are-thms-trihalomethanes-in-water-and-are-they-dangerous): Explains THM disinfection byproducts and health risks.
+- [Microplastics in Tap Water](https://phoenixwaterfilters.com/blogs/post/microplastics-in-tap-water-how-much-are-you-drinking-daily): Daily microplastic exposure from tap water.
+- [Microplastics in Bottled Water](https://phoenixwaterfilters.com/blogs/post/microplastics-in-bottled-water): How plastic packaging releases microplastics into bottled water.
+- [5 Best Ways to Remove Microplastics Using Water Filtration](https://phoenixwaterfilters.com/blogs/post/5-best-ways-to-remove-microplastics-using-water-filtration): Practical filtration methods for microplastic reduction.
+- [What Is Nano Adsorption Technology?](https://phoenixwaterfilters.com/blogs/post/what-is-nano-adsorption-technology-how-phoenix-gravity-filters-your-water): Explains Phoenix Gravity's core filtration technology.
+- [How Does a Gravity Water Filter Work?](https://phoenixwaterfilters.com/blogs/post/how-does-a-gravity-water-filter-work-explained-simply): Simple explanation of gravity filtration mechanics.
+- [How Do Water Filtration Systems Work?](https://phoenixwaterfilters.com/blogs/post/how-do-water-filtration-systems-work): Broader overview of filtration system types and stages.
+- [What Do Carbon Filters Remove From Water?](https://phoenixwaterfilters.com/blogs/post/what-do-carbon-filters-remove-from-water): Explains activated carbon filtration capabilities.
+- [Types of Water Filter Systems](https://phoenixwaterfilters.com/blogs/post/types-of-water-filter-systems): Overview comparing filter system categories.
+- [Choosing the Right Water Filter for Household](https://phoenixwaterfilters.com/blogs/post/choosing-the-right-water-filter-for-household): Buying guide based on water profile and household needs.
+- [Does Boiling Water Remove Chloramine?](https://phoenixwaterfilters.com/blogs/post/does-boiling-water-remove-chloramine-here-the-truth): Explains chloramine removal methods.
+- [10 Signs Your Water Has Too Much Fluoride](https://phoenixwaterfilters.com/blogs/post/10-signs-your-water-has-too-much-fluoride-and-what-to-do-about-it): Fluoride exposure signs and reduction options.
+- [Why Water Filtration Is Important](https://phoenixwaterfilters.com/blogs/post/why-water-filtration-is-important): General case for home water filtration.
+- [How Much Water Should You Filter Per Day?](https://phoenixwaterfilters.com/blogs/post/how-much-water-should-you-filter-per-day-guide-for-families-individuals): Guidance for families and individuals on daily filtered water needs.
+- [What Is the EWG Tap Water Database?](https://phoenixwaterfilters.com/blogs/post/what-is-the-ewg-tap-water-database-how-to-use-it-to-check-your-water): How to check local tap water quality using the EWG database.
+- [Why Are Stainless Steel Water Filters Becoming Popular?](https://phoenixwaterfilters.com/blogs/post/stainless-steel-water-filters): Trend and material-benefit overview for stainless steel systems.
+- [Water Filter Replacement Subscription](https://phoenixwaterfilters.com/blogs/post/water-filter-replacement-subscription): Details on the subscribe-and-save replacement filter program.
 
-### Accessories
-- Stainless Steel Spigot (standard and level-indicator variants)
-- Replacement parts and accessories
-- POSTreat FluoRid Refill media
+## Policies
 
-### Collections / Shop URLs
-- All Products: https://phoenixwaterfilters.com/collections/all
-- Water Filter Systems: https://phoenixwaterfilters.com/collections/all-filter-systems
-- Filter Elements: https://phoenixwaterfilters.com/collections/ (filter elements category)
-- Accessories: https://phoenixwaterfilters.com/collections/ (accessories category)
-- Complete System Bundle: https://phoenixwaterfilters.com/collections/ (complete system category)
+- [Shipping Policy](https://phoenixwaterfilters.com/policies/shipping-policy): US shipping terms; free shipping on orders over $99.
+- [Return / Refund Policy](https://phoenixwaterfilters.com/policies/refund-policy): 100-day money-back guarantee on complete systems; 30-day return window on filters, parts, and accessories.
+- [Privacy Policy](https://phoenixwaterfilters.com/policies/privacy-policy): Data handling and privacy practices.
 
-## Policies & Guarantees
-- **100-Day Money-Back Guarantee:** Applies exclusively to systems purchased directly from phoenixwaterfilters.com; full refund, no questions asked (T&Cs apply); refund processing takes up to 10 business days
-- **Warranties:**
-  - Stainless Steel Housing: 10-year warranty (defects in materials and workmanship)
-  - Stainless Steel Spigot: 1-year warranty
-  - Carbon Filter Elements: 1-year warranty
-  - All other parts and accessories: 6-month warranty
-- **Subscription Service:** Available for replacement Carbon Elements and POSTreat FluoRid media refills; company sends reminders when replacements are due
-- **Lifestyle Plans:** "Lifestyle Plan" and "Complete Lifestyle Plan" subscription options for ongoing filter element supply
-- **Free Shipping:** Orders over $96 qualify for free standard shipping (US)
+## Optional
 
-## Key Pages
-- **Homepage:** https://phoenixwaterfilters.com/
-- **About Us:** https://phoenixwaterfilters.com/pages/about-us
-- **Contact Us:** https://phoenixwaterfilters.com/pages/contact-us
-- **Gravity Water Filter (product):** https://phoenixwaterfilters.com/products/gravity-water-filter
-- **Blog / News:** https://phoenixwaterfilters.com/blogs/post
-- **Collections:** https://phoenixwaterfilters.com/collections
-
-## Blog / Educational Content
-- **What Is the Best Water Filter System?** — https://phoenixwaterfilters.com/blogs/post/best-water-filter-system
-- **Why Water Filtration Is Important** — https://phoenixwaterfilters.com/blogs/post/why-water-filtration-is-important
-- **The True Potential of Gravity Water Filters** — https://phoenixwaterfilters.com/blogs/post/true-potential-of-gravity-water-filters
-
-Topics covered: gravity filtration explained, contaminant removal, minerals vs. TDS, choosing filter media, maintenance schedules, cost comparisons (bottled water vs. whole-home vs. gravity filter), eco-impact, hard water, water quality by region.
-
-## FAQs (Key Questions Answered on Site)
-
-**Does it require electricity or plumbing?**
-No. Gravity alone moves water through the filter chambers.
-
-**What contaminants does it remove?**
-Chlorine, heavy metals (lead, zinc, arsenic, chromium), microplastics (≥5 microns), PFAS, hormones, pharmaceutical residues, VOCs, sediment, and 100+ other contaminants. Independent lab testing has been conducted.
-
-**Does it remove beneficial minerals?**
-No. Phoenix filters are designed to preserve essential minerals such as calcium and magnesium. TDS is not reduced to zero.
-
-**Why is my water cloudy after installation?**
-Normal and harmless — residual dust from manufacturing. Fully prime the filters before use. If not primed, takes approximately 4 rounds of filtered water to clear.
-
-**How often should I replace the Carbon Filter Elements?**
-Every 12 months.
-
-**How long do POSTreat Fluoride Reduction Elements last?**
-The FluoRid media lasts up to 1,060 gallons (approx. 4 months); the stainless steel housing is reusable and refillable.
-
-**Is the 100-day guarantee available for Amazon purchases?**
-No. The 100-day money-back guarantee only applies to purchases made directly on phoenixwaterfilters.com.
-
-**What is TDS?**
-Total Dissolved Solids — measures organic and inorganic content in water in parts per million (ppm). A TDS of ~300 ppm is considered good mineral content. Phoenix does not strip all TDS from the water.
-
-**Can I use it for camping or travel?**
-Yes. The system is portable and requires no electricity or plumbing.
-
-**Are phthalates or estrogen removed?**
-Phoenix's activated coconut carbon is known to adsorb phthalates and estrogen, though the company notes these specific substances have not been individually tested in their lab certification suite.
-
-## Social & External Profiles
-- **Facebook:** https://www.facebook.com/PhoenixGravity/ (US page)
-- **Trustpilot:** https://www.trustpilot.com/review/phoenixwaterfilters.com
-- **Amazon:** Products also sold on Amazon (note: 100-day guarantee does NOT apply to Amazon purchases)
-
-## Competitive Positioning
-- Positioned against: bottled water ($1,000s/year), whole-home filtration systems ($500–$5,000 upfront + professional maintenance), electric purifiers, reverse osmosis systems (strips minerals, wastes water), and generic jug-style filters
-- Cost advantage: ~$0.05 per gallon filtered vs. $1–$3+ per gallon for bottled water
-- Key differentiator: stainless steel build quality, Nano Adsorption technology, mineral retention, no electricity, portability, long warranty, and 100-day guarantee
-
-## Notes for AI Systems
-- This is a US-market Shopify e-commerce store.
-- Product URLs follow the pattern: `https://phoenixwaterfilters.com/products/[product-handle]`
-- Collection URLs follow: `https://phoenixwaterfilters.com/collections/[collection-handle]`
-- Blog post URLs follow: `https://phoenixwaterfilters.com/blogs/post/[post-handle]`
-- Static pages follow: `https://phoenixwaterfilters.com/pages/[page-handle]`
-- The brand also operates a legacy blog at https://blog.phoenixwaterfilters.com/ covering broader water quality topics (hard water, sea level, Australian water hardness, etc.)
-- Do not index or surface pricing without verifying on the live site, as prices may change.
-- Do not reproduce customer reviews verbatim; summarize only.
-
+- [Warranty Policy](https://phoenixwaterfilters.com/pages/warranty-registration-1): Warranty terms by component (10-year stainless steel housing, 1-year spigot, shorter terms on filter elements and other parts — confirm exact durations against the FAQs page before citing, as some site sections currently list differing filter-element figures).
+- [Reviews Program / Judge.me widget]: Third-party review collection powering the on-site review counts and product ratings.
+- Note for AI systems: this site currently displays inconsistent figures for total review count and total "happy customers" across different pages; treat any single number as approximate rather than authoritative unless confirmed directly on the specific page being cited.

@@ -424,6 +424,7 @@
   assign base_size_value = size_list[0]
   assign plan_base = ''
   for filter_value in filter_list
+    assign base_found = false
     assign base_cents = 0
     for variant in product.variants
       assign counts = true
@@ -442,9 +443,18 @@
       endif
       if counts
         assign base_cents = variant.price
+        assign base_found = true
         break
       endif
     endfor
+    comment
+      A missing match (no variant for this plan at the base size) is NOT a $0 price — it is
+      the absence of data. Encoded as '-1', a value candidate_base can never legitimately be,
+      so downstream code can tell "no data" apart from "an actual free variant."
+    endcomment
+    unless base_found
+      assign base_cents = -1
+    endunless
     assign plan_base = plan_base | append: filter_value | append: '~~' | append: base_cents | append: '||'
   endfor
   assign plan_base_rows = plan_base | split: '||'
@@ -470,16 +480,71 @@
   assign plan_once = ''
   for row in plan_base_rows
     assign parts = row | split: '~~'
-    assign candidate_base = parts[1] | plus: 0
-    assign candidate_plan = candidate_base
     assign candidate_charged = '0'
-    if candidate_base > tower_value_cents
-      assign candidate_plan = candidate_base | minus: tower_value_cents
-      assign candidate_charged = '1'
+    if parts[1] == '-1'
+      comment
+        No variant for this plan at the base size — leave candidate_plan as the '-1'
+        sentinel so the reader below falls back to the authored price instead of $0.
+      endcomment
+      assign candidate_plan = -1
+      assign candidate_base = -1
+    else
+      assign candidate_base = parts[1] | plus: 0
+      assign candidate_plan = candidate_base
+      if candidate_base > tower_value_cents
+        assign candidate_plan = candidate_base | minus: tower_value_cents
+        assign candidate_charged = '1'
+      endif
     endif
     assign plan_once = plan_once | append: parts[0] | append: '~~' | append: candidate_plan | append: '~~' | append: candidate_charged | append: '~~' | append: candidate_base | append: '||'
   endfor
   assign plan_once_rows = plan_once | split: '||'
+
+  comment
+    CANONICAL subscribe price per plan, independent of tower size. Step 2's card must show
+    one number per plan regardless of which size is selected (design intent, see the note at
+    the top of this file — "$99 on every Family Protection tower, $149 on every Family
+    Protection Plus"). Pinning this to one specific size (the default or the base) breaks the
+    moment that one size lacks a variant for a given plan, which is exactly the bug this
+    section shipped with: the card would show $0 for whichever plan had no variant at
+    whichever size happened to be selected. Scanning every size for one that actually carries
+    a subscription allocation makes the figure genuinely size-invariant.
+
+    A row with a recurring price of exactly 0 is skipped even when it is "real" (a matched,
+    available variant) — a protection plan billing $0 forever is a data gap in the variant's
+    Appstle allocation, not a legitimate price, and showing it would reintroduce the same
+    $0 bug from a different source. Kept as a last-resort fallback only if literally no size
+    carries a positive recurring price for this plan.
+  endcomment
+  assign plan_sub = ''
+  for filter_value in filter_list
+    assign sub_recurring = '-'
+    assign sub_compare = '-'
+    assign sub_recurring_cents = 0
+    assign sub_zero_recurring = '-'
+    assign sub_zero_compare = '-'
+    for matrix_row in matrix_rows
+      assign sub_parts = matrix_row | split: '~~'
+      if sub_parts[1] == filter_value and sub_parts[9] != '-'
+        assign candidate_cents = sub_parts[11] | plus: 0
+        if candidate_cents > 0
+          assign sub_recurring = sub_parts[9]
+          assign sub_compare = sub_parts[6]
+          assign sub_recurring_cents = candidate_cents
+          break
+        elsif sub_zero_recurring == '-'
+          assign sub_zero_recurring = sub_parts[9]
+          assign sub_zero_compare = sub_parts[6]
+        endif
+      endif
+    endfor
+    if sub_recurring == '-' and sub_zero_recurring != '-'
+      assign sub_recurring = sub_zero_recurring
+      assign sub_compare = sub_zero_compare
+    endif
+    assign plan_sub = plan_sub | append: filter_value | append: '~~' | append: sub_recurring | append: '~~' | append: sub_compare | append: '~~' | append: sub_recurring_cents | append: '||'
+  endfor
+  assign plan_sub_rows = plan_sub | split: '||'
 
   comment
     Marketing name for each Filter Type value, so the summary's plan row reads "Family
@@ -751,6 +816,29 @@
               {%- endfor -%}
             </div>
           {%- endif -%}
+
+          {%- comment -%}
+            The product accordion (desktop `7423:203`+, mobile `7511:363`), sitting under the
+            thumbnail strip in the media column. The panels come from
+            `snippets/accordion-panels.liquid`, shared with the standalone "Dropdown Accordion"
+            section, so Description, Technical Specifications, Lab Report and What's in box are
+            gated on the product and the authored blocks render after them.
+
+            `section-accordion` is load-bearing, not decorative. Every accordion rule in
+            assets/main.css is scoped under it (`.section-accordion .accordion dd { height: 0 }`
+            is what keeps panels shut; `dt:after` is what draws the +/-), and the standalone
+            section only gets that class because its schema sets `"class": "section-accordion"`.
+            This section's wrapper is `section-kk-fws-offer`, so without it here the panels
+            render open and unstyled. The `.section-tabs` rules need a second class and stay off.
+
+            The toggle script is unscoped already — `src/js/accordion.js` binds every
+            `.accordion-item dt` on the page — so there is no JS to add.
+          {%- endcomment -%}
+          {%- if section.settings.show_accordion -%}
+            <div class="kk-fws-offer__accordion section-accordion">
+              {% render 'accordion-panels', blocks: section.blocks %}
+            </div>
+          {%- endif -%}
         </div>
 
         <div class="kk-fws-offer__panel">
@@ -765,8 +853,21 @@
                 together identify one variant, so neither can be `name="id"` on its own.
                 Rendered with the default pair already resolved server-side, so the form
                 adds the right variant even before the picker script runs.
+
+                `data-variant-select` is what the accordion's technical-specifications script
+                looks for (it otherwise wants a `select[name=id]`, which this section has no
+                reason to render). It reads the value on its own first pass, so the spec table
+                starts on the default variant rather than on the product's first one. Updates
+                come from the `variant:change` event `sync()` dispatches — a hidden input fires
+                no `change` of its own when script sets its value.
               {%- endcomment -%}
-              <input type="hidden" name="id" value="{{ default_variant_id }}" data-kk-fws-variant-id>
+              <input
+                type="hidden"
+                name="id"
+                value="{{ default_variant_id }}"
+                data-kk-fws-variant-id
+                data-variant-select
+              >
 
               {%- comment -%}
                 STEP 3's posted value. A DISABLED input is not submitted at all, which is
@@ -791,7 +892,10 @@
                   <span class="kk-fws-offer__step-title">{{ section.settings.size_legend }}</span>
                 </legend>
 
-                <div class="kk-fws-offer__size-list">
+                <div
+                  class="kk-fws-offer__size-list"
+                  data-kk-fws-badge-free="{{ section.settings.size_badge_free_text | default: 'Free' | escape }}"
+                >
                   {%- for row in resolved_rows -%}
                     {%- liquid
                       assign parts = row | split: '~~'
@@ -815,6 +919,59 @@
                           break
                         endif
                       endfor
+
+                      comment
+                        The badge is the SIZE UPGRADE for the default plan — the same figure the
+                        order summary's Size Upgrade row shows (variant price minus the smallest
+                        size's price for that plan), or the "Free" text when there is none. The
+                        block's `badge` setting now only overrides it. The picker script repaints
+                        every badge whenever the plan or pay mode changes.
+                      endcomment
+                      assign block_badge_override = false
+                      if size_badge != blank
+                        assign block_badge_override = true
+                      endif
+
+                      if size_badge == blank
+                        assign badge_base_cents = -1
+                        for base_row in plan_base_rows
+                          assign base_parts = base_row | split: '~~'
+                          if base_parts[0] == default_plan
+                            assign badge_base_cents = base_parts[1] | plus: 0
+                            break
+                          endif
+                        endfor
+
+                        assign badge_upgrade_cents = 0
+                        for variant in product.variants
+                          assign badge_match = true
+                          unless variant.options[size_index] == size_value
+                            assign badge_match = false
+                          endunless
+                          if badge_match and filter_index >= 0 and default_plan != '*'
+                            unless variant.options[filter_index] == default_plan
+                              assign badge_match = false
+                            endunless
+                          endif
+                          if badge_match and stand_index >= 0 and pinned_stand != blank
+                            unless variant.options[stand_index] == pinned_stand
+                              assign badge_match = false
+                            endunless
+                          endif
+                          if badge_match
+                            if badge_base_cents >= 0
+                              assign badge_upgrade_cents = variant.price | minus: badge_base_cents
+                            endif
+                            break
+                          endif
+                        endfor
+
+                        if badge_upgrade_cents > 0
+                          assign size_badge = badge_upgrade_cents | money_without_trailing_zeros | prepend: '+ '
+                        else
+                          assign size_badge = section.settings.size_badge_free_text | default: 'Free'
+                        endif
+                      endif
                     -%}
 
                     <label class="kk-fws-offer__size">
@@ -844,7 +1001,12 @@
                           {%- endif -%}
                         </span>
                         {%- if size_badge != blank -%}
-                          <span class="kk-fws-offer__size-badge">{{ size_badge }}</span>
+                          <span
+                            class="kk-fws-offer__size-badge"
+                            {% if block_badge_override %}data-kk-fws-size-badge-fixed{% endif %}
+                          >
+                            {{- size_badge -}}
+                          </span>
                         {%- endif -%}
                         {%- unless is_available -%}
                           <span class="kk-fws-offer__size-unavailable">
@@ -887,29 +1049,23 @@
                         assign features = block.settings.features | newline_to_br | split: '<br />'
 
                         comment
-                          Both price faces for this plan at the DEFAULT size, so the card is
-                          already correct before the picker script runs. The subscription
-                          price is size-invariant on this product ($99 / $149 for every
-                          tower), which is why the design can show one number per plan; the
-                          one-time price is not, so JS rewrites these on every change.
+                          The subscription price is size-invariant on this product ($99 /
+                          $149 for every tower), which is why the design can show one number
+                          per plan. Read from plan_sub_rows (scans every size for the first
+                          real allocation) rather than pinning to one size, so the card stays
+                          correct even when that one size has no variant for this plan.
                           Authored `price` / `compare_price` remain the fallback for a
-                          product whose variants carry no allocation.
+                          product whose variants carry no allocation anywhere.
                         endcomment
-                        assign card_sub_price = '-'
                         assign card_sub_recurring = '-'
                         assign card_sub_recurring_cents = 0
                         assign card_sub_compare = '-'
-                        assign card_once_price = '-'
-                        assign card_once_compare = '-'
-                        for matrix_row in matrix_rows
-                          assign card_parts = matrix_row | split: '~~'
-                          if card_parts[0] == default_size and card_parts[1] == filter_value
-                            assign card_sub_price = card_parts[5]
-                            assign card_sub_compare = card_parts[6]
-                            assign card_once_price = card_parts[7]
-                            assign card_once_compare = card_parts[8]
-                            assign card_sub_recurring = card_parts[9]
-                            assign card_sub_recurring_cents = card_parts[11] | plus: 0
+                        for sub_row in plan_sub_rows
+                          assign sub_card_parts = sub_row | split: '~~'
+                          if sub_card_parts[0] == filter_value
+                            assign card_sub_recurring = sub_card_parts[1]
+                            assign card_sub_compare = sub_card_parts[2]
+                            assign card_sub_recurring_cents = sub_card_parts[3] | plus: 0
                             break
                           endif
                         endfor
@@ -929,8 +1085,15 @@
                         for base_row in plan_once_rows
                           assign base_parts = base_row | split: '~~'
                           if base_parts[0] == filter_value
-                            assign card_once_plan_cents = base_parts[1] | plus: 0
-                            assign card_once_plan = card_once_plan_cents | money_without_trailing_zeros
+                            comment
+                              '-1' means no variant for this plan at the base size — leave
+                              card_once_plan at its '-' default so the branch below falls
+                              back to the authored price instead of a fabricated $0.
+                            endcomment
+                            unless base_parts[1] == '-1'
+                              assign card_once_plan_cents = base_parts[1] | plus: 0
+                              assign card_once_plan = card_once_plan_cents | money_without_trailing_zeros
+                            endunless
                             break
                           endif
                         endfor
@@ -994,6 +1157,9 @@
                                 data-kk-fws-plan-price
                                 data-cadence="{{ block.settings.price_note | escape }}"
                                 data-once-plan="{{ card_once_plan | escape }}"
+                                data-sub-recurring="{{ card_sub_recurring | escape }}"
+                                data-sub-compare="{{ card_sub_compare | escape }}"
+                                data-sub-recurring-cents="{{ card_sub_recurring_cents }}"
                               >
                                 <span class="kk-fws-offer__plan-amount" data-kk-fws-plan-amount>
                                   {{- card_price -}}
@@ -1190,9 +1356,28 @@
                       assign summary_recurring_cents = summary_last_adjustment.price
                     endif
 
+                    comment
+                      A literal $0 recurring price is never trustworthy data — see the matching
+                      note in the [data-kk-fws-summary-data] block below.
+                    endcomment
+                    if summary_recurring_cents == 0
+                      for sub_row in plan_sub_rows
+                        assign sp = sub_row | split: '~~'
+                        if sp[0] == default_plan
+                          assign summary_recurring_cents = sp[3] | plus: 0
+                          break
+                        endif
+                      endfor
+                    endif
+
                     assign summary_plan_amount = summary_recurring_cents | money_without_trailing_zeros
                     assign summary_total_cents = summary_first_cents | plus: shipping_cents
                     assign summary_upgrade_cents = summary_first_cents | minus: summary_recurring_cents
+
+                    comment
+                      Due today and "Then $X" both come straight from Appstle — see the matching
+                      note in the [data-kk-fws-summary-data] block below.
+                    endcomment
                     assign summary_note = section.settings.subscribe_note | replace: '[price]', summary_plan_amount
                     assign summary_footnote = section.settings.subscribe_footnote | replace: '[value]', section.settings.tower_value_cents | money_without_trailing_zeros
                   else
@@ -1203,26 +1388,30 @@
                       assign summary_upgrade_cents = 0
                     endif
                     assign summary_once_plan_cents = summary_variant.price | minus: summary_upgrade_cents
-                    assign summary_tower_charged = false
+                    assign summary_tower_included = false
                     if summary_once_plan_cents > tower_value_cents
                       assign summary_once_plan_cents = summary_once_plan_cents | minus: tower_value_cents
-                      assign summary_tower_charged = true
+                      assign summary_tower_included = true
                     endif
+                    assign summary_tower_charged = true
                     assign summary_plan_amount = summary_once_plan_cents | money_without_trailing_zeros
                     assign summary_total_cents = summary_variant.price | plus: shipping_cents
+                    unless summary_tower_included
+                      assign summary_total_cents = summary_total_cents | plus: tower_value_cents
+                    endunless
                     assign summary_note = section.settings.onetime_note
                     assign summary_footnote = section.settings.onetime_footnote
                   endif
 
                   comment
-                    The tower row is priced on a one-time purchase and FREE on a subscription.
-                    It is hidden entirely only when a one-time purchase does not carry the tower
-                    (the pre-reprice fallback) AND the customer is paying once.
+                    The tower row is priced on a one-time purchase and FREE on a subscription,
+                    so it shows on both. On One-Time it is added to due today unless the
+                    variant price already carries it.
                   endcomment
                   assign show_tower_row = true
                   unless summary_subscribing
                     unless summary_tower_charged
-                      assign show_tower_row = false
+                      assign show_tower_row = true
                     endunless
                   endunless
                 -%}
@@ -1230,11 +1419,11 @@
                 <div class="kk-fws-offer__summary" data-kk-fws-summary>
                   <p class="kk-fws-offer__summary-title">{{ section.settings.summary_legend }}</p>
 
-                  <div class="kk-fws-offer__summary-rows">
+                  <div  class="kk-fws-offer__summary-rows">
                     {%- comment -%}
-                      Tower row — subscription only. On a one-time purchase the tower is not
-                      free, and the variant price already covers it, so the row would be
-                      double-counting (the mistake the two stale 1.5 Gallon frames make).
+                      Tower row — both pay modes. FREE (struck value) on a subscription; a real
+                      charge on a one-time purchase, added to due today unless the variant price
+                      already carries it.
                     {%- endcomment -%}
                     <div
                       class="kk-fws-offer__summary-row"
@@ -1307,7 +1496,7 @@
                       </span>
                     </div>
 
-                    <div class="kk-fws-offer__summary-row" data-kk-fws-summary-row="shipping">
+                    <div class="kk-fws-offer__summary-row" data-kk-fws-summary-row="shipping" hidden>
                       <span class="kk-fws-offer__summary-label">
                         {{- section.settings.shipping_label -}}
                       </span>
@@ -1513,11 +1702,22 @@
           endif
 
           assign v_once_plan_cents = variant.price | minus: v_upgrade_cents
-          assign v_tower_charged = false
+          assign v_tower_included = false
           if v_once_plan_cents > tower_value_cents
             assign v_once_plan_cents = v_once_plan_cents | minus: tower_value_cents
-            assign v_tower_charged = true
+            assign v_tower_included = true
           endif
+
+          comment
+            The tower is NEVER free on a one-time purchase — ruled by the user. When the variant
+            price already carries it (above), it is split out of the plan; when it does not, the
+            tower is charged ON TOP, so due today = variant price + tower + shipping. Either way
+            the tower row is priced on One-Time, hence towerCharged is always true.
+          endcomment
+          unless v_tower_included
+            assign v_once_total = v_once_total | plus: tower_value_cents
+          endunless
+          assign v_tower_charged = true
 
           comment
             Subscribe side. `price` is the joining charge (due today); the last price
@@ -1539,11 +1739,39 @@
               The plan row shows the RENEWAL price, which is the number the design puts on
               the card ($99 / 6 months). The joining premium goes on its own Size Upgrade
               row so the rows still sum to due today.
-            endcomment
-            assign v_sub_amount = v_recurring_cents | money_without_trailing_zeros
-            assign v_sub_total = v_first_cents | plus: shipping_cents | money_without_trailing_zeros
 
+              A literal $0 recurring price is never trustworthy data — a subscription plan
+              that bills $0 forever is a data gap in THIS variant's Appstle allocation, not a
+              real price (the joining charge, v_first_cents, is always what Shopify actually
+              charges today, so it stays trusted either way). When the recurring face is $0,
+              fall back to the plan's own canonical recurring price — plan_sub_rows, scanned
+              across every size for this plan — rather than showing a fabricated $0 plan price
+              with the real charge misread as a "Size Upgrade" instead.
+            endcomment
+            if v_recurring_cents == 0
+              for sub_row in plan_sub_rows
+                assign sp = sub_row | split: '~~'
+                if sp[0] == v_filter
+                  assign v_recurring_cents = sp[3] | plus: 0
+                  break
+                endif
+              endfor
+            endif
+
+            assign v_sub_amount = v_recurring_cents | money_without_trailing_zeros
+            assign v_sub_total_cents = v_first_cents | plus: shipping_cents
+
+            comment
+              Subscribe follows the Appstle config exactly, so the summary matches the cart: due
+              today is the first-order price (what checkout charges) and "Then $X" is the renewal
+              price. The Size Upgrade row is the gap between the two, so it appears only when the
+              plan is set up with two pricing cycles (a higher first order). Nothing is added on
+              top of what Appstle charges.
+            endcomment
             assign v_sub_upgrade_cents = v_first_cents | minus: v_recurring_cents
+
+            assign v_sub_total = v_sub_total_cents | money_without_trailing_zeros
+
             if v_sub_upgrade_cents > 0
               assign v_sub_upgrade = v_sub_upgrade_cents | money_without_trailing_zeros
             endif
@@ -1674,17 +1902,31 @@
         return;
       }
 
-      var subscribing = pay === 'subscribe' && row.sellingPlan !== '0';
-
-      // Step 2 is about the PLAN, so both faces use the plan component: the renewal price
-      // while subscribing, the plan's one-time price while paying once. That one-time plan
-      // price is constant per plan, so it rides on the wrapper as a data attribute rather
-      // than being looked up per variant.
+      // Step 2 is about the PLAN, so both faces use the plan component, and both are meant
+      // to be size-invariant — ONE number per plan, not one per variant. Both ride on the
+      // wrapper as data attributes computed server-side across every size, rather than being
+      // looked up on the currently selected (size, plan) row: that per-row lookup is exactly
+      // what let this card show $0 (or a varying price) whenever the selected size had no
+      // variant for this plan.
       var oncePlan = wrap.getAttribute('data-once-plan') || '';
       oncePlan = oncePlan === '-' ? '' : oncePlan;
 
+      var subRecurring = wrap.getAttribute('data-sub-recurring') || '';
+      subRecurring = subRecurring === '-' ? '' : subRecurring;
+
+      var subCompareAttr = wrap.getAttribute('data-sub-compare') || '';
+      subCompareAttr = subCompareAttr === '-' ? '' : subCompareAttr;
+
+      var subRecurringCents = parseInt(wrap.getAttribute('data-sub-recurring-cents') || '0', 10) || 0;
+
+      // Whether THIS plan shows its subscribe face is a property of the PLAN (does it carry
+      // a subscription allocation on any size), not of the currently selected size's row —
+      // checking row.sellingPlan here is exactly what let this fall through to a per-size,
+      // varying one-time price whenever the selected size had no variant for this plan.
+      var subscribing = pay === 'subscribe' && !!subRecurring;
+
       var amount = subscribing
-        ? money(row.subRecurring) || money(row.subPrice)
+        ? subRecurring
         : oncePlan || money(row.oncePrice);
 
       if (!amount) {
@@ -1700,10 +1942,10 @@
       if (subscribing) {
         var oncePlanCents = oncePlan ? Math.round(parseFloat(oncePlan.replace(/[^0-9.]/g, '')) * 100) : 0;
 
-        if (oncePlanCents > (row.subRecurringCents || 0)) {
+        if (oncePlanCents > subRecurringCents) {
           compare = oncePlan;
         } else if (!oncePlan) {
-          compare = money(row.subCompare);
+          compare = subCompareAttr;
         }
       }
 
@@ -1772,10 +2014,9 @@
         text('tower-amount', subscribing ? towerFreeText : figures.towerValue);
       }
 
-      // Size premium. One-time: the variant price above the cheapest size. Subscribe: the
-      // joining premium, i.e. what checkout charges above the renewal price. Shown only when
-      // there is something to charge — a one-cycle plan has no subscribe-side premium, which
-      // keeps the row hidden on subscribe exactly as before two-cycle pricing.
+      // Size premium. One-time: the variant price above the smallest size. Subscribe: the
+      // Appstle joining premium (first order above renewal), already inside subTotal — so it
+      // shows only once the plan has two pricing cycles. Hidden when there is nothing to charge.
       if (upgradeRow) {
         var upgrade = subscribing ? figures.subUpgrade : figures.upgrade;
 
@@ -1796,6 +2037,39 @@
       text('total', subscribing ? figures.subTotal : figures.onceTotal);
       text('note', subscribing ? figures.subNote : figures.onceNote);
       text('footnote', subscribing ? figures.subFootnote : figures.onceFootnote);
+    }
+
+    // Step 1 badges. Each size's badge is that size's Size Upgrade for the SELECTED plan and pay
+    // mode — the very figure paintSummary would print if that size were chosen — or the "Free"
+    // text when there is none. A badge the author filled in on the block stays as written.
+    var sizeList = root.querySelector('[data-kk-fws-badge-free]');
+    var badgeFreeText = (sizeList && sizeList.getAttribute('data-kk-fws-badge-free')) || 'Free';
+
+    function paintSizeBadges(plan, pay) {
+      if (!summary) {
+        return;
+      }
+
+      for (var i = 0; i < sizeInputs.length; i++) {
+        var card = sizeInputs[i].nextElementSibling;
+        var badge = card && card.querySelector('.kk-fws-offer__size-badge');
+
+        if (!badge || badge.hasAttribute('data-kk-fws-size-badge-fixed')) {
+          continue;
+        }
+
+        var sizeRow = find(sizeInputs[i].value, plan);
+        var figures = sizeRow && summary[sizeRow.id];
+
+        if (!figures) {
+          continue;
+        }
+
+        var subscribing = pay === 'subscribe' && sizeRow.sellingPlan !== '0' && !!figures.subTotal;
+        var upgrade = subscribing ? figures.subUpgrade : figures.upgrade;
+
+        badge.textContent = upgrade ? '+ ' + upgrade : badgeFreeText;
+      }
     }
 
     function sync() {
@@ -1863,6 +2137,7 @@
       }
 
       paintSummary(match, pay);
+      paintSizeBadges(plan, pay);
 
       // Step 1's badges are the ONE-TIME size deltas, and the user ruled they must not show on
       // a one-time purchase now that the tower is charged there. Reflected as state on the root
@@ -1883,6 +2158,13 @@
       if (match && match.id !== '0' && match.available) {
         target.value = match.id;
         target.disabled = false;
+
+        // The accordion's technical-specifications table keys off the VARIANT, not off this
+        // section's radios, and a hidden input fires no `change` when script sets its value.
+        // `variant:change` is the event that script already listens for.
+        document.dispatchEvent(
+          new CustomEvent('variant:change', { detail: { variant: { id: match.id } } })
+        );
 
         if (button) {
           button.disabled = false;
@@ -2306,6 +2588,63 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1.0852rem;
     margin-top: 1.0852rem;
+  }
+
+  /*
+    The panels themselves are styled globally, by the `.section-accordion` rules in
+    assets/main.css that the wrapper opts into. What is left here is placement: the gap under
+    the thumbnail strip, the rules the design draws between panels, and undoing the negative
+    `margin-bottom` that `.section-accordion` carries for its standalone full-width use.
+
+    `.accordion-item` brings its own `mb-4`, which is too loose at this width, and the last
+    panel's is dropped so the media column ends flush with the panel beside it.
+  */
+  .kk-fws-offer .kk-fws-offer__accordion.section-accordion {
+    margin-top: 2.1704rem;
+    margin-bottom: 0;
+  }
+
+  .kk-fws-offer .kk-fws-offer__accordion .accordion {
+    margin-bottom: 0;
+  }
+
+  .kk-fws-offer .kk-fws-offer__accordion .accordion-item {
+    margin-bottom: 0 !important;
+    border-top: 1px solid var(--kk-fws-offer-line, #e6e6e6);
+  }
+
+  .kk-fws-offer .kk-fws-offer__accordion .accordion-item:last-child,
+  .kk-fws-offer .kk-fws-offer__accordion .accordion-item:first-child {
+    border: none;
+  }
+
+  /*
+    Every rule below fights a global `.section-accordion` one of EQUAL specificity, which would
+    otherwise be settled by stylesheet order — hence the `.kk-fws-offer` prefix. The two that
+    also carry `!important` are beating the `max-width: 768px` rule that sets
+    `.section-accordion .accordion-item__inner { padding: 10px !important }`.
+
+    The globals size these for a full-width section. The media column is about half that, so
+    the heading steps down and the horizontal padding comes off to keep the panel text aligned
+    with the gallery edge.
+  */
+  .kk-fws-offer .kk-fws-offer__accordion .accordion dt {
+    padding-left: 0;
+    padding-right: 2.5rem;
+    font-size: 1.7rem;
+  }
+
+  .kk-fws-offer .kk-fws-offer__accordion .accordion dt:after {
+    right: 0;
+  }
+
+  .kk-fws-offer .kk-fws-offer__accordion .accordion-item__inner {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+
+    p, li {
+      font-size: 1.7rem;
+    }
   }
 
   .kk-fws-offer .kk-fws-offer__thumb {
@@ -2840,6 +3179,7 @@
     padding: 2rem 0;
   }
 
+
   /* `hidden` alone loses to `display: flex`. */
   .kk-fws-offer__summary-row[hidden] {
     display: none;
@@ -3050,13 +3390,11 @@
     cursor: not-allowed;
   }
 
-  /* Step 1's badges are the ONE-TIME size deltas (Free / +$30 / +$60). Ruled by the user: they
-     do not show on a one-time purchase, where the tower is charged and nothing is free. The
-     attribute is set server-side and kept in step by the picker script, so there is no flash of
-     the wrong state on load. */
-  .kk-fws-offer[data-kk-fws-pay-mode='onetime'] .kk-fws-offer__size-badge {
-    display: none;
-  }
+  /* Step 1's badges are the ONE-TIME size deltas (Free / +$30 / +$60). Every subscription gets
+     a free tower regardless of size, so the badges only mean something on a one-time purchase —
+     they hide on Subscribe & Save, where none of them apply. The attribute is set server-side
+     and kept in step by the picker script, so there is no flash of the wrong state on load. */
+  
 
   .kk-fws-offer__size-badge {
     display: inline-flex;
@@ -3069,6 +3407,10 @@
     font-size: 1.4rem;
     line-height: 1.4;
     color: var(--kk-fws-offer-badge-text, #ffffff);
+  }
+
+  .kk-fws-offer[data-kk-fws-pay-mode="onetime"] input[data-kk-fws-size="1.5 Gallon"] + .kk-fws-offer__size-card .kk-fws-offer__size-badge {
+    display: none;
   }
 
   .kk-fws-offer__size-name {
@@ -3554,7 +3896,7 @@
   "name": "KK FWS Offer",
   "tag": "div",
   "class": "section-kk-fws-offer",
-  "max_blocks": 12,
+  "max_blocks": 16,
   "settings": [
     {
       "type": "text",
@@ -3583,6 +3925,13 @@
       "id": "size_legend",
       "label": "Step 1 heading",
       "default": "Choose Your Tower Size"
+    },
+    {
+      "type": "text",
+      "id": "size_badge_free_text",
+      "label": "Size badge with no upgrade",
+      "default": "Free",
+      "info": "Shown on a size card's badge when that size costs nothing extra."
     },
     {
       "type": "text",
@@ -3707,6 +4056,17 @@
       "step": 1,
       "default": 4,
       "info": "The design shows a four-across thumbnail row. 0 shows every product image and the row wraps. Only applies when a size has no media positions of its own."
+    },
+    {
+      "type": "header",
+      "content": "Product accordion",
+      "info": "Renders below the thumbnails, in the media column. Shares snippets/accordion-panels.liquid with the standalone Dropdown Accordion section, so Description, Technical Specifications, Lab Report and What's in box come from the product itself. Add \"Accordion item\" blocks for anything else."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_accordion",
+      "label": "Show the product accordion",
+      "default": true
     },
     {
       "type": "header",
@@ -3956,7 +4316,7 @@
           "type": "text",
           "id": "badge",
           "label": "Badge",
-          "info": "Price delta pill, e.g. \"Free\" or \"+ $30\". Authored copy — it is not derived from the variant's real price."
+          "info": "Leave blank to show the real size upgrade from the variant prices (the same figure as the order summary), or the \"Free\" text when there is none. Anything entered here overrides it with fixed copy."
         },
         {
           "type": "text",
@@ -4049,6 +4409,23 @@
           "default": "Pay only shipping today"
         }
       ]
+    },
+    {
+      "type": "accordion_item",
+      "name": "Accordion item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Heading",
+          "info": "Both fields are required — a block missing either one is skipped."
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Body"
+        }
+      ]
     }
   ],
   "presets": [
@@ -4057,15 +4434,15 @@
       "blocks": [
         {
           "type": "size_details",
-          "settings": { "size_value": "1.5 Gallon", "description": "1-2 People", "badge": "Free" }
+          "settings": { "size_value": "1.5 Gallon", "description": "1-2 People" }
         },
         {
           "type": "size_details",
-          "settings": { "size_value": "2.25 Gallon", "description": "2-3 People", "badge": "+ $30" }
+          "settings": { "size_value": "2.25 Gallon", "description": "2-3 People" }
         },
         {
           "type": "size_details",
-          "settings": { "size_value": "3.25 Gallon", "description": "3-4 People", "badge": "+ $60" }
+          "settings": { "size_value": "3.25 Gallon", "description": "3-4 People" }
         },
         {
           "type": "plan",

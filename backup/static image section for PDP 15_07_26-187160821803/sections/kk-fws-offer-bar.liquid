@@ -30,9 +30,21 @@
 {% stylesheet %}
   /* Campaign landing page replaces the global header group (nav + trust bar +
      announcement bar), which theme.liquid wraps in a single <header class="site-header">.
-     Owned by this section because it is the first campaign section on the page. */
-  .site-header {
-    display: none;
+     Owned by this section because it is the first campaign section on the page.
+     The body class is "template-product-kk.free-w-shipping" (template.suffix keeps its
+     dot), so the dot is escaped; unescaped it would read as two separate classes. */
+  
+
+  body.template-product-kk\.free-w-shipping {
+    padding-top: 0 !important;
+
+    .site-header {
+      display: none;
+    }
+
+    main {
+      margin-top: 0 !important;
+    }
   }
 
   /* The global header is position:fixed, so the theme reserves space for it with
@@ -41,13 +53,13 @@
      space above the page, so the compensation has to be undone here too.
      !important because these compete with equal-specificity rules in the global
      bundles and the bundle order is not guaranteed. */
-  body {
+  /* body {
     padding-top: 0 !important;
   }
 
   main {
     margin-top: 0 !important;
-  }
+  } */
 
   .kk-fws-offer-bar {
     display: block;

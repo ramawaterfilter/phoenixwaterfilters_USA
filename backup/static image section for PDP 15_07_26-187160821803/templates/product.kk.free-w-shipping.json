@@ -62,6 +62,7 @@
       ],
       "settings": {
         "brand_text": "Phoenix Gravity",
+        "brand_link": "",
         "show_menu_icon": true,
         "menu_label": "Menu",
         "menu_close_label": "Close menu",
@@ -139,6 +140,7 @@
         "badge_warranty"
       ],
       "settings": {
+        "image": "shopify://shop_images/Hero.png",
         "eyebrow": "Limited [month] offer for American families:",
         "heading": "Get An NSF Certified Water Filter Tower Shipped Direct To You - Completely FREE!",
         "subheading": "Join over 12,219+ American families who've already made the switch to clean, fresh and delicious water. Get your FREE water filter tower today, just cover shipping!",
@@ -235,6 +237,7 @@
         "heading": "Why 12,000+ Families Switched Off Tap Water For Good",
         "subheading": "Independent certification, effortless setup, and water that pays for itself",
         "show_media": true,
+        "image": "shopify://shop_images/lifestyle.png",
         "background_color": "#ffffff",
         "heading_color": "#153a5b",
         "text_color": "#26303a",
@@ -314,24 +317,30 @@
           "type": "size_details",
           "settings": {
             "size_value": "1.5 Gallon",
+            "label": "",
             "description": "1-2 People",
-            "badge": "Free"
+            "badge": "",
+            "media_positions": ""
           }
         },
         "size_2": {
           "type": "size_details",
           "settings": {
             "size_value": "2.25 Gallon",
+            "label": "",
             "description": "2-3 People",
-            "badge": "+ $30"
+            "badge": "",
+            "media_positions": ""
           }
         },
         "size_3": {
           "type": "size_details",
           "settings": {
             "size_value": "3.25 Gallon",
+            "label": "",
             "description": "3-4 People",
-            "badge": "+ $60"
+            "badge": "",
+            "media_positions": ""
           }
         },
         "plan_standard": {
@@ -343,7 +352,7 @@
             "price": "$99",
             "price_note": "/ 6 months",
             "compare_price": "$129",
-            "features": "150+ contaminants removed\nPair of carbon fitter elements\nReplaced every & months"
+            "features": "150+ contaminants removed\nPair of carbon fitter elements\nReplaced every 6 months"
           }
         },
         "plan_plus": {
@@ -355,7 +364,7 @@
             "price": "$149",
             "price_note": "/ 6 months",
             "compare_price": "$249",
-            "features": "Fluoride + 150 contaminants removed\nIncludes & months of fluoride media\nSteal fluoride-reduction elements"
+            "features": "Fluoride + 150 contaminants removed\nIncludes 6 months of fluoride media\nSteal fluoride-reduction elements"
           }
         },
         "trust_1": {
@@ -378,6 +387,27 @@
             "icon": "cancel",
             "text": "Cancel any time"
           }
+        },
+        "accordion_guarantee": {
+          "type": "accordion_item",
+          "settings": {
+            "question": "100-Day Money-Back Guarantee",
+            "answer": "<p>Worried the Phoenix Gravity Water Filter sounds too good to be true? Not sure it will really remove as many contaminants as we promise? We stand behind our product 100% - so you can try it in your own home for 100 days. <br/><br/>If you’re not completely satisfied with the purity of your water, simply return it within 100 days for a full refund, no questions asked! <br/><br/>Terms apply</p>"
+          }
+        },
+        "accordion_warranty": {
+          "type": "accordion_item",
+          "settings": {
+            "question": "Warranty & Protection",
+            "answer": "<p>We stand behind the quality and craftsmanship of every Phoenix Gravity system.</p><ul><li><strong>Stainless Steel Gravity Filter Housings:</strong> 10-year warranty against defects in materials and workmanship.<br/></li><li><strong>Stainless Steel Spigot:</strong> 1-year warranty against defects in materials and workmanship.<br/></li><li><strong>Carbon Filter Elements:</strong> 3-month warranty against defects in materials and workmanship.<br/></li><li><strong>All Other Parts & Accessories:</strong> 6-month warranty against defects in materials and workmanship.<br/></li></ul><p></p><p><strong>Transit Damage ? </strong></p><p>If your order arrives damaged, report it within <strong>30 days of delivery</strong>, and we’ll provide a free replacement. Our warranty is designed to give you added confidence in the quality, durability, and workmanship of your Phoenix Gravity water filter.<br/><br/></p>"
+          }
+        },
+        "accordion_shipping": {
+          "type": "accordion_item",
+          "settings": {
+            "question": "Shipping & Returns",
+            "answer": "<p><strong>Shipping :</strong></p><p>NOTE: Most orders will be processed and shipped within 3-7 business days. We appreciate your patience.</p><p>We Ship Anywhere! Within the USA. Phoenix Gravity’s free shipping offer applies to retail customer orders with a minimum amount of $99.99 shipped domestically (within the US). Orders are normally shipped via UPS ground service, USPS Priority Mail, or USPS First Class mail. Please note that UPS does not ship to PO Boxes or Military Addresses. </p><p><strong>Return Process :</strong></p><p>To initiate a return, customers must contact our customer support team and provide valid website order details. Once the details are validated, the support team will approve the return and share detailed instructions on how and where to send the product.</p><p><strong>Orders & Damaged Goods:</strong></p><p>If your order was damaged or defective during delivery, or there was an error in your order, ex. If the filters are broken or the size of the filter system is incorrect, please contact our Customer Service within 14 days of delivery receipt at 1 (800) 917-0455 or email us at <a href=\"mailto:hello@phoenixwaterfilters.com\" title=\"hello@phoenixwaterfilters.com\">hello@phoenixwaterfilters.com</a>. We will make every effort to correct your order. If you were shipped an incorrect item, Phoenix Gravity will pay for the return via standard shipping to the registered address. Please make sure you include your order ID and order date.</p><p><strong>Cancellation Policy:</strong></p><p>Cancel within 24 hours of ordering for a full refund. After shipment, use our 100-Day Trial for returns. Shipped orders will be notified via registered email IDs.<br/></p><p><strong>Important Notes :</strong></p><ul><li>Products returned without prior authorization will not be accepted.</li><li>Products must be returned in their original packaging and must be free from any damage.</li></ul>"
+          }
         }
       },
       "block_order": [
@@ -388,7 +418,10 @@
         "plan_plus",
         "trust_1",
         "trust_2",
-        "trust_3"
+        "trust_3",
+        "accordion_guarantee",
+        "accordion_warranty",
+        "accordion_shipping"
       ],
       "settings": {
         "eyebrow": "BUILD YOUR own system in minutes",
@@ -396,12 +429,55 @@
         "subheading": "Pick your size, your protection, and how you pay. Your price updates live - and the free-system offer still applies on every subscription.",
         "size_legend": "Choose Your Tower Size",
         "size_option_name": "Size",
+        "sold_out_text": "Sold out",
+        "unavailable_text": "This configuration is not available right now.",
         "plan_legend": "Choose Your Protection Plan",
         "filter_option_name": "Filter Type",
+        "pay_legend": "How Would You Like to Pay?",
+        "subscribe_label": "Subscribe & Save",
+        "subscribe_description": "Just cover the protection plan and shipping today",
+        "subscribe_ribbon": "Free system",
+        "onetime_label": "One-Time Purchase",
+        "onetime_description": "Pay in full - today no subscription",
+        "onetime_ribbon": "",
+        "pay_unavailable_text": "Not available on this configuration",
         "stand_option_name": "Stand",
         "stand_option_value": "No Stand",
         "media_limit": 4,
-        "button_label": "send me my free TOWER"
+        "show_accordion": true,
+        "button_label": "send me my free TOWER",
+        "show_summary": true,
+        "summary_legend": "Your order",
+        "tower_label": "Stainless Steel Tower",
+        "tower_value_cents": 24900,
+        "tower_free_text": "FREE",
+        "size_upgrade_label": "Size Upgrade",
+        "summary_cadence": "/ 6 months",
+        "shipping_label": "Shipping",
+        "shipping_cents": 0,
+        "due_today_label": "Due today",
+        "subscribe_note": "Then [price] / 6 months - cancel anytime",
+        "onetime_note": "One-time payment - yours to keep forever",
+        "subscribe_footnote": "You save [value] on the Stainless Steel Tower today",
+        "onetime_footnote": "Own it outright - no subscription",
+        "background_color": "#ffffff",
+        "heading_color": "#153a5b",
+        "text_color": "#26303a",
+        "eyebrow_background_color": "#f8f5f3",
+        "nav_background_color": "#f5f3f1",
+        "thumb_border_color": "#efefef",
+        "card_background_color": "#f5f3f1",
+        "badge_background_color": "#153a5b",
+        "badge_text_color": "#ffffff",
+        "card_border_color": "#e7e7e7",
+        "step_background_color": "#153a5b",
+        "step_text_color": "#ffffff",
+        "compare_price_color": "#c4c4c4",
+        "card_selected_background_color": "#ffffff",
+        "card_selected_border_color": "#153a5b",
+        "button_background_color": "#153a5b",
+        "button_text_color": "#ffffff",
+        "line_color": "#e6e6e6"
       }
     },
     "kk_fws_tap_warning": {
@@ -425,6 +501,7 @@
         "paragraph_effects"
       ],
       "settings": {
+        "image": "shopify://shop_images/tap_water.png",
         "heading": "WARNING: Drinking Tap Water Makes 7.2 million Americans Sick Every Year!",
         "background_color": "#ffffff",
         "heading_color": "#153a5b",

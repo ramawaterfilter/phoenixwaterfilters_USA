@@ -1,9 +1,48 @@
 {% comment %}Variant-aware product section. Uses custom.variant_images with product.media fallback.{% endcomment %}
 {% liquid
+  assign hidden_variant_ids = ','
+  for block in section.blocks
+    if block.type == 'variant_picker'
+      assign hidden_variant_entries = block.settings.hidden_variant_ids | split: ','
+      for hidden_variant_entry in hidden_variant_entries
+        assign hidden_variant_id = hidden_variant_entry | strip
+        if hidden_variant_id != blank
+          assign hidden_variant_ids = hidden_variant_ids | append: hidden_variant_id | append: ','
+        endif
+      endfor
+      break
+    endif
+  endfor
+
   assign current_variant = product.selected_variant
-  if current_variant == blank
-    assign current_variant = product.variants.first
+  if current_variant != blank
+    capture current_variant_token
+      echo ',' | append: current_variant.id | append: ','
+    endcapture
+    if hidden_variant_ids contains current_variant_token
+      assign current_variant = blank
+    endif
   endif
+  if current_variant == blank
+    for variant in product.variants
+      capture variant_token
+        echo ',' | append: variant.id | append: ','
+      endcapture
+      unless hidden_variant_ids contains variant_token
+        assign current_variant = variant
+        break
+      endunless
+    endfor
+  endif
+  assign visible_variant_count = 0
+  for variant in product.variants
+    capture variant_token
+      echo ',' | append: variant.id | append: ','
+    endcapture
+    unless hidden_variant_ids contains variant_token
+      assign visible_variant_count = visible_variant_count | plus: 1
+    endunless
+  endfor
   assign variant_images = current_variant.metafields.custom.variant_images.value
   assign custom_gallery = false
   if variant_images != blank and variant_images.size > 0
@@ -182,12 +221,20 @@
                 {%- assign media_alt = media.alt | default: product.title -%}
                 <button
                   type="button"
-                  class="custom-nice-product__thumb{% if forloop.first %} is-active{% endif %}{% if forloop.index <= 4 %} is-thumb-visible{% endif %}"
+                  class="custom-nice-product__thumb{% if forloop.first %} is-active{% endif %}{% if forloop.index > 1 and forloop.index <= 5 %} is-thumb-visible{% endif %}"
                   data-thumb="{{ forloop.index0 }}"
                   aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
                   aria-label="Show {{ media.media_type | default: 'media' }} {{ forloop.index }}"
                 >
-                  {{- media.preview_image | image_url: width: 900 | image_tag: loading: 'lazy', alt: media_alt -}}
+                  {{-
+                    media.preview_image
+                    | image_url: width: 540
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '120, 180, 240, 360, 540',
+                      sizes: '(min-width: 992px) 260px, 50vw',
+                      alt: media_alt
+                  -}}
                   {%- if media.media_type == 'video' -%}
                     <span class="custom-nice-product__play" aria-hidden="true">&#9654;</span>
                   {%- endif -%}
@@ -205,11 +252,15 @@
                   aria-current="false"
                   aria-label="Show {{ media.media_type | replace: '_', ' ' }} {{ thumb_index | plus: 1 }}"
                 >
-                  {{
+                  {%- assign media_alt = media.alt | default: product.title -%}
+                  {{-
                     media.preview_image
-                    | image_url: width: 900
-                    | image_tag: loading: 'lazy', alt: media.alt
-                    | default: product.title
+                    | image_url: width: 540
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '120, 180, 240, 360, 540',
+                      sizes: '(min-width: 992px) 260px, 50vw',
+                      alt: media_alt
                   -}}
                   {%- unless media.media_type == 'image' -%}
                     <span class="custom-nice-product__play">▶</span>
@@ -235,6 +286,8 @@
             aria-label="{{ 'products.product.product_variants' | t }}"
           >
             {% for variant in product.variants %}
+              {% capture variant_token %},{{ variant.id }},{% endcapture %}
+              {% if hidden_variant_ids contains variant_token %}{% continue %}{% endif %}
               <option
                 value="{{ variant.id }}"
                 {% if variant.id == current_variant.id %}
@@ -310,7 +363,7 @@
                   class="custom-nice-product__block custom-nice-product__variants"
                   {{ block.shopify_attributes }}
                 >
-                  {% if product.variants.size > 1 %}
+                  {% if visible_variant_count > 1 %}
                     {% for option in product.options_with_values %}
                       {% liquid
                         assign option_index = option.position | minus: 1
@@ -359,6 +412,21 @@
                         <div class="custom-nice-product__values">
                           {% for value in option.values %}
                             {% liquid
+                              assign value_has_visible_variant = false
+                              for variant in product.variants
+                                capture variant_token
+                                  echo ',' | append: variant.id | append: ','
+                                endcapture
+                                unless hidden_variant_ids contains variant_token
+                                  if variant.options[option_index] == value
+                                    assign value_has_visible_variant = true
+                                    break
+                                  endif
+                                endunless
+                              endfor
+                              unless value_has_visible_variant
+                                continue
+                              endunless
                               assign option_image = blank
                               assign primary = value
                               assign secondary = blank
@@ -475,7 +543,7 @@
                       {%- endif -%}
                     </span>
                   </button>
-                  {% if block.settings.show_dynamic_checkout %}
+                  {% if block.settings.show_dynamic_checkout and current_variant != blank %}
                     {{ form | payment_button }}
                   {% endif %}
                   <p class="custom-nice-product__status" data-status role="status" aria-live="polite"></p>
@@ -622,7 +690,7 @@
       "moneyFormat": {{ shop.money_format | json }}, "currency": {{ cart.currency.iso_code | default: shop.currency | json }},
       "defaultDescription": {{ product.description | json }},
       "strings": {"add":{{ 'products.product.add_to_cart' | t | json }},"sold":{{ 'products.product.sold_out' | t | json }},"preorder":{{ 'products.product.pre_order' | t | json }},"stock":{{ 'products.product.inventory_in_stock' | t | json }},"adding":"Adding…","added":"Added to cart","error":"Unable to add this item. Please try again."},
-      "variants": [{% for variant in product.variants %}{% assign images = variant.metafields.custom.variant_images.value %}{"id":{{ variant.id | json }},"options":{{ variant.options | json }},"available":{{ variant.available | json }},"price":{{ variant.price | json }},"compare":{{ variant.compare_at_price | json }},"inventory":{{ variant.inventory_quantity | json }},"management":{{ variant.inventory_management | json }},"policy":{{ variant.inventory_policy | json }},"media":{{ variant.featured_media.id | default: 0 | json }},"min":{{ variant.quantity_rule.min | default: 1 | json }},"max":{{ variant.quantity_rule.max | json }},"increment":{{ variant.quantity_rule.increment | default: 1 | json }},"customGallery":{% if images != blank and images.size > 0 %}true{% else %}false{% endif %}{% if variant.metafields.custom.variant_level_description != blank %}{% capture description_override %}{{ variant.metafields.custom.variant_level_description | metafield_tag }}{% endcapture %},"descriptionOverride":{{ description_override | strip | json }}{% endif %}}{% unless forloop.last %},{% endunless %}{% endfor %}]
+      "variants": [{% assign rendered_variant_count = 0 %}{% for variant in product.variants %}{% capture variant_token %},{{ variant.id }},{% endcapture %}{% if hidden_variant_ids contains variant_token %}{% continue %}{% endif %}{% assign images = variant.metafields.custom.variant_images.value %}{% if rendered_variant_count > 0 %},{% endif %}{"id":{{ variant.id | json }},"options":{{ variant.options | json }},"available":{{ variant.available | json }},"price":{{ variant.price | json }},"compare":{{ variant.compare_at_price | json }},"inventory":{{ variant.inventory_quantity | json }},"management":{{ variant.inventory_management | json }},"policy":{{ variant.inventory_policy | json }},"media":{{ variant.featured_media.id | default: 0 | json }},"min":{{ variant.quantity_rule.min | default: 1 | json }},"max":{{ variant.quantity_rule.max | json }},"increment":{{ variant.quantity_rule.increment | default: 1 | json }},"customGallery":{% if images != blank and images.size > 0 %}true{% else %}false{% endif %}{% if variant.metafields.custom.variant_level_description != blank %}{% capture description_override %}{{ variant.metafields.custom.variant_level_description | metafield_tag }}{% endcapture %},"descriptionOverride":{{ description_override | strip | json }}{% endif %}}{% assign rendered_variant_count = rendered_variant_count | plus: 1 %}{% endfor %}]
     }
   </script>
 </div>
@@ -762,6 +830,7 @@
   }
 
   #CustomNiceProduct-{{ section.id }} .custom-nice-product__thumb.is-active {
+    display: none;
     border-color: var(--blue);
   }
 
@@ -1418,6 +1487,9 @@
         this.root = root;
         this.data = JSON.parse(root.querySelector('[data-product-json]').textContent);
         this.variants = this.data.variants;
+        this.variantById = new Map();
+        this.variantByOptions = new Map();
+        this.variantPrefixes = [];
         this.form = root.querySelector('form');
         this.select = root.querySelector('[data-variant-select]');
         this.qty = root.querySelector('[data-quantity]');
@@ -1425,6 +1497,19 @@
         this.buttonText = root.querySelector('[data-add-text]');
         this.status = root.querySelector('[data-status]');
         this.description = root.querySelector('[data-description]');
+        this.price = root.querySelector('[data-price]');
+        this.compare = root.querySelector('[data-compare]');
+        this.comparePrice = this.compare?.querySelector('s');
+        this.stock = root.querySelector('[data-stock]');
+        this.optionGroups = [...root.querySelectorAll('[data-option-index]')].map(
+          element => ({
+            element,
+            index: Number(element.dataset.optionIndex),
+            label: element.querySelector('[data-selected]'),
+            inputs: [...element.querySelectorAll('[data-option]')],
+          })
+        );
+        this.indexVariants();
         this.slider = root.querySelector('.custom-nice-product__slider');
         this.slides = root.querySelector('[data-live-slides]');
         this.thumbs = root.querySelector('[data-live-thumbs]');
@@ -1457,6 +1542,12 @@
         this.form.addEventListener('submit', this.submit, true);
         document.addEventListener('keydown', this.keydown);
 
+        if (!this.variant) {
+          if (this.button) this.button.disabled = true;
+          if (this.buttonText) this.buttonText.textContent = this.data.strings.sold;
+          return;
+        }
+
         this.apply(this.variant, false, false);
         setTimeout(() => this.setupGallery(this.variant.media), 0);
       }
@@ -1472,12 +1563,27 @@
       }
 
       find(id) {
-        return this.variants.find(v => String(v.id) === String(id));
+        return this.variantById.get(String(id));
+      }
+
+      indexVariants() {
+        this.variants.forEach(variant => {
+          this.variantById.set(String(variant.id), variant);
+          this.variantByOptions.set(JSON.stringify(variant.options), variant);
+
+          variant.options.forEach((_, index) => {
+            const key = JSON.stringify(variant.options.slice(0, index + 1));
+            const prefixes = this.variantPrefixes[index] ||= new Map();
+            const match = prefixes.get(key) || { first: variant, available: null };
+            if (!match.available && variant.available) match.available = variant;
+            prefixes.set(key, match);
+          });
+        });
       }
 
       selections() {
-        return [...this.root.querySelectorAll('[data-option-index]')].map(
-          g => g.querySelector('[data-option]:checked')?.value || ''
+        return this.optionGroups.map(
+          group => group.inputs.find(input => input.checked)?.value || ''
         );
       }
 
@@ -1488,15 +1594,13 @@
         const changed = Number(group.dataset.optionIndex);
         const selected = this.selections();
 
-        let variant = this.variants.find(v =>
-          v.options.every((x, i) => x === selected[i])
-        );
+        let variant = this.variantByOptions.get(JSON.stringify(selected));
 
         if (!variant || (!variant.available && changed < selected.length - 1)) {
-          const matches = this.variants.filter(v =>
-            v.options.slice(0, changed + 1).every((x, i) => x === selected[i])
+          const matches = this.variantPrefixes[changed]?.get(
+            JSON.stringify(selected.slice(0, changed + 1))
           );
-          variant = matches.find(v => v.available) || variant || matches[0];
+          variant = matches?.available || variant || matches?.first;
         }
 
         if (!variant) return;
@@ -1505,10 +1609,9 @@
       }
 
       sync(variant) {
-        this.root.querySelectorAll('[data-option-index]').forEach(g => {
-          const i = Number(g.dataset.optionIndex);
-          const input = [...g.querySelectorAll('[data-option]')].find(
-            x => x.value === variant.options[i]
+        this.optionGroups.forEach(group => {
+          const input = group.inputs.find(
+            item => item.value === variant.options[group.index]
           );
           if (input) input.checked = true;
         });
@@ -1516,20 +1619,21 @@
 
       availability(variant) {
         const selected = variant.options;
-        this.root.querySelectorAll('[data-option-index]').forEach(g => {
-          const i = Number(g.dataset.optionIndex);
-          const label = g.querySelector('[data-selected]');
-          if (label) label.textContent = selected[i];
+        this.optionGroups.forEach(group => {
+          const { index, label, inputs } = group;
+          if (label) label.textContent = selected[index];
 
-          g.querySelectorAll('[data-option]').forEach(input => {
-            const available = this.variants.some(
-              v =>
-                v.available &&
-                v.options.slice(0, i).every((x, j) => x === selected[j]) &&
-                v.options[i] === input.value
+          inputs.forEach(input => {
+            const candidateOptions = [...selected];
+            candidateOptions[index] = input.value;
+            const candidate = this.variantByOptions.get(
+              JSON.stringify(candidateOptions)
             );
+            const exists = Boolean(candidate);
+            const available = Boolean(candidate?.available);
             const card = input.closest('.custom-nice-product__card');
-            input.disabled = !available && !input.checked;
+            card.hidden = !exists;
+            input.disabled = !exists || (!available && !input.checked);
             card.classList.toggle('is-unavailable', !available);
             card.setAttribute('aria-disabled', String(!available));
           });
@@ -1541,14 +1645,12 @@
         this.select.value = String(variant.id);
         this.availability(variant);
 
-        const price = this.root.querySelector('[data-price]');
-        const compare = this.root.querySelector('[data-compare]');
         const show = Number(variant.compare) > Number(variant.price);
 
-        if (price) price.textContent = this.money(variant.price);
-        if (compare) {
-          compare.hidden = !show;
-          compare.querySelector('s').textContent = show
+        if (this.price) this.price.textContent = this.money(variant.price);
+        if (this.compare) {
+          this.compare.hidden = !show;
+          this.comparePrice.textContent = show
             ? this.money(variant.compare)
             : '';
         }
@@ -1563,16 +1665,14 @@
           variant.management &&
           Number(variant.inventory) <= 0 &&
           variant.policy === 'continue';
-        const stock = this.root.querySelector('[data-stock]');
-
-        if (stock) {
-          stock.textContent = variant.available
+        if (this.stock) {
+          this.stock.textContent = variant.available
             ? preorder
               ? this.data.strings.preorder
               : this.data.strings.stock
             : this.data.strings.sold;
-          stock.classList.toggle('is-in', variant.available);
-          stock.classList.toggle('is-out', !variant.available);
+          this.stock.classList.toggle('is-in', variant.available);
+          this.stock.classList.toggle('is-out', !variant.available);
         }
 
         if (this.button) this.button.disabled = !variant.available;
@@ -1781,20 +1881,17 @@
       activeThumb(index) {
         const thumbButtons = [...this.thumbs.querySelectorAll('[data-thumb]')];
         const total = thumbButtons.length;
-        const windowSize = Math.min(4, total);
+        const windowSize = Math.min(4, Math.max(0, total - 1));
         const normalizedIndex = total
           ? ((Number(index) % total) + total) % total
           : 0;
-        const windowStart =
-          total > 4 ? Math.floor(normalizedIndex / 4) * 4 : 0;
-
         thumbButtons.forEach(x => {
           const thumbIndex = Number(x.dataset.thumb);
-          const windowPosition = total
-            ? (thumbIndex - windowStart + total) % total
-            : 0;
-          const visible = windowPosition < windowSize;
           const active = thumbIndex === normalizedIndex;
+          const windowPosition = total
+            ? (thumbIndex - normalizedIndex - 1 + total) % total
+            : 0;
+          const visible = !active && windowPosition < windowSize;
 
           x.classList.toggle('is-thumb-visible', visible);
           x.classList.toggle('is-active', active);
@@ -2100,6 +2197,7 @@
       "settings": [
         { "type": "checkbox", "id": "show_step_numbers", "label": "Show step numbers", "default": true },
         { "type": "text", "id": "label_prefix", "label": "Option label prefix", "default": "Select" },
+        { "type": "textarea", "id": "hidden_variant_ids", "label": "Hidden variant IDs", "info": "Enter multiple variant IDs separated by commas. Hidden variants cannot be selected or purchased from this section." },
         { "type": "checkbox", "id": "show_size_guide", "label": "Show stand size guide", "default": true },
         { "type": "text", "id": "size_guide_label", "label": "Size guide label", "default": "Size Guide" }
       ]
