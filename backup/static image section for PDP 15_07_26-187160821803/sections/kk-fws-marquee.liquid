@@ -1,0 +1,355 @@
+{%- comment -%}
+  KK FWS Marquee — Figma `7809:15045`.
+
+  A navy strip of icon + text items, separated by small dots, scrolling continuously with the
+  edges faded out. Each item is an "Item" block.
+
+  Built on the boilerplate marquee pattern (boilerplate/marquee): the blocks render ONCE as the
+  repeat unit (`[data-kk-fws-marquee-items]`), and the script below clones that unit until the
+  track is at least twice the strip's width, so the CSS animation can loop by exactly one unit
+  without a gap. Clones are aria-hidden, so assistive tech reads the list once. It re-measures
+  on resize and after the icons load. With reduced motion requested, nothing is cloned and the
+  first unit simply sits still (scrollable sideways if it overflows).
+{%- endcomment -%}
+
+{%- assign item_blocks = section.blocks | where: 'type', 'item' -%}
+
+{%- if item_blocks.size > 0 -%}
+  <section
+    class="kk-fws-marquee{% if section.settings.pause_on_hover %} kk-fws-marquee--pausable{% endif %}{% if section.settings.direction == 'right' %} kk-fws-marquee--reverse{% endif %}"
+    data-kk-fws-marquee
+    style="
+      --kk-fws-marquee-background: {{ section.settings.background_color }};
+      --kk-fws-marquee-text: {{ section.settings.text_color }};
+      --kk-fws-marquee-duration: {{ section.settings.duration }}s;
+    "
+  >
+    <div class="kk-fws-marquee__track" data-kk-fws-marquee-track>
+      <ul class="kk-fws-marquee__items" data-kk-fws-marquee-items>
+        {%- for block in item_blocks -%}
+          {%- if block.settings.text != blank -%}
+            <li class="kk-fws-marquee__item" {{ block.shopify_attributes }}>
+              {%- if block.settings.custom_icon != blank -%}
+                {{
+                  block.settings.custom_icon
+                  | image_url: width: 56
+                  | image_tag: class: 'kk-fws-marquee__icon', width: 28, height: 28, loading: 'eager', alt: ''
+                }}
+              {%- elsif block.settings.icon != 'none' -%}
+                <img
+                  class="kk-fws-marquee__icon"
+                  src="{{ 'kk-fws-icon-' | append: block.settings.icon | append: '.svg' | asset_url }}"
+                  alt=""
+                  width="28"
+                  height="28"
+                  aria-hidden="true"
+                >
+              {%- endif -%}
+              <span class="kk-fws-marquee__text">{{ block.settings.text }}</span>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      var root = document.currentScript && document.currentScript.previousElementSibling;
+      if (!root || !root.hasAttribute('data-kk-fws-marquee')) return;
+
+      var track = root.querySelector('[data-kk-fws-marquee-track]');
+      var unit = root.querySelector('[data-kk-fws-marquee-items]');
+      if (!track || !unit) return;
+
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        root.classList.add('is-static');
+        return;
+      }
+
+      function fill() {
+        var unitWidth = unit.getBoundingClientRect().width;
+        if (!unitWidth) return;
+
+        var clones = track.querySelectorAll('[data-kk-fws-marquee-clone]');
+        var needed = Math.max(1, Math.ceil((root.clientWidth * 2) / unitWidth) - 1);
+
+        for (var i = clones.length; i < needed; i++) {
+          var clone = unit.cloneNode(true);
+          clone.removeAttribute('data-kk-fws-marquee-items');
+          clone.setAttribute('data-kk-fws-marquee-clone', '');
+          clone.setAttribute('aria-hidden', 'true');
+          [].forEach.call(clone.querySelectorAll('[data-shopify-editor-block]'), function (node) {
+            node.removeAttribute('data-shopify-editor-block');
+          });
+          track.appendChild(clone);
+        }
+
+        root.classList.add('is-running');
+      }
+
+      // Measure only once the icons have their size, as the boilerplate marquee does.
+      var pending = [].filter.call(unit.querySelectorAll('img'), function (img) {
+        return !img.complete;
+      });
+      var waiting = pending.length;
+      var settle = function () {
+        waiting -= 1;
+        if (waiting <= 0) fill();
+      };
+      pending.forEach(function (img) {
+        img.addEventListener('load', settle, { once: true });
+        img.addEventListener('error', settle, { once: true });
+      });
+      if (!waiting) fill();
+
+      if ('ResizeObserver' in window) {
+        new ResizeObserver(fill).observe(root);
+      }
+    })();
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Figma `7809:15045`: navy, 30px top and bottom, 44px between an item and a dot, 180px fades
+     at both edges. */
+  .kk-fws-marquee {
+    --kk-fws-marquee-gap: 4.4rem;
+
+    position: relative;
+    overflow: hidden;
+    padding: 3rem 0;
+    background: var(--kk-fws-marquee-background, var(--primary));
+  }
+
+  .kk-fws-marquee::before,
+  .kk-fws-marquee::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    width: min(18rem, 15%);
+    pointer-events: none;
+  }
+
+  .kk-fws-marquee::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--kk-fws-marquee-background, var(--primary)), transparent);
+  }
+
+  .kk-fws-marquee::after {
+    right: 0;
+    background: linear-gradient(270deg, var(--kk-fws-marquee-background, var(--primary)), transparent);
+  }
+
+  .kk-fws-marquee__track {
+    display: flex;
+    width: max-content;
+    gap: var(--kk-fws-marquee-gap);
+    padding-left: var(--kk-fws-marquee-gap);
+  }
+
+  /* Each repeat unit moves left by its own width plus one gap, then snaps back — the next unit
+     has taken its place, so the loop is seamless. */
+  .kk-fws-marquee.is-running .kk-fws-marquee__items {
+    animation: kk-fws-marquee var(--kk-fws-marquee-duration, 40s) linear infinite;
+  }
+
+  .kk-fws-marquee--reverse.is-running .kk-fws-marquee__items {
+    animation-direction: reverse;
+  }
+
+  .kk-fws-marquee--pausable:hover .kk-fws-marquee__items {
+    animation-play-state: paused;
+  }
+
+  @keyframes kk-fws-marquee {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(calc(-100% - var(--kk-fws-marquee-gap)));
+    }
+  }
+
+  .kk-fws-marquee__items {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--kk-fws-marquee-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-marquee__item {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 1.4rem;
+  }
+
+  /* The 6px separator dot. Drawn after every item, including the last, because the next
+     repeat unit follows it. */
+  .kk-fws-marquee__item::after {
+    content: '';
+    flex-shrink: 0;
+    width: 0.6rem;
+    height: 0.6rem;
+    margin-left: calc(var(--kk-fws-marquee-gap) - 1.4rem);
+    border-radius: 50%;
+    background: var(--primary-100);
+  }
+
+  .kk-fws-marquee__icon {
+    display: block;
+    flex-shrink: 0;
+    width: 2.8rem;
+    height: 2.8rem;
+    object-fit: contain;
+  }
+
+  .kk-fws-marquee__text {
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2rem;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--kk-fws-marquee-text, #ffffff);
+  }
+
+  /* Reduced motion: no clones, no animation; the row can be scrolled by hand instead. */
+  .kk-fws-marquee.is-static .kk-fws-marquee__track {
+    width: auto;
+    overflow-x: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kk-fws-marquee .kk-fws-marquee__items {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .kk-fws-marquee {
+      --kk-fws-marquee-gap: 2.8rem;
+
+      padding: 2rem 0;
+    }
+
+    .kk-fws-marquee__item {
+      gap: 1rem;
+    }
+
+    .kk-fws-marquee__item::after {
+      margin-left: calc(var(--kk-fws-marquee-gap) - 1rem);
+    }
+
+    .kk-fws-marquee__icon {
+      width: 2.2rem;
+      height: 2.2rem;
+    }
+
+    .kk-fws-marquee__text {
+      font-size: 1.5rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Marquee",
+  "tag": "div",
+  "class": "section-kk-fws-marquee",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "range",
+      "id": "duration",
+      "label": "Seconds per loop",
+      "info": "Lower is faster.",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "unit": "s",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Direction",
+      "options": [
+        { "value": "left", "label": "Right to left" },
+        { "value": "right", "label": "Left to right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b1638"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "lab-report", "label": "Lab report" },
+            { "value": "shield-outline", "label": "Shield" },
+            { "value": "water-drop", "label": "Water drop" },
+            { "value": "none", "label": "None" }
+          ],
+          "default": "lab-report"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon",
+          "info": "Overrides the icon selected above. Shown at 28 x 28."
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "info": "An item with no text is not shown."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Marquee",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "lab-report" } },
+        { "type": "item", "settings": { "icon": "shield-outline" } },
+        { "type": "item", "settings": { "icon": "water-drop" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

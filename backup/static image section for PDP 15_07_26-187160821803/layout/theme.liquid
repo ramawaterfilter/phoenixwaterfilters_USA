@@ -139,7 +139,7 @@
       }
     </script>
 
-    {% if template.name == 'index' or template.name == 'product' or template.name == 'article' %}
+    {% if template.name == 'index' or template.name == 'product' or template.name == 'article' or template.name == 'blog' %}
       <script type="application/ld+json">
         {
           "@context": "https://schema.org",
@@ -263,6 +263,12 @@
     {% if settings.favicon != blank %}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32 }}">
     {% endif %}
+
+    {%- comment -%} Campaign base styles. Must load before content_for_header so the kk-fws-* section stylesheets override it. {%- endcomment -%}
+    {%- if template.suffix == 'kk.free-w-shipping' -%}
+      {{ 'kk-fws-base.css' | asset_url | stylesheet_tag }}
+      {%- render 'kk-fws-reveal' -%}
+    {%- endif -%}
 
     {{ content_for_header }}
 
@@ -439,9 +445,9 @@
       }
     </style>
     {% comment %}
-      Crazy Egg disabled: its active A/B test replaces the product-page content and layout.
-      <script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0120/1668.js" async="async"></script>
-    {% endcomment %}
+      Crazy Egg re-enabled: its active A/B test replaces the product-page content and layout.
+      {% endcomment %}
+    <script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0120/1668.js" async="async"></script>
      
 
 
@@ -453,6 +459,11 @@
 
  {% if product.metafields.custom.custom.schema != blank %}
   {{ product.metafields.custom.custom.schema }}
+{% endif %}
+
+
+{% if blog.metafields.custom.custom.schema != blank %}
+  {{ blog.metafields.custom.custom.schema }}
 {% endif %}
 
 {% comment %} /////////////////////////////////////////////////////////////////////////href-lang end/////////////////////////////////////////////////////////////////// {% endcomment %}

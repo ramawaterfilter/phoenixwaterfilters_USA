@@ -1,46 +1,60 @@
+{%- comment -%}
+  KK FWS Tap Warning — Figma `7809:15640`.
+
+  A white content card (warning pill, heading, paragraphs, CTA, trust row) overlapping a
+  rounded photo on the right. Paragraph copy is rich text: bold words render in the heading
+  colour, as the design highlights them.
+{%- endcomment -%}
+
 {%- liquid
   assign warning_image = section.settings.image
   if warning_image == blank
     assign warning_image = product.featured_image
   endif
+
+  assign paragraph_blocks = section.blocks | where: 'type', 'paragraph'
+  assign trust_blocks = section.blocks | where: 'type', 'trust'
 -%}
 
 <section
-  class="kk-fws-tap-warning"
-  style="
-    --kk-fws-tap-warning-background: {{ section.settings.background_color }};
-    --kk-fws-tap-warning-heading: {{ section.settings.heading_color }};
-    --kk-fws-tap-warning-text: {{ section.settings.text_color }};
-    --kk-fws-tap-warning-fade: {{ section.settings.fade_color }};
-  "
+  class="kk-fws-tap-warning kk-fws-section"
+  style="--kk-fws-tap-warning-background: {{ section.settings.background_color }};"
 >
-  <div class="kk-fws-tap-warning__media">
-    {%- if warning_image != blank -%}
-      {{
-        warning_image
-        | image_url: width: 1600
-        | image_tag:
-          loading: 'lazy',
-          class: 'kk-fws-tap-warning__image',
-          widths: '375, 750, 1006, 1400, 1600',
-          sizes: '(max-width: 749px) 101vw, calc(50vw + 32.3rem)'
-      }}
-    {%- else -%}
-      {{ 'lifestyle-1' | placeholder_svg_tag: 'kk-fws-tap-warning__image kk-fws-tap-warning__image--placeholder' }}
-    {%- endif -%}
-    <span class="kk-fws-tap-warning__fade" aria-hidden="true"></span>
-  </div>
-
-  <div class="kk-fws-tap-warning__container">
-    <div class="kk-fws-tap-warning__content">
-      {%- if section.settings.heading != blank -%}
-        <h2 class="kk-fws-tap-warning__heading">{{ section.settings.heading }}</h2>
+  <div class="kk-fws-tap-warning__container kk-fws-container">
+    <div class="kk-fws-tap-warning__media{% if section.settings.mirror_image %} kk-fws-tap-warning__media--mirrored{% endif %}">
+      {%- if warning_image != blank -%}
+        {{
+          warning_image
+          | image_url: width: 1600
+          | image_tag:
+            loading: 'lazy',
+            class: 'kk-fws-tap-warning__image',
+            widths: '375, 750, 1100, 1600',
+            sizes: '(max-width: 749px) calc(100vw - 4rem), (max-width: 989px) calc(100vw - 4rem), 760px'
+        }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'kk-fws-tap-warning__image kk-fws-tap-warning__image--placeholder' }}
       {%- endif -%}
+    </div>
 
-      {%- if section.blocks.size > 0 -%}
+    <div class="kk-fws-tap-warning__card">
+      <div class="kk-fws-tap-warning__intro">
+        {%- if section.settings.badge_text != blank -%}
+          <p class="kk-fws-tap-warning__badge">
+            <span class="kk-fws-tap-warning__badge-dot" aria-hidden="true"></span>
+            {{- section.settings.badge_text -}}
+          </p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="kk-fws-tap-warning__heading kk-fws-heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+      </div>
+
+      {%- if paragraph_blocks.size > 0 -%}
         <div class="kk-fws-tap-warning__body">
-          {%- for block in section.blocks -%}
-            {%- if block.type == 'paragraph' and block.settings.text != blank -%}
+          {%- for block in paragraph_blocks -%}
+            {%- if block.settings.text != blank -%}
               <div class="kk-fws-tap-warning__paragraph" {{ block.shopify_attributes }}>
                 {{ block.settings.text }}
               </div>
@@ -48,27 +62,57 @@
           {%- endfor -%}
         </div>
       {%- endif -%}
+
+      {%- render 'kk-fws-cta', section: section, prefix: 'kk-fws-tap-warning', trust_blocks: trust_blocks, icon_size: 22 -%}
     </div>
   </div>
 </section>
 
 {% stylesheet %}
+  /* Figma `7809:15640`: #f5f6f8, 148px top and bottom, 1312px container (64px gutters). The
+     760 x 809 photo sits flush right, starting 28px above the card; the 772px card overlaps it
+     on the left. */
   .kk-fws-tap-warning {
-    /* Override the theme global `section { padding: 20px 0 }`; this band sizes
-       from its own content and media layer. */
-    padding: 0;
+    --kk-fws-tap-warning-ink: var(--primary);
+    --kk-fws-tap-warning-muted: var(--primary-100);
+    /* kk-fws-base.css overrides */
+    --kk-fws-section-padding: 14.8rem;
+    --kk-fws-container-max-md: 64rem;
+    --kk-fws-heading-size: 4rem;
+    --kk-fws-heading-size-md: 3.4rem;
+    --kk-fws-heading-size-sm: 2.7rem;
+    --kk-fws-cta-margin: 0;
+    --kk-fws-cta-margin-sm: 0;
+    --kk-fws-trust-gap: 0.8rem 3.2rem;
+    --kk-fws-trust-item-gap: 0.9rem;
+    --kk-fws-trust-size: 1.7rem;
+    --kk-fws-button-padding: 2.8rem 4rem;
+    --kk-fws-button-padding-md: 2.8rem 4rem;
+    --kk-fws-button-size: 2rem;
+    --kk-fws-button-size-sm: 1.8rem;
+
+    background: var(--kk-fws-tap-warning-background, var(--light));
+  }
+
+  .kk-fws-tap-warning__container {
     position: relative;
-    overflow: hidden;
-    background: var(--kk-fws-tap-warning-background, #ffffff);
+    flex-direction: row;
+    align-items: flex-start;
+    min-height: 78.1rem;
   }
 
   .kk-fws-tap-warning__media {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: min(100%, calc(50% + 32.3rem));
+    top: -2.8rem;
+    right: 0;
+    width: min(76rem, 57.93%);
+    height: 80.9rem;
     overflow: hidden;
+    border-radius: 2.4rem;
+    background: var(--light-alt);
+    box-shadow:
+      0 1.6rem 4rem rgba(11, 22, 56, 0.1),
+      0 0.2rem 0.8rem rgba(11, 22, 56, 0.05);
   }
 
   .kk-fws-tap-warning__image {
@@ -76,54 +120,78 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: right center;
   }
 
-  .kk-fws-tap-warning__fade {
-    display: none;
+  /* The design uses the photo mirrored, so the tap pours on the left, beside the card. */
+  .kk-fws-tap-warning__media--mirrored .kk-fws-tap-warning__image {
+    transform: scaleX(-1);
+    border-radius: 1.5rem;
   }
 
-  .kk-fws-tap-warning__container {
+  /* Figma crops to the photo's left 60% before mirroring it, which puts the stream of water
+     just right of centre. object-position works in the image's own (unflipped) coordinates. */
+  .kk-fws-tap-warning__media--mirrored .kk-fws-tap-warning__image {
+    object-position: left center;
+  }
+
+  .kk-fws-tap-warning__card {
     position: relative;
-    width: min(100% - 3.2rem, 114rem);
-    min-height: 86.72rem;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-  }
-
-  .kk-fws-tap-warning__content {
-    grid-column: 2;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 3rem;
+    gap: 3.88rem;
+    box-sizing: border-box;
+    width: min(77.2rem, 58.85%);
+    padding: 5.6rem 5.6rem 5.2rem;
+    border-radius: 2.4rem;
+    background: #ffffff;
+    box-shadow: 0 2.4rem 3rem rgba(11, 22, 56, 0.12);
     word-break: break-word;
   }
 
-  .kk-fws-tap-warning__heading {
+  .kk-fws-tap-warning__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.48rem;
+  }
+
+  .kk-fws-tap-warning__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
     margin: 0;
-    font-family: 'Value Sans Medium', sans-serif;
-    font-weight: 500;
-    font-size: 5.2rem;
-    line-height: 1.1;
-    text-transform: none;
-    color: var(--kk-fws-tap-warning-heading, #153a5b);
+    padding: 1.3rem 2.2rem;
+    border-radius: 99.9rem;
+    background: #fdecec;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.7rem;
+    line-height: 1;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    color: #b42318;
+  }
+
+  .kk-fws-tap-warning__badge-dot {
+    flex-shrink: 0;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    background: #d92d20;
   }
 
   .kk-fws-tap-warning__body {
     display: flex;
     flex-direction: column;
+    gap: 1.88rem;
+    margin-bottom: -0.48rem;
     font-family: 'Value Sans', sans-serif;
     font-weight: 400;
-    font-size: 2.2rem;
-    line-height: 1.4;
-    color: var(--kk-fws-tap-warning-text, #26303a);
-  }
-
-  .kk-fws-tap-warning__paragraph + .kk-fws-tap-warning__paragraph {
-    margin-top: 1.4em;
+    font-size: 1.8rem;
+    line-height: 1.55;
+    color: var(--kk-fws-tap-warning-muted);
   }
 
   .kk-fws-tap-warning__paragraph p {
@@ -131,71 +199,74 @@
   }
 
   .kk-fws-tap-warning__paragraph p + p {
-    margin-top: 1.4em;
+    margin-top: 1.88rem;
+  }
+
+  .kk-fws-tap-warning__paragraph strong,
+  .kk-fws-tap-warning__paragraph b {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    color: var(--kk-fws-tap-warning-ink);
   }
 
   .kk-fws-tap-warning__paragraph a {
     color: inherit;
   }
 
+  /* CTA + trust row — Figma `7809:15663`. */
+
+  /* Tablet and below: the photo leads, full width, and the card overlaps its bottom edge. */
   @media (max-width: 989px) {
+
     .kk-fws-tap-warning__container {
-      min-height: 70rem;
+      flex-direction: column;
+      align-items: stretch;
+      min-height: 0;
     }
 
-    .kk-fws-tap-warning__heading {
-      font-size: 4rem;
+    .kk-fws-tap-warning__media {
+      position: relative;
+      top: auto;
+      right: auto;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 3;
     }
 
-    .kk-fws-tap-warning__body {
-      font-size: 1.8rem;
-    }
-
-    .kk-fws-tap-warning__content {
-      gap: 2.4rem;
+    .kk-fws-tap-warning__card {
+      width: calc(100% - 4rem);
+      margin: -10rem auto 0;
+      padding: 4rem;
     }
   }
 
   @media (max-width: 749px) {
+
     .kk-fws-tap-warning__media {
-      top: 0;
-      bottom: auto;
-      left: -0.66%;
-      width: 101.32%;
-      height: 24.9rem;
+      border-radius: 1.6rem;
     }
 
-    .kk-fws-tap-warning__fade {
-      display: block;
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(
-        to top,
-        var(--kk-fws-tap-warning-fade, #ffffff) 0%,
-        rgba(255, 255, 255, 0) 51%
-      );
+    .kk-fws-tap-warning__card {
+      gap: 2.4rem;
+      width: calc(100% - 2.4rem);
+      margin-top: -6rem;
+      padding: 2.8rem 2.2rem;
+      border-radius: 1.8rem;
     }
 
-    .kk-fws-tap-warning__container {
-      width: min(100% - 4rem, 54rem);
-      min-height: 0;
-      grid-template-columns: 1fr;
-      padding: 20.5rem 0 4rem;
+    .kk-fws-tap-warning__intro {
+      gap: 1.6rem;
     }
 
-    .kk-fws-tap-warning__content {
-      grid-column: 1;
-      gap: 1.8rem;
-    }
-
-    .kk-fws-tap-warning__heading {
-      max-width: 28.7rem;
-      font-size: 2.8rem;
+    .kk-fws-tap-warning__badge {
+      padding: 1rem 1.6rem;
+      font-size: 1.6rem;
+      letter-spacing: 0.16rem;
     }
 
     .kk-fws-tap-warning__body {
-      font-size: 1.6rem;
+      gap: 1.4rem;
+      font-size: 1.7rem;
     }
   }
 {% endstylesheet %}
@@ -205,19 +276,47 @@
   "name": "KK FWS Tap Warning",
   "tag": "div",
   "class": "section-kk-fws-tap-warning",
-  "max_blocks": 6,
+  "max_blocks": 8,
   "settings": [
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Background image",
-      "info": "Tap water lifestyle photo. Falls back to the product's featured image when empty. Photography is uploaded to the Shopify CDN, not committed to the theme."
+      "label": "Image",
+      "info": "Tap water photo. Falls back to the product's featured image when empty. Photography is uploaded to the Shopify CDN, not committed to the theme."
+    },
+    {
+      "type": "checkbox",
+      "id": "mirror_image",
+      "label": "Mirror image",
+      "default": true,
+      "info": "Flips the photo left to right, as the design uses it."
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Warning pill text"
     },
     {
       "type": "inline_richtext",
       "id": "heading",
       "label": "Heading",
-      "default": "WARNING: Drinking Tap Water Makes 7.2 million Americans Sick Every Year!"
+      "default": "Drinking Tap Water Makes 7.2 million Americans Sick Every Year!"
+    },
+    {
+      "type": "header",
+      "content": "Call to action",
+      "info": "The button shows only when it has both a label and a link. Add \"Trust item\" blocks for the row underneath."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "E.g. #kk-fws-offer to jump to the offer section."
     },
     {
       "type": "header",
@@ -227,26 +326,7 @@
       "type": "color",
       "id": "background_color",
       "label": "Background",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "heading_color",
-      "label": "Heading",
-      "default": "#153a5b"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Body text",
-      "default": "#26303a"
-    },
-    {
-      "type": "color",
-      "id": "fade_color",
-      "label": "Mobile image fade",
-      "info": "Colour the image fades into at the bottom on mobile. Match the background.",
-      "default": "#ffffff"
+      "default": "#f5f6f8"
     }
   ],
   "blocks": [
@@ -258,7 +338,19 @@
           "type": "richtext",
           "id": "text",
           "label": "Text",
+          "info": "Bold text is highlighted in the heading colour.",
           "default": "<p>Every year, millions of Americans fall sick by ingesting harmful chemicals through tap water.</p>"
+        }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
         }
       ]
     }
@@ -270,13 +362,13 @@
         {
           "type": "paragraph",
           "settings": {
-            "text": "<p>Every year, millions of Americans fall sick by ingesting harmful chemicals through tap water. In Baltimore, they recently detected a parasite in the drinking water… in California’s Coachella Valley, they found water from fast-food soda fountains contained salmonella… and in Iowa, they identified unsafe amounts of nitrate and alachlor.</p>"
+            "text": "<p>Every year, millions of Americans fall sick by ingesting harmful chemicals through tap water. In Baltimore, they recently detected a <strong>parasite</strong> in the drinking water… in California’s Coachella Valley, they found water from fast-food soda fountains contained <strong>salmonella</strong>… and in Iowa, they identified unsafe amounts of <strong>nitrate and alachlor</strong>.</p>"
           }
         },
         {
           "type": "paragraph",
           "settings": {
-            "text": "<p>These chemicals have been linked to a range of dangerous side effects - liver and kidney damage, thyroid disease, cancer and even “blue baby syndrome” in infants. Phoenix Gravity Water Filters use a powerful Nano Toxin filter technology to remove 99.9% of contaminants from tap water, making it safe to drink in any city in America!</p>"
+            "text": "<p>These chemicals have been linked to a range of dangerous side effects - <strong>liver and kidney damage, thyroid disease, cancer</strong> and even <strong>“blue baby syndrome”</strong> in infants. Phoenix Gravity Water Filters use a powerful <strong>Nano Toxin filter technology</strong> to remove <strong>99.9% of contaminants</strong> from tap water, making it safe to drink in any city in America!</p>"
           }
         }
       ]

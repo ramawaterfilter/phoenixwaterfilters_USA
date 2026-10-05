@@ -1,0 +1,491 @@
+{%- comment -%}
+  KK FWS Cards — Figma `7809:15889`.
+
+  Logo mark and heading, then the product photo with up to six benefit callouts arranged
+  around it — the first half of the "Card" blocks down the left, the rest down the right —
+  each joined to the photo by a short line and dot. Then a CTA and a trust row.
+
+  Replaces the reused theme `cards` section on the campaign template. Below 1200px there is no
+  room to orbit the photo, so the callouts drop into a grid underneath it and the connectors go.
+{%- endcomment -%}
+
+{%- liquid
+  assign card_blocks = section.blocks | where: 'type', 'card'
+  assign trust_blocks = section.blocks | where: 'type', 'trust'
+  assign left_count = card_blocks.size | plus: 1 | divided_by: 2
+-%}
+
+<section
+  id="kk-fws-cards"
+  class="kk-fws-cards kk-fws-section"
+  style="--kk-fws-cards-background: {{ section.settings.background_color }};"
+>
+  <div class="kk-fws-cards__container kk-fws-container">
+    <div class="kk-fws-cards__intro" >
+      {%- if section.settings.logo != blank -%}
+        {{
+          section.settings.logo
+          | image_url: width: 96
+          | image_tag: class: 'kk-fws-cards__logo', width: 48, height: 44, loading: 'lazy', alt: ''
+        }}
+      {%- elsif section.settings.show_logo -%}
+        <img
+          class="kk-fws-cards__logo"
+          src="{{ 'kk-fws-phoenix-mark.png' | asset_url }}"
+          alt=""
+          width="48"
+          height="44"
+          loading="lazy"
+          data-kk-fws-reveal
+          
+        >
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="kk-fws-cards__heading kk-fws-heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+    </div>
+
+    <div class="kk-fws-cards__stage">
+      <div class="kk-fws-cards__media">
+        {%- if section.settings.image != blank -%}
+          {{
+            section.settings.image
+            | image_url: width: 1200
+            | image_tag:
+              class: 'kk-fws-cards__image',
+              loading: 'lazy',
+              widths: '400, 600, 900, 1200',
+              sizes: '(max-width: 749px) 80vw, 582px'
+          }}
+        {%- else -%}
+          <img
+            class="kk-fws-cards__image"
+            src="{{ 'kk-fws-cards-tower.jpg' | asset_url }}"
+            alt=""
+            width="562"
+            height="720"
+            loading="lazy"
+          >
+        {%- endif -%}
+      </div>
+
+      {%- if card_blocks.size > 0 -%}
+        <ul class="kk-fws-cards__list">
+          {%- for block in card_blocks -%}
+            {%- liquid
+              if forloop.index <= left_count
+                assign side = 'left'
+                assign row = forloop.index
+              else
+                assign side = 'right'
+                assign row = forloop.index | minus: left_count
+              endif
+            -%}
+            <li
+              class="kk-fws-cards__card kk-fws-cards__card--{{ side }} kk-fws-cards__card--row-{{ row }}"
+              data-kk-fws-reveal
+              {{ block.shopify_attributes }}
+            >
+              <span class="kk-fws-cards__icon-box" aria-hidden="true">
+                {%- if block.settings.custom_icon != blank -%}
+                  {{
+                    block.settings.custom_icon
+                    | image_url: width: 52
+                    | image_tag: class: 'kk-fws-cards__icon', width: 26, height: 26, loading: 'lazy', alt: ''
+                  }}
+                {%- else -%}
+                  <img
+                    class="kk-fws-cards__icon"
+                    src="{{ 'kk-fws-icon-card-' | append: block.settings.icon | append: '.svg' | asset_url }}"
+                    alt=""
+                    width="26"
+                    height="26"
+                    loading="lazy"
+                  >
+                {%- endif -%}
+              </span>
+
+              <span class="kk-fws-cards__text">
+                {%- if block.settings.heading != blank -%}
+                  <span class="kk-fws-cards__card-heading">{{ block.settings.heading }}</span>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <span class="kk-fws-cards__card-text">{{ block.settings.text }}</span>
+                {%- endif -%}
+              </span>
+
+              <span class="kk-fws-cards__connector" aria-hidden="true"></span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    {%- render 'kk-fws-cta', section: section, prefix: 'kk-fws-cards', trust_blocks: trust_blocks, icon_size: 20 -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  /* Figma `7809:15889`: #f5f6f8, 88px top and bottom, 1312px container (64px gutters). */
+  .kk-fws-cards {
+    --kk-fws-cards-ink: var(--primary);
+    --kk-fws-cards-blue: var(--primary-600);
+    /* kk-fws-base.css overrides */
+    --kk-fws-heading-size-md: 3.6rem;
+    --kk-fws-trust-item-gap: 0.8rem;
+    --kk-fws-trust-icon: 2rem;
+    --kk-fws-button-padding: 2.9rem 4.8rem;
+
+    background: var(--kk-fws-cards-background, var(--light));
+  }
+
+  .kk-fws-cards__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.3rem;
+    max-width: 84rem;
+    margin-bottom: 4rem;
+    text-align: center;
+  }
+
+  .kk-fws-cards__logo {
+    display: block;
+    width: 4.8rem;
+    height: 4.4rem;
+    object-fit: contain;
+  }
+
+  /* The 1312 x 746 stage: photo centred, callouts positioned around it. */
+  .kk-fws-cards__stage {
+    position: relative;
+    width: 100%;
+    height: 74.6rem;
+  }
+
+  .kk-fws-cards__media {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 58.2rem;
+    height: 100%;
+    transform: translateX(-50%);
+  }
+
+  .kk-fws-cards__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .kk-fws-cards__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-cards__card {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    box-sizing: border-box;
+    width: 37rem;
+    padding: 2.2rem 2.4rem;
+    border: 1px solid #e6e9f0;
+    border-radius: 2.2rem;
+    background: #ffffff;
+    box-shadow: 0 1rem 1.4rem rgba(11, 22, 56, 0.05);
+  }
+
+  /* Rows at 123 / 353 / 574px; the outer edge steps in 50 / 10 / 80px, mirrored right. */
+  .kk-fws-cards__card--row-1 { top: 12.3rem; }
+  .kk-fws-cards__card--row-2 { top: 35.3rem; }
+  .kk-fws-cards__card--row-3 { top: 57.4rem; }
+
+  .kk-fws-cards__card--left.kk-fws-cards__card--row-1 { left: 5rem; }
+  .kk-fws-cards__card--left.kk-fws-cards__card--row-2 { left: 1rem; }
+  .kk-fws-cards__card--left.kk-fws-cards__card--row-3 { left: 8rem; }
+
+  .kk-fws-cards__card--right.kk-fws-cards__card--row-1 { right: 5rem; }
+  .kk-fws-cards__card--right.kk-fws-cards__card--row-2 { right: 1rem; }
+  .kk-fws-cards__card--right.kk-fws-cards__card--row-3 { right: 8rem; }
+
+  .kk-fws-cards__icon-box {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 5.2rem;
+    height: 5.2rem;
+    border-radius: 1.6rem;
+    background: #f2f6ff;
+  }
+
+  .kk-fws-cards__icon {
+    display: block;
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  .kk-fws-cards__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    min-width: 0;
+  }
+
+  .kk-fws-cards__card-heading {
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.1rem;
+    line-height: 1.25;
+    color: var(--kk-fws-cards-ink);
+  }
+
+  .kk-fws-cards__card-text {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: #6b7085;
+  }
+
+  /* The connector — a 60px line ending in a 12px dot, off the card's inner edge. */
+  .kk-fws-cards__connector {
+    position: absolute;
+    top: 50%;
+    width: 6rem;
+    height: 1px;
+    background: rgba(39, 100, 255, 0.35);
+  }
+
+  .kk-fws-cards__connector::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    background: var(--kk-fws-cards-blue);
+    transform: translateY(-50%);
+  }
+
+  .kk-fws-cards__card--left .kk-fws-cards__connector {
+    left: 100%;
+  }
+
+  .kk-fws-cards__card--left .kk-fws-cards__connector::after {
+    right: -0.6rem;
+  }
+
+  .kk-fws-cards__card--right .kk-fws-cards__connector {
+    right: 100%;
+  }
+
+  .kk-fws-cards__card--right .kk-fws-cards__connector::after {
+    left: -0.6rem;
+  }
+
+  /* CTA + trust row — Figma `7809:15973`. */
+
+  /* Below 1200px the callouts can't orbit the photo: photo first, then a grid of cards. */
+  @media (max-width: 1199px) {
+    .kk-fws-cards__stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3.2rem;
+      height: auto;
+    }
+
+    .kk-fws-cards__media {
+      position: relative;
+      left: auto;
+      width: min(100%, 42rem);
+      height: auto;
+      aspect-ratio: 582 / 746;
+      transform: none;
+    }
+
+    .kk-fws-cards__list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.6rem;
+      width: 100%;
+    }
+
+    .kk-fws-cards .kk-fws-cards__card {
+      position: relative;
+      top: auto;
+      right: auto;
+      left: auto;
+      width: auto;
+    }
+
+    .kk-fws-cards__connector {
+      display: none;
+    }
+  }
+
+  @media (max-width: 749px) {
+
+    .kk-fws-cards__intro {
+      gap: 1.4rem;
+      margin-bottom: 2.4rem;
+    }
+
+    .kk-fws-cards__logo {
+      width: 3.6rem;
+      height: 3.3rem;
+    }
+
+    .kk-fws-cards__stage {
+      gap: 2rem;
+    }
+
+    .kk-fws-cards__media {
+      width: min(100%, 30rem);
+    }
+
+    .kk-fws-cards__list {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.2rem;
+    }
+
+    .kk-fws-cards .kk-fws-cards__card {
+      padding: 1.8rem;
+      border-radius: 1.8rem;
+    }
+
+    .kk-fws-cards__card-heading {
+      font-size: 1.6rem;
+    }
+
+    .kk-fws-cards__card-text {
+      font-size: 1.6rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Cards",
+  "tag": "div",
+  "class": "section-kk-fws-cards",
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_logo",
+      "label": "Show Phoenix mark",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Custom mark",
+      "info": "Overrides the built-in Phoenix mark. Shown at 48 x 44."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Product image",
+      "info": "Shown at 582 x 746 in the middle of the cards. Falls back to the tower photo from the design."
+    },
+    {
+      "type": "header",
+      "content": "Call to action",
+      "info": "The button shows only when it has both a label and a link. Add \"Trust item\" blocks for the row underneath."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "E.g. #kk-fws-offer to jump to the offer section."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f5f6f8"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "The first half of the cards sit left of the photo, the rest on the right."
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "drop", "label": "Water drop" },
+            { "value": "tag", "label": "Price tag" },
+            { "value": "bag", "label": "Bag" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "award", "label": "Award" },
+            { "value": "glass", "label": "Glass" }
+          ],
+          "default": "drop"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon",
+          "info": "Overrides the icon selected above. Shown at 26 x 26."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Cards"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,217 @@
+/* Shared base styles for the kk-fws-* campaign sections.
+
+   Every class is prefixed .kk-fws- so nothing else in the theme is affected.
+
+   Load order matters: theme.liquid loads this file before content_for_header, which is where
+   Shopify injects each section's {% stylesheet %}. Section rules therefore win at equal
+   specificity.
+
+   Per-section differences are set as custom properties on the section root, e.g.
+     .kk-fws-tap-warning { --kk-fws-section-padding: 14.8rem; }
+   rather than by re-declaring the property. That keeps each override confined to the
+   breakpoint it belongs to. Tablet (-md) and mobile (-sm) values each have their own
+   property; the defaults below match the majority of sections. */
+
+/* Section ------------------------------------------------------------------------------- */
+
+.kk-fws-section {
+  padding: var(--kk-fws-section-padding, 8.8rem) 0;
+}
+
+/* Container: 1312px content width with 64px gutters (Figma). */
+.kk-fws-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100% - 12.8rem, var(--kk-fws-container-max, 131.2rem));
+  margin: 0 auto;
+}
+
+/* Section heading (h2) ------------------------------------------------------------------ */
+
+.kk-fws-heading {
+  margin: 0;
+  font-family: "Value Sans Medium", sans-serif;
+  font-weight: 500;
+  font-size: var(--kk-fws-heading-size, 4.8rem);
+  line-height: 1.14;
+  letter-spacing: -0.04rem;
+  text-transform: none;
+  color: var(--primary);
+}
+
+/* CTA: button + trust badges (snippets/kk-fws-cta.liquid) ---------------------------------- */
+
+.kk-fws-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+  margin-top: var(--kk-fws-cta-margin, 3.6rem);
+}
+
+.kk-fws-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: var(--kk-fws-button-padding, 2.9rem 4.4rem);
+  border-radius: 99.9rem;
+  background: var(--primary-600);
+  box-shadow: 0 1.2rem 1.3rem rgba(39, 100, 255, 0.26);
+  font-family: "Value Sans Bold", sans-serif;
+  font-weight: 700;
+  font-size: var(--kk-fws-button-size, 2.2rem);
+  line-height: 1.2;
+  letter-spacing: 0.14rem;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #ffffff;
+  transition: opacity 0.2s ease;
+}
+
+.kk-fws-button:hover,
+.kk-fws-button:focus-visible {
+  opacity: 0.9;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.kk-fws-trust-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--kk-fws-trust-gap, 1rem 3.6rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kk-fws-trust-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-fws-trust-item-gap, 1rem);
+  font-family: "Value Sans Medium", sans-serif;
+  font-weight: 500;
+  font-size: var(--kk-fws-trust-size, 1.8rem);
+  line-height: 1.2;
+  color: var(--primary);
+}
+
+.kk-fws-trust-list__icon {
+  display: block;
+  flex-shrink: 0;
+  width: var(--kk-fws-trust-icon, 2.2rem);
+  height: var(--kk-fws-trust-icon, 2.2rem);
+}
+
+/* Scroll reveal: [data-kk-fws-reveal], [data-kk-fws-reveal-left], [data-kk-fws-reveal-right]
+   (snippets/kk-fws-reveal.liquid). Hidden start state only once the script has set
+   html.kk-fws-reveal-ready. All three fade up below 990px; from 990px the -left / -right
+   variants slide in horizontally instead. */
+
+.kk-fws-reveal-ready :is([data-kk-fws-reveal], [data-kk-fws-reveal-left], [data-kk-fws-reveal-right]) {
+  opacity: 0;
+  transform: translateY(2.4rem);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.kk-fws-reveal-ready :is([data-kk-fws-reveal], [data-kk-fws-reveal-left], [data-kk-fws-reveal-right]).is-from-above:not(.is-revealed) {
+  transform: translateY(-2.4rem);
+}
+
+@media (min-width: 990px) {
+  /* Second selector in each pair outranks the .is-from-above rule: horizontal either way. */
+  .kk-fws-reveal-ready [data-kk-fws-reveal-left]:not(.is-revealed),
+  .kk-fws-reveal-ready [data-kk-fws-reveal-left].is-from-above:not(.is-revealed) {
+    transform: translateX(-4rem);
+  }
+
+  .kk-fws-reveal-ready [data-kk-fws-reveal-right]:not(.is-revealed),
+  .kk-fws-reveal-ready [data-kk-fws-reveal-right].is-from-above:not(.is-revealed) {
+    transform: translateX(4rem);
+  }
+}
+
+.kk-fws-reveal-ready :is([data-kk-fws-reveal], [data-kk-fws-reveal-left], [data-kk-fws-reveal-right]).is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kk-fws-button {
+    transition: none;
+  }
+}
+
+/* Tablet -------------------------------------------------------------------------------- */
+
+@media (max-width: 989px) {
+  .kk-fws-section {
+    padding: var(--kk-fws-section-padding-md, 6rem) 0;
+  }
+
+  .kk-fws-container {
+    width: min(
+      100% - 4rem,
+      var(--kk-fws-container-max-md, var(--kk-fws-container-max, 64.2rem))
+    );
+  }
+
+  .kk-fws-heading {
+    font-size: var(--kk-fws-heading-size-md, 3.8rem);
+  }
+
+  .kk-fws-button {
+    padding: var(--kk-fws-button-padding-md, 2.4rem 4rem);
+    font-size: var(--kk-fws-button-size-md, 2rem);
+  }
+
+  .kk-fws-trust-list__item {
+    font-size: var(--kk-fws-trust-size-md, var(--kk-fws-trust-size, 1.8rem));
+  }
+}
+
+/* Mobile -------------------------------------------------------------------------------- */
+
+@media (max-width: 749px) {
+  .kk-fws-section {
+    padding: var(--kk-fws-section-padding-sm, 4rem) 0;
+  }
+
+  .kk-fws-container {
+    width: min(100% - var(--kk-fws-container-gutter-sm, 4rem), 54rem);
+  }
+
+  .kk-fws-heading {
+    font-size: var(--kk-fws-heading-size-sm, 3rem);
+  }
+
+  .kk-fws-cta {
+    align-self: stretch;
+    margin-top: var(--kk-fws-cta-margin-sm, 2.8rem);
+  }
+
+  .kk-fws-button {
+    width: 100%;
+    padding: 2rem 2.4rem;
+    font-size: var(--kk-fws-button-size-sm, 1.9rem);
+    letter-spacing: 0.1rem;
+  }
+
+  .kk-fws-trust-list {
+    gap: 0.8rem 2.4rem;
+  }
+
+  .kk-fws-trust-list__item {
+    gap: 0.8rem;
+    font-size: 1.5rem;
+  }
+
+  .kk-fws-trust-list__icon {
+    width: 2rem;
+    height: 2rem;
+  }
+}

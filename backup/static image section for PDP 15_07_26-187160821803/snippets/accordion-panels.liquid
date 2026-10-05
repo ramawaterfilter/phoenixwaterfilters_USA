@@ -1354,7 +1354,6 @@ document.addEventListener('DOMContentLoaded', function() {
 <style>
   .tech-accordion-wrapper {
     display: flex;
-    flex-direction: column;
     gap: 20px;
   }
 
@@ -1362,6 +1361,11 @@ document.addEventListener('DOMContentLoaded', function() {
     align-items: stretch;
     border-radius: 12px;
     overflow: hidden;
+
+
+    .kk-fws-offer__accordion & {
+       flex-direction: column-reverse;
+    }
   }
 
   .tech-accordion-content {
@@ -1411,6 +1415,12 @@ document.addEventListener('DOMContentLoaded', function() {
     display: flex;
     align-items: center;
     justify-content: center;
+    
+    .kk-fws-offer__accordion & {
+      width: 100%;
+      mix-blend-mode: multiply;
+    }
+
   }
 
   .tech-accordion-image img {
@@ -1418,11 +1428,16 @@ document.addEventListener('DOMContentLoaded', function() {
     height: 100%;
     object-fit: cover;
     border-radius: 0;
+
+    .kk-fws-offer__accordion & {
+      object-fit: contain;
+    }
   }
   a.text-link {
     font-size: 12px;
   }
   @media (max-width: 768px) {
+   
     .tech-accordion {
       flex-direction: column;
     }

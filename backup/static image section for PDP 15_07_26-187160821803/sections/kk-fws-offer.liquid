@@ -4,9 +4,9 @@
   Built, and matched to the real Figma nodes (desktop `7420:1104` heading, `7420:1106`
   gallery, `7423:1590` step 1 size cards, `7423:1612` step 2 plan cards,
   `7423:1666` step 3 pay cards, `7422:145` CTA + trust row; mobile `7511:207`, step 2 at
-  `7511:259`, step 3 at `7511:313`): section shell, eyebrow/heading/subheading, step 1
-  (tower size), step 2 (protection plan), step 3 (pay mode), the order summary and the gallery — 1:1 slides,
-  square edge-flush arrows, a four-across thumbnail strip, and video media as click-to-play
+  `7511:259`, step 3 at `7511:313`): section shell, step 1
+  (tower size), step 2 (protection plan), step 3 (pay mode), the order summary and the gallery — 578x658 slides in a rounded bordered card,
+  round white arrows bottom-right, a four-across thumbnail strip, and video media as click-to-play
   posters.
 
   STEP 2 IS THE PRODUCT'S `Filter Type` OPTION. "Family Protection" and "Family Protection
@@ -548,13 +548,16 @@
 
   comment
     Marketing name for each Filter Type value, so the summary's plan row reads "Family
-    Protection" rather than the raw option value.
+    Protection" rather than the raw option value. The third field is the ONE-TIME name: paying
+    once buys filters, not a plan, so step 2 and the summary call it a filter there.
+    Encoded as "filter~~plan_label~~filter_label".
   endcomment
   assign plan_names = ''
   for block in section.blocks
     if block.type == 'plan' and block.settings.filter_value != blank
       assign plan_label = block.settings.label | default: block.settings.filter_value
-      assign plan_names = plan_names | append: block.settings.filter_value | append: '~~' | append: plan_label | append: '||'
+      assign filter_label = block.settings.filter_label | default: plan_label
+      assign plan_names = plan_names | append: block.settings.filter_value | append: '~~' | append: plan_label | append: '~~' | append: filter_label | append: '||'
     endif
   endfor
   assign plan_name_rows = plan_names | split: '||'
@@ -631,6 +634,7 @@
   id="kk-fws-offer"
   class="kk-fws-offer"
   data-kk-fws-pay-mode="{{ default_pay }}"
+  data-kk-fws-video-title="{{ section.settings.video_title_label | escape }}"
   style="
     --kk-fws-offer-background: {{ section.settings.background_color }};
     --kk-fws-offer-heading: {{ section.settings.heading_color }};
@@ -642,7 +646,6 @@
     --kk-fws-offer-button-background: {{ section.settings.button_background_color }};
     --kk-fws-offer-button-text: {{ section.settings.button_text_color }};
     --kk-fws-offer-line: {{ section.settings.line_color }};
-    --kk-fws-offer-eyebrow-background: {{ section.settings.eyebrow_background_color }};
     --kk-fws-offer-nav-background: {{ section.settings.nav_background_color }};
     --kk-fws-offer-thumb-border: {{ section.settings.thumb_border_color }};
     --kk-fws-offer-badge-background: {{ section.settings.badge_background_color }};
@@ -652,23 +655,7 @@
     --kk-fws-offer-compare: {{ section.settings.compare_price_color }};
   "
 >
-  <div class="kk-fws-offer__container">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="kk-fws-offer__eyebrow">
-        {{- section.settings.eyebrow | replace: '[month]', '<span class="dyn-month"></span>' -}}
-      </p>
-    {%- endif -%}
-
-    {%- if section.settings.heading != blank -%}
-      <h2 class="kk-fws-offer__heading">{{ section.settings.heading }}</h2>
-    {%- endif -%}
-
-    {%- if section.settings.subheading != blank -%}
-      <p class="kk-fws-offer__subheading">
-        {{- section.settings.subheading | replace: '[month]', '<span class="dyn-month"></span>' -}}
-      </p>
-    {%- endif -%}
-
+  <div class="kk-fws-offer__container kk-fws-container">
     {%- if product == blank -%}
       <p class="kk-fws-offer__notice">
         This section needs a product. Preview it on a product template.
@@ -680,7 +667,7 @@
             id="product-slider"
             class="swiper-container swiper kk-fws-offer__slider"
             data-slidestoshow="1"
-            aria-label="{{ product.title | escape }} media gallery"
+            aria-label="{{ section.settings.gallery_label | replace: '[title]', product.title | escape }}"
           >
             <div class="swiper-wrapper">
               {%- for pair in slide_list -%}
@@ -732,7 +719,7 @@
                           alt: media_alt
                       }}
                       <button class="kk-fws-offer__play" type="button">
-                        <span class="sr-only">Play video</span>
+                        <span class="sr-only">{{ section.settings.play_video_label }}</span>
                       </button>
                     </div>
                   {%- endif -%}
@@ -747,28 +734,28 @@
             <button
               class="swiper-prev kk-fws-offer__nav kk-fws-offer__nav--prev"
               type="button"
-              aria-label="Previous image"
+              aria-label="{{ section.settings.previous_label | escape }}"
             >
               <img
                 class="kk-fws-offer__nav-icon"
-                src="{{ 'kk-fws-icon-chevron.svg' | asset_url }}"
+                src="{{ 'kk-fws-icon-gallery-arrow.svg' | asset_url }}"
                 alt=""
-                width="12"
-                height="21"
+                width="18"
+                height="18"
                 aria-hidden="true"
               >
             </button>
             <button
               class="swiper-next kk-fws-offer__nav kk-fws-offer__nav--next"
               type="button"
-              aria-label="Next image"
+              aria-label="{{ section.settings.next_label | escape }}"
             >
               <img
                 class="kk-fws-offer__nav-icon"
-                src="{{ 'kk-fws-icon-chevron.svg' | asset_url }}"
+                src="{{ 'kk-fws-icon-gallery-arrow.svg' | asset_url }}"
                 alt=""
-                width="12"
-                height="21"
+                width="18"
+                height="18"
                 aria-hidden="true"
               >
             </button>
@@ -782,7 +769,7 @@
             and exact. The class must not be `control`, or initSlider would adopt it.
           {%- endcomment -%}
           {%- if slide_list.size > 1 -%}
-            <div class="kk-fws-offer__thumbs" data-kk-fws-thumbs role="tablist" aria-label="Gallery thumbnails">
+            <div class="kk-fws-offer__thumbs" data-kk-fws-thumbs role="tablist" aria-label="{{ section.settings.thumbs_label | escape }}">
               {%- for pair in slide_list -%}
                 {%- liquid
                   assign slide_parts = pair | split: '~~'
@@ -816,32 +803,120 @@
               {%- endfor -%}
             </div>
           {%- endif -%}
-
-          {%- comment -%}
-            The product accordion (desktop `7423:203`+, mobile `7511:363`), sitting under the
-            thumbnail strip in the media column. The panels come from
-            `snippets/accordion-panels.liquid`, shared with the standalone "Dropdown Accordion"
-            section, so Description, Technical Specifications, Lab Report and What's in box are
-            gated on the product and the authored blocks render after them.
-
-            `section-accordion` is load-bearing, not decorative. Every accordion rule in
-            assets/main.css is scoped under it (`.section-accordion .accordion dd { height: 0 }`
-            is what keeps panels shut; `dt:after` is what draws the +/-), and the standalone
-            section only gets that class because its schema sets `"class": "section-accordion"`.
-            This section's wrapper is `section-kk-fws-offer`, so without it here the panels
-            render open and unstyled. The `.section-tabs` rules need a second class and stay off.
-
-            The toggle script is unscoped already — `src/js/accordion.js` binds every
-            `.accordion-item dt` on the page — so there is no JS to add.
-          {%- endcomment -%}
-          {%- if section.settings.show_accordion -%}
-            <div class="kk-fws-offer__accordion section-accordion">
-              {% render 'accordion-panels', blocks: section.blocks %}
-            </div>
-          {%- endif -%}
         </div>
 
         <div class="kk-fws-offer__panel">
+          {%- comment -%}
+            Product intro — Figma `7809:14726`. No copy lives in this file: each line reads the
+            product first and the matching section setting second, and renders nothing when
+            both are empty.
+
+            - Badge: `custom.product_badge_text` metafield, else "Badge text".
+            - Headline: the "Headline" field, else the product title. Bold text in the field
+              renders blue and italic text renders struck through (Figma `7943:4496`).
+            - Rating: the `reviews.rating` / `reviews.rating_count` metafields (written by the
+              reviews app), else "Rating score" / "Rating count". "Rating text" wraps the count,
+              with [count] as the placeholder.
+            - Certification + tap-water pill: editor fields only — the product has no field
+              for either.
+            - Introduction: the "Introduction" field. The product description is NOT shown
+              here — it lives in the accordion's Description panel under the gallery.
+          {%- endcomment -%}
+          {%- liquid
+            assign intro_badge = product.metafields.custom.product_badge_text.value | default: section.settings.badge_text
+
+            assign rating_score = section.settings.rating_score
+            assign rating_count = section.settings.rating_count
+            if product.metafields.reviews.rating.value != blank
+              assign rating_score = product.metafields.reviews.rating.value.rating | round: 1 | append: '/' | append: product.metafields.reviews.rating.value.scale_max
+            endif
+            if product.metafields.reviews.rating_count.value > 0
+              assign rating_count = product.metafields.reviews.rating_count.value
+            endif
+            assign rating_text = ''
+            if rating_count != blank and section.settings.rating_text != blank
+              assign rating_text = section.settings.rating_text | replace: '[count]', rating_count
+            endif
+
+            assign intro_headline = section.settings.headline | default: product.title
+          -%}
+          <div class="kk-fws-offer__intro">
+            {%- if intro_badge != blank -%}
+              <p class="kk-fws-offer__badge">
+                <span class="kk-fws-offer__badge-dot" aria-hidden="true"></span>
+                <span class="kk-fws-offer__badge-text">{{ intro_badge }}</span>
+              </p>
+            {%- endif -%}
+
+            <h1 class="kk-fws-offer__title">{{ intro_headline }}</h1>
+
+            {%- if rating_score != blank or rating_text != blank or section.settings.certification_text != blank -%}
+              <div class="kk-fws-offer__rating">
+                {%- if rating_score != blank or rating_text != blank -%}
+                  <img
+                    class="kk-fws-offer__rating-stars"
+                    src="{{ 'kk-fws-icon-stars-gold.svg' | asset_url }}"
+                    alt=""
+                    width="126"
+                    height="21"
+                    aria-hidden="true"
+                    loading="lazy"
+                  >
+                {%- endif -%}
+                {%- if rating_score != blank -%}
+                  <span class="kk-fws-offer__rating-score">{{ rating_score }}</span>
+                {%- endif -%}
+                {%- if rating_text != blank -%}
+                  <span class="kk-fws-offer__rating-count">{{ rating_text }}</span>
+                {%- endif -%}
+                {%- if section.settings.certification_text != blank -%}
+                  {%- if rating_score != blank or rating_text != blank -%}
+                    <span class="kk-fws-offer__rating-dot" aria-hidden="true"></span>
+                  {%- endif -%}
+                  <span class="kk-fws-offer__certification">
+                    <img
+                      class="kk-fws-offer__certification-icon"
+                      src="{{ 'kk-fws-icon-shield-check.svg' | asset_url }}"
+                      alt=""
+                      width="18"
+                      height="18"
+                      aria-hidden="true"
+                      loading="lazy"
+                    >
+                    {{- section.settings.certification_text -}}
+                  </span>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            {%- if section.settings.tap_badge_text != blank -%}
+              <p class="kk-fws-offer__tap-badge">
+                {%- if section.settings.tap_badge_icon != blank -%}
+                  {{
+                    section.settings.tap_badge_icon
+                    | image_url: width: 52
+                    | image_tag: class: 'kk-fws-offer__tap-badge-icon', width: 26, height: 18, loading: 'lazy', alt: ''
+                  }}
+                {%- elsif section.settings.tap_badge_flag -%}
+                  <img
+                    class="kk-fws-offer__tap-badge-icon"
+                    src="{{ 'kk-fws-icon-flag-us.svg' | asset_url }}"
+                    alt=""
+                    width="26"
+                    height="18"
+                    aria-hidden="true"
+                    loading="lazy"
+                  >
+                {%- endif -%}
+                {{- section.settings.tap_badge_text -}}
+              </p>
+            {%- endif -%}
+
+            {%- if section.settings.introduction != blank -%}
+              <div class="kk-fws-offer__introduction">{{ section.settings.introduction }}</div>
+            {%- endif -%}
+          </div>
+
           {%- if selectable_count == 0 -%}
             <p class="kk-fws-offer__notice">
               {{ section.settings.unavailable_text }}
@@ -885,6 +960,94 @@
                 data-kk-fws-selling-plan
                 {% if default_pay != 'subscribe' or default_selling_plan_id == '0' %}disabled{% endif %}
               >
+
+              {%- comment -%}
+                STEP 3 — how would you like to pay? Rendered FIRST, as the two-option toggle at
+                the top of the card (Figma `7809:14804`). Still "step 3" in the data model: the
+                pay mode is resolved after size and plan, it just reads first. The legend stays
+                for screen readers; the radio dots and descriptions are hidden in CSS.
+
+                Rendered only when the product actually has selling plans. With none, there
+                is no choice to offer — every purchase is one-time — and showing a dead
+                toggle would be worse than showing nothing.
+              {%- endcomment -%}
+              {%- if subscription_offered -%}
+                <fieldset class="kk-fws-offer__pays">
+                  <legend class="kk-fws-offer__step kk-fws-offer__step--hidden">
+                    <span class="kk-fws-offer__step-number" aria-hidden="true">3</span>
+                    <span class="kk-fws-offer__step-title">{{ section.settings.pay_legend }}</span>
+                  </legend>
+
+                  <div class="kk-fws-offer__pay-list">
+                    <label class="kk-fws-offer__pay">
+                      <input
+                        class="kk-fws-offer__pay-input"
+                        type="radio"
+                        name="kk-fws-pay"
+                        value="subscribe"
+                        data-kk-fws-pay="subscribe"
+                        {% if default_pay == 'subscribe' %}checked{% endif %}
+                      >
+                      <span class="kk-fws-offer__pay-card">
+                        {%- if section.settings.subscribe_ribbon != blank -%}
+                          <span class="kk-fws-offer__pay-ribbon">{{ section.settings.subscribe_ribbon }}</span>
+                        {%- endif -%}
+
+                        <span class="kk-fws-offer__pay-body">
+                          <span class="kk-fws-offer__pay-name">
+                            <span class="kk-fws-offer__pay-radio" aria-hidden="true"></span>
+                            <span class="kk-fws-offer__pay-label">{{ section.settings.subscribe_label }}</span>
+                          </span>
+
+                          {%- if section.settings.subscribe_description != blank -%}
+                            <span class="kk-fws-offer__pay-description">
+                              {{- section.settings.subscribe_description -}}
+                            </span>
+                          {%- endif -%}
+
+                          {%- comment -%}
+                            Only reachable when the selected size/plan pair has no allocation
+                            while some other pair does — the card stays visible and greys out
+                            rather than vanishing, matching how step 2 handles the same case.
+                          {%- endcomment -%}
+                          <span class="kk-fws-offer__pay-unavailable">
+                            {{ section.settings.pay_unavailable_text }}
+                          </span>
+                        </span>
+                      </span>
+                    </label>
+
+                    <label class="kk-fws-offer__pay">
+                      <input
+                        class="kk-fws-offer__pay-input"
+                        type="radio"
+                        name="kk-fws-pay"
+                        value="onetime"
+                        data-kk-fws-pay="onetime"
+                        {% if default_pay != 'subscribe' %}checked{% endif %}
+                      >
+                      <span class="kk-fws-offer__pay-card">
+                        {%- if section.settings.onetime_ribbon != blank -%}
+                          <span class="kk-fws-offer__pay-ribbon">{{ section.settings.onetime_ribbon }}</span>
+                        {%- endif -%}
+
+                        <span class="kk-fws-offer__pay-body">
+                          <span class="kk-fws-offer__pay-name">
+                            <span class="kk-fws-offer__pay-radio" aria-hidden="true"></span>
+                            <span class="kk-fws-offer__pay-label">{{ section.settings.onetime_label }}</span>
+                          </span>
+
+                          {%- if section.settings.onetime_description != blank -%}
+                            <span class="kk-fws-offer__pay-description">
+                              {{- section.settings.onetime_description -}}
+                            </span>
+                          {%- endif -%}
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                </fieldset>
+              {%- endif -%}
 
               <fieldset class="kk-fws-offer__sizes">
                 <legend class="kk-fws-offer__step">
@@ -1030,7 +1193,14 @@
                 <fieldset class="kk-fws-offer__plans">
                   <legend class="kk-fws-offer__step">
                     <span class="kk-fws-offer__step-number" aria-hidden="true">2</span>
-                    <span class="kk-fws-offer__step-title">{{ section.settings.plan_legend }}</span>
+                    {%- comment -%}
+                      Both faces render; the root's data-kk-fws-pay-mode picks one in CSS, so
+                      the heading follows step 3 with no script of its own.
+                    {%- endcomment -%}
+                    <span class="kk-fws-offer__step-title" data-kk-fws-face="subscribe">{{ section.settings.plan_legend }}</span>
+                    <span class="kk-fws-offer__step-title" data-kk-fws-face="onetime">
+                      {{- section.settings.filter_legend | default: section.settings.plan_legend -}}
+                    </span>
                   </legend>
 
                   <div class="kk-fws-offer__plan-list">
@@ -1047,6 +1217,22 @@
                         endfor
 
                         assign features = block.settings.features | newline_to_br | split: '<br />'
+                        assign filter_features_source = block.settings.filter_features | default: block.settings.features
+                        assign filter_features = filter_features_source | newline_to_br | split: '<br />'
+
+                        comment
+                          ONE-TIME card price: the real variant price for the selected size and
+                          this filter — exactly what the cart charges. Unlike the subscribe face
+                          it varies with size, and the picker script repaints it on every change.
+                        endcomment
+                        assign card_once_variant = '-'
+                        for once_row in matrix_rows
+                          assign once_parts = once_row | split: '~~'
+                          if once_parts[0] == default_size and once_parts[1] == filter_value
+                            assign card_once_variant = once_parts[7]
+                            break
+                          endif
+                        endfor
 
                         comment
                           The subscription price is size-invariant on this product ($99 /
@@ -1110,8 +1296,8 @@
                           if card_once_plan_cents > card_sub_recurring_cents
                             assign card_compare = card_once_plan
                           endif
-                        elsif card_once_plan != '-'
-                          assign card_price = card_once_plan
+                        elsif card_once_variant != '-'
+                          assign card_price = card_once_variant
                           assign card_cadence = ''
                           assign card_compare = ''
                         else
@@ -1143,7 +1329,10 @@
                           <span class="kk-fws-offer__plan-body">
                             <span class="kk-fws-offer__plan-name">
                               <span class="kk-fws-offer__plan-radio" aria-hidden="true"></span>
-                              <span class="kk-fws-offer__plan-label">{{ block.settings.label | default: filter_value }}</span>
+                              <span class="kk-fws-offer__plan-label" data-kk-fws-face="subscribe">{{ block.settings.label | default: filter_value }}</span>
+                              <span class="kk-fws-offer__plan-label" data-kk-fws-face="onetime">
+                                {{- block.settings.filter_label | default: block.settings.label | default: filter_value -}}
+                              </span>
                             </span>
 
                             {%- if card_price != blank -%}
@@ -1182,8 +1371,29 @@
                             {%- endif -%}
 
                             {%- if features.size > 0 -%}
-                              <span class="kk-fws-offer__plan-features">
+                              <span class="kk-fws-offer__plan-features" data-kk-fws-face="subscribe">
                                 {%- for feature in features -%}
+                                  {%- assign feature_text = feature | strip_newlines | strip -%}
+                                  {%- if feature_text != blank -%}
+                                    <span class="kk-fws-offer__plan-feature">
+                                      <img
+                                        class="kk-fws-offer__plan-check"
+                                        src="{{ 'kk-fws-icon-check.svg' | asset_url }}"
+                                        alt=""
+                                        width="13"
+                                        height="9"
+                                        aria-hidden="true"
+                                        loading="lazy"
+                                      >
+                                      <span class="kk-fws-offer__plan-feature-text">{{ feature_text }}</span>
+                                    </span>
+                                  {%- endif -%}
+                                {%- endfor -%}
+                              </span>
+                            {%- endif -%}
+                            {%- if filter_features.size > 0 -%}
+                              <span class="kk-fws-offer__plan-features" data-kk-fws-face="onetime">
+                                {%- for feature in filter_features -%}
                                   {%- assign feature_text = feature | strip_newlines | strip -%}
                                   {%- if feature_text != blank -%}
                                     <span class="kk-fws-offer__plan-feature">
@@ -1217,93 +1427,6 @@
               {%- endif -%}
 
               {%- comment -%}
-                STEP 3 — how would you like to pay? (Figma desktop `7423:1666`, mobile
-                `7511:313`.) Two cards, same visual language as step 2 but shorter: ribbon,
-                radio, name, one line of copy, no price and no feature list.
-
-                Rendered only when the product actually has selling plans. With none, there
-                is no choice to offer — every purchase is one-time — and showing a dead
-                toggle would be worse than showing nothing.
-              {%- endcomment -%}
-              {%- if subscription_offered -%}
-                <fieldset class="kk-fws-offer__pays">
-                  <legend class="kk-fws-offer__step">
-                    <span class="kk-fws-offer__step-number" aria-hidden="true">3</span>
-                    <span class="kk-fws-offer__step-title">{{ section.settings.pay_legend }}</span>
-                  </legend>
-
-                  <div class="kk-fws-offer__pay-list">
-                    <label class="kk-fws-offer__pay">
-                      <input
-                        class="kk-fws-offer__pay-input"
-                        type="radio"
-                        name="kk-fws-pay"
-                        value="subscribe"
-                        data-kk-fws-pay="subscribe"
-                        {% if default_pay == 'subscribe' %}checked{% endif %}
-                      >
-                      <span class="kk-fws-offer__pay-card">
-                        {%- if section.settings.subscribe_ribbon != blank -%}
-                          <span class="kk-fws-offer__pay-ribbon">{{ section.settings.subscribe_ribbon }}</span>
-                        {%- endif -%}
-
-                        <span class="kk-fws-offer__pay-body">
-                          <span class="kk-fws-offer__pay-name">
-                            <span class="kk-fws-offer__pay-radio" aria-hidden="true"></span>
-                            <span class="kk-fws-offer__pay-label">{{ section.settings.subscribe_label }}</span>
-                          </span>
-
-                          {%- if section.settings.subscribe_description != blank -%}
-                            <span class="kk-fws-offer__pay-description">
-                              {{- section.settings.subscribe_description -}}
-                            </span>
-                          {%- endif -%}
-
-                          {%- comment -%}
-                            Only reachable when the selected size/plan pair has no allocation
-                            while some other pair does — the card stays visible and greys out
-                            rather than vanishing, matching how step 2 handles the same case.
-                          {%- endcomment -%}
-                          <span class="kk-fws-offer__pay-unavailable">
-                            {{ section.settings.pay_unavailable_text }}
-                          </span>
-                        </span>
-                      </span>
-                    </label>
-
-                    <label class="kk-fws-offer__pay">
-                      <input
-                        class="kk-fws-offer__pay-input"
-                        type="radio"
-                        name="kk-fws-pay"
-                        value="onetime"
-                        data-kk-fws-pay="onetime"
-                        {% if default_pay != 'subscribe' %}checked{% endif %}
-                      >
-                      <span class="kk-fws-offer__pay-card">
-                        {%- if section.settings.onetime_ribbon != blank -%}
-                          <span class="kk-fws-offer__pay-ribbon">{{ section.settings.onetime_ribbon }}</span>
-                        {%- endif -%}
-
-                        <span class="kk-fws-offer__pay-body">
-                          <span class="kk-fws-offer__pay-name">
-                            <span class="kk-fws-offer__pay-radio" aria-hidden="true"></span>
-                            <span class="kk-fws-offer__pay-label">{{ section.settings.onetime_label }}</span>
-                          </span>
-
-                          {%- if section.settings.onetime_description != blank -%}
-                            <span class="kk-fws-offer__pay-description">
-                              {{- section.settings.onetime_description -}}
-                            </span>
-                          {%- endif -%}
-                        </span>
-                      </span>
-                    </label>
-                  </div>
-                </fieldset>
-              {%- endif -%}
-
-              {%- comment -%}
                 ORDER SUMMARY — desktop `7423:1692`, mobile `7511:336`. Every figure is
                 rendered server-side for the default configuration and rewritten by the
                 picker script; nothing here is a static number.
@@ -1324,10 +1447,12 @@
                   endfor
 
                   assign summary_plan_label = default_plan
+                  assign summary_filter_label = default_plan
                   for row in plan_name_rows
                     assign parts = row | split: '~~'
                     if parts[0] == default_plan
                       assign summary_plan_label = parts[1]
+                      assign summary_filter_label = parts[2]
                       break
                     endif
                   endfor
@@ -1382,48 +1507,37 @@
                     assign summary_footnote = section.settings.subscribe_footnote | replace: '[value]', section.settings.tower_value_cents | money_without_trailing_zeros
                   else
                     comment
-                      Same split as the per-variant data below — see the note there.
+                      ONE-TIME: one variant, one charge. The tower row carries the whole variant
+                      price, the filter row reads "Included", and due today is exactly what
+                      checkout charges — see the note in the per-variant data below.
                     endcomment
-                    if summary_upgrade_cents < 0
-                      assign summary_upgrade_cents = 0
-                    endif
-                    assign summary_once_plan_cents = summary_variant.price | minus: summary_upgrade_cents
-                    assign summary_tower_included = false
-                    if summary_once_plan_cents > tower_value_cents
-                      assign summary_once_plan_cents = summary_once_plan_cents | minus: tower_value_cents
-                      assign summary_tower_included = true
-                    endif
-                    assign summary_tower_charged = true
-                    assign summary_plan_amount = summary_once_plan_cents | money_without_trailing_zeros
+                    assign summary_upgrade_cents = 0
+                    assign summary_plan_label = summary_filter_label
+                    assign summary_plan_amount = section.settings.filter_included_text | default: 'Included'
                     assign summary_total_cents = summary_variant.price | plus: shipping_cents
-                    unless summary_tower_included
-                      assign summary_total_cents = summary_total_cents | plus: tower_value_cents
-                    endunless
                     assign summary_note = section.settings.onetime_note
                     assign summary_footnote = section.settings.onetime_footnote
                   endif
 
                   comment
-                    The tower row is priced on a one-time purchase and FREE on a subscription,
-                    so it shows on both. On One-Time it is added to due today unless the
-                    variant price already carries it.
+                    The tower row shows on both pay modes: FREE (struck value) on a
+                    subscription, the whole variant price on a one-time purchase.
                   endcomment
                   assign show_tower_row = true
-                  unless summary_subscribing
-                    unless summary_tower_charged
-                      assign show_tower_row = true
-                    endunless
-                  endunless
                 -%}
 
-                <div class="kk-fws-offer__summary" data-kk-fws-summary>
+                <div
+                  class="kk-fws-offer__summary"
+                  data-kk-fws-summary
+                  data-kk-fws-included-text="{{ section.settings.filter_included_text | default: 'Included' | escape }}"
+                >
                   <p class="kk-fws-offer__summary-title">{{ section.settings.summary_legend }}</p>
 
-                  <div  class="kk-fws-offer__summary-rows">
+                  <div class="kk-fws-offer__summary-box">
+                  <div class="kk-fws-offer__summary-rows">
                     {%- comment -%}
-                      Tower row — both pay modes. FREE (struck value) on a subscription; a real
-                      charge on a one-time purchase, added to due today unless the variant price
-                      already carries it.
+                      Tower row — both pay modes. FREE (struck value) on a subscription; the
+                      variant price (tower + filters) on a one-time purchase.
                     {%- endcomment -%}
                     <div
                       class="kk-fws-offer__summary-row"
@@ -1437,7 +1551,7 @@
                       <span class="kk-fws-offer__summary-value">
                         {%- comment -%}
                           Subscribing strikes the tower value and reads FREE; paying once shows
-                          the same figure as a real charge. One row, two faces.
+                          the variant price. One row, two faces.
                         {%- endcomment -%}
                         <s
                           class="kk-fws-offer__summary-strike"
@@ -1450,7 +1564,7 @@
                           {%- if summary_subscribing -%}
                             {{- section.settings.tower_free_text -}}
                           {%- else -%}
-                            {{- tower_value_cents | money_without_trailing_zeros -}}
+                            {{- summary_variant.price | money_without_trailing_zeros -}}
                           {%- endif -%}
                         </span>
                       </span>
@@ -1458,10 +1572,10 @@
 
                     {%- comment -%}
                       Size upgrade, directly under the tower it applies to (Figma `7423:2426`).
-                      On a ONE-TIME purchase this is the variant price above the base size. On a SUBSCRIPTION it is the joining premium — the gap
-                      between what checkout charges and what renewals cost. Either way the row
-                      appears only when there is something to charge, so a one-cycle plan
-                      (where joining == recurring) hides it exactly as before.
+                      SUBSCRIPTION only: the joining premium — the gap between what checkout
+                      charges and what renewals cost — so a one-cycle plan (where joining ==
+                      recurring) hides it. Never shown on a one-time purchase, where the tower
+                      row already carries the full variant price.
                     {%- endcomment -%}
                     <div
                       class="kk-fws-offer__summary-row"
@@ -1517,9 +1631,45 @@
                         {{- summary_note -}}
                       </p>
                     </div>
-                    <p class="kk-fws-offer__summary-total" data-kk-fws-summary-total>
-                      {{- summary_total_cents | money_without_trailing_zeros -}}
+                    <p class="kk-fws-offer__summary-totals">
+                      {%- comment -%}
+                        The tower value struck beside the total (Figma `7809:14913`). Subscription
+                        face only — on a one-time purchase the tower is part of the total.
+                      {%- endcomment -%}
+                      {%- if tower_value_cents > 0 -%}
+                        <s class="kk-fws-offer__summary-due-strike" data-kk-fws-face="subscribe">
+                          {{- tower_value_cents | money_without_trailing_zeros -}}
+                        </s>
+                      {%- endif -%}
+                      <span class="kk-fws-offer__summary-total" data-kk-fws-summary-total>
+                        {{- summary_total_cents | money_without_trailing_zeros -}}
+                      </span>
                     </p>
+                  </div>
+
+                  {%- comment -%}
+                    Countdown bar — Figma `7809:14917` / `7809:14919`. Subscribe & Save only: it is
+                    the deadline on the free-system offer, which a one-time purchase doesn't get.
+
+                    Driven by the small script at the foot of this file, NOT the theme's
+                    src/js/countdown.js: that one only handles a fixed date or an evergreen
+                    window under an hour, and this offer needs a repeating daily deadline. A
+                    distinct attribute keeps the theme script from binding it a second time.
+                  {%- endcomment -%}
+                  {%- if section.settings.countdown_end != blank -%}
+                    <div class="kk-fws-offer__countdown" data-kk-fws-face="subscribe">
+                      {%- if section.settings.countdown_label != blank -%}
+                        <span class="kk-fws-offer__countdown-label">{{ section.settings.countdown_label }}</span>
+                      {%- endif -%}
+                      <span
+                        class="kk-fws-offer__countdown-time"
+                        data-kk-fws-countdown="{{ section.settings.countdown_end | escape }}"
+                        role="timer"
+                      >
+                        00:00:00
+                      </span>
+                    </div>
+                  {%- endif -%}
                   </div>
 
                   <p class="kk-fws-offer__summary-footnote">
@@ -1537,24 +1687,80 @@
                 </div>
               {%- endif -%}
 
-              <button class="kk-fws-offer__button" type="submit" name="add">
-                {{- section.settings.button_label -}}
-              </button>
+              <div class="kk-fws-offer__button-wrap">  
 
-              {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
-              {%- if trust_blocks.size > 0 -%}
-                <ul class="kk-fws-offer__trust-list">
-                  {%- for block in trust_blocks -%}
-                    <li class="kk-fws-offer__trust" {{ block.shopify_attributes }}>
-                      {%- render 'kk-fws-offer-icon', block: block -%}
-                      <span class="kk-fws-offer__trust-text">{{ block.settings.text }}</span>
-                    </li>
+                {%- liquid
+                  assign button_label_onetime = section.settings.button_label_onetime | default: section.settings.button_label
+                  assign button_label_default = section.settings.button_label
+                  if default_pay != 'subscribe'
+                    assign button_label_default = button_label_onetime
+                  endif
+                -%}
+                {%- comment -%}
+                  Both labels ride on data attributes and the pay-mode script swaps the text, rather
+                  than rendering two spans: the theme's ajax cart (src/js/cart.js) overwrites the
+                  button's textContent while adding, which would wipe any markup inside it.
+                {%- endcomment -%}
+                <button
+                  class="kk-fws-offer__button"
+                  type="submit"
+                  name="add"
+                  data-kk-fws-label-subscribe="{{ section.settings.button_label | escape }}"
+                  data-kk-fws-label-onetime="{{ button_label_onetime | escape }}"
+                >
+                  {{- button_label_default -}}
+                </button>
+
+                {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+                {%- if trust_blocks.size > 0 -%}
+                  <ul class="kk-fws-offer__trust-list">
+                    {%- for block in trust_blocks -%}
+                      <li class="kk-fws-offer__trust" {{ block.shopify_attributes }}>
+                        {%- render 'kk-fws-offer-icon', block: block -%}
+                        <span class="kk-fws-offer__trust-text">{{ block.settings.text }}</span>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              
+              </div>
+
+              {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+                <ul class="kk-fws-offer__payments" aria-label="{{ section.settings.payments_label | escape }}">
+                  {%- for type in shop.enabled_payment_types -%}
+                    <li class="kk-fws-offer__payment">{{ type | payment_type_svg_tag: class: 'kk-fws-offer__payment-icon' }}</li>
                   {%- endfor -%}
                 </ul>
               {%- endif -%}
             {%- endform -%}
           {%- endif -%}
         </div>
+
+        {%- comment -%}
+          The product accordion (desktop `7423:203`+, mobile `7511:363`). Desktop shows it under
+          the thumbnail strip in the media column; below 990px it follows the buy form. It sits
+          after the panel in the DOM so the stacked layout gets that order for free, and the
+          desktop grid places it back in the left column (see `.kk-fws-offer__layout`). The
+          panels come from
+          `snippets/accordion-panels.liquid`, shared with the standalone "Dropdown Accordion"
+          section, so Description, Technical Specifications, Lab Report and What's in box are
+          gated on the product and the authored blocks render after them.
+
+          `section-accordion` is load-bearing, not decorative. Every accordion rule in
+          assets/main.css is scoped under it (`.section-accordion .accordion dd { height: 0 }`
+          is what keeps panels shut; `dt:after` is what draws the +/-), and the standalone
+          section only gets that class because its schema sets `"class": "section-accordion"`.
+          This section's wrapper is `section-kk-fws-offer`, so without it here the panels
+          render open and unstyled. The `.section-tabs` rules need a second class and stay off.
+
+          The toggle script is unscoped already — `src/js/accordion.js` binds every
+          `.accordion-item dt` on the page — so there is no JS to add.
+        {%- endcomment -%}
+        {%- if section.settings.show_accordion -%}
+          <div class="kk-fws-offer__accordion section-accordion">
+            {% render 'accordion-panels', blocks: section.blocks %}
+          </div>
+        {%- endif -%}
       </div>
     {%- endif -%}
   </div>
@@ -1662,62 +1868,40 @@
           endif
 
           assign v_plan_label = v_filter
+          assign v_filter_label = v_filter
           for row in plan_name_rows
             assign parts = row | split: '~~'
             if parts[0] == v_filter
               assign v_plan_label = parts[1]
+              assign v_filter_label = parts[2]
               break
             endif
           endfor
 
-          assign v_base_cents = variant.price
+          comment
+            ONE-TIME is a single charge: the variant price (tower + the chosen filters) plus
+            shipping, exactly what checkout takes. It is NOT split into tower / size upgrade /
+            plan — the old split priced the tower at the authored tower value and, whenever the
+            remainder fell below it, added that value ON TOP of the variant price, overstating
+            due today by the full tower value against what Shopify actually charged.
+          endcomment
+          assign v_once_total = variant.price | plus: shipping_cents
+
+          comment
+            Step 1's one-time badge only: how much more this size costs than the smallest
+            size for the same filter, floored at zero. Not an order summary row.
+          endcomment
+          assign v_once_upgrade_cents = 0
           for row in plan_base_rows
             assign parts = row | split: '~~'
             if parts[0] == v_filter
               assign v_base_cents = parts[1] | plus: 0
+              if v_base_cents >= 0 and variant.price > v_base_cents
+                assign v_once_upgrade_cents = variant.price | minus: v_base_cents
+              endif
               break
             endif
           endfor
-
-          assign v_once_total = variant.price | plus: shipping_cents
-
-          comment
-            SPLIT THE ONE-TIME PRICE: tower + plan + size premium, derived so the three ALWAYS
-            add back up to the variant price. That invariant is what keeps the summary's rows
-            summing to due-today in every state, including a half-finished reprice.
-
-              premium = variant price - base size's price, floored at zero
-              plan    = variant price - premium          (i.e. the base size's price)
-              tower   = charged only when the plan still clears the tower value, and then
-                        deducted from the plan
-
-            Flooring the premium matters while a reprice is in flight: an un-repriced size can
-            cost LESS than the repriced base, which would otherwise yield a negative premium and
-            a plan component that no longer reconciles. Deducting the tower only when the plan
-            exceeds it is what keeps the component positive without a separate clamp.
-          endcomment
-          assign v_upgrade_cents = variant.price | minus: v_base_cents
-          if v_upgrade_cents < 0
-            assign v_upgrade_cents = 0
-          endif
-
-          assign v_once_plan_cents = variant.price | minus: v_upgrade_cents
-          assign v_tower_included = false
-          if v_once_plan_cents > tower_value_cents
-            assign v_once_plan_cents = v_once_plan_cents | minus: tower_value_cents
-            assign v_tower_included = true
-          endif
-
-          comment
-            The tower is NEVER free on a one-time purchase — ruled by the user. When the variant
-            price already carries it (above), it is split out of the plan; when it does not, the
-            tower is charged ON TOP, so due today = variant price + tower + shipping. Either way
-            the tower row is priced on One-Time, hence towerCharged is always true.
-          endcomment
-          unless v_tower_included
-            assign v_once_total = v_once_total | plus: tower_value_cents
-          endunless
-          assign v_tower_charged = true
 
           comment
             Subscribe side. `price` is the joining charge (due today); the last price
@@ -1790,10 +1974,9 @@
         {{ variant.id | append: '' | json }}: {
           "size": {{ variant.options[size_index] | json }},
           "planLabel": {{ v_plan_label | json }},
-          "base": {{ v_once_plan_cents | money_without_trailing_zeros | json }},
-          "towerCharged": {{ v_tower_charged | json }},
-          "towerValue": {{ tower_value_cents | money_without_trailing_zeros | json }},
-          "upgrade": {% if v_upgrade_cents > 0 %}{{ v_upgrade_cents | money_without_trailing_zeros | json }}{% else %}""{% endif %},
+          "filterLabel": {{ v_filter_label | json }},
+          "oncePrice": {{ variant.price | money_without_trailing_zeros | json }},
+          "onceUpgrade": {% if v_once_upgrade_cents > 0 %}{{ v_once_upgrade_cents | money_without_trailing_zeros | json }}{% else %}""{% endif %},
           "subAmount": {{ v_sub_amount | json }},
           "subUpgrade": {{ v_sub_upgrade | json }},
           "subTotal": {{ v_sub_total | json }},
@@ -1852,6 +2035,11 @@
     if (towerAmountNode && /[a-z]/i.test(towerAmountNode.textContent)) {
       towerFreeText = towerAmountNode.textContent.trim();
     }
+
+    // The filter row's one-time value ("Included"), carried as an attribute because the
+    // server may have rendered the subscribe face, where the node holds a price instead.
+    var filterIncludedText =
+      (summaryCard && summaryCard.getAttribute('data-kk-fws-included-text')) || 'Included';
 
     if (summaryCard && summaryData) {
       try {
@@ -1925,9 +2113,11 @@
       // varying one-time price whenever the selected size had no variant for this plan.
       var subscribing = pay === 'subscribe' && !!subRecurring;
 
+      // Paying once, the card is a FILTER choice and shows the real variant price for the
+      // selected size — what the cart will charge — so it moves with step 1.
       var amount = subscribing
         ? subRecurring
-        : oncePlan || money(row.oncePrice);
+        : money(row.oncePrice) || oncePlan;
 
       if (!amount) {
         return;
@@ -2000,10 +2190,10 @@
       var upgradeRow = row('upgrade');
       var cadence = summaryCard.querySelector('[data-kk-fws-summary-plan-cadence]');
 
-      // Tower: FREE on a subscription, a real charge on a one-time purchase. Hidden only when
-      // paying once on a product whose one-time price does not carry the tower.
+      // Tower: FREE on a subscription; on a one-time purchase it carries the whole variant
+      // price (tower + the chosen filters), which is the single thing checkout charges.
       if (towerRow) {
-        towerRow.hidden = !subscribing && !figures.towerCharged;
+        towerRow.hidden = false;
 
         var strike = summaryCard.querySelector('[data-kk-fws-summary-tower-strike]');
 
@@ -2011,14 +2201,14 @@
           strike.hidden = !subscribing;
         }
 
-        text('tower-amount', subscribing ? towerFreeText : figures.towerValue);
+        text('tower-amount', subscribing ? towerFreeText : figures.oncePrice);
       }
 
-      // Size premium. One-time: the variant price above the smallest size. Subscribe: the
-      // Appstle joining premium (first order above renewal), already inside subTotal — so it
-      // shows only once the plan has two pricing cycles. Hidden when there is nothing to charge.
+      // Size premium — subscribe only: the Appstle joining premium (first order above renewal),
+      // already inside subTotal, so it shows only once the plan has two pricing cycles. Never on
+      // a one-time purchase, where the tower row already holds the full variant price.
       if (upgradeRow) {
-        var upgrade = subscribing ? figures.subUpgrade : figures.upgrade;
+        var upgrade = subscribing ? figures.subUpgrade : '';
 
         upgradeRow.hidden = !upgrade;
 
@@ -2032,8 +2222,8 @@
       }
 
       text('size', figures.size);
-      text('plan-label', figures.planLabel);
-      text('plan-amount', subscribing ? figures.subAmount : figures.base);
+      text('plan-label', subscribing ? figures.planLabel : figures.filterLabel);
+      text('plan-amount', subscribing ? figures.subAmount : filterIncludedText);
       text('total', subscribing ? figures.subTotal : figures.onceTotal);
       text('note', subscribing ? figures.subNote : figures.onceNote);
       text('footnote', subscribing ? figures.subFootnote : figures.onceFootnote);
@@ -2066,7 +2256,7 @@
         }
 
         var subscribing = pay === 'subscribe' && sizeRow.sellingPlan !== '0' && !!figures.subTotal;
-        var upgrade = subscribing ? figures.subUpgrade : figures.upgrade;
+        var upgrade = subscribing ? figures.subUpgrade : figures.onceUpgrade;
 
         badge.textContent = upgrade ? '+ ' + upgrade : badgeFreeText;
       }
@@ -2144,6 +2334,17 @@
       // so the hiding is one CSS rule rather than per-node DOM work.
       root.setAttribute('data-kk-fws-pay-mode', pay === 'subscribe' ? 'subscribe' : 'onetime');
 
+      // Label follows the pay mode. Also restores it after cart.js has left "Added To Cart".
+      if (button) {
+        var label = button.getAttribute(
+          pay === 'subscribe' ? 'data-kk-fws-label-subscribe' : 'data-kk-fws-label-onetime'
+        );
+
+        if (label) {
+          button.textContent = label;
+        }
+      }
+
       // One-time is the ABSENCE of a selling_plan, so the input is disabled rather than
       // emptied — see the note on the input itself.
       if (sellingPlanTarget) {
@@ -2195,6 +2396,74 @@
     }
 
     sync();
+
+    // Size and plan pickers: one highlight "thumb" per list that slides to the checked card.
+    // Measured rather than computed from an index so it follows any grid (row wrap,
+    // breakpoints, font swap, the pay-mode faces changing card heights). Until this runs the
+    // checked card paints its own selected state, so there is no flash.
+    function slidingThumb(list, inputSelector) {
+      function place() {
+        var checked = list.querySelector(inputSelector + ':checked');
+        var card = checked && checked.nextElementSibling;
+
+        if (!card) {
+          list.classList.remove('is-sliding');
+          return;
+        }
+
+        var listBox = list.getBoundingClientRect();
+        var cardBox = card.getBoundingClientRect();
+
+        // Hidden (e.g. a collapsed ancestor): keep the last position.
+        if (!cardBox.width) {
+          return;
+        }
+
+        list.style.setProperty('--kk-fws-thumb-x', cardBox.left - listBox.left + 'px');
+        list.style.setProperty('--kk-fws-thumb-y', cardBox.top - listBox.top + 'px');
+        list.style.setProperty('--kk-fws-thumb-w', cardBox.width + 'px');
+        list.style.setProperty('--kk-fws-thumb-h', cardBox.height + 'px');
+
+        if (!list.classList.contains('is-sliding')) {
+          list.classList.add('is-sliding');
+          // Animate moves only, never the first placement.
+          window.requestAnimationFrame(function () {
+            list.classList.add('is-sliding-ready');
+          });
+        }
+      }
+
+      if ('ResizeObserver' in window) {
+        new ResizeObserver(place).observe(list);
+      }
+
+      place();
+      return place;
+    }
+
+    var thumbPlacers = [];
+    var sizeList = root.querySelector('.kk-fws-offer__size-list');
+    var planList = root.querySelector('.kk-fws-offer__plan-list');
+
+    if (sizeList) {
+      thumbPlacers.push(slidingThumb(sizeList, '.kk-fws-offer__size-input'));
+    }
+
+    if (planList) {
+      thumbPlacers.push(slidingThumb(planList, '.kk-fws-offer__plan-input'));
+    }
+
+    // Registered after sync's listeners, so these run once sync has settled the selection:
+    // sync can re-check a plan when a size or pay change leaves the current one unavailable.
+    var allInputs = sizeInputs.concat(planInputs, payInputs);
+
+    for (var t = 0; t < allInputs.length; t++) {
+      allInputs[t].addEventListener('change', function () {
+        for (var p = 0; p < thumbPlacers.length; p++) {
+          thumbPlacers[p]();
+        }
+      });
+    }
   })();
 </script>
 
@@ -2358,7 +2627,7 @@
         player.setAttribute('src', embed);
         player.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
         player.setAttribute('allowfullscreen', 'allowfullscreen');
-        player.setAttribute('title', 'Product video');
+        player.setAttribute('title', root.getAttribute('data-kk-fws-video-title') || '');
       } else if (src) {
         player = document.createElement('video');
         player.setAttribute('src', src);
@@ -2376,55 +2645,80 @@
   })();
 </script>
 
+
+{%- if section.settings.countdown_end != blank -%}
+  {%- comment -%}
+    Offer countdown. Reads `data-kk-fws-countdown`:
+      "daily"            -> to the next local midnight, restarting every day
+      "N hours" / "N minutes" -> to the next N-hour (or N-minute) boundary since local
+                            midnight, so every visitor sees the same deadline
+      anything else      -> parsed as a date; counts down once, then holds at 00:00:00
+    Hours are not capped at 24, so a date more than a day away reads e.g. 52:10:04.
+  {%- endcomment -%}
+  <script>
+    (function () {
+      var nodes = document.querySelectorAll('#kk-fws-offer [data-kk-fws-countdown]');
+      if (!nodes.length) return;
+
+      function pad(n) {
+        return n < 10 ? '0' + n : String(n);
+      }
+
+      function deadline(spec, now) {
+        var value = String(spec).trim().toLowerCase();
+        var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        if (value === 'daily') return midnight + 864e5;
+
+        var match = value.match(/^(\d+(?:\.\d+)?)\s*(hours?|hrs?|h|minutes?|mins?|m)$/);
+        if (match) {
+          var step = parseFloat(match[1]) * (match[2].charAt(0) === 'h' ? 36e5 : 6e4);
+          if (step > 0) return midnight + Math.ceil((now.getTime() - midnight + 1) / step) * step;
+        }
+
+        var fixed = Date.parse(spec);
+        return isNaN(fixed) ? null : fixed;
+      }
+
+      [].forEach.call(nodes, function (node) {
+        var spec = node.getAttribute('data-kk-fws-countdown');
+        var end = deadline(spec, new Date());
+        if (end === null) return;
+        var repeats = !/^\d{4}-/.test(spec.trim());
+
+        function tick() {
+          var now = new Date();
+          var left = end - now.getTime();
+          if (left <= 0) {
+            if (repeats) {
+              end = deadline(spec, now);
+              left = end - now.getTime();
+            } else {
+              left = 0;
+            }
+          }
+          var total = Math.floor(left / 1000);
+          node.textContent =
+            pad(Math.floor(total / 3600)) + ':' + pad(Math.floor((total % 3600) / 60)) + ':' + pad(total % 60);
+          if (left <= 0 && !repeats) window.clearInterval(timer);
+        }
+
+        var timer = window.setInterval(tick, 1000);
+        tick();
+      });
+    })();
+  </script>
+{%- endif -%}
+
 {% stylesheet %}
+  /* Figma `7809:14660`: a 1440 frame with 64px gutters (a 1312px container), 32px above the
+     columns and 76px below. This section deliberately departs from the campaign's 114rem
+     container — the user asked for it to match this frame. */
   .kk-fws-offer {
-    background: var(--kk-fws-offer-background, #ffffff);
-    padding: 10rem 0;
+    background: var(--kk-fws-offer-background, var(--light));
+    padding: 3.2rem 0 7.6rem;
   }
 
-  .kk-fws-offer__container {
-    width: min(100% - 3.2rem, 114rem);
-    margin: 0 auto;
-  }
-
-  .kk-fws-offer__eyebrow {
-    display: table;
-    margin: 0 auto;
-    padding: 0.8rem 2.16rem;
-    border-radius: 0.3rem;
-    background: var(--kk-fws-offer-eyebrow-background, #f8f5f3);
-    font-family: 'Value Sans Medium', sans-serif;
-    font-weight: 500;
-    font-size: 1.4rem;
-    line-height: normal;
-    letter-spacing: 0.14rem;
-    text-transform: uppercase;
-    text-align: center;
-    color: var(--kk-fws-offer-text, #26303a);
-  }
-
-  .kk-fws-offer__heading {
-    max-width: 55.3rem;
-    margin: 2rem auto 0;
-    font-family: 'Value Sans Medium', sans-serif;
-    font-weight: 500;
-    font-size: 5.2rem;
-    line-height: 1.1;
-    text-align: center;
-    text-transform: none;
-    color: var(--kk-fws-offer-heading, #153a5b);
-  }
-
-  .kk-fws-offer__subheading {
-    max-width: 70rem;
-    margin: 2rem auto 0;
-    font-family: 'Value Sans', sans-serif;
-    font-weight: 400;
-    font-size: 2.2rem;
-    line-height: 1.4;
-    text-align: center;
-    color: var(--kk-fws-offer-text, #26303a);
-  }
+  
 
   /* PHASE 1: hide the Appstle subscription widget inside this section.
      The app injects its own "Purchase Options" UI (Subscribe / One Time Purchase, with
@@ -2446,24 +2740,35 @@
     /* minmax(0, 1fr) not 1fr: a grid item defaults to min-width:auto, so the Swiper
        track (a flex row of square slides) can force its column far wider than 1fr.
        Without this the media column measured 27018px wide in the browser. */
-    /* 569px gallery + 541px panel + 30.9px gutter = the 1140px campaign container. */
-    grid-template-columns: minmax(0, 569fr) minmax(0, 541fr);
-    column-gap: 3.1rem;
+    /* 580px gallery + 64px gap + 668px panel = the 1312px container (Figma `7809:14661` /
+       `7809:14723`). */
+    grid-template-columns: minmax(0, 580fr) minmax(0, 668fr);
+    /* The accordion follows the panel in the DOM (so it stacks under the form below 990px)
+       but sits under the gallery here. The panel spans both rows; the 1fr row soaks up any
+       extra panel height so it never opens a gap between the gallery and the accordion. */
+    grid-template-rows: auto 1fr;
+    column-gap: 6.4rem;
     align-items: start;
-    margin-top: 4rem;
   }
 
   .kk-fws-offer__media {
+    grid-column: 1;
+    grid-row: 1;
     position: relative;
     min-width: 0;
     max-width: 100%;
   }
 
+  /* Rounded, bordered image card — Figma 7809:14664 (578x658). */
   .kk-fws-offer__slider {
     position: relative;
     overflow: hidden;
     width: 100%;
     max-width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--light-alt);
+    border-radius: 2.4rem;
+    background: #fff;
   }
 
   .kk-fws-offer__slide {
@@ -2479,11 +2784,12 @@
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 578 / 658;
     object-fit: cover;
   }
 
-  /* Square nav buttons flush to the image edges, vertically centred — Figma 7420:1080/1084.
+  /* Round white arrows grouped bottom-right, 1.7rem in from the edges with a 1.2rem gap —
+     Figma 7809:14667 / 7809:14670.
      Deliberately NOT `.swiper-button-prev/next`: those classes pull in Swiper's own 27x44
      styling and its ::after icon font. The theme wires navigation off `.swiper-prev` /
      `.swiper-next`, which is all Swiper actually needs. */
@@ -2493,43 +2799,39 @@
      class and strip the fill and border off whichever arrow is currently at the end. */
   .kk-fws-offer .kk-fws-offer__nav {
     position: absolute;
-    top: 50%;
+    bottom: 1.7rem;
     z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 4.687rem;
-    height: 4.687rem;
+    width: 5rem;
+    height: 5rem;
     margin: 0;
     padding: 0;
-    transform: translateY(-50%);
     border: 0;
-    border-radius: 0;
-    background: var(--kk-fws-offer-nav-background, #f5f3f1);
+    border-radius: 50%;
+    background: #fff;
+    filter: drop-shadow(0 0.6rem 0.9rem rgba(11, 22, 56, 0.14));
     cursor: pointer;
     transition: opacity 0.2s ease;
   }
 
   .kk-fws-offer .kk-fws-offer__nav--prev {
-    left: 0;
+    right: 7.4rem;
   }
 
   .kk-fws-offer .kk-fws-offer__nav--next {
-    right: 0;
+    right: 1.7rem;
   }
 
   .kk-fws-offer__nav-icon {
     display: block;
-    width: 2.0603rem;
-    height: 1.2232rem;
-  }
-
-  .kk-fws-offer .kk-fws-offer__nav--prev .kk-fws-offer__nav-icon {
-    transform: rotate(-90deg);
+    width: 1.8rem;
+    height: 1.8rem;
   }
 
   .kk-fws-offer .kk-fws-offer__nav--next .kk-fws-offer__nav-icon {
-    transform: rotate(90deg);
+    transform: rotate(180deg);
   }
 
   .kk-fws-offer .kk-fws-offer__nav.swiper-button-disabled {
@@ -2577,17 +2879,17 @@
   .kk-fws-offer__video-player {
     display: block;
     width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 578 / 658;
     border: 0;
     object-fit: cover;
   }
 
-  /* Four-across thumbnail row — Figma 7420:1105 (desktop) / 7511:222 (mobile). */
+  /* Four-across thumbnail row — Figma 7809:14673 (4 x 136x170, 12px gap, 12px below the slider). */
   .kk-fws-offer__thumbs {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.0852rem;
-    margin-top: 1.0852rem;
+    gap: 1.2rem;
+    margin-top: 1.2rem;
   }
 
   /*
@@ -2600,7 +2902,9 @@
     panel's is dropped so the media column ends flush with the panel beside it.
   */
   .kk-fws-offer .kk-fws-offer__accordion.section-accordion {
-    margin-top: 2.1704rem;
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 3.2rem;
     margin-bottom: 0;
   }
 
@@ -2608,42 +2912,62 @@
     margin-bottom: 0;
   }
 
+  /* Ruled rows — Figma `7809:14680`: a 1px rule above every row and one under the last, so
+     the rules live on the items and the global per-<dt> rules are switched off. */
   .kk-fws-offer .kk-fws-offer__accordion .accordion-item {
     margin-bottom: 0 !important;
-    border-top: 1px solid var(--kk-fws-offer-line, #e6e6e6);
+    border-top: 1px solid var(--kk-fws-offer-rule);
   }
 
-  .kk-fws-offer .kk-fws-offer__accordion .accordion-item:last-child,
-  .kk-fws-offer .kk-fws-offer__accordion .accordion-item:first-child {
-    border: none;
+  .kk-fws-offer .kk-fws-offer__accordion .accordion-item:last-child {
+    border-bottom: 1px solid var(--kk-fws-offer-rule);
   }
 
   /*
-    Every rule below fights a global `.section-accordion` one of EQUAL specificity, which would
-    otherwise be settled by stylesheet order — hence the `.kk-fws-offer` prefix. The two that
-    also carry `!important` are beating the `max-width: 768px` rule that sets
+    Every rule below fights a global `.section-accordion` one (assets/main.css), hence the
+    `.kk-fws-offer` prefix. The `!important`s beat the `max-width: 768px` rule that sets
     `.section-accordion .accordion-item__inner { padding: 10px !important }`.
-
-    The globals size these for a full-width section. The media column is about half that, so
-    the heading steps down and the horizontal padding comes off to keep the panel text aligned
-    with the gallery edge.
   */
-  .kk-fws-offer .kk-fws-offer__accordion .accordion dt {
-    padding-left: 0;
-    padding-right: 2.5rem;
-    font-size: 1.7rem;
+  .kk-fws-offer .kk-fws-offer__accordion .accordion dt,
+  .kk-fws-offer .kk-fws-offer__accordion .accordion-item.active dt,
+  .kk-fws-offer .kk-fws-offer__accordion .accordion-item:first-of-type dt {
+    padding: 1.4rem 4rem 1.4rem 0.6rem;
+    border: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1.3;
+    color: var(--kk-fws-offer-ink);
   }
 
+  /* The +/- is a 22px stroked icon (Figma `7809:14685`) rather than the global text glyph. */
   .kk-fws-offer .kk-fws-offer__accordion .accordion dt:after {
-    right: 0;
+    content: '';
+    top: 50%;
+    right: 0.5rem;
+    width: 2.2rem;
+    height: 2.2rem;
+    border: 0;
+    transform: translateY(-50%);
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22' fill='none'%3E%3Cpath d='M11 4.58V17.42M4.58 11H17.42' stroke='%230B1638' stroke-width='1.65' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
+  .kk-fws-offer .kk-fws-offer__accordion .accordion-item.active dt:after {
+    content: '';
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22' fill='none'%3E%3Cpath d='M4.58 11H17.42' stroke='%230B1638' stroke-width='1.65' stroke-linecap='round'/%3E%3C/svg%3E");
   }
 
   .kk-fws-offer .kk-fws-offer__accordion .accordion-item__inner {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    padding: 0 0.6rem 2rem !important;
+    font-family: 'Value Sans', sans-serif;
+    font-size: 1.6rem;
+    line-height: 1.55;
+    color: var(--kk-fws-offer-muted);
 
     p, li {
-      font-size: 1.7rem;
+      font-size: 1.6rem;
+      line-height: 1.55;
+      color: var(--kk-fws-offer-muted);
     }
   }
 
@@ -2653,23 +2977,28 @@
     width: 100%;
     margin: 0;
     padding: 0;
-    border: 1px solid var(--kk-fws-offer-thumb-border, #efefef);
-    border-radius: 0;
-    background: none;
+    overflow: hidden;
+    box-sizing: border-box;
+    border: 1px solid var(--light-alt);
+    border-radius: 1.4rem;
+    background: #fff;
     cursor: pointer;
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
   .kk-fws-offer .kk-fws-offer__thumb[hidden] {
     display: none;
   }
 
+  /* Figma draws the active thumb with a 2px #2764ff border. The second pixel is an inset
+     shadow so the thumb doesn't shift by 1px when it becomes active. */
   .kk-fws-offer .kk-fws-offer__thumb.is-active {
-    border-color: var(--kk-fws-offer-card-selected-border, #153a5b);
+    border-color: var(--primary-600);
+    box-shadow: inset 0 0 0 1px var(--primary-600);
   }
 
   .kk-fws-offer .kk-fws-offer__thumb:focus-visible {
-    outline: 2px solid var(--kk-fws-offer-card-selected-border, #153a5b);
+    outline: 2px solid var(--primary-600);
     outline-offset: 2px;
   }
 
@@ -2677,7 +3006,7 @@
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 136 / 170;
     object-fit: cover;
   }
 
@@ -2705,298 +3034,309 @@
     border-left: 0.8rem solid var(--kk-fws-offer-heading, #153a5b);
   }
 
-  .kk-fws-offer__panel {
-    display: flex;
-    flex-direction: column;
-    gap: 2.6rem;
+  /*
+    PRODUCT PANEL — Figma `7809:14723`.
+
+    The panel's palette is fixed to the design rather than read from the colour settings:
+    the template's saved colours are the previous navy-and-beige design, and they would
+    override any new defaults. The section-level colour settings still drive the gallery.
+  */
+  .kk-fws-offer {
+    --kk-fws-offer-ink: var(--primary);
+    --kk-fws-offer-blue: var(--primary-600);
+    --kk-fws-offer-muted: var(--primary-100);
+    --kk-fws-offer-subtle: #6b7085;
+    --kk-fws-offer-faint: #8a8fa8;
+    --kk-fws-offer-rule: var(--light-alt);
+    --kk-fws-offer-surface: var(--light);
+    --kk-fws-offer-track: #eef0f3;
   }
 
+  .kk-fws-offer__panel {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1.547rem;
+    min-width: 0;
+    padding-top: 0.6rem;
+  }
+
+  /* Intro — Figma `7809:14726`. */
+  .kk-fws-offer__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.1rem;
+  }
+
+  .kk-fws-offer__badge {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    box-sizing: border-box;
+    /* 598px of the 668px column in Figma `7809:14727`. */
+    width: min(100%, 59.84rem);
+    /* Fixed 30px (Figma 7809:14727) so trimming the text's line box doesn't shrink the pill. */
+    min-height: 3rem;
+    margin: 0 0 0.5rem;
+    padding: 0.85rem 2rem;
+    border-radius: 99.9rem;
+    /* Stripes are one square tile (the first layer) so they can drift seamlessly: a 135deg
+       gradient banded at 25% steps across a tile of side 0.6rem * 4 / sqrt(2) gives 6px
+       stripes and 6px gaps, and shifting the tile by its own width loops without a seam. */
+    --kk-fws-badge-stripe-tile: 1.6971rem;
+    background:
+      linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.09) 25%,
+        rgba(255, 255, 255, 0) 25% 50%,
+        rgba(255, 255, 255, 0.09) 50% 75%,
+        rgba(255, 255, 255, 0) 75%
+      ),
+      linear-gradient(90deg, #13206e 0%, #2440c8 55%, #4a7bff 100%);
+    background-size: var(--kk-fws-badge-stripe-tile) var(--kk-fws-badge-stripe-tile), 100% 100%;
+    background-repeat: repeat, no-repeat;
+    animation: kk-fws-offer-badge-stripes 4s linear infinite;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      0 0.4rem 0.6rem rgba(39, 100, 255, 0.22);
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    line-height: 1;
+    letter-spacing: 0.26rem;
+    text-align: center;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+
+  /* Trims the text's line box to the capital letters, so the flex row centres the dot on
+     the caps themselves rather than on the font's ascender/descender box — which is what
+     left the dot sitting off-centre. Browsers without text-box fall back to line-box centring. */
+  /* Slow right-to-left drift: one tile width every 4s (~4px a second). Only the stripe
+     layer moves; the blue gradient stays put. */
+  @keyframes kk-fws-offer-badge-stripes {
+    from {
+      background-position: 0 0, 0 0;
+    }
+
+    to {
+      background-position: calc(var(--kk-fws-badge-stripe-tile) * -1) 0, 0 0;
+    }
+  }
+
+  .kk-fws-offer__badge-text {
+    text-box: trim-both cap alphabetic;
+  }
+
+  .kk-fws-offer__badge-dot {
+    flex-shrink: 0;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background: #ffffff;
+  }
+
+  /* Headline — Figma `7809:14735`. */
+  .kk-fws-offer__title {
+    max-width: 66.8rem;
+    margin: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 3.9rem;
+    line-height: 1.159;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    color: var(--kk-fws-offer-ink);
+  }
+
+  /* Bold in the Headline field is the blue highlight ("FREE"), italic the struck price. */
+  .kk-fws-offer__title strong,
+  .kk-fws-offer__title b {
+    font-weight: inherit;
+    color: var(--kk-fws-offer-blue);
+  }
+
+  .kk-fws-offer__title em,
+  .kk-fws-offer__title i {
+    font-style: normal;
+    text-decoration: line-through;
+    text-decoration-thickness: from-font;
+  }
+
+  .kk-fws-offer__rating {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem 1.2rem;
+    padding-top: 0.1rem;
+  }
+
+  .kk-fws-offer__rating-stars {
+    display: block;
+    width: 12.6rem;
+    height: 2.1rem;
+  }
+
+  .kk-fws-offer__rating-score {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--kk-fws-offer-ink);
+  }
+
+  .kk-fws-offer__rating-count {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--kk-fws-offer-muted);
+  }
+
+  .kk-fws-offer__rating-dot {
+    flex-shrink: 0;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: #a3a7bf;
+  }
+
+  .kk-fws-offer__certification {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    line-height: 1;
+    letter-spacing: 0.13rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-offer-blue);
+  }
+
+  .kk-fws-offer__certification-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .kk-fws-offer__tap-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin: 0;
+    padding: 1.3rem 2.2rem 1.2rem 1.6rem;
+    border: 1px solid var(--kk-fws-offer-blue);
+    border-radius: 99.9rem;
+    background: #ffffff;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--kk-fws-offer-ink);
+  }
+
+  .kk-fws-offer__tap-badge-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 2.6rem;
+    height: 1.8rem;
+    object-fit: cover;
+  }
+
+  /* Introduction — Figma `7809:14800`. */
+  .kk-fws-offer__introduction,
+  .kk-fws-offer__introduction p {
+    max-width: 64.1rem;
+    margin: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.8rem;
+    line-height: 1.55;
+    color: var(--kk-fws-offer-muted);
+  }
+
+  .kk-fws-offer__introduction p + p {
+    margin-top: 1em;
+  }
+
+  /* The card — Figma `7809:14802`. The form is the card, so every control, the summary,
+     the button and the trust row sit inside it. */
   .kk-fws-offer__form {
     display: flex;
     flex-direction: column;
-    gap: 2.6rem;
+    gap: 2.92rem;
     margin: 0;
+    padding: 2.41rem;
+    border: 1px solid var(--kk-fws-offer-rule);
+    border-radius: 2.06rem;
+    background: #ffffff;
+    box-shadow:
+      0 2.4rem 2.8rem rgba(11, 22, 56, 0.11),
+      0 0.4rem 0.6rem rgba(11, 22, 56, 0.04);
   }
 
-  .kk-fws-offer__sizes {
+  .kk-fws-offer__sizes,
+  .kk-fws-offer__plans,
+  .kk-fws-offer__pays {
+    min-width: 0;
     margin: 0;
     padding: 0;
     border: 0;
   }
 
-  /* Numbered step header — Figma 7423:1585 / 7423:1613 (desktop), 7511:235 / 7511:260
-     (mobile). A <legend> so the radio group keeps its accessible name; `display: flex`
-     on a legend is fine in every browser this theme targets. */
+  /* Step heading. The numbers are gone from the design; the <legend> stays so each radio
+     group keeps its accessible name. */
   .kk-fws-offer__step {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin: 0 0 2rem;
+    display: block;
+    margin: 0 0 1.38rem;
     padding: 0;
   }
 
   .kk-fws-offer__step-number {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    width: 4rem;
-    height: 4rem;
-    border-radius: 50%;
-    background: var(--kk-fws-offer-step-background, #153a5b);
-    font-family: 'Value Sans Bold', sans-serif;
-    font-weight: 700;
-    font-size: 2rem;
-    line-height: 1.5;
-    color: var(--kk-fws-offer-step-text, #ffffff);
+    display: none;
   }
 
   .kk-fws-offer__step-title {
     font-family: 'Value Sans Bold', sans-serif;
     font-weight: 700;
-    font-size: 2rem;
-    line-height: 1.5;
-    color: var(--kk-fws-offer-text, #26303a);
+    font-size: 1.9rem;
+    line-height: 1.25;
+    letter-spacing: -0.02rem;
+    color: var(--kk-fws-offer-ink);
   }
 
-  .kk-fws-offer__plans {
-    margin: 0;
-    padding: 0;
-    border: 0;
+  /* The plan ribbons hang 0.9rem above their cards, so step 2's heading sits further off. */
+  .kk-fws-offer__plans .kk-fws-offer__step {
+    margin-bottom: 2.58rem;
   }
 
-  /* Two cards across at EVERY breakpoint — mobile narrows them (163.5px each, 8px gap in
-     a 335px container) rather than stacking. Figma 7511:265. */
-  .kk-fws-offer__plan-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2rem;
-    align-items: stretch;
-  }
-
-  .kk-fws-offer__plan {
-    display: block;
-    position: relative;
-    cursor: pointer;
-  }
-
-  .kk-fws-offer__plan-input {
+  .kk-fws-offer__step--hidden {
     position: absolute;
     width: 1px;
     height: 1px;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .kk-fws-offer__plan-card {
-    position: relative;
-    display: block;
-    box-sizing: border-box;
-    height: 100%;
-    min-height: 26.3897rem;
-    padding: 3.1rem 2.5rem 2.4rem;
-    /* Transparent rather than absent so selecting a card does not resize it. */
-    border: 0.3068rem solid transparent;
-    border-radius: 0.8181rem;
-    background: var(--kk-fws-offer-card-background, #f5f3f1);
-    transition: border-color 0.2s ease, background-color 0.2s ease;
-  }
-
-  .kk-fws-offer__plan-input:checked + .kk-fws-offer__plan-card {
-    border-color: var(--kk-fws-offer-card-selected-border, #153a5b);
-    background: var(--kk-fws-offer-card-selected-background, #ffffff);
-  }
-
-  .kk-fws-offer__plan-input:focus-visible + .kk-fws-offer__plan-card {
-    outline: 2px solid var(--kk-fws-offer-card-selected-border, #153a5b);
-    outline-offset: 2px;
-  }
-
-  .kk-fws-offer__plan.is-unavailable,
-  .kk-fws-offer__plan-input:disabled + .kk-fws-offer__plan-card {
-    cursor: not-allowed;
-  }
-
-  .kk-fws-offer__plan-input:disabled + .kk-fws-offer__plan-card {
-    opacity: 0.5;
-  }
-
-  /* Ribbon sits on the card's top-right corner. Absolute offsets resolve against the
-     padding box, so the border width has to be added back to reach the border box. */
-  .kk-fws-offer__plan-ribbon {
-    position: absolute;
-    top: -0.3068rem;
-    right: -0.3068rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    min-height: 2.0327rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 0 0.9rem 0 0.9rem;
-    background: var(--kk-fws-offer-badge-background, #153a5b);
-    font-family: 'Value Sans Medium', sans-serif;
-    font-weight: 500;
-    font-size: 1.2rem;
-    line-height: normal;
-    letter-spacing: 0.12rem;
-    text-transform: uppercase;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
     white-space: nowrap;
-    color: var(--kk-fws-offer-badge-text, #ffffff);
   }
 
-  .kk-fws-offer__plan-body {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-  }
-
-  /* Top-aligned, not centred: the plan name wraps to two lines in the narrow half of the
-     two-column band and on mobile, and a centred radio would then float beside the gap
-     between the lines instead of sitting against the first one. */
-  .kk-fws-offer__plan-name {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  /* The radio mark is two concentric circles, so it is drawn in CSS rather than committed
-     as an icon — it has no glyph to get wrong, and this way it follows the colour settings. */
-  .kk-fws-offer__plan-radio {
-    position: relative;
-    flex-shrink: 0;
-    box-sizing: border-box;
-    width: 1.6691rem;
-    height: 1.6691rem;
-    /* Optically centres the dot on the first line of the name (23.4px line box). */
-    margin-top: 0.34rem;
-    border: 0.13rem solid var(--kk-fws-offer-card-selected-border, #153a5b);
-    border-radius: 50%;
-    background: #ffffff;
-  }
-
-  .kk-fws-offer__plan-input:checked + .kk-fws-offer__plan-card .kk-fws-offer__plan-radio::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 60%;
-    height: 60%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background: var(--kk-fws-offer-card-selected-border, #153a5b);
-  }
-
-  /* Wraps at every width. Figma fits "Family Protection Plus" on one line at 1366px, but
-     the card is narrower than that through the whole two-column band, so forcing one line
-     overflows the card there — the design's single line is a 1366px-only coincidence. */
-  .kk-fws-offer__plan-label {
-    min-width: 0;
-    font-family: 'Value Sans Bold', sans-serif;
-    font-weight: 700;
-    font-size: 1.8rem;
-    line-height: 1.3;
-    overflow-wrap: break-word;
-    color: var(--kk-fws-offer-heading, #153a5b);
-  }
-
-  .kk-fws-offer__plan-price {
-    display: flex;
-    align-items: center;
-    gap: 0.44rem;
-    flex-wrap: wrap;
-  }
-
-  .kk-fws-offer__plan-amount {
-    font-family: 'Value Sans Bold', sans-serif;
-    font-weight: 700;
-    font-size: 2.8rem;
-    line-height: 1.5;
-    color: var(--kk-fws-offer-heading, #153a5b);
-  }
-
-  .kk-fws-offer__plan-cadence {
-    font-family: 'Value Sans', sans-serif;
-    font-weight: 400;
-    font-size: 1.4rem;
-    line-height: 1.3;
-    color: var(--kk-fws-offer-text, #26303a);
-  }
-
-  .kk-fws-offer__plan-compare {
-    margin-left: 0.56rem;
-    font-family: 'Value Sans Bold', sans-serif;
-    font-weight: 700;
-    font-size: 1.6rem;
-    line-height: 1.4;
-    text-decoration: line-through;
-    color: var(--kk-fws-offer-compare, #c4c4c4);
-  }
-
-  .kk-fws-offer__plan-features {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-
-  .kk-fws-offer__plan-feature {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-  }
-
-  .kk-fws-offer__plan-check {
-    display: block;
-    flex-shrink: 0;
-    width: 1.3222rem;
-    height: 0.85rem;
-    object-fit: contain;
-  }
-
-  .kk-fws-offer__plan-feature-text {
-    font-family: 'Value Sans', sans-serif;
-    font-weight: 400;
-    font-size: 1.4rem;
-    line-height: 1.3;
-    color: var(--kk-fws-offer-text, #26303a);
-  }
-
-  .kk-fws-offer__plan-unavailable {
-    font-family: 'Value Sans', sans-serif;
-    font-weight: 400;
-    font-size: 1.4rem;
-    line-height: 1.4;
-    letter-spacing: 0.1rem;
-    text-transform: uppercase;
-    color: var(--kk-fws-offer-text, #26303a);
-  }
-
-  /* STEP 3 — pay mode. Same card language as step 2 (Figma 7423:1672 / 7511:319) but a
-     third the height: no price row and no feature list, just a name and one line of copy.
-     Kept as its own block rather than sharing step 2's selectors because the two steps
-     diverge on height, padding and type scale at both breakpoints. */
-  .kk-fws-offer__pays {
-    margin: 0;
-    padding: 0;
-    border: 0;
-  }
-
-  .kk-fws-offer__pay-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2rem;
-    align-items: stretch;
-  }
-
+  /* Shared: the radio inputs are visually hidden; the cards are the controls. */
+  .kk-fws-offer__size,
+  .kk-fws-offer__plan,
   .kk-fws-offer__pay {
     display: block;
     position: relative;
+    min-width: 0;
     cursor: pointer;
   }
 
+  .kk-fws-offer__size-input,
+  .kk-fws-offer__plan-input,
   .kk-fws-offer__pay-input {
     position: absolute;
     width: 1px;
@@ -3008,28 +3348,63 @@
     pointer-events: none;
   }
 
-  .kk-fws-offer__pay-card {
+  /* PAY MODE — a two-option toggle on a grey track (Figma `7809:14804`).
+     The white pill is one ::before "thumb" that slides between the options, driven by the
+     root's data-kk-fws-pay-mode (server-rendered, kept in sync by the pay-mode script), so
+     it needs no :has(). Subscribe is the first option, one-time the second. */
+  .kk-fws-offer__pay-list {
+    --kk-fws-pay-inset: 0.52rem;
+    --kk-fws-pay-gap: 0.518rem;
+
     position: relative;
-    display: flex;
-    align-items: center;
-    box-sizing: border-box;
-    height: 100%;
-    min-height: 13.1rem;
-    padding: 3.1rem 2.8rem 2.4rem;
-    /* Transparent rather than absent so selecting a card does not resize it. */
-    border: 0.3068rem solid transparent;
-    border-radius: 0.8181rem;
-    background: var(--kk-fws-offer-card-background, #f5f3f1);
-    transition: border-color 0.2s ease, background-color 0.2s ease;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kk-fws-pay-gap);
+    padding: var(--kk-fws-pay-inset);
+    border-radius: 3.44rem;
+    background: var(--kk-fws-offer-track);
   }
 
-  .kk-fws-offer__pay-input:checked + .kk-fws-offer__pay-card {
-    border-color: var(--kk-fws-offer-card-selected-border, #153a5b);
-    background: var(--kk-fws-offer-card-selected-background, #ffffff);
+  .kk-fws-offer__pay-list::before {
+    content: '';
+    position: absolute;
+    top: var(--kk-fws-pay-inset);
+    bottom: var(--kk-fws-pay-inset);
+    left: var(--kk-fws-pay-inset);
+    width: calc((100% - 2 * var(--kk-fws-pay-inset) - var(--kk-fws-pay-gap)) / 2);
+    box-sizing: border-box;
+    border: 1px solid var(--kk-fws-offer-rule);
+    border-radius: 3.44rem;
+    background: #ffffff;
+    box-shadow: 0 0.2rem 0.5rem rgba(11, 22, 56, 0.08);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .kk-fws-offer[data-kk-fws-pay-mode="onetime"] .kk-fws-offer__pay-list::before {
+    transform: translateX(calc(100% + var(--kk-fws-pay-gap)));
+  }
+
+  /* Labels sit above the thumb. */
+  .kk-fws-offer__pay-list .kk-fws-offer__pay {
+    z-index: 1;
+  }
+
+  .kk-fws-offer__pay-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem 0.86rem;
+    box-sizing: border-box;
+    height: 100%;
+    padding: 1.53rem 1.6rem;
+    border: 1px solid transparent;
+    border-radius: 3.44rem;
+    text-align: center;
   }
 
   .kk-fws-offer__pay-input:focus-visible + .kk-fws-offer__pay-card {
-    outline: 2px solid var(--kk-fws-offer-card-selected-border, #153a5b);
+    outline: 2px solid var(--kk-fws-offer-blue);
     outline-offset: 2px;
   }
 
@@ -3038,302 +3413,96 @@
     cursor: not-allowed;
   }
 
+  /* Disabled: greyed out — desaturated so the blue ribbon goes grey too. */
   .kk-fws-offer__pay-input:disabled + .kk-fws-offer__pay-card {
-    opacity: 0.5;
+    opacity: 0.55;
+    filter: grayscale(1);
   }
 
-  /* Ribbon sits on the card's top-right corner. Absolute offsets resolve against the
-     padding box, so the border width has to be added back to reach the border box. */
+  /* The ribbon reads as an inline pill after the label, so it is ordered after the body. */
   .kk-fws-offer__pay-ribbon {
-    position: absolute;
-    top: -0.3068rem;
-    right: -0.3068rem;
-    display: flex;
+    order: 2;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    min-height: 2.0327rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 0 0.9rem 0 0.9rem;
-    background: var(--kk-fws-offer-badge-background, #153a5b);
-    font-family: 'Value Sans Medium', sans-serif;
-    font-weight: 500;
-    font-size: 1.2rem;
-    line-height: normal;
-    letter-spacing: 0.12rem;
+    padding: 0.44rem 0.77rem 0.45rem;
+    border-radius: 99.9rem;
+    background: var(--kk-fws-offer-blue);
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1;
+    letter-spacing: 0.1rem;
     text-transform: uppercase;
     white-space: nowrap;
-    color: var(--kk-fws-offer-badge-text, #ffffff);
+    color: #ffffff;
   }
 
   .kk-fws-offer__pay-body {
+    order: 1;
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
-    width: 100%;
+    align-items: center;
+    gap: 0.4rem;
   }
 
-  /* Top-aligned for the same reason as step 2: "One-Time Purchase" wraps to two lines in
-     the narrow half of the two-column band and on mobile. */
   .kk-fws-offer__pay-name {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
+    display: block;
   }
 
-  .kk-fws-offer__pay-radio {
-    position: relative;
-    flex-shrink: 0;
-    box-sizing: border-box;
-    width: 1.6691rem;
-    height: 1.6691rem;
-    /* Optically centres the dot on the first line of the name (23.4px line box). */
-    margin-top: 0.34rem;
-    border: 0.13rem solid var(--kk-fws-offer-card-selected-border, #153a5b);
-    border-radius: 50%;
-    background: #ffffff;
-  }
-
-  .kk-fws-offer__pay-input:checked + .kk-fws-offer__pay-card .kk-fws-offer__pay-radio::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 60%;
-    height: 60%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background: var(--kk-fws-offer-card-selected-border, #153a5b);
+  .kk-fws-offer__pay-radio,
+  .kk-fws-offer__pay-description {
+    display: none;
   }
 
   .kk-fws-offer__pay-label {
-    min-width: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.72rem;
+    line-height: 1;
+    color: var(--kk-fws-offer-muted);
+  }
+
+  /* Narrow desktop: the two-column layout squeezes the pay toggle, so the labels step down. */
+  @media (min-width: 998px) and (max-width: 1294px) {
+    .kk-fws-offer__pay-ribbon {
+      position: absolute;
+      top: -0.6rem;
+      right: 50%;
+      transform: translateX(50%);
+      
+    }
+    .kk-fws-offer__pay-label {
+      font-size: 1.4rem;
+    }
+  }
+
+  .kk-fws-offer__pay-input:checked + .kk-fws-offer__pay-card .kk-fws-offer__pay-label {
     font-family: 'Value Sans Bold', sans-serif;
     font-weight: 700;
-    font-size: 1.8rem;
-    line-height: 1.3;
-    overflow-wrap: break-word;
-    color: var(--kk-fws-offer-heading, #153a5b);
+    color: var(--kk-fws-offer-ink);
   }
 
-  .kk-fws-offer__pay-description {
-    font-family: 'Value Sans', sans-serif;
-    font-weight: 400;
-    font-size: 1.4rem;
-    line-height: 1.3;
-    color: var(--kk-fws-offer-text, #26303a);
-  }
-
-  /* Only ever shown on the subscribe card, and only when the selected size/plan pair has
-     no allocation — otherwise it would read as a permanent disclaimer. */
+  /* Only shown when the selected size/plan pair cannot be subscribed to. */
   .kk-fws-offer__pay-unavailable {
     display: none;
     font-family: 'Value Sans', sans-serif;
     font-weight: 400;
-    font-size: 1.4rem;
-    line-height: 1.4;
-    letter-spacing: 0.1rem;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    letter-spacing: 0.08rem;
     text-transform: uppercase;
-    color: var(--kk-fws-offer-text, #26303a);
+    color: var(--kk-fws-offer-subtle);
   }
 
   .kk-fws-offer__pay-input:disabled + .kk-fws-offer__pay-card .kk-fws-offer__pay-unavailable {
     display: block;
   }
 
-  /* ORDER SUMMARY — desktop `7423:1692`, mobile `7511:336`. Dividers are inset from the card
-     edge on desktop (Figma insets them by the 26.93px gutter) and full-bleed on mobile
-     (`7511:344` spans the card), so they are row borders rather than separate elements. */
-  .kk-fws-offer__summary {
-    box-sizing: border-box;
-    overflow: hidden;
-    /* 2.05rem, not Figma's 2.35rem: the design's 23.52px is measured from the frame's outer
-       edge, which includes the 3.068px border. */
-    padding: 2.05rem 0 1.8rem;
-    border: 0.3068rem solid var(--kk-fws-offer-card-background, #f5f3f1);
-    border-radius: 0.8181rem;
-    background: var(--kk-fws-offer-card-selected-background, #ffffff);
-  }
-
-  .kk-fws-offer__summary-title {
-    margin: 0 0 0.9rem;
-    padding: 0 2.693rem;
-    font-family: 'Value Sans Bold', sans-serif;
-    font-weight: 700;
-    font-size: 1.4rem;
-    line-height: normal;
-    letter-spacing: 0.14rem;
-    text-transform: uppercase;
-    color: var(--kk-fws-offer-heading, #153a5b);
-  }
-
-  .kk-fws-offer__summary-rows {
-    padding: 0 2.693rem;
-  }
-
-  .kk-fws-offer__summary-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.6rem;
-    padding: 2rem 0;
-  }
-
-
-  /* `hidden` alone loses to `display: flex`. */
-  .kk-fws-offer__summary-row[hidden] {
-    display: none;
-  }
-
-  /* Between rows only — Figma has no rule between the last row and the due-today band. The
-     sibling selector also means a hidden row takes its divider with it. */
-  .kk-fws-offer__summary-row + .kk-fws-offer__summary-row:not([hidden]) {
-    border-top: 1px solid var(--kk-fws-offer-line, #efefef);
-  }
-
-  .kk-fws-offer__summary-label {
-    font-family: 'Value Sans', sans-serif;
-    font-weight: 400;
-    font-size: 1.6rem;
-    line-height: 1.3;
-    color: var(--kk-fws-offer-text, #26303a);
-  }
-
-  .kk-fws-offer__summary-value {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    gap: 1rem;
-    text-align: right;
-  }
-
-  .kk-fws-offer__summary-amount {
-    font-family: 'Value Sans Bold', sans-serif;
-    font-weight: 700;
-    font-size: 1.8rem;
-    line-height: 1.3;
-    white-space: nowrap;
-    color: var(--kk-fws-offer-heading, #153a5b);
-  }
-
-  /* Sits tight against the amount rather than in the row's 1rem gap — Figma renders
-     "$99 / 6 months" as one phrase (`7423:1703`). */
-  .kk-fws-offer__summary-cadence {
-    margin-left: -0.6rem;
-    font-family: 'Value Sans', sans-serif;
-    font-weight: 400;
-    font-size: 1.8rem;
-    line-height: 1.3;
-    white-space: nowrap;
-    color: var(--kk-fws-offer-heading, #153a5b);
-  }
-
-  .kk-fws-offer__summary-cadence[hidden] {
-    display: none;
-  }
-
-  .kk-fws-offer__summary-strike {
-    font-family: 'Value Sans Bold', sans-serif;
-    font-weight: 700;
-    font-size: 1.6rem;
-    line-height: 1.4;
-    text-decoration: line-through;
-    white-space: nowrap;
-    color: var(--kk-fws-offer-compare, #c4c4c4);
-  }
-
-  /* Full-bleed band: the card clips overflow, so negative insets are not needed — the row
-     simply has no side padding of its own beyond the gutter. */
-  .kk-fws-offer__summary-due {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.6rem;
-    /* No margin: the last row's own 2rem padding-bottom is already the gap Figma shows
-       between the shipping line and the band (22px). */
-    padding: 1.64rem 2.693rem;
-    background: var(--kk-fws-offer-card-background, #f5f3f1);
-  }
-
-  .kk-fws-offer__summary-due-text {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    min-width: 0;
-  }
-
-  .kk-fws-offer__summary-due-label {
-    margin: 0;
-    font-family: 'Value Sans Bold', sans-serif;
-    font-weight: 700;
-    font-size: 1.4rem;
-    line-height: normal;
-    letter-spacing: 0.14rem;
-    text-transform: uppercase;
-    color: var(--kk-fws-offer-heading, #153a5b);
-  }
-
-  .kk-fws-offer__summary-note {
-    margin: 0;
-    font-family: 'Value Sans', sans-serif;
-    font-weight: 400;
-    font-size: 1.6rem;
-    line-height: 1.3;
-    color: var(--kk-fws-offer-text, #26303a);
-  }
-
-  .kk-fws-offer__summary-total {
-    margin: 0;
-    flex-shrink: 0;
-    font-family: 'Value Sans Bold', sans-serif;
-    font-weight: 700;
-    font-size: 3.2rem;
-    line-height: 1.5;
-    white-space: nowrap;
-    color: var(--kk-fws-offer-heading, #153a5b);
-  }
-
-  .kk-fws-offer__summary-footnote {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin: 2rem 0 0;
-    padding: 0 2.693rem;
-    font-family: 'Value Sans', sans-serif;
-    font-weight: 400;
-    font-size: 1.6rem;
-    line-height: 1.3;
-    color: var(--kk-fws-offer-text, #26303a);
-  }
-
-  .kk-fws-offer__summary-footnote-icon {
-    display: block;
-    flex-shrink: 0;
-    width: 1.3804rem;
-    height: 1.3804rem;
-  }
-
+  /* TOWER SIZE — Figma `7809:14819`. Selected is solid blue; the rest are pale grey. */
   .kk-fws-offer__size-list {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.9rem;
-  }
-
-  .kk-fws-offer__size {
-    display: block;
-    position: relative;
-    cursor: pointer;
-  }
-
-  .kk-fws-offer__size-input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    opacity: 0;
-    pointer-events: none;
+    gap: 1rem;
   }
 
   .kk-fws-offer__size-card {
@@ -3342,74 +3511,92 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.4053rem;
     box-sizing: border-box;
     height: 100%;
-    min-height: 11.0873rem;
-    padding: 1.6rem 1.2rem;
-    /* Transparent rather than absent so selecting a card does not resize it. */
-    border: 0.2215rem solid transparent;
-    border-radius: 0.8106rem;
-    background: var(--kk-fws-offer-card-background, #f5f3f1);
+    padding: 1.518rem 1.2rem 1.62rem;
+    border: 1px solid var(--kk-fws-offer-rule);
+    border-radius: 1.38rem;
+    background: var(--kk-fws-offer-surface);
     text-align: center;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
   .kk-fws-offer__size-input:checked + .kk-fws-offer__size-card {
-    border-color: var(--kk-fws-offer-card-selected-border, #153a5b);
-    background: var(--kk-fws-offer-card-selected-background, #ffffff);
-  }
-
-  .kk-fws-offer__size-text {
-    display: block;
-  }
-
-  /* Tick badge straddles the card's top-right corner (Figma 7423:1593). */
-  .kk-fws-offer__size-tick {
-    position: absolute;
-    /* Absolute offsets resolve against the padding box, so the card's border has to be
-       added back to land the tick on the border-box corner as Figma has it. */
-    top: calc(-1.13rem - 0.2215rem);
-    right: calc(-1.13rem - 0.2215rem);
-    display: none;
-    width: 2.2594rem;
-    height: 2.2594rem;
-  }
-
-  .kk-fws-offer__size-input:checked + .kk-fws-offer__size-card .kk-fws-offer__size-tick {
-    display: block;
+    border-color: var(--kk-fws-offer-blue);
+    background: var(--kk-fws-offer-blue);
+    box-shadow: 0 1rem 1.1rem rgba(39, 100, 255, 0.22);
   }
 
   .kk-fws-offer__size-input:focus-visible + .kk-fws-offer__size-card {
-    outline: 2px solid var(--kk-fws-offer-card-selected-border, #153a5b);
+    outline: 2px solid var(--kk-fws-offer-blue);
     outline-offset: 2px;
   }
 
+  /* Disabled (sold out): grey fill and rule, desaturated text. */
   .kk-fws-offer__size-input:disabled + .kk-fws-offer__size-card {
-    opacity: 0.5;
+    border-color: var(--light-alt);
+    background: var(--light-alt);
+    opacity: 0.6;
+    filter: grayscale(1);
     cursor: not-allowed;
   }
 
-  /* Step 1's badges are the ONE-TIME size deltas (Free / +$30 / +$60). Every subscription gets
-     a free tower regardless of size, so the badges only mean something on a one-time purchase —
-     they hide on Subscribe & Save, where none of them apply. The attribute is set server-side
-     and kept in step by the picker script, so there is no flash of the wrong state on load. */
-  
-
-  .kk-fws-offer__size-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.443rem 0.8861rem;
-    border-radius: 0.5538rem;
-    background: var(--kk-fws-offer-badge-background, #153a5b);
-    font-family: 'Value Sans Bold', sans-serif;
-    font-weight: 700;
-    font-size: 1.4rem;
-    line-height: 1.4;
-    color: var(--kk-fws-offer-badge-text, #ffffff);
+  /* Sliding thumb, enabled by the picker script (.is-sliding). The thumb paints above the
+     grey cards and below their text: the list is the stacking context, cards stay
+     z-index:auto, the thumb is z-index 1 and the card text z-index 2. */
+  .kk-fws-offer__size-list.is-sliding {
+    position: relative;
+    isolation: isolate;
   }
 
-  .kk-fws-offer[data-kk-fws-pay-mode="onetime"] input[data-kk-fws-size="1.5 Gallon"] + .kk-fws-offer__size-card .kk-fws-offer__size-badge {
+  .kk-fws-offer__size-list.is-sliding::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: var(--kk-fws-thumb-w);
+    height: var(--kk-fws-thumb-h);
+    box-sizing: border-box;
+    border-radius: 1.38rem;
+    background: var(--kk-fws-offer-blue);
+    box-shadow: 0 1rem 1.1rem rgba(39, 100, 255, 0.22);
+    transform: translate(var(--kk-fws-thumb-x), var(--kk-fws-thumb-y));
+    pointer-events: none;
+  }
+
+  .kk-fws-offer__size-list.is-sliding-ready::before {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s ease, height 0.3s ease;
+  }
+
+  /* The checked card keeps its resting look underneath; the thumb supplies the blue. */
+  .kk-fws-offer__size-list.is-sliding .kk-fws-offer__size-input:checked + .kk-fws-offer__size-card {
+    border-color: var(--kk-fws-offer-rule);
+    background: var(--kk-fws-offer-surface);
+    box-shadow: none;
+  }
+
+  .kk-fws-offer__size-list.is-sliding .kk-fws-offer__size-text,
+  .kk-fws-offer__size-list.is-sliding .kk-fws-offer__size-unavailable {
+    position: relative;
+    z-index: 2;
+  }
+
+  .kk-fws-offer__size-list.is-sliding-ready .kk-fws-offer__size-name,
+  .kk-fws-offer__size-list.is-sliding-ready .kk-fws-offer__size-description {
+    transition: color 0.3s ease;
+  }
+
+  .kk-fws-offer__size-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.689rem;
+  }
+
+  /* Not in the design: hidden, not removed, so the picker script's repaint still finds them. */
+  .kk-fws-offer__size-tick,
+  .kk-fws-offer .kk-fws-offer__size-badge {
     display: none;
   }
 
@@ -3417,64 +3604,515 @@
     display: block;
     font-family: 'Value Sans Bold', sans-serif;
     font-weight: 700;
-    font-size: 1.8rem;
-    line-height: 1.8rem;
-    color: var(--kk-fws-offer-heading, #153a5b);
+    font-size: 1.89rem;
+    line-height: 1.1;
+    color: var(--kk-fws-offer-ink);
   }
 
   .kk-fws-offer__size-description {
     display: block;
     font-family: 'Value Sans', sans-serif;
     font-weight: 400;
-    font-size: 1.6rem;
-    line-height: 1.8rem;
-    color: var(--kk-fws-offer-heading, #153a5b);
+    font-size: 1.38rem;
+    line-height: 1.2;
+    color: var(--kk-fws-offer-subtle);
+  }
+
+  .kk-fws-offer__size-input:checked + .kk-fws-offer__size-card .kk-fws-offer__size-name {
+    color: #ffffff;
+  }
+
+  .kk-fws-offer__size-input:checked + .kk-fws-offer__size-card .kk-fws-offer__size-description {
+    color: #e3ebff;
   }
 
   .kk-fws-offer__size-unavailable {
+    margin-top: 0.6rem;
     font-family: 'Value Sans', sans-serif;
     font-weight: 400;
-    font-size: 1.4rem;
-    line-height: 1.4;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    letter-spacing: 0.08rem;
     text-transform: uppercase;
-    letter-spacing: 0.1rem;
-    color: var(--kk-fws-offer-text, #26303a);
+    color: var(--kk-fws-offer-subtle);
   }
 
+  /* PROTECTION PLAN — Figma `7809:14840`. */
+  .kk-fws-offer__plan-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.38rem;
+    align-items: stretch;
+  }
+
+  /* Both states carry a 2px border so selecting a card does not resize it; the unselected
+     one draws its 1px rule as an inset shadow inside the transparent second pixel. */
+  .kk-fws-offer__plan-card {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    height: 100%;
+    padding: 2.24rem 1.69rem 1.89rem;
+    border: 2px solid transparent;
+    border-radius: 1.55rem;
+    background: #ffffff;
+    box-shadow: inset 0 0 0 1px var(--kk-fws-offer-rule);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .kk-fws-offer__plan-input:checked + .kk-fws-offer__plan-card {
+    border-color: var(--kk-fws-offer-blue);
+    background: #f2f6ff;
+    box-shadow: none;
+  }
+
+  .kk-fws-offer__plan-input:focus-visible + .kk-fws-offer__plan-card {
+    outline: 2px solid var(--kk-fws-offer-blue);
+    outline-offset: 2px;
+  }
+
+  .kk-fws-offer__plan.is-unavailable,
+  .kk-fws-offer__plan-input:disabled + .kk-fws-offer__plan-card {
+    cursor: not-allowed;
+  }
+
+  /* Disabled: grey fill, desaturated so the ribbon and radio go grey too. */
+  .kk-fws-offer__plan-input:disabled + .kk-fws-offer__plan-card {
+    background: var(--light);
+    opacity: 0.6;
+    filter: grayscale(1);
+  }
+
+  /* Sliding thumb, enabled by the picker script (.is-sliding) — same layering as the size
+     list: thumb z-index 1 over the white cards, card content (incl. the hanging ribbon)
+     z-index 2 above it. */
+  .kk-fws-offer__plan-list.is-sliding {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .kk-fws-offer__plan-list.is-sliding::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: var(--kk-fws-thumb-w);
+    height: var(--kk-fws-thumb-h);
+    box-sizing: border-box;
+    border: 2px solid var(--kk-fws-offer-blue);
+    border-radius: 1.55rem;
+    background: #f2f6ff;
+    transform: translate(var(--kk-fws-thumb-x), var(--kk-fws-thumb-y));
+    pointer-events: none;
+  }
+
+  .kk-fws-offer__plan-list.is-sliding-ready::before {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s ease, height 0.3s ease;
+  }
+
+  /* The checked card keeps its resting look underneath; the thumb supplies the highlight. */
+  .kk-fws-offer__plan-list.is-sliding .kk-fws-offer__plan-input:checked + .kk-fws-offer__plan-card {
+    border-color: transparent;
+    background: #ffffff;
+    box-shadow: inset 0 0 0 1px var(--kk-fws-offer-rule);
+  }
+
+  .kk-fws-offer__plan-list.is-sliding .kk-fws-offer__plan-body,
+  .kk-fws-offer__plan-list.is-sliding .kk-fws-offer__plan-ribbon {
+    z-index: 2;
+  }
+
+  .kk-fws-offer__plan-list.is-sliding .kk-fws-offer__plan-body {
+    position: relative;
+  }
+
+  .kk-fws-offer__plan-list.is-sliding-ready .kk-fws-offer__plan-ribbon {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Ribbon hangs off the top-left edge: grey on an unselected card, blue on the selected one. */
+  .kk-fws-offer__plan-ribbon {
+    position: absolute;
+    top: -1.03rem;
+    left: 1.89rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.31rem 1.03rem;
+    border-radius: 1.55rem;
+    background: var(--kk-fws-offer-track);
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.03rem;
+    line-height: 1.2;
+    letter-spacing: 0.12rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--kk-fws-offer-ink);
+  }
+
+  .kk-fws-offer__plan-input:checked + .kk-fws-offer__plan-card .kk-fws-offer__plan-ribbon {
+    background: var(--kk-fws-offer-blue);
+    color: #ffffff;
+  }
+
+  .kk-fws-offer__plan-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.38rem;
+  }
+
+  .kk-fws-offer__plan-name {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.03rem;
+  }
+
+  /* Unselected: a 2px pale ring. Selected: a thick blue ring around a white centre. */
+  .kk-fws-offer__plan-radio {
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 1.889rem;
+    height: 1.889rem;
+    margin-top: 0.08rem;
+    border: 2px solid #c5cce4;
+    border-radius: 50%;
+    background: #ffffff;
+    transition: border-width 0.2s ease, border-color 0.2s ease;
+  }
+
+  .kk-fws-offer__plan-input:checked + .kk-fws-offer__plan-card .kk-fws-offer__plan-radio {
+    border-width: 0.6rem;
+    border-color: var(--kk-fws-offer-blue);
+  }
+
+  .kk-fws-offer__plan-label {
+    min-width: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.72rem;
+    line-height: 1.2;
+    overflow-wrap: break-word;
+    color: var(--kk-fws-offer-ink);
+  }
+
+  .kk-fws-offer__plan-price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.69rem;
+  }
+
+  .kk-fws-offer__plan-amount {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 3.2rem;
+    line-height: 1;
+    letter-spacing: -0.05rem;
+    color: var(--kk-fws-offer-ink);
+  }
+
+  .kk-fws-offer__plan-cadence {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.29rem;
+    line-height: 1.2;
+    color: var(--kk-fws-offer-subtle);
+  }
+
+  .kk-fws-offer__plan-compare {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.29rem;
+    line-height: 1.2;
+    text-decoration: line-through;
+    color: #a3a7bf;
+  }
+
+  /* Not in the design. Kept in the markup (and in the block settings) so they can return. */
+  .kk-fws-offer .kk-fws-offer__plan-features {
+    display: none;
+  }
+
+  .kk-fws-offer__plan-unavailable {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-offer-subtle);
+  }
+
+  /* Step 2 reads as a protection plan on Subscribe & Save and as a filter choice on One-Time.
+     Both faces are rendered; the root's pay mode (set server-side, kept in step by the picker
+     script) shows one. */
+  .kk-fws-offer[data-kk-fws-pay-mode="subscribe"] [data-kk-fws-face="onetime"],
+  .kk-fws-offer[data-kk-fws-pay-mode="onetime"] [data-kk-fws-face="subscribe"] {
+    display: none;
+  }
+
+  /* ORDER SUMMARY — Figma `7809:14877`: a heading, then a grey box of ruled rows, the due-today
+     line and the countdown bar. */
+  .kk-fws-offer__summary {
+    display: flex;
+    flex-direction: column;
+    gap: 1.379rem;
+  }
+
+  .kk-fws-offer__summary-title {
+    margin: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.9rem;
+    line-height: 1.25;
+    letter-spacing: -0.02rem;
+    text-transform: none;
+    color: var(--kk-fws-offer-ink);
+  }
+
+  .kk-fws-offer__summary-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 0.2rem 2.14rem 1.6rem;
+    border: 1px solid var(--kk-fws-offer-rule);
+    border-radius: 1.55rem;
+    background: var(--kk-fws-offer-surface);
+  }
+
+  .kk-fws-offer__summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid #e1e4ea;
+  }
+
+  /* `hidden` alone loses to `display: flex`. */
+  .kk-fws-offer__summary-row[hidden] {
+    display: none;
+  }
+
+  .kk-fws-offer__summary-label {
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.55rem;
+    line-height: 1.2;
+    color: var(--kk-fws-offer-ink);
+  }
+
+  .kk-fws-offer__summary-value {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 1.2rem;
+    text-align: right;
+  }
+
+  .kk-fws-offer__summary-amount {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.55rem;
+    line-height: 1.07;
+    white-space: nowrap;
+    color: var(--kk-fws-offer-ink);
+  }
+
+  /* On a subscription the tower row's amount is the FREE pill (Figma `7809:14892`). */
+  .kk-fws-offer[data-kk-fws-pay-mode="subscribe"] [data-kk-fws-summary-tower-amount] {
+    padding: 0.4rem 1.38rem 0.2rem;
+    border-radius: 99.9rem;
+    background: #0f7a4a;
+    font-size: 1.89rem;
+    line-height: 1;
+    letter-spacing: 0.1rem;
+    color: #ffffff;
+  }
+
+  /* Tight against the amount — Figma prints "$99 / 6 months" as one phrase. */
+  .kk-fws-offer__summary-cadence {
+    margin-left: -1.2rem;
+    padding-left: 0.4rem;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.38rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    color: var(--kk-fws-offer-subtle);
+  }
+
+  .kk-fws-offer__summary-cadence[hidden] {
+    display: none;
+  }
+
+  .kk-fws-offer__summary-strike,
+  .kk-fws-offer__summary-due-strike {
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.72rem;
+    line-height: 1.2;
+    text-decoration: line-through;
+    white-space: nowrap;
+    color: var(--kk-fws-offer-faint);
+  }
+
+  .kk-fws-offer__summary-due {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    padding: 0.6rem 0 0;
+  }
+
+  .kk-fws-offer__summary-due-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.52rem;
+    min-width: 0;
+  }
+
+  .kk-fws-offer__summary-due-label {
+    margin: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.55rem;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--kk-fws-offer-ink);
+  }
+
+  .kk-fws-offer__summary-note {
+    margin: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.29rem;
+    line-height: 1.2;
+    color: var(--kk-fws-offer-subtle);
+  }
+
+  .kk-fws-offer__summary-totals {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 1.2rem;
+    margin: 0;
+  }
+
+  .kk-fws-offer__summary-due-strike {
+    font-size: 2.06rem;
+  }
+
+  .kk-fws-offer__summary-total {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 3.2rem;
+    line-height: 1;
+    letter-spacing: -0.05rem;
+    white-space: nowrap;
+    color: var(--kk-fws-offer-ink);
+  }
+
+  /* Not in the design; kept in the markup because the picker script rewrites it. */
+  .kk-fws-offer .kk-fws-offer__summary-footnote {
+    display: none;
+  }
+
+  /* Countdown bar — Figma `7809:14917`. */
+  .kk-fws-offer__countdown {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.38rem;
+    margin-top: 0.6rem;
+    padding: 0.8rem 1.38rem;
+    border: 0.2rem solid #dce0e5;
+    border-radius: 1.2rem;
+    background:
+      radial-gradient(70% 160% at 100% 100%, rgba(39, 100, 255, 0.38) 0%, rgba(39, 100, 255, 0) 55%),
+      var(--kk-fws-offer-ink);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 1rem 2.4rem rgba(11, 22, 56, 0.28);
+  }
+
+  .kk-fws-offer__countdown-label {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.12rem;
+    line-height: 1.2;
+    letter-spacing: 0.21rem;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .kk-fws-offer__countdown-time {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1;
+    letter-spacing: 0.3rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    background: linear-gradient(90deg, #ffffff 0%, #f2f6ff 45%, #bfd2ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* CTA — Figma `7809:14931`. */
   .kk-fws-offer__button {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: 6.542rem;
-    padding: 1.2rem 4.4rem;
+    min-height: 0;
+    margin-top: 0;
+    padding: 2.27rem 2.4rem 2.37rem;
     box-sizing: border-box;
     border: 0;
-    background: var(--kk-fws-offer-button-background, #153a5b);
-    border-radius: 23.027rem;
+    border-radius: 3.44rem;
+    background: var(--kk-fws-offer-blue);
+    box-shadow: 0 1.2rem 1.3rem rgba(39, 100, 255, 0.26);
     font-family: 'Value Sans Bold', sans-serif;
     font-weight: 700;
-    font-size: 2.4rem;
-    line-height: 1.14;
-    letter-spacing: 0.138rem;
+    font-size: 1.81rem;
+    line-height: 1.2;
+    letter-spacing: 0.14rem;
     text-align: center;
     text-transform: uppercase;
-    color: var(--kk-fws-offer-button-text, #ffffff);
+    color: #ffffff;
     cursor: pointer;
-    transition: opacity 0.2s ease;
+    transition: all 0.2s ease;
+  }
+
+  /* No available variant: grey, inert. The hover/press rules below are overridden here. */
+  .kk-fws-offer__button:disabled,
+  .kk-fws-offer__button:disabled:hover,
+  .kk-fws-offer__button:disabled:focus-visible {
+    scale: 1;
+    background: var(--light-alt-200);
+    box-shadow: none;
+    color: #ffffff;
+    cursor: not-allowed;
   }
 
   .kk-fws-offer__button:hover,
   .kk-fws-offer__button:focus-visible {
-    opacity: 0.9;
-    color: var(--kk-fws-offer-button-text, #ffffff);
+    scale: 1.01;
+    box-shadow: none;
+     background: var(--kk-fws-offer-blue);
+    color: #ffffff;
   }
 
   .kk-fws-offer__trust-list {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
-    gap: 2.763rem;
+    justify-content: center;
+    gap: 0.8rem 3.44rem;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -3483,23 +4121,43 @@
   .kk-fws-offer__trust {
     display: flex;
     align-items: center;
-    gap: 0.921rem;
+    gap: 0.69rem;
+     margin-top: 0.8rem;
   }
 
   .kk-fws-offer__trust-icon {
     display: block;
     flex-shrink: 0;
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 1.55rem;
+    height: 1.55rem;
     object-fit: contain;
   }
 
   .kk-fws-offer__trust-text {
-    font-family: 'Value Sans', sans-serif;
-    font-weight: 400;
-    font-size: 1.6rem;
-    line-height: 1.4;
-    color: var(--kk-fws-offer-text, #26303a);
+
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.38rem;
+    line-height: 1.2;
+   
+    color: var(--kk-fws-offer-ink);
+  }
+
+  .kk-fws-offer__payments {
+    display: flex;
+    flex-wrap: no-wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-offer__payment-icon {
+    display: block;
+    width: auto;
+    height: 2.58rem;
   }
 
   .kk-fws-offer__notice {
@@ -3508,12 +4166,95 @@
     font-weight: 400;
     font-size: 1.8rem;
     line-height: 1.4;
-    color: var(--kk-fws-offer-text, #26303a);
+    color: var(--kk-fws-offer-muted, var(--primary-100));
+  }
+
+  /* Interaction states for the form's controls: the pay toggle, size and plan cards, CTA.
+     Only UNCHECKED, enabled options react. The checked one is drawn by a sliding thumb
+     (::before on its list) that the card can't move with. Hover is gated on real hover
+     devices so a tap doesn't leave it stuck on; the press is a small scale, motion-gated. */
+  .kk-fws-offer__pay-card {
+    transition: background-color 0.2s ease, transform 0.1s ease;
+  }
+
+  .kk-fws-offer__size-card {
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+  }
+
+  .kk-fws-offer__plan-card {
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+  }
+
+  @media (hover: hover) {
+    .kk-fws-offer__pay-input:not(:checked):not(:disabled) + .kk-fws-offer__pay-card:hover {
+      background: rgba(255, 255, 255, 0.55);
+    }
+
+    .kk-fws-offer__size-input:not(:checked):not(:disabled) + .kk-fws-offer__size-card:hover {
+      border-color: rgba(39, 100, 255, 0.45);
+      background: #ffffff;
+    }
+
+    .kk-fws-offer__plan-input:not(:checked):not(:disabled) + .kk-fws-offer__plan-card:hover {
+      background: #f8faff;
+      box-shadow: inset 0 0 0 1px rgba(39, 100, 255, 0.45);
+    }
+
+    .kk-fws-offer__plan-input:not(:checked):not(:disabled) + .kk-fws-offer__plan-card:hover .kk-fws-offer__plan-radio {
+      border-color: rgba(39, 100, 255, 0.55);
+    }
+  }
+
+  /* Mouse down. */
+  .kk-fws-offer__pay-input:not(:checked):not(:disabled) + .kk-fws-offer__pay-card:active {
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  .kk-fws-offer__size-input:not(:checked):not(:disabled) + .kk-fws-offer__size-card:active {
+    border-color: var(--kk-fws-offer-blue);
+    background: #eef3ff;
+  }
+
+  .kk-fws-offer__plan-input:not(:checked):not(:disabled) + .kk-fws-offer__plan-card:active {
+    background: #eef3ff;
+    box-shadow: inset 0 0 0 1px var(--kk-fws-offer-blue);
+  }
+
+  .kk-fws-offer__button:active:not(:disabled) {
+    background: #1f57e6;
+    box-shadow: 0 0.4rem 0.6rem rgba(39, 100, 255, 0.22);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .kk-fws-offer__pay-input:not(:checked):not(:disabled) + .kk-fws-offer__pay-card:active,
+    .kk-fws-offer__size-input:not(:checked):not(:disabled) + .kk-fws-offer__size-card:active {
+      transform: scale(0.97);
+    }
+
+    .kk-fws-offer__plan-input:not(:checked):not(:disabled) + .kk-fws-offer__plan-card:active {
+      transform: scale(0.985);
+    }
+
+    .kk-fws-offer__button:active:not(:disabled) {
+      scale: 0.98;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .kk-fws-offer__badge {
+      animation: none;
+    }
+
+    .kk-fws-offer__pay-card,
     .kk-fws-offer__size-card,
     .kk-fws-offer__plan-card,
+    .kk-fws-offer__plan-radio,
+    .kk-fws-offer__pay-list::before,
+    .kk-fws-offer__size-list.is-sliding-ready::before,
+    .kk-fws-offer__plan-list.is-sliding-ready::before,
+    .kk-fws-offer__plan-list.is-sliding-ready .kk-fws-offer__plan-ribbon,
+    .kk-fws-offer__size-list.is-sliding-ready .kk-fws-offer__size-name,
+    .kk-fws-offer__size-list.is-sliding-ready .kk-fws-offer__size-description,
     .kk-fws-offer__button,
     .kk-fws-offer__nav,
     .kk-fws-offer__thumb {
@@ -3522,95 +4263,85 @@
   }
 
   @media (max-width: 989px) {
+     .kk-fws-offer__plan-list {
+      
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    
+  }
     .kk-fws-offer {
-      padding: 6rem 0;
+      padding: 3.2rem 0 6rem;
+       
     }
 
-    .kk-fws-offer__heading {
-      font-size: 4rem;
-    }
-
-    .kk-fws-offer__subheading {
-      font-size: 1.8rem;
-    }
+   
 
     .kk-fws-offer__layout {
       grid-template-columns: 1fr;
+      grid-template-rows: none;
       row-gap: 3.2rem;
     }
 
-    .kk-fws-offer .kk-fws-offer__nav {
-      width: 3.6rem;
-      height: 3.6rem;
+    /* Stacked: back to DOM order, so gallery, then the buy form, then the accordion. */
+    .kk-fws-offer__media,
+    .kk-fws-offer__panel,
+    .kk-fws-offer .kk-fws-offer__accordion.section-accordion {
+      grid-column: auto;
+      grid-row: auto;
     }
 
-    .kk-fws-offer__nav-icon {
-      width: 1.6rem;
-      height: 0.95rem;
+    /* The layout's row-gap spaces it from the form. */
+    .kk-fws-offer .kk-fws-offer__accordion.section-accordion {
+      margin-top: 0;
     }
 
-    .kk-fws-offer__button {
-      font-size: 1.9rem;
-      letter-spacing: 0.1rem;
-    }
-
-    .kk-fws-offer__trust-list {
-      gap: 1.6rem;
-    }
-
-    .kk-fws-offer__plan-list {
-      gap: 1.6rem;
-    }
-
-    .kk-fws-offer__plan-card {
-      padding: 2.8rem 1.8rem 2rem;
-    }
-
-    .kk-fws-offer__plan-amount {
-      font-size: 2.4rem;
+    .kk-fws-offer__title {
+      font-size: 3.4rem;
     }
   }
 
   @media (max-width: 749px) {
     .kk-fws-offer {
-      padding: 4rem 0;
+      padding: 2.4rem 0 4rem;
     }
 
-    .kk-fws-offer__container {
-      width: min(100% - 4rem, 54rem);
-    }
-
-    .kk-fws-offer__eyebrow {
-      padding: 0.6rem 1.6rem;
-      font-size: 1.2rem;
-      letter-spacing: 0.12rem;
-    }
-
-    .kk-fws-offer__heading {
-      max-width: none;
-      margin-top: 1.6rem;
-      font-size: 2.8rem;
-    }
-
-    .kk-fws-offer__subheading {
-      max-width: none;
-      margin-top: 1.2rem;
+    .kk-fws-offer .kk-fws-offer__accordion .accordion dt,
+    .kk-fws-offer .kk-fws-offer__accordion .accordion-item.active dt,
+    .kk-fws-offer .kk-fws-offer__accordion .accordion-item:first-of-type dt {
       font-size: 1.6rem;
     }
 
+   
+
+    .kk-fws-offer__slider {
+      border-radius: 1.6rem;
+    }
+
     .kk-fws-offer .kk-fws-offer__nav {
-      width: 2.7595rem;
-      height: 2.7595rem;
+      bottom: 1.2rem;
+      width: 4rem;
+      height: 4rem;
+    }
+
+    .kk-fws-offer .kk-fws-offer__nav--prev {
+      right: 4.2rem;
+    }
+
+    .kk-fws-offer .kk-fws-offer__nav--next {
+      right: 1.2rem;
     }
 
     .kk-fws-offer__nav-icon {
-      width: 1.213rem;
-      height: 0.7202rem;
+      width: 1.6rem;
+      height: 1.6rem;
     }
 
     .kk-fws-offer__thumbs {
-      gap: 0.6389rem;
+      gap: 0.8rem;
       margin-top: 0.8rem;
+    }
+
+    .kk-fws-offer .kk-fws-offer__thumb {
+      border-radius: 1rem;
     }
 
     .kk-fws-offer .kk-fws-offer__play {
@@ -3625,268 +4356,188 @@
     }
 
     .kk-fws-offer__layout {
-      margin-top: 2.4rem;
       row-gap: 2.4rem;
     }
 
-    .kk-fws-offer__panel,
-    .kk-fws-offer__form {
-      gap: 1.8rem;
+    .kk-fws-offer__badge {
+      padding: 0.8rem 1.4rem;
+      font-size: 1.1rem;
+      letter-spacing: 0.16rem;
     }
 
-    .kk-fws-offer__size-list {
-      gap: 1.2rem;
+    .kk-fws-offer__title {
+      font-size: 2.7rem;
+    letter-spacing: -0.08rem !important;
     }
 
-    .kk-fws-offer__size-card {
-      min-height: 9rem;
-      padding: 1.2rem 0.6rem;
-      border-width: 0.2rem;
+    .kk-fws-offer__rating-stars {
+      width: 9.6rem;
+      height: 1.6rem;
     }
 
-    .kk-fws-offer__size-name {
-      font-size: 1.6rem;
-      line-height: 1.8rem;
+    .kk-fws-offer__certification {
+      letter-spacing: 0.1rem;
     }
 
-    .kk-fws-offer__size-description {
+    .kk-fws-offer__tap-badge {
+      padding: 1rem 1.6rem 1rem 1.2rem;
       font-size: 1.4rem;
-      line-height: 1.8rem;
     }
 
-    .kk-fws-offer__size-badge {
-      padding: 0.4rem 0.8rem;
-      font-size: 1.2rem;
-    }
-
-    .kk-fws-offer__size-tick {
-      top: calc(-0.9rem - 0.2rem);
-      right: calc(-0.9rem - 0.2rem);
-      width: 1.8rem;
-      height: 1.8rem;
-    }
-
-    .kk-fws-offer__button {
-      min-height: 0;
-      padding: 1.2rem 2rem;
+    .kk-fws-offer__introduction,
+    .kk-fws-offer__introduction p {
       font-size: 1.7rem;
-      line-height: 1.14;
-      letter-spacing: 0.1rem;
     }
 
-    .kk-fws-offer__trust-list {
-      flex-wrap: wrap;
-      gap: 1.2rem;
-    }
-
-    .kk-fws-offer__trust-text {
-      font-size: 1.4rem;
-    }
-
-    /* Mobile step + plan cards — Figma 7511:259/7511:265. The cards stay two-across and
-       narrow to 163.5px; they do not stack. */
-    .kk-fws-offer__step {
-      gap: 1.2rem;
-      margin-bottom: 1.6rem;
-    }
-
-    .kk-fws-offer__step-number {
-      width: 3.2rem;
-      height: 3.2rem;
-      font-size: 1.6rem;
-    }
-
-    .kk-fws-offer__step-title {
-      font-size: 1.6rem;
-    }
-
-    .kk-fws-offer__plan-list {
-      gap: 0.8rem;
-    }
-
-    .kk-fws-offer__plan-card {
-      min-height: 25.5rem;
-      padding: 3.2rem 1.2rem 1.6rem;
-      border-width: 0.2rem;
-    }
-
-    .kk-fws-offer__plan-ribbon {
-      top: -0.2rem;
-      right: -0.2rem;
-      min-height: 2.2rem;
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      letter-spacing: 0.1rem;
-    }
-
-    .kk-fws-offer__plan-body {
-      gap: 1.2rem;
-    }
-
-    .kk-fws-offer__plan-name {
-      gap: 0.6rem;
-    }
-
-    .kk-fws-offer__plan-radio {
-      width: 1.2rem;
-      height: 1.2rem;
-      margin-top: 0.31rem;
-      border-width: 0.1rem;
-    }
-
-    .kk-fws-offer__plan-label {
-      font-size: 1.4rem;
-    }
-
-    .kk-fws-offer__plan-amount {
-      font-size: 1.8rem;
-    }
-
-    .kk-fws-offer__plan-cadence {
-      font-size: 1.2rem;
-    }
-
-    /* No extra margin here: "$149 / 6 months $249" needs 136.9px of the 135.5px available
-       at 375px, and the row's own 4.4px gap is enough separation. Figma 7511:296 has the
-       three on one line with ~1.5px to spare. */
-    .kk-fws-offer__plan-compare {
-      margin-left: 0;
-      font-size: 1.4rem;
-    }
-
-    .kk-fws-offer__plan-features {
-      gap: 1.2rem;
-    }
-
-    .kk-fws-offer__plan-feature-text {
-      font-size: 1.2rem;
-      line-height: 1.4rem;
-    }
-
-    .kk-fws-offer__plan-unavailable {
-      font-size: 1.2rem;
-    }
-
-    /* Mobile step 3 — Figma 7511:319. Two across like step 2; 16px padding, 12px copy. */
-    .kk-fws-offer__pay-list {
-      gap: 0.8rem;
+    .kk-fws-offer__form {
+      gap: 2.4rem;
+      padding: 1.6rem;
+      border-radius: 1.6rem;
     }
 
     .kk-fws-offer__pay-card {
-      min-height: 0;
-      padding: 3.2rem 1.6rem 1.6rem;
-      border-width: 0.2rem;
-    }
-
-    .kk-fws-offer__pay-ribbon {
-      top: -0.2rem;
-      right: -0.2rem;
-      min-height: 2.2rem;
-      padding: 0.4rem 1.2rem;
-      font-size: 1rem;
-      letter-spacing: 0.1rem;
-    }
-
-    .kk-fws-offer__pay-name {
-      gap: 0.6rem;
-    }
-
-    .kk-fws-offer__pay-radio {
-      width: 1.2rem;
-      height: 1.2rem;
-      margin-top: 0.31rem;
-      border-width: 0.1rem;
+      padding: 1.2rem 0.8rem;
     }
 
     .kk-fws-offer__pay-label {
-      font-size: 1.6rem;
-      line-height: 1.2;
+      font-size: 1.35rem;
     }
 
-    .kk-fws-offer__pay-description {
-      font-size: 1.2rem;
-      line-height: 1.2;
+    .kk-fws-offer__pay-ribbon {
+      display: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.06rem;
     }
 
-    .kk-fws-offer__pay-unavailable {
-      font-size: 1.2rem;
-    }
-
-    /* Mobile order summary — Figma 7511:336. 20px gutter, 16px rhythm, smaller type, and
-       the dividers run the full width of the card rather than being inset. */
-    .kk-fws-offer__summary {
-      padding: 2rem 0;
-      border-width: 0.15rem;
-      border-radius: 0.8rem;
-    }
-
+    .kk-fws-offer__step-title,
     .kk-fws-offer__summary-title {
-      margin-bottom: 0;
-      padding: 0 2rem;
       font-size: 1.6rem;
-      line-height: 1.2;
-      letter-spacing: 0;
     }
 
-    .kk-fws-offer__summary-rows {
-      padding: 0;
+    .kk-fws-offer__size-list {
+      gap: 0.8rem;
     }
 
-    .kk-fws-offer__summary-row {
-      gap: 1.2rem;
-      padding: 1.6rem 2rem;
+    .kk-fws-offer__size-card {
+      padding: 1.2rem 0.6rem;
+      border-radius: 1.2rem;
     }
 
-    .kk-fws-offer__summary-label {
-      font-size: 1.4rem;
-      line-height: 1.2;
+    .kk-fws-offer__size-name {
+      font-size: 1.5rem;
     }
 
-    .kk-fws-offer__summary-value {
-      gap: 2rem;
+    .kk-fws-offer__size-description {
+      font-size: 1.2rem;
     }
 
-    .kk-fws-offer__summary-amount {
-      font-size: 1.4rem;
-      line-height: 1.2;
+    .kk-fws-offer__plan-list {
+      gap: 3.2rem;
     }
 
-    .kk-fws-offer__summary-cadence {
-      margin-left: -1.6rem;
-      font-size: 1.4rem;
-      line-height: 1.2;
+    .kk-fws-offer__plan-card {
+      padding: 2rem 1.2rem 1.6rem;
+      border-radius: 1.2rem;
+    }
+
+    .kk-fws-offer__plan-ribbon {
+      left: 1.2rem;
+      padding: 0.3rem 0.8rem;
+      font-size: 1.2rem;
+      letter-spacing: 0.08rem;
+    }
+
+    .kk-fws-offer__plan-name {
+      gap: 0.8rem;
+    }
+
+    .kk-fws-offer__plan-radio {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
+
+    .kk-fws-offer__plan-input:checked + .kk-fws-offer__plan-card .kk-fws-offer__plan-radio {
+      border-width: 0.5rem;
+    }
+
+    .kk-fws-offer__plan-label {
+      font-size: 1.5rem;
+    }
+
+    .kk-fws-offer__plan-amount {
+      font-size: 2.4rem;
+    }
+
+    .kk-fws-offer__plan-price {
+      gap: 0.4rem;
+    }
+
+    .kk-fws-offer__plan-cadence,
+    .kk-fws-offer__plan-compare {
+      font-size: 1.25rem;
+    }
+
+    .kk-fws-offer__summary-box {
+      padding: 0.2rem 1.4rem 1.4rem;
+      border-radius: 1.2rem;
+    }
+
+    .kk-fws-offer__summary-label,
+    .kk-fws-offer__summary-amount,
+    .kk-fws-offer__summary-due-label {
+      font-size: 1.5rem;
+    }
+
+    .kk-fws-offer[data-kk-fws-pay-mode="subscribe"] [data-kk-fws-summary-tower-amount] {
+      padding: 0.3rem 1rem;
+      font-size: 1.7rem;
     }
 
     .kk-fws-offer__summary-strike {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
     }
 
-    .kk-fws-offer__summary-due {
-      gap: 1.2rem;
-      margin-top: 0;
-      padding: 1.6rem 2rem;
-    }
-
-    .kk-fws-offer__summary-due-label {
-      font-size: 1.6rem;
-      line-height: 1.2;
-      letter-spacing: 0;
+    .kk-fws-offer__summary-cadence {
+      font-size: 1.4rem;
     }
 
     .kk-fws-offer__summary-note {
-      font-size: 1.4rem;
-      line-height: 1.2;
+      font-size: 1.2rem;
+    }
+
+    .kk-fws-offer__summary-due-strike {
+      font-size: 1.6rem;
     }
 
     .kk-fws-offer__summary-total {
       font-size: 2.4rem;
     }
 
-    .kk-fws-offer__summary-footnote {
-      margin-top: 1.6rem;
-      padding: 0 2rem;
-      font-size: 1.4rem;
-      line-height: 1.2;
+    .kk-fws-offer__countdown-label {
+      font-size: 1.2rem;
+    }
+
+    .kk-fws-offer__countdown-time {
+      font-size: 2.1rem;
+      letter-spacing: 0.2rem;
+    }
+
+    .kk-fws-offer__button {
+      padding: 1.8rem 1.6rem;
+      font-size: 1.8rem;
+      letter-spacing: 0.1rem;
+    }
+
+    .kk-fws-offer__trust-list {
+      gap: 0.8rem 2rem;
+    }
+
+    .kk-fws-offer__trust-text {
+      font-size: 1.5rem;
+    }
+
+    .kk-fws-offer__payment-icon {
+      height: 2.2rem;
     }
   }
 {% endstylesheet %}
@@ -3899,22 +4550,67 @@
   "max_blocks": 16,
   "settings": [
     {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow",
-      "default": "BUILD YOUR own system in minutes"
+      "type": "header",
+      "content": "Product intro",
+      "info": "The badge and rating come from the product's metafields when it has them; the fields below are only the fallback. Leave any field empty to hide that line. The product description is shown in the accordion, not here."
     },
     {
       "type": "inline_richtext",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Prefer to Customize? Configure Your System."
+      "id": "headline",
+      "label": "Headline",
+      "info": "Shown as the H1. Bold text is blue and italic text is struck through. Leave empty to use the product title."
+    },
+    {
+      "type": "richtext",
+      "id": "introduction",
+      "label": "Introduction",
+      "info": "Shown under the headline, rating and tap-water pill."
     },
     {
       "type": "text",
-      "id": "subheading",
-      "label": "Subheading",
-      "default": "Pick your size, your protection, and how you pay. Your price updates live - and the free-system offer still applies on every subscription."
+      "id": "badge_text",
+      "label": "Badge text",
+      "info": "Fallback for the custom.product_badge_text metafield."
+    },
+    {
+      "type": "text",
+      "id": "rating_score",
+      "label": "Rating score",
+      "info": "Fallback for the reviews.rating metafield, e.g. 4.7/5."
+    },
+    {
+      "type": "text",
+      "id": "rating_count",
+      "label": "Rating count",
+      "info": "Fallback for the reviews.rating_count metafield."
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating text",
+      "info": "[count] is replaced with the rating count."
+    },
+    {
+      "type": "text",
+      "id": "certification_text",
+      "label": "Certification text"
+    },
+    {
+      "type": "text",
+      "id": "tap_badge_text",
+      "label": "Tap-water pill text"
+    },
+    {
+      "type": "checkbox",
+      "id": "tap_badge_flag",
+      "label": "Show US flag on the pill",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "tap_badge_icon",
+      "label": "Custom pill icon",
+      "info": "Overrides the US flag."
     },
     {
       "type": "header",
@@ -3963,6 +4659,13 @@
       "id": "plan_legend",
       "label": "Step 2 heading",
       "default": "Choose Your Protection Plan"
+    },
+    {
+      "type": "text",
+      "id": "filter_legend",
+      "label": "Step 2 heading (one-time)",
+      "default": "Choose Your Filter",
+      "info": "Shown when One-Time Purchase is selected — paying once buys the filters, not a plan."
     },
     {
       "type": "text",
@@ -4059,6 +4762,54 @@
     },
     {
       "type": "header",
+      "content": "Accessibility labels",
+      "info": "Read by screen readers only; not shown on the page."
+    },
+    {
+      "type": "text",
+      "id": "gallery_label",
+      "label": "Gallery label",
+      "default": "[title] media gallery",
+      "info": "[title] is replaced with the product title."
+    },
+    {
+      "type": "text",
+      "id": "previous_label",
+      "label": "Previous image button",
+      "default": "Previous image"
+    },
+    {
+      "type": "text",
+      "id": "next_label",
+      "label": "Next image button",
+      "default": "Next image"
+    },
+    {
+      "type": "text",
+      "id": "thumbs_label",
+      "label": "Thumbnail strip",
+      "default": "Gallery thumbnails"
+    },
+    {
+      "type": "text",
+      "id": "play_video_label",
+      "label": "Play video button",
+      "default": "Play video"
+    },
+    {
+      "type": "text",
+      "id": "video_title_label",
+      "label": "Video player title",
+      "default": "Product video"
+    },
+    {
+      "type": "text",
+      "id": "payments_label",
+      "label": "Payment icons",
+      "default": "Accepted payment methods"
+    },
+    {
+      "type": "header",
       "content": "Product accordion",
       "info": "Renders below the thumbnails, in the media column. Shares snippets/accordion-panels.liquid with the standalone Dropdown Accordion section, so Description, Technical Specifications, Lab Report and What's in box come from the product itself. Add \"Accordion item\" blocks for anything else."
     },
@@ -4076,8 +4827,15 @@
       "type": "text",
       "id": "button_label",
       "label": "Button label",
-      "default": "send me my free TOWER",
-      "info": "Plain text only — the theme's ajax cart replaces the button text while adding."
+      "default": "Free for this week only",
+      "info": "Shown with Subscribe & Save selected. Plain text only — the theme's ajax cart replaces the button text while adding."
+    },
+    {
+      "type": "text",
+      "id": "button_label_onetime",
+      "label": "Button label (one-time purchase)",
+      "default": "Buy now without the discount",
+      "info": "Shown with One-Time Purchase selected. Falls back to the button label when empty."
     },
     {
       "type": "header",
@@ -4108,7 +4866,7 @@
       "id": "tower_value_cents",
       "label": "Tower value (cents)",
       "default": 24900,
-      "info": "Struck through on the tower row and used in the saving line. 24900 = $249."
+      "info": "Subscribe & Save only: struck through on the tower row and used in the saving line. 24900 = $249."
     },
     {
       "type": "text",
@@ -4121,7 +4879,14 @@
       "id": "size_upgrade_label",
       "label": "Size upgrade row label",
       "default": "Size Upgrade",
-      "info": "Shown on a one-time purchase only, and only when the selected size costs more than the cheapest."
+      "info": "Subscribe & Save only, when the plan charges more on the first order than on renewals."
+    },
+    {
+      "type": "text",
+      "id": "filter_included_text",
+      "label": "Filter row value (one-time)",
+      "default": "Included",
+      "info": "One-time purchase: the tower row carries the full price and the filter row reads this."
     },
     {
       "type": "text",
@@ -4176,6 +4941,23 @@
       "default": "Own it outright - no subscription"
     },
     {
+      "type": "text",
+      "id": "countdown_label",
+      "label": "Countdown label"
+    },
+    {
+      "type": "text",
+      "id": "countdown_end",
+      "label": "Countdown end",
+      "info": "\"daily\" counts down to midnight in the visitor's time zone and restarts each day. \"6 hours\" (or any number of hours or minutes) restarts every 6 hours from midnight. A date like 2026-10-09T23:59:59-07:00 counts down once to that moment. Leave empty to hide the countdown. Shown on Subscribe & Save only."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    },
+    {
       "type": "header",
       "content": "Colors"
     },
@@ -4183,7 +4965,7 @@
       "type": "color",
       "id": "background_color",
       "label": "Section background",
-      "default": "#ffffff"
+      "default": "#f5f6f8"
     },
     {
       "type": "color",
@@ -4196,12 +4978,6 @@
       "id": "text_color",
       "label": "Body text",
       "default": "#26303a"
-    },
-    {
-      "type": "color",
-      "id": "eyebrow_background_color",
-      "label": "Eyebrow pill background",
-      "default": "#f8f5f3"
     },
     {
       "type": "color",
@@ -4346,6 +5122,12 @@
         },
         {
           "type": "text",
+          "id": "filter_label",
+          "label": "Filter name (one-time)",
+          "info": "Card and order summary name when One-Time Purchase is selected. Defaults to the plan name."
+        },
+        {
+          "type": "text",
           "id": "ribbon",
           "label": "Corner ribbon",
           "info": "e.g. \"Most popular\". Leave blank for no ribbon."
@@ -4375,6 +5157,12 @@
           "label": "Feature list",
           "default": "150+ contaminants removed\nPair of carbon fitter elements\nReplaced every & months",
           "info": "One feature per line. Each gets a check mark."
+        },
+        {
+          "type": "textarea",
+          "id": "filter_features",
+          "label": "Feature list (one-time)",
+          "info": "Shown when One-Time Purchase is selected. Defaults to the feature list above."
         }
       ]
     },
@@ -4387,6 +5175,7 @@
           "id": "icon",
           "label": "Icon",
           "options": [
+            { "value": "tick", "label": "Tick" },
             { "value": "shipping", "label": "Shipping" },
             { "value": "trial", "label": "Trial" },
             { "value": "cancel", "label": "Cancel any time" },
@@ -4468,9 +5257,8 @@
             "features": "Fluoride + 150 contaminants removed\nIncludes & months of fluoride media\nSteal fluoride-reduction elements"
           }
         },
-        { "type": "trust", "settings": { "icon": "shipping", "text": "Pay only shipping today" } },
-        { "type": "trust", "settings": { "icon": "trial", "text": "100-day trial" } },
-        { "type": "trust", "settings": { "icon": "cancel", "text": "Cancel any time" } }
+        { "type": "trust", "settings": { "icon": "tick", "text": "100-day trial" } },
+        { "type": "trust", "settings": { "icon": "tick", "text": "Cancel any time" } }
       ]
     }
   ]

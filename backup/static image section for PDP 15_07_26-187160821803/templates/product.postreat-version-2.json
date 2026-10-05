@@ -22,7 +22,7 @@
         "custom_liquid_wx43j3": {
           "type": "custom_liquid",
           "settings": {
-            "custom_liquid": "<section class=\"hero\">\n  <div class=\"content\">\n    <h1>\n      <span class=\"white\">The First Refillable</span><br>\n      <span class=\"blue\">Steel Fluoride Filter</span><br>\n      <span class=\"white\">for Home Gravity</span><br>\n      <span class=\"white\">Systems</span>\n    </h1>\n\n    <!-- U.S. Tap Water Badge -->\n    <div class=\"us-water-badge\">\n      <img\n        src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/united-states-flag-icon.svg?v=1783937607\"\n        alt=\"United States Flag\"\n        class=\"us-water-badge__flag\"\n      >\n\n      <span class=\"us-water-badge__text\">\n        Designed for Universal Compatibility.\n      </span>\n    </div>\n\n    <p>\n      Clinically studied. Aluminum-free. Removes\n      <strong>95%+ of fluoride and arsenic</strong>\n      — without stripping the minerals your body actually needs.\n    </p>\n  </div>\n</section>\n\n<style>\n.us-water-badge {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 12px;\n\n  padding: 10px 18px;\n\n  background: #fff;\n  border: 2px solid #2D5CC7;\n  border-radius: 999px;\n\n  width: fit-content;\n  max-width: 100%;\n  box-sizing: border-box;\n\n  margin-bottom: 20px;\n}\n\n.us-water-badge__flag {\n  width: 34px;\n  height: auto;\n  flex-shrink: 0;\n  display: block;\n}\n\n.us-water-badge__text {\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 16px;\n  font-weight: 600;\n  color: #2f2f2f;\n  line-height: 1.2;\n  white-space: nowrap;\n}\n\n/* Tablet */\n@media screen and (max-width: 768px) {\n  .us-water-badge {\n    gap: 10px;\n    padding: 9px 16px;\n  }\n\n  .us-water-badge__flag {\n    width: 30px;\n  }\n\n  .us-water-badge__text {\n    font-size: 15px;\n  }\n}\n\n/* Mobile */\n@media screen and (max-width: 480px) {\n  .us-water-badge {\n    width: 100%;\n    justify-content: center;\n    padding: 10px 14px;\n    gap: 15px;\n  }\n\n  .us-water-badge__flag {\n    width: 26px;\n  }\n\n  .us-water-badge__text {\n    font-size: 12px;\n    white-space: normal;\n    text-align: left;\n    line-height: 1.3;\n  }\n}\n</style>"
+            "custom_liquid": "<section class=\"hero\">\n  <div class=\"content\">\n    <h1>\n      <span class=\"white\">The First Refillable</span><br>\n      <span class=\"blue\">Steel Fluoride Filter</span><br>\n      <span class=\"white\">for Home Gravity</span><br>\n      <span class=\"white\">Systems</span>\n    </h1>\n\n    <!-- U.S. Tap Water Badge -->\n    <div class=\"us-water-badge\">\n      <img\n        src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/united-states-flag-icon.svg?v=1783937607\"\n        alt=\"United States Flag\"\n        class=\"us-water-badge__flag\"\n      >\n\n      <span class=\"us-water-badge__text\">\n        Designed for Universal Compatibility.\n      </span>\n    </div>\n\n    <p>\n      Clinically studied. Aluminum-free. Removes\n      <strong>95%+ of fluoride</strong>\n      — without stripping the minerals your body actually needs.\n    </p>\n  </div>\n</section>\n\n<style>\n.us-water-badge {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 12px;\n\n  padding: 10px 18px;\n\n  background: #fff;\n  border: 2px solid #2D5CC7;\n  border-radius: 999px;\n\n  width: fit-content;\n  max-width: 100%;\n  box-sizing: border-box;\n\n  margin-bottom: 20px;\n}\n\n.us-water-badge__flag {\n  width: 34px;\n  height: auto;\n  flex-shrink: 0;\n  display: block;\n}\n\n.us-water-badge__text {\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 16px;\n  font-weight: 600;\n  color: #2f2f2f;\n  line-height: 1.2;\n  white-space: nowrap;\n}\n\n/* Tablet */\n@media screen and (max-width: 768px) {\n  .us-water-badge {\n    gap: 10px;\n    padding: 9px 16px;\n  }\n\n  .us-water-badge__flag {\n    width: 30px;\n  }\n\n  .us-water-badge__text {\n    font-size: 15px;\n  }\n}\n\n/* Mobile */\n@media screen and (max-width: 480px) {\n  .us-water-badge {\n    width: 100%;\n    justify-content: center;\n    padding: 10px 14px;\n    gap: 15px;\n  }\n\n  .us-water-badge__flag {\n    width: 26px;\n  }\n\n  .us-water-badge__text {\n    font-size: 12px;\n    white-space: normal;\n    text-align: left;\n    line-height: 1.3;\n  }\n}\n</style>"
           }
         },
         "rating_xUErbe": {
@@ -102,7 +102,7 @@
         "description_stat_2_label": "Gallons Per Pair",
         "description_stat_3_value": "10yr",
         "description_stat_3_label": "Steel Casing Warranty",
-        "description_stat_4_value": "2,400+",
+        "description_stat_4_value": "2,750+",
         "description_stat_4_label": "Customers Protected",
         "show_badge": true,
         "badge_text": ""
@@ -240,7 +240,7 @@
             "visibility": "always",
             "variant_ids": "",
             "heading": "POSTreat Steel Filter Stage",
-            "description": "<p>Pre-filtered water flows through our proprietary FluoRid media inside the AISI 304 steel casing — capturing fluoride and arsenic with 95%+ efficiency.</p>"
+            "description": "<p>Pre-filtered water flows through our proprietary FluoRid media inside the AISI 304 steel casing — capturing fluoride with 95%+ efficiency.</p>"
           }
         },
         "step_EN3Cwg": {
@@ -529,6 +529,7 @@
         },
         "row_aG4hiP": {
           "type": "row",
+          "disabled": true,
           "settings": {
             "feature": "Removes Arsenic",
             "detail": "",
@@ -709,7 +710,7 @@
           "name": "Set Up Question and answer",
           "settings": {
             "question": "How long do the POSTreat Steel Filter elements last?",
-            "answer": "<p>The AISI 304 stainless steel casing is built to last 10+ years and is covered by a 10-year warranty. The FluoRid media inside — which does the fluoride and arsenic capturing — needs to be replaced every 4 months or approximately every 1,060 gallons of filtration, whichever comes first. Only the media changes; the steel casing stays for a decade.<br/></p>"
+            "answer": "<p>The AISI 304 stainless steel casing is built to last 10+ years and is covered by a 10-year warranty. The FluoRid media inside — which does the fluoride capturing — needs to be replaced every 4 months or approximately every 1,060 gallons of filtration, whichever comes first. Only the media changes; the steel casing stays for a decade.<br/></p>"
           }
         },
         "question_answer_HetfrQ": {
@@ -733,7 +734,7 @@
           "name": "Set Up Question and answer",
           "settings": {
             "question": "Do I need a stainless steel casing if I just want to replace the media?",
-            "answer": "<p>Yes — the AISI 304 stainless steel casing is essential. It creates the controlled contact environment that allows the FluoRid media to intercept fluoride and arsenic effectively. Without it, the media cannot function properly. The casing is reusable for 10+ years; you only ever need to replace the media inside.</p>"
+            "answer": "<p>Yes — the AISI 304 stainless steel casing is essential. It creates the controlled contact environment that allows the FluoRid media to intercept fluoride effectively. Without it, the media cannot function properly. The casing is reusable for 10+ years; you only ever need to replace the media inside.</p>"
           }
         },
         "question_answer_CBmXVy": {
@@ -755,8 +756,8 @@
           "type": "question_answer",
           "name": "Filtration Question and answer",
           "settings": {
-            "question": "Does POSTreat Steel Filter remove arsenic as well as fluoride?",
-            "answer": "<p>Yes. The proprietary FluoRid media is specifically formulated to reduce both fluoride and arsenic from drinking water. These two contaminants often co-occur in tap and well water, and our media addresses both in a single pass through the lower chamber.</p>"
+            "question": "Does POSTreat Steel Filter remove fluoride?",
+            "answer": "<p>Yes. The proprietary FluoRid media is specifically formulated to reduce both fluoride from drinking water. These two contaminants often co-occur in tap and well water, and our media addresses both in a single pass through the lower chamber.</p>"
           }
         },
         "question_answer_iK84z7": {
@@ -764,7 +765,7 @@
           "name": "Filtration Question and answer",
           "settings": {
             "question": "Does it remove healthy minerals from the water?",
-            "answer": "<p>No. Unlike reverse osmosis, POSTreat Steel Filter is designed to target fluoride and arsenic specifically — not the broad spectrum of dissolved minerals your body needs for hydration and cellular function. Calcium, magnesium, and trace minerals remain intact in your filtered water.</p>"
+            "answer": "<p>No. Unlike reverse osmosis, POSTreat Steel Filter is designed to target fluoride specifically — not the broad spectrum of dissolved minerals your body needs for hydration and cellular function. Calcium, magnesium, and trace minerals remain intact in your filtered water.</p>"
           }
         },
         "question_answer_cik4Hy": {
@@ -780,7 +781,7 @@
           "name": "Filtration Question and answer",
           "settings": {
             "question": "Is it compatible with Black Berkey® filter elements?",
-            "answer": "<p>Yes. POSTreat Steel Filter Elements are cross-compatible with Black Berkey® Replacement Elements, making them a popular upgrade for existing Berkey system owners who want to add professional-grade fluoride and arsenic reduction without buying a new system.</p>"
+            "answer": "<p>Yes. POSTreat Steel Filter Elements are cross-compatible with Black Berkey® Replacement Elements, making them a popular upgrade for existing Berkey system owners who want to add professional-grade fluoride reduction without buying a new system.</p>"
           }
         },
         "question_answer_P9XUWc": {

@@ -1,0 +1,671 @@
+{%- comment -%}
+  KK FWS Accordion Tabs (FAQ) — Figma `7809:15991`.
+
+  Replaces the reused theme `accordion-tabs` section on the campaign template. It keeps the
+  same block model — a "Tab" block followed by the "Question & answer" blocks that belong to it
+  — so the FAQ content moved across unchanged. It owns the `#kk-fws-faq` anchor itself.
+
+  Behaviour is self-contained on purpose. The theme's src/js/accordion.js binds every
+  `.accordion-item dt` on the page, so this section uses its own class names to stay out of
+  its way. Tabs follow the WAI-ARIA tabs pattern (arrow keys move between tabs); within a
+  panel one answer is open at a time, and the first answer of each tab starts open, as the
+  design shows. The open/close animates grid rows from 0fr to 1fr, so no heights are measured.
+{%- endcomment -%}
+
+{%- liquid
+  assign tab_blocks = section.blocks | where: 'type', 'tab'
+  assign trust_blocks = section.blocks | where: 'type', 'trust'
+-%}
+
+<section
+  id="kk-fws-faq"
+  class="kk-fws-faq kk-fws-section"
+  data-kk-fws-faq
+  style="--kk-fws-faq-background: {{ section.settings.background_color }};"
+>
+  <div class="kk-fws-faq__container kk-fws-container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="kk-fws-faq__heading kk-fws-heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if tab_blocks.size > 1 -%}
+      <div class="kk-fws-faq__tabs" role="tablist" aria-label="{{ section.settings.tabs_label | escape }}">
+        {%- for block in tab_blocks -%}
+          <button
+            type="button"
+            class="kk-fws-faq__tab"
+            id="kk-fws-faq-tab-{{ block.id }}"
+            role="tab"
+            aria-controls="kk-fws-faq-panel-{{ block.id }}"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
+            data-kk-fws-faq-tab
+            {{ block.shopify_attributes }}
+          >
+            {{- block.settings.tab_title -}}
+          </button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="kk-fws-faq__panels">
+      {%- liquid
+        assign panel_open = false
+        assign tab_index = 0
+        assign question_index = 0
+      -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'tab' -%}
+          {%- if panel_open -%}
+            </dl></div>
+          {%- endif -%}
+          {%- liquid
+            assign panel_open = true
+            assign tab_index = tab_index | plus: 1
+            assign question_index = 0
+          -%}
+          <div
+            class="kk-fws-faq__panel"
+            id="kk-fws-faq-panel-{{ block.id }}"
+            {% if tab_blocks.size > 1 %}
+              role="tabpanel"
+              aria-labelledby="kk-fws-faq-tab-{{ block.id }}"
+              tabindex="0"
+            {% endif %}
+            {% if tab_index > 1 %}hidden{% endif %}
+            data-kk-fws-faq-panel
+          >
+            <dl class="kk-fws-faq__list">
+        {%- elsif block.type == 'question_answer' and panel_open -%}
+          {%- assign question_index = question_index | plus: 1 -%}
+          {%- assign is_open = false -%}
+          {%- if question_index == 1 and section.settings.open_first -%}
+            {%- assign is_open = true -%}
+          {%- endif -%}
+          <div class="kk-fws-faq__item{% if is_open %} is-open{% endif %}" data-kk-fws-faq-item {{ block.shopify_attributes }}>
+            <dt class="kk-fws-faq__question">
+              <button
+                type="button"
+                class="kk-fws-faq__toggle"
+                id="kk-fws-faq-q-{{ block.id }}"
+                aria-expanded="{% if is_open %}true{% else %}false{% endif %}"
+                aria-controls="kk-fws-faq-a-{{ block.id }}"
+                data-kk-fws-faq-toggle
+              >
+                <span class="kk-fws-faq__question-text">{{ block.settings.question }}</span>
+                <span class="kk-fws-faq__icon" aria-hidden="true"></span>
+              </button>
+            </dt>
+            <dd
+              class="kk-fws-faq__answer"
+              id="kk-fws-faq-a-{{ block.id }}"
+              role="region"
+              aria-labelledby="kk-fws-faq-q-{{ block.id }}"
+            >
+              <div class="kk-fws-faq__answer-inner">
+                <div class="kk-fws-faq__answer-body">{{ block.settings.answer }}</div>
+              </div>
+            </dd>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if panel_open -%}
+        </dl></div>
+      {%- endif -%}
+    </div>
+
+    {%- render 'kk-fws-cta', section: section, prefix: 'kk-fws-faq', trust_blocks: trust_blocks, icon_size: 22 -%}
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.currentScript && document.currentScript.previousElementSibling;
+    if (!root || !root.hasAttribute('data-kk-fws-faq')) return;
+
+    // Tabs.
+    var tabs = [].slice.call(root.querySelectorAll('[data-kk-fws-faq-tab]'));
+    var panels = [].slice.call(root.querySelectorAll('[data-kk-fws-faq-panel]'));
+
+    // Sliding thumb: measured to the selected tab. offset* is relative to the bar's content,
+    // so it is unaffected by the bar's sideways scroll.
+    var tabBar = root.querySelector('.kk-fws-faq__tabs');
+
+    function placeThumb() {
+      var selected = tabBar && tabBar.querySelector('[aria-selected="true"]');
+
+      if (!selected || !selected.offsetWidth) return;
+
+      tabBar.style.setProperty('--kk-fws-thumb-x', selected.offsetLeft + 'px');
+      tabBar.style.setProperty('--kk-fws-thumb-y', selected.offsetTop + 'px');
+      tabBar.style.setProperty('--kk-fws-thumb-w', selected.offsetWidth + 'px');
+      tabBar.style.setProperty('--kk-fws-thumb-h', selected.offsetHeight + 'px');
+
+      if (!tabBar.classList.contains('is-sliding')) {
+        tabBar.classList.add('is-sliding');
+        // Animate moves only, never the first placement.
+        window.requestAnimationFrame(function () {
+          tabBar.classList.add('is-sliding-ready');
+        });
+      }
+    }
+
+    function selectTab(index, focus) {
+      tabs.forEach(function (tab, i) {
+        var selected = i === index;
+        tab.setAttribute('aria-selected', selected ? 'true' : 'false');
+        tab.tabIndex = selected ? 0 : -1;
+        if (panels[i]) panels[i].hidden = !selected;
+      });
+      placeThumb();
+      if (focus && tabs[index]) tabs[index].focus();
+    }
+
+    if (tabBar) {
+      // The selected tab turns bold, so its width changes after selection; fonts loading
+      // and breakpoints move tabs too. Watching each tab catches all of it.
+      if ('ResizeObserver' in window) {
+        var resizeObserver = new ResizeObserver(placeThumb);
+        resizeObserver.observe(tabBar);
+        tabs.forEach(function (tab) {
+          resizeObserver.observe(tab);
+        });
+      }
+
+      placeThumb();
+    }
+
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener('click', function () {
+        selectTab(i, false);
+      });
+      tab.addEventListener('keydown', function (event) {
+        var next = null;
+        if (event.key === 'ArrowRight') next = (i + 1) % tabs.length;
+        else if (event.key === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = tabs.length - 1;
+        if (next === null) return;
+        event.preventDefault();
+        selectTab(next, true);
+      });
+    });
+
+    // Accordion — one open answer per panel.
+    root.addEventListener('click', function (event) {
+      var toggle = event.target.closest('[data-kk-fws-faq-toggle]');
+      if (!toggle || !root.contains(toggle)) return;
+
+      var item = toggle.closest('[data-kk-fws-faq-item]');
+      var panel = toggle.closest('[data-kk-fws-faq-panel]');
+      var opening = toggle.getAttribute('aria-expanded') !== 'true';
+
+      if (opening && panel) {
+        [].forEach.call(panel.querySelectorAll('[data-kk-fws-faq-item].is-open'), function (other) {
+          if (other === item) return;
+          other.classList.remove('is-open');
+          var otherToggle = other.querySelector('[data-kk-fws-faq-toggle]');
+          if (otherToggle) otherToggle.setAttribute('aria-expanded', 'false');
+        });
+      }
+
+      item.classList.toggle('is-open', opening);
+      toggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
+    });
+  })();
+</script>
+
+{% stylesheet %}
+  /* Figma `7809:15991`: white, 88px top and bottom; tab bar 1041px, list 1000px. */
+  .kk-fws-faq {
+    --kk-fws-faq-ink: var(--primary);
+    --kk-fws-faq-muted: var(--primary-100);
+    --kk-fws-faq-blue: var(--primary-600);
+    --kk-fws-faq-rule: var(--light-alt);
+    /* kk-fws-base.css overrides */
+    --kk-fws-container-max: 104.1rem;
+
+    background: var(--kk-fws-faq-background, #ffffff);
+    scroll-margin-top: 2rem;
+  }
+
+  .kk-fws-faq__heading {
+    margin-bottom: 4rem;
+    text-align: center;
+  }
+
+  /* Tab bar — a white pill holding the tabs; the selected one fills blue. */
+  .kk-fws-faq__tabs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 4.4rem;
+    padding: 0.6rem;
+    overflow-x: auto;
+    border: 1px solid var(--kk-fws-faq-rule);
+    border-radius: 99.9rem;
+    background: #ffffff;
+    box-shadow: 0 0.8rem 1.1rem rgba(11, 22, 56, 0.05);
+    scrollbar-width: none;
+  }
+
+  .kk-fws-faq__tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .kk-fws-faq__tab {
+    flex-shrink: 0;
+    margin: 0;
+    padding: 1.54rem 2.2rem 1.64rem;
+    border: 0;
+    border-radius: 99.9rem;
+    background: transparent;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.6rem;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: none;
+    white-space: nowrap;
+    color: var(--kk-fws-faq-muted);
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Hover: the primary blue at 20%. Unselected tabs only — the selected one is already blue. */
+  .kk-fws-faq__tab:hover:not([aria-selected='true']) {
+    background: rgba(39, 100, 255, 0.2);
+    color: var(--kk-fws-faq-ink);
+  }
+
+  .kk-fws-faq__tab[aria-selected='true'] {
+    background: var(--kk-fws-faq-blue);
+    box-shadow: 0 0.6rem 0.7rem rgba(39, 100, 255, 0.25);
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  /* Sliding thumb (same effect as the offer's pay toggle), enabled by the tab script
+     (.is-sliding). One blue pill measured to the selected tab slides between tabs; it is a
+     child of the scrolling bar, so it scrolls with the tabs on narrow screens. Without the
+     script the selected tab paints itself blue, as above. */
+  .kk-fws-faq__tabs.is-sliding {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .kk-fws-faq__tabs.is-sliding::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: var(--kk-fws-thumb-w);
+    height: var(--kk-fws-thumb-h);
+    border-radius: 99.9rem;
+    background: var(--kk-fws-faq-blue);
+    box-shadow: 0 0.6rem 0.7rem rgba(39, 100, 255, 0.25);
+    transform: translate(var(--kk-fws-thumb-x), var(--kk-fws-thumb-y));
+    pointer-events: none;
+  }
+
+  .kk-fws-faq__tabs.is-sliding-ready::before {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s ease, height 0.3s ease;
+  }
+
+  .kk-fws-faq__tabs.is-sliding .kk-fws-faq__tab {
+    position: relative;
+    z-index: 1;
+  }
+
+  .kk-fws-faq__tabs.is-sliding .kk-fws-faq__tab[aria-selected='true'] {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .kk-fws-faq__tab:focus-visible {
+    outline: 2px solid var(--kk-fws-faq-blue);
+    outline-offset: 2px;
+  }
+
+  .kk-fws-faq__panels {
+    width: 100%;
+    max-width: 100rem;
+  }
+
+  .kk-fws-faq__panel:focus-visible {
+    outline: 2px solid var(--kk-fws-faq-blue);
+    outline-offset: 0.6rem;
+    border-radius: 1.8rem;
+  }
+
+  .kk-fws-faq__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    margin: 0;
+  }
+
+  .kk-fws-faq__item {
+    border: 1px solid var(--kk-fws-faq-rule);
+    border-radius: 1.8rem;
+    background: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .kk-fws-faq__item.is-open {
+    border-color: var(--kk-fws-faq-blue);
+    box-shadow: 0 1.2rem 1.5rem rgba(39, 100, 255, 0.08);
+  }
+
+  .kk-fws-faq__question {
+    margin: 0;
+    padding: 0;
+  }
+
+  .kk-fws-faq__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.4rem;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 2.4rem 3.2rem;
+    border: 0;
+    border-radius: 1.8rem;
+    background: none;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.2rem;
+    line-height: 1.3;
+    letter-spacing: 0;
+    text-align: left;
+    text-transform: none;
+    color: var(--kk-fws-faq-ink);
+    cursor: pointer;
+  }
+
+  /* No hover fill on the question row — the theme's global button hover would otherwise paint
+     one. Scoped through the section root so it outranks that rule. */
+  .kk-fws-faq .kk-fws-faq__toggle:hover,
+  .kk-fws-faq .kk-fws-faq__toggle:focus,
+  .kk-fws-faq .kk-fws-faq__toggle:active {
+    background: none;
+    color: var(--kk-fws-faq-ink);
+  }
+
+  .kk-fws-faq__toggle:focus-visible {
+    outline: 2px solid var(--kk-fws-faq-blue);
+    outline-offset: -0.4rem;
+  }
+
+  .kk-fws-faq__question-text {
+    min-width: 0;
+  }
+
+  /* 44px disc: pale with a blue plus when closed, blue with a white minus when open. */
+  .kk-fws-faq__icon {
+    position: relative;
+    flex-shrink: 0;
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: 50%;
+    background: #f2f6ff;
+    transition: background-color 0.2s ease;
+  }
+
+  .kk-fws-faq__icon::before,
+  .kk-fws-faq__icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1.3rem;
+    height: 0.15rem;
+    border-radius: 0.1rem;
+    background: var(--kk-fws-faq-blue);
+    transform: translate(-50%, -50%);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  .kk-fws-faq__icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .kk-fws-faq__item.is-open .kk-fws-faq__icon {
+    background: var(--kk-fws-faq-blue);
+  }
+
+  .kk-fws-faq__item.is-open .kk-fws-faq__icon::before,
+  .kk-fws-faq__item.is-open .kk-fws-faq__icon::after {
+    background: #ffffff;
+  }
+
+  .kk-fws-faq__item.is-open .kk-fws-faq__icon::after {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  .kk-fws-faq__answer {
+    display: grid;
+    grid-template-rows: 0fr;
+    margin: 0;
+    transition: grid-template-rows 0.25s ease;
+  }
+
+  .kk-fws-faq__item.is-open .kk-fws-faq__answer {
+    grid-template-rows: 1fr;
+  }
+
+  .kk-fws-faq__answer-inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Closed answers are also hidden from assistive tech and the tab order, not just collapsed. */
+  .kk-fws-faq__item:not(.is-open) .kk-fws-faq__answer-inner {
+    visibility: hidden;
+    transition: visibility 0s 0.25s;
+  }
+
+  .kk-fws-faq__answer-body {
+    max-width: 82.1rem;
+    padding: 0 3.2rem 3.2rem;
+    margin-top: -0.4rem;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.8rem;
+    line-height: 1.55;
+    color: var(--kk-fws-faq-muted);
+  }
+
+  .kk-fws-faq__answer-body p {
+    margin: 0;
+  }
+
+  .kk-fws-faq__answer-body p + p {
+    margin-top: 1em;
+  }
+
+  .kk-fws-faq__answer-body a {
+    color: var(--kk-fws-faq-blue);
+  }
+
+  /* CTA + trust row — Figma `7809:16065`. */
+
+  @media (prefers-reduced-motion: reduce) {
+    .kk-fws-faq__tab,
+    .kk-fws-faq__tabs.is-sliding-ready::before,
+    .kk-fws-faq__item,
+    .kk-fws-faq__icon,
+    .kk-fws-faq__icon::before,
+    .kk-fws-faq__icon::after,
+    .kk-fws-faq__answer {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 989px) {
+
+    /* The five tabs no longer fit: the bar scrolls sideways instead of wrapping. */
+    .kk-fws-faq__tabs {
+      justify-content: flex-start;
+    }
+
+    .kk-fws-faq__toggle {
+      font-size: 2rem;
+    }
+  }
+
+  @media (max-width: 749px) {
+
+    .kk-fws-faq__heading {
+      margin-bottom: 2.4rem;
+    }
+
+    .kk-fws-faq__tabs {
+      margin-bottom: 2.4rem;
+      padding: 0.4rem;
+     
+    }
+
+    .kk-fws-faq__tab {
+      padding: 1.2rem 1.6rem;
+      font-size: 1.4rem;
+       flex-shrink: 1;
+    }
+
+    .kk-fws-faq__list {
+      gap: 1rem;
+    }
+
+    .kk-fws-faq__item,
+    .kk-fws-faq__toggle {
+      border-radius: 1.4rem;
+    }
+
+    .kk-fws-faq__toggle {
+      gap: 1.6rem;
+      padding: 1.8rem 1.8rem;
+      font-size: 1.6rem;
+    }
+
+    .kk-fws-faq__icon {
+      width: 3.6rem;
+      height: 3.6rem;
+    }
+
+    .kk-fws-faq__answer-body {
+      padding: 0 1.8rem 2rem;
+      font-size: 1.7rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Accordion Tabs",
+  "tag": "div",
+  "class": "section-kk-fws-accordion-tabs",
+  "max_blocks": 50,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Owns the #kk-fws-faq anchor. Add a \"Tab\" block, then the \"Question & answer\" blocks that belong under it, then the next \"Tab\"."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "tabs_label",
+      "label": "Tab bar label",
+      "info": "Visually hidden — names the tab bar for screen readers.",
+      "default": "FAQ topics"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Open the first question in each tab",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Call to action",
+      "info": "The button shows only when it has both a label and a link. Add \"Trust item\" blocks for the row underneath."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "E.g. #kk-fws-offer to jump to the offer section."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_title",
+          "label": "Tab title"
+        }
+      ]
+    },
+    {
+      "type": "question_answer",
+      "name": "Question & answer",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Accordion Tabs"
+    }
+  ]
+}
+{% endschema %}

@@ -39,7 +39,7 @@
           "settings": {
             "show_step_numbers": true,
             "label_prefix": "Select",
-            "hidden_variant_ids": "41681640521771, 41868949061675, 41868949028907, 41681640554539, 41868949192747, 41868949159979, 50481033052203, 50481033084971, 50481033117739, 44636478570539, 44636478603307, 44636478636075, 44636478767147, 44636478799915, 44636478832683, 44636478963755, 44636478996523, 44636479029291",
+            "hidden_variant_ids": "",
             "show_size_guide": true,
             "size_guide_label": "Size Guide"
           }
@@ -75,7 +75,7 @@
         "custom_liquid_aXyUfM": {
           "type": "custom_liquid",
           "settings": {
-            "custom_liquid": "<i data-govx-id></i>"
+            "custom_liquid": "<i data-govx-id></i>\n<style>\n.govx-id-full-wrapper {\njustify-content: center !important;\n}\n</style>"
           }
         },
         "trust_badges_LQBzjy": {

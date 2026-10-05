@@ -1,33 +1,86 @@
+{%- comment -%}
+  KK FWS Why Switched — Figma `7809:15072`.
+
+  Logo mark, heading and subheading; the product video in a rounded frame; the four-feature
+  card pulled up over the bottom of the video; then a CTA and a trust row.
+
+  The video is the former stand-alone `kk-fws-video` section merged in (same Wistia embed,
+  same script loader, same poster fallback). `kk-fws-video` still exists for the second video
+  further down the template.
+{%- endcomment -%}
+
 {%- liquid
   assign feature_blocks = section.blocks | where: 'type', 'feature'
-  assign media_image = section.settings.image
+  assign trust_blocks = section.blocks | where: 'type', 'trust'
+
+  assign media_id = section.settings.media_id | strip | escape
+  assign poster_url = ''
+  if section.settings.poster_image != blank
+    assign poster_url = section.settings.poster_image | image_url: width: 2000
+  elsif media_id != blank
+    assign poster_url = 'https://fast.wistia.com/embed/medias/' | append: media_id | append: '/swatch'
+  endif
+  assign embed_src = 'https://fast.wistia.com/embed/' | append: media_id | append: '.js'
 -%}
 
 <section
   id="kk-fws-why-switched"
-  class="kk-fws-why-switched"
+  class="kk-fws-why-switched kk-fws-section{% if media_id != blank %} kk-fws-why-switched--has-video{% endif %}"
   style="
     --kk-fws-why-switched-background: {{ section.settings.background_color }};
-    --kk-fws-why-switched-heading: {{ section.settings.heading_color }};
-    --kk-fws-why-switched-text: {{ section.settings.text_color }};
-    --kk-fws-why-switched-card-background: {{ section.settings.card_background_color }};
-    --kk-fws-why-switched-line: {{ section.settings.line_color }};
+    {% if poster_url != blank %}--kk-fws-why-switched-poster: url('{{ poster_url }}');{% endif %}
   "
 >
-  <div class="kk-fws-why-switched__container">
-    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
-      <div class="kk-fws-why-switched__intro">
-        {%- if section.settings.heading != blank -%}
-          <h2 class="kk-fws-why-switched__heading">{{ section.settings.heading }}</h2>
-        {%- endif -%}
+  <div class="kk-fws-why-switched__container kk-fws-container">
+    <div class="kk-fws-why-switched__intro">
+      {%- if section.settings.logo != blank -%}
+        {{
+          section.settings.logo
+          | image_url: width: 96
+          | image_tag: class: 'kk-fws-why-switched__logo', width: 48, height: 44, loading: 'lazy', alt: ''
+        }}
+      {%- elsif section.settings.show_logo -%}
+        <img
+          class="kk-fws-why-switched__logo"
+          src="{{ 'kk-fws-phoenix-mark.png' | asset_url }}"
+          alt=""
+          width="48"
+          height="44"
+          loading="lazy"
+          data-kk-fws-reveal
+        >
+      {%- endif -%}
 
-        {%- if section.settings.subheading != blank -%}
-          <p class="kk-fws-why-switched__subheading">{{ section.settings.subheading }}</p>
-        {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="kk-fws-why-switched__heading kk-fws-heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.subheading != blank -%}
+        <p class="kk-fws-why-switched__subheading">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if media_id != blank -%}
+      <div class="kk-fws-why-switched__video{% if section.settings.crop_mobile %} kk-fws-why-switched__video--crop-mobile{% endif %}" data-kk-fws-reveal>
+        <wistia-player
+          class="kk-fws-why-switched__player"
+          media-id="{{ media_id }}"
+          aspect="1.7777777777777777"
+          {% if section.settings.autoplay %}
+            autoplay
+            muted
+            silent-autoplay="allow"
+            playsinline
+            {% if section.settings.loop %}end-video-behavior="loop"{% endif %}
+          {% endif %}
+          {% if section.settings.video_title != blank %}
+            aria-label="{{ section.settings.video_title | escape }}"
+          {% endif %}
+        ></wistia-player>
       </div>
     {%- endif -%}
 
-    {%- if feature_blocks.size > 0 or section.settings.show_media -%}
+    {%- if feature_blocks.size > 0 -%}
       <div class="kk-fws-why-switched__grid">
         {%- for block in feature_blocks -%}
           <div class="kk-fws-why-switched__card" {{ block.shopify_attributes }}>
@@ -42,42 +95,54 @@
             {%- endif -%}
           </div>
         {%- endfor -%}
-
-        {%- if section.settings.show_media -%}
-          <div class="kk-fws-why-switched__media">
-            {%- if media_image != blank -%}
-              {{
-                media_image
-                | image_url: width: 1600
-                | image_tag:
-                  class: 'kk-fws-why-switched__image',
-                  loading: 'lazy',
-                  widths: '375, 750, 1100, 1600',
-                  sizes: '(max-width: 749px) calc(100vw - 4rem), (max-width: 989px) calc(100vw - 3.2rem), 759px'
-              }}
-            {%- else -%}
-              {{ 'lifestyle-1' | placeholder_svg_tag: 'kk-fws-why-switched__image kk-fws-why-switched__image--placeholder' }}
-            {%- endif -%}
-          </div>
-        {%- endif -%}
       </div>
     {%- endif -%}
+
+    {%- render 'kk-fws-cta', section: section, prefix: 'kk-fws-why-switched', trust_blocks: trust_blocks, icon_size: 24 -%}
   </div>
 </section>
 
-{% stylesheet %}
-  .kk-fws-why-switched {
-    background: var(--kk-fws-why-switched-background, #ffffff);
-    padding: 10rem 0;
-  }
+{%- if media_id != blank -%}
+  {%- comment -%}
+    Carried over from kk-fws-video: the theme does not load the Wistia player globally
+    (src/js/wistia.js only handles the older [data-wistia-vid-id] embeds), so the section
+    injects the same two scripts. The shared `data-kk-fws-video` guard means this and the
+    remaining kk-fws-video section never load them twice.
+  {%- endcomment -%}
+  <script>
+    (function () {
+      var load = function (src, isModule) {
+        if (document.querySelector('script[data-kk-fws-video="' + src + '"]')) return;
+        var script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        script.setAttribute('data-kk-fws-video', src);
+        if (isModule) script.type = 'module';
+        document.head.appendChild(script);
+      };
+      load('https://fast.wistia.com/player.js', false);
+      load({{ embed_src | json }}, true);
+    })();
+  </script>
+{%- endif -%}
 
-  .kk-fws-why-switched__container {
-    width: min(100% - 3.2rem, 114rem);
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2.75rem;
+{% stylesheet %}
+  /* Figma `7809:15072`: 88px top and bottom on #f5f6f8, 1312px container (64px gutters). */
+  .kk-fws-why-switched {
+    --kk-fws-why-switched-ink: var(--primary);
+    --kk-fws-why-switched-muted: var(--primary-100);
+    /* kk-fws-base.css overrides */
+    --kk-fws-heading-size-md: 4rem;
+    --kk-fws-cta-margin-sm: 2.4rem;
+    --kk-fws-trust-gap: 1rem 4.4rem;
+    --kk-fws-trust-size: 2rem;
+    --kk-fws-trust-size-md: 1.8rem;
+    --kk-fws-trust-icon: 2.4rem;
+    --kk-fws-button-padding: 3.2rem 4.8rem;
+    --kk-fws-button-size: 2.4rem;
+    --kk-fws-button-size-sm: 2rem;
+
+    background: var(--kk-fws-why-switched-background, var(--light));
   }
 
   .kk-fws-why-switched__intro {
@@ -86,40 +151,85 @@
     align-items: center;
     gap: 2rem;
     width: 100%;
+    max-width: 66rem;
+    margin-bottom: 4.4rem;
     text-align: center;
   }
 
-  .kk-fws-why-switched__heading {
-    margin: 0;
-    max-width: 76.662rem;
-    font-family: 'Value Sans Medium', sans-serif;
-    font-weight: 500;
-    font-size: 5.2rem;
-    line-height: 1.1;
-    color: var(--kk-fws-why-switched-heading, #153a5b);
-    text-transform: none;
+  .kk-fws-why-switched__logo {
+    display: block;
+    width: 4.8rem;
+    height: 4.4rem;
+    margin-bottom: 0.1rem;
+    object-fit: contain;
   }
 
   .kk-fws-why-switched__subheading {
     margin: 0;
-    max-width: 51.588rem;
     font-family: 'Value Sans', sans-serif;
     font-weight: 400;
-    font-size: 2.2rem;
-    line-height: 1.4;
-    color: var(--kk-fws-why-switched-text, #26303a);
+    font-size: 2rem;
+    line-height: 1.5;
+    color: var(--kk-fws-why-switched-muted);
   }
 
-  /* 1px grid gap over a line-coloured background reproduces Figma's
-     collapsed 1px card borders without doubling them up. */
-  .kk-fws-why-switched__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: minmax(45.148rem, auto);
-    gap: 1px;
+  /* Video frame — Figma `7809:15086`: 1312 x 621, rounded, navy behind the player. The 16:9
+     player is taller than the frame at full width, so it covers it, cropped top and bottom. */
+  .kk-fws-why-switched__video {
+    position: relative;
     width: 100%;
-    background: var(--kk-fws-why-switched-line, #e7e7e7);
-    border: 1px solid var(--kk-fws-why-switched-line, #e7e7e7);
+    aspect-ratio: 1312 / 621;
+    overflow: hidden;
+    border-radius: 2.4rem;
+    background: var(--kk-fws-why-switched-ink);
+    box-shadow:
+      0 1.6rem 4rem rgba(11, 22, 56, 0.1),
+      0 0.2rem 0.8rem rgba(11, 22, 56, 0.05);
+  }
+
+  .kk-fws-why-switched__player {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    transform: translate(-50%, -50%);
+    border: 0;
+    background-color: transparent;
+  }
+
+  /* Poster shown until the Wistia custom element upgrades. */
+  .kk-fws-why-switched__player:not(:defined) {
+    background: center / cover no-repeat var(--kk-fws-why-switched-poster, none);
+  }
+
+  /* Feature card — Figma `7809:15089`: one white card, 2 x 2 features, 1px inner rules. The
+     rules are the 1px grid gap showing the card's rule-coloured background, so they never double
+     up. With a video above, the card is pulled 140px up over its bottom edge. */
+  .kk-fws-why-switched__grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    box-sizing: border-box;
+    width: min(100% - 15rem, 116.2rem);
+    overflow: hidden;
+    border: 1px solid var(--light-alt);
+    border-radius: 2.4rem;
+    background: var(--light-alt);
+    box-shadow: 0 2rem 2.4rem rgba(11, 22, 56, 0.1);
+  }
+
+  .kk-fws-why-switched--has-video .kk-fws-why-switched__grid {
+    margin-top: -14rem;
+  }
+
+  /* An odd last feature spans the row rather than leaving an empty grey cell. */
+  .kk-fws-why-switched__card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
   }
 
   .kk-fws-why-switched__card {
@@ -127,148 +237,147 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 2rem;
-    padding: 6rem 3.4rem;
-    background: var(--kk-fws-why-switched-card-background, #ffffff);
+    min-width: 0;
+    padding: 4rem 4.8rem;
+    background: #ffffff;
   }
 
   .kk-fws-why-switched__icon-box {
-    display: block;
+    display: flex;
     flex-shrink: 0;
-    width: 7.5rem;
-    height: 7.5rem;
+    align-items: center;
+    justify-content: center;
+    width: 6.4rem;
+    height: 6.4rem;
+    border-radius: 1.6rem;
+    background: #f2f6ff;
+  }
+
+  .kk-fws-why-switched__icon-box--badge {
+    border-radius: 0;
+    background: none;
   }
 
   .kk-fws-why-switched__icon {
+    display: block;
+    width: 3.4rem;
+    height: 3.4rem;
+  }
+
+  .kk-fws-why-switched__badge {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: contain;
   }
 
-  /* Figma clips these two glyphs inside their 75px frame; reproduce the inset
-     so they don't render oversized next to the other icons. */
-  .kk-fws-why-switched__icon--certified {
-    padding: 6.26% 9.275%;
-    box-sizing: border-box;
-  }
-
-  .kk-fws-why-switched__icon--setup {
-    padding: 3.605% 5.825%;
-    box-sizing: border-box;
-  }
-
   .kk-fws-why-switched__card-heading {
     margin: 0;
     font-family: 'Value Sans Medium', sans-serif;
     font-weight: 500;
-    font-size: 2.4787rem;
-    line-height: 1.2;
-    color: var(--kk-fws-why-switched-heading, #153a5b);
+    font-size: 3rem;
+    line-height: 1.3;
     text-transform: none;
+    color: var(--kk-fws-why-switched-ink);
   }
 
+  /* 12px under the heading, not the card's 20px rhythm. */
   .kk-fws-why-switched__card-text {
-    margin: 0;
+    max-width: 48.4rem;
+    margin: -0.8rem 0 0;
     font-family: 'Value Sans', sans-serif;
     font-weight: 400;
-    font-size: 2.2rem;
-    line-height: 1.4;
-    color: var(--kk-fws-why-switched-text, #26303a);
+    font-size: 1.8rem;
+    line-height: 1.5;
+    color: var(--kk-fws-why-switched-muted);
   }
 
-  .kk-fws-why-switched__media {
-    position: relative;
-    grid-column: span 2;
-    overflow: hidden;
-    background: var(--kk-fws-why-switched-line, #e7e7e7);
-  }
-
-  .kk-fws-why-switched__image {
-    position: absolute;
-    inset: 0;
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  /* CTA + trust row — Figma `7809:15123`. */
 
   @media (max-width: 989px) {
-    .kk-fws-why-switched {
-      padding: 6rem 0;
-    }
-
-    .kk-fws-why-switched__heading {
-      font-size: 4rem;
-    }
 
     .kk-fws-why-switched__grid {
-      grid-template-columns: repeat(2, 1fr);
-      grid-auto-rows: minmax(38rem, auto);
+      width: min(100% - 6rem, 116.2rem);
+    }
+
+    .kk-fws-why-switched--has-video .kk-fws-why-switched__grid {
+      margin-top: -8rem;
     }
 
     .kk-fws-why-switched__card {
-      padding: 4rem 2.8rem;
+      padding: 3.2rem;
     }
 
     .kk-fws-why-switched__card-heading {
-      font-size: 2.2rem;
+      font-size: 2.4rem;
     }
 
     .kk-fws-why-switched__card-text {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
     }
   }
 
   @media (max-width: 749px) {
-    .kk-fws-why-switched {
-      padding: 4rem 0;
-    }
-
-    .kk-fws-why-switched__container {
-      width: min(100% - 4rem, 54rem);
-      gap: 1.8rem;
-    }
 
     .kk-fws-why-switched__intro {
-      gap: 1.8rem;
+      gap: 1.4rem;
+      margin-bottom: 2.4rem;
     }
 
-    .kk-fws-why-switched__heading {
-      font-size: 2.8rem;
-      max-width: none;
+    .kk-fws-why-switched__logo {
+      width: 3.6rem;
+      height: 3.3rem;
     }
 
     .kk-fws-why-switched__subheading {
-      font-size: 1.6rem;
-      max-width: none;
+      font-size: 1.8rem;
+    }
+
+    .kk-fws-why-switched__video {
+      aspect-ratio: 16 / 10;
+      border-radius: 1.6rem;
+    }
+
+    /* Height-led on mobile so the 16:9 player fills the taller frame, cropping its sides. */
+    .kk-fws-why-switched__video--crop-mobile .kk-fws-why-switched__player {
+      width: auto;
+      height: 100%;
+      min-width: 100%;
     }
 
     .kk-fws-why-switched__grid {
-      grid-template-columns: 1fr;
-      grid-auto-rows: auto;
+      grid-template-columns: minmax(0, 1fr);
+      width: calc(100% - 2.4rem);
+      border-radius: 1.8rem;
+    }
+
+    .kk-fws-why-switched--has-video .kk-fws-why-switched__grid {
+      margin-top: -4rem;
     }
 
     .kk-fws-why-switched__card {
       gap: 1.6rem;
-      padding: 2rem;
+      padding: 2.4rem;
+    }
+
+    .kk-fws-why-switched__card-text {
+      margin-top: -0.6rem;
+      font-size: 1.7rem;
     }
 
     .kk-fws-why-switched__icon-box {
       width: 5.2rem;
       height: 5.2rem;
+      border-radius: 1.3rem;
+    }
+
+    .kk-fws-why-switched__icon {
+      width: 2.8rem;
+      height: 2.8rem;
     }
 
     .kk-fws-why-switched__card-heading {
-      font-size: 2rem;
-    }
-
-    .kk-fws-why-switched__card-text {
-      font-size: 1.6rem;
-    }
-
-    .kk-fws-why-switched__media {
-      grid-column: span 1;
-      min-height: 32rem;
+      font-size: 2.2rem;
     }
   }
 {% endstylesheet %}
@@ -278,8 +387,20 @@
   "name": "KK FWS Why Switched",
   "tag": "div",
   "class": "section-kk-fws-why-switched",
-  "max_blocks": 6,
+  "max_blocks": 10,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_logo",
+      "label": "Show Phoenix mark",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Custom mark",
+      "info": "Overrides the built-in Phoenix mark. Shown at 48 x 44."
+    },
     {
       "type": "inline_richtext",
       "id": "heading",
@@ -294,19 +415,63 @@
     },
     {
       "type": "header",
-      "content": "Media"
+      "content": "Video",
+      "info": "The feature cards overlap the bottom of the video. Leave the media ID empty to hide the video."
     },
     {
-      "type": "checkbox",
-      "id": "show_media",
-      "label": "Show image tile",
-      "default": true
+      "type": "text",
+      "id": "media_id",
+      "label": "Wistia media ID",
+      "default": "t5p83isk4k",
+      "info": "The hashed ID from the Wistia media URL."
+    },
+    {
+      "type": "text",
+      "id": "video_title",
+      "label": "Accessible label",
+      "default": "Phoenix Gravity Water Filter System | Clean & Healthy Water"
     },
     {
       "type": "image_picker",
-      "id": "image",
-      "label": "Image",
-      "info": "Falls back to the bundled kitchen image from the design."
+      "id": "poster_image",
+      "label": "Poster image",
+      "info": "Optional. Shown while the player loads. Falls back to the Wistia thumbnail for the media ID above."
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay muted",
+      "default": true,
+      "info": "Browsers only allow autoplay with the sound off, so the video starts muted; visitors can unmute it."
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Loop while autoplaying",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "crop_mobile",
+      "label": "Crop video sides on mobile",
+      "default": true,
+      "info": "Fills the taller mobile frame by cropping the 16:9 video's sides. Uncheck to letterbox instead."
+    },
+    {
+      "type": "header",
+      "content": "Call to action",
+      "info": "The button shows only when it has both a label and a link. Add \"Trust item\" blocks for the row underneath."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "E.g. #kk-fws-offer to jump to the offer section."
     },
     {
       "type": "header",
@@ -316,31 +481,7 @@
       "type": "color",
       "id": "background_color",
       "label": "Background",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "heading_color",
-      "label": "Headings",
-      "default": "#153a5b"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Body text",
-      "default": "#26303a"
-    },
-    {
-      "type": "color",
-      "id": "card_background_color",
-      "label": "Card background",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "line_color",
-      "label": "Card border",
-      "default": "#e7e7e7"
+      "default": "#f5f6f8"
     }
   ],
   "blocks": [
@@ -364,7 +505,7 @@
           "type": "image_picker",
           "id": "custom_icon",
           "label": "Custom icon",
-          "info": "Overrides the icon selected above."
+          "info": "Overrides the icon selected above. Shown at 64 x 64 with no tile behind it."
         },
         {
           "type": "text",
@@ -377,6 +518,17 @@
           "id": "text",
           "label": "Text",
           "default": "Independently tested to reduce lead, chlorine, microplastics, PFAS and more. What reaches your glass is water the way it should taste"
+        }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
         }
       ]
     }

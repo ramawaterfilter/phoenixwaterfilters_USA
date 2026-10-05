@@ -1,5 +1,9 @@
 {%- comment -%}
-  Renders one feature icon for the KK FWS "Why switched" section.
+  Renders one feature icon for the KK FWS "Why switched" section (Figma `7809:15091`).
+
+  The line icons sit centred in a 64px pale-blue tile. The NSF/ANSI certificate is a
+  self-contained round badge in the design, so it renders at the tile's size with no tile
+  behind it; a custom image does the same.
 
   Accepts:
   - block: {Object} Block with an `icon` select setting and an optional `custom_icon` image.
@@ -8,27 +12,36 @@
   {% render 'kk-fws-why-switched-icon', block: block %}
 {%- endcomment -%}
 
-{%- liquid
-  assign icon_key = block.settings.icon | default: 'contaminants'
-  assign icon_class = 'kk-fws-why-switched__icon kk-fws-why-switched__icon--' | append: icon_key
--%}
+{%- assign icon_key = block.settings.icon | default: 'contaminants' -%}
 
-<span class="kk-fws-why-switched__icon-box">
-  {%- if block.settings.custom_icon != blank -%}
+{%- if block.settings.custom_icon != blank -%}
+  <span class="kk-fws-why-switched__icon-box kk-fws-why-switched__icon-box--badge">
     {{
       block.settings.custom_icon
-      | image_url: width: 150
-      | image_tag: class: 'kk-fws-why-switched__icon', loading: 'lazy', alt: ''
+      | image_url: width: 128
+      | image_tag: class: 'kk-fws-why-switched__badge', width: 64, height: 64, loading: 'lazy', alt: ''
     }}
-  {%- else -%}
-    {%- assign icon_asset = 'kk-fws-icon-' | append: icon_key | append: '.svg' -%}
+  </span>
+{%- elsif icon_key == 'certified' -%}
+  <span class="kk-fws-why-switched__icon-box kk-fws-why-switched__icon-box--badge">
     <img
-      class="{{ icon_class }}"
-      src="{{ icon_asset | asset_url }}"
+      class="kk-fws-why-switched__badge"
+      src="{{ 'kk-fws-nsf-badge.png' | asset_url }}"
       alt=""
-      width="75"
-      height="75"
+      width="64"
+      height="64"
       loading="lazy"
     >
-  {%- endif -%}
-</span>
+  </span>
+{%- else -%}
+  <span class="kk-fws-why-switched__icon-box">
+    <img
+      class="kk-fws-why-switched__icon"
+      src="{{ 'kk-fws-icon-' | append: icon_key | append: '.svg' | asset_url }}"
+      alt=""
+      width="34"
+      height="34"
+      loading="lazy"
+    >
+  </span>
+{%- endif -%}

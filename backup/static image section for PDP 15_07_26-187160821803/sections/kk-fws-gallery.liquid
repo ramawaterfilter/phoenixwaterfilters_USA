@@ -1,0 +1,365 @@
+{%- comment -%}
+  KK FWS Gallery — Figma `7809:16084`.
+
+  Rating row, heading, then a bento grid: one large image (648 x 616) beside a 2 x 2 block of
+  smaller ones (316 x 300), 16px apart. Then a CTA and a trust row.
+
+  Replaces the reused theme `gallery` section on the campaign template, keeping its
+  `gallery_images_block` block type so the existing images carried across. The design holds
+  five images, so the first five image blocks are shown; reorder the blocks to choose them.
+{%- endcomment -%}
+
+{%- liquid
+  assign image_blocks = section.blocks | where: 'type', 'gallery_images_block'
+  assign trust_blocks = section.blocks | where: 'type', 'trust'
+-%}
+
+<section
+  id="kk-fws-gallery"
+  class="kk-fws-gallery kk-fws-section"
+  style="--kk-fws-gallery-background: {{ section.settings.background_color }};"
+>
+  <div class="kk-fws-gallery__container kk-fws-container">
+    <div class="kk-fws-gallery__intro">
+      {%- if section.settings.rating_text != blank or section.settings.certification_text != blank -%}
+        <div class="kk-fws-gallery__rating">
+          {%- if section.settings.rating_text != blank -%}
+            <img
+              class="kk-fws-gallery__rating-stars"
+              src="{{ 'kk-fws-icon-stars-gold.svg' | asset_url }}"
+              alt=""
+              width="150"
+              height="25"
+              loading="lazy"
+            >
+            <span class="kk-fws-gallery__rating-text">{{ section.settings.rating_text }}</span>
+          {%- endif -%}
+          {%- if section.settings.rating_text != blank and section.settings.certification_text != blank -%}
+            <span class="kk-fws-gallery__rating-dot" aria-hidden="true"></span>
+          {%- endif -%}
+          {%- if section.settings.certification_text != blank -%}
+            <span class="kk-fws-gallery__certification">
+              <img
+                class="kk-fws-gallery__certification-icon"
+                src="{{ 'kk-fws-icon-shield-check.svg' | asset_url }}"
+                alt=""
+                width="22"
+                height="22"
+                aria-hidden="true"
+                loading="lazy"
+              >
+              {{- section.settings.certification_text -}}
+            </span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="kk-fws-gallery__heading kk-fws-heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.content != blank -%}
+        <div class="kk-fws-gallery__content">{{ section.settings.content }}</div>
+      {%- endif -%}
+    </div>
+
+    {%- if image_blocks.size > 0 -%}
+      <ul class="kk-fws-gallery__grid kk-fws-gallery__grid--count-{{ image_blocks.size | at_most: 5 }}">
+        {%- for block in image_blocks limit: 5 -%}
+          {%- liquid
+            if forloop.first
+              assign image_sizes = '(max-width: 749px) calc(100vw - 4rem), (max-width: 989px) calc(100vw - 4rem), 648px'
+            else
+              assign image_sizes = '(max-width: 749px) calc(50vw - 2.4rem), (max-width: 989px) calc(50vw - 2.8rem), 316px'
+            endif
+            assign image_alt = block.settings.gallery_image.alt | default: section.settings.image_alt
+          -%}
+          <li class="kk-fws-gallery__item{% if forloop.first %} kk-fws-gallery__item--feature{% endif %}" {{ block.shopify_attributes }}>
+            {%- if block.settings.gallery_image != blank -%}
+              {{
+                block.settings.gallery_image
+                | image_url: width: 1400
+                | image_tag:
+                  class: 'kk-fws-gallery__image',
+                  loading: 'lazy',
+                  widths: '360, 640, 900, 1400',
+                  sizes: image_sizes,
+                  alt: image_alt
+              }}
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'kk-fws-gallery__image' }}
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- render 'kk-fws-cta', section: section, prefix: 'kk-fws-gallery', trust_blocks: trust_blocks, icon_size: 22 -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  /* Figma `7809:16084`: white, 88px top and bottom, 1312px container (64px gutters). */
+  .kk-fws-gallery {
+    --kk-fws-gallery-ink: var(--primary);
+    --kk-fws-gallery-blue: var(--primary-600);
+
+    background: var(--kk-fws-gallery-background, #ffffff);
+  }
+
+  .kk-fws-gallery__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.1rem;
+    max-width: 76rem;
+    margin-bottom: 4rem;
+    text-align: center;
+  }
+
+  .kk-fws-gallery__rating {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem 1.4rem;
+  }
+
+  .kk-fws-gallery__rating-stars {
+    display: block;
+    width: 15rem;
+    height: 2.5rem;
+  }
+
+  .kk-fws-gallery__rating-text {
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.9rem;
+    line-height: 1;
+    color: var(--kk-fws-gallery-ink);
+  }
+
+  .kk-fws-gallery__rating-dot {
+    flex-shrink: 0;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: #a3a7bf;
+  }
+
+  .kk-fws-gallery__certification {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-gallery-blue);
+  }
+
+  .kk-fws-gallery__certification-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .kk-fws-gallery__content,
+  .kk-fws-gallery__content p {
+    margin: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-size: 1.8rem;
+    line-height: 1.55;
+    color: var(--primary-100);
+  }
+
+  /* Bento: four 316px columns, 16px gaps — the feature image spans two columns and two rows
+     (648 x 616), the next four fill the 2 x 2 block beside it. */
+  .kk-fws-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: 30rem;
+    gap: 1.6rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-gallery__item {
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 2rem;
+    background: var(--light);
+  }
+
+  .kk-fws-gallery__item--feature {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  /* With fewer than five images there is no 2 x 2 block to sit beside, so the feature takes
+     the full width of the row it shares. */
+  .kk-fws-gallery__grid--count-1 .kk-fws-gallery__item--feature {
+    grid-column: 1 / -1;
+  }
+
+  .kk-fws-gallery__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* CTA + trust row — Figma `7809:16116`. */
+
+  @media (max-width: 989px) {
+
+    /* Feature image full width on top, the rest two across beneath it. */
+    .kk-fws-gallery__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-rows: auto;
+    }
+
+    .kk-fws-gallery__item {
+      aspect-ratio: 316 / 300;
+    }
+
+    .kk-fws-gallery__item--feature {
+      grid-column: 1 / -1;
+      grid-row: auto;
+      aspect-ratio: 648 / 616;
+    }
+  }
+
+  @media (max-width: 749px) {
+
+    .kk-fws-gallery__intro {
+      gap: 1.4rem;
+      margin-bottom: 2.4rem;
+    }
+
+    .kk-fws-gallery__rating-stars {
+      width: 11rem;
+      height: 1.83rem;
+    }
+
+    .kk-fws-gallery__rating-text {
+      font-size: 1.7rem;
+    }
+
+    .kk-fws-gallery__certification {
+      font-size: 1.4rem;
+      letter-spacing: 0.1rem;
+    }
+
+    .kk-fws-gallery__grid {
+      gap: 0.8rem;
+    }
+
+    .kk-fws-gallery__item {
+      border-radius: 1.4rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Gallery",
+  "tag": "div",
+  "class": "section-kk-fws-gallery",
+  "max_blocks": 16,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The first five \"Image\" blocks fill the grid: the first is the large one. Reorder the blocks to change which images show."
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating text",
+      "info": "Shown beside the stars, e.g. Based on 7495 Reviews."
+    },
+    {
+      "type": "text",
+      "id": "certification_text",
+      "label": "Certification text"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Text",
+      "info": "Optional, under the heading."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Fallback image description",
+      "info": "Used for any image that has no alt text of its own in Files."
+    },
+    {
+      "type": "header",
+      "content": "Call to action",
+      "info": "The button shows only when it has both a label and a link. Add \"Trust item\" blocks for the row underneath."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "E.g. #kk-fws-offer to jump to the offer section."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "gallery_images_block",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "gallery_image",
+          "label": "Image"
+        }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Gallery"
+    }
+  ]
+}
+{% endschema %}

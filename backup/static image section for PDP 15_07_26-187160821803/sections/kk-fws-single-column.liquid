@@ -1,0 +1,316 @@
+{%- comment -%}
+  KK FWS Single Column — Figma `7809:15849`.
+
+  A centred, single-column message: badge (with a soft blue glow behind it), heading, body
+  copy, CTA, trust row and a small "terms" link, over a decorative background (coconut and
+  carbon photography at the edges). Built for the 100-day free trial message, but every piece
+  is a setting, so it works for any short centred pitch.
+
+  The decorative background is purely ornamental, so it is a CSS background rather than an
+  <img>, and it is dropped below 990px, where the edge photography would sit behind the copy.
+{%- endcomment -%}
+
+{%- liquid
+  assign trust_blocks = section.blocks | where: 'type', 'trust'
+
+  assign background_url = ''
+  if section.settings.show_background
+    if section.settings.background_image != blank
+      assign background_url = section.settings.background_image | image_url: width: 2400
+    else
+      assign background_url = 'kk-fws-single-column-bg.jpg' | asset_url
+    endif
+  endif
+-%}
+
+<section
+  class="kk-fws-single-column kk-fws-section{% if background_url != blank %} kk-fws-single-column--decorated{% endif %}"
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handle }}"{% endif %}
+  style="
+    --kk-fws-single-column-background: {{ section.settings.background_color }};
+    {% if background_url != blank %}--kk-fws-single-column-image: url('{{ background_url }}');{% endif %}
+  "
+>
+  <div class="kk-fws-single-column__container kk-fws-container">
+    <div class="kk-fws-single-column__intro">
+      {%- if section.settings.show_badge -%}
+        <div class="kk-fws-single-column__badge">
+          {%- if section.settings.badge_image != blank -%}
+            {{
+              section.settings.badge_image
+              | image_url: width: 400
+              | image_tag: class: 'kk-fws-single-column__badge-image', width: 200, height: 200, loading: 'lazy', alt: ''
+            }}
+          {%- else -%}
+            <img
+              class="kk-fws-single-column__badge-image"
+              src="{{ 'kk-fws-trial-badge.png' | asset_url }}"
+              alt=""
+              width="200"
+              height="200"
+              loading="lazy"
+              data-kk-fws-reveal
+            >
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="kk-fws-single-column__heading kk-fws-heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.text != blank -%}
+      <div class="kk-fws-single-column__text">{{ section.settings.text }}</div>
+    {%- endif -%}
+
+    {%- capture terms -%}
+      {%- if section.settings.terms_label != blank -%}
+        {%- if section.settings.terms_link != blank -%}
+          <a class="kk-fws-single-column__terms" href="{{ section.settings.terms_link }}">
+            {{- section.settings.terms_label -}}
+          </a>
+        {%- else -%}
+          <p class="kk-fws-single-column__terms">{{ section.settings.terms_label }}</p>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endcapture -%}
+    {%- render 'kk-fws-cta', section: section, prefix: 'kk-fws-single-column', trust_blocks: trust_blocks, icon_size: 20, after: terms -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  /* Figma `7809:15849`: white, 88px top and bottom; the 1500 x 906 decorative image sits 30px
+     past the left edge and 10px down, so it bleeds slightly off both sides at 1440. */
+  .kk-fws-single-column {
+    --kk-fws-single-column-ink: var(--primary);
+    --kk-fws-single-column-blue: var(--primary-600);
+    /* kk-fws-base.css overrides */
+    --kk-fws-container-max: 78rem;
+    --kk-fws-trust-item-gap: 0.8rem;
+    --kk-fws-trust-icon: 2rem;
+    --kk-fws-button-padding: 2.9rem 4.8rem;
+
+    position: relative;
+    background-color: var(--kk-fws-single-column-background, #ffffff);
+  }
+
+  .kk-fws-single-column--decorated {
+    background-image: var(--kk-fws-single-column-image);
+    background-repeat: no-repeat;
+    background-position: center 1rem;
+    background-size: max(104.17%, 150rem) auto;
+  }
+
+  .kk-fws-single-column__container {
+    text-align: center;
+  }
+
+  .kk-fws-single-column__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3.6rem;
+    margin-bottom: 4rem;
+  }
+
+  /* The badge sits on a 280px radial glow of the primary blue at 12%. */
+  .kk-fws-single-column__badge {
+    position: relative;
+    width: 20rem;
+    height: 20rem;
+  }
+
+  .kk-fws-single-column__badge::before {
+    content: '';
+    position: absolute;
+    inset: -4rem;
+    z-index: 0;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(39, 100, 255, 0.12) 0%, rgba(39, 100, 255, 0) 100%);
+  }
+
+  .kk-fws-single-column__badge-image {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .kk-fws-single-column__text,
+  .kk-fws-single-column__text p {
+    margin: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.9rem;
+    line-height: 1.55;
+    color: var(--primary-100);
+  }
+
+  .kk-fws-single-column__text p + p {
+    margin-top: 1.8rem;
+  }
+
+  .kk-fws-single-column__text a {
+    color: var(--kk-fws-single-column-blue);
+  }
+
+  /* CTA, trust row and terms — Figma `7809:15867`. */
+
+  /* 28px under the trust row (the CTA block's 14px gap plus this). */
+  .kk-fws-single-column__terms {
+    margin: 1.4rem 0 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2rem;
+    color: #6b7085;
+  }
+
+  a.kk-fws-single-column__terms:hover,
+  a.kk-fws-single-column__terms:focus-visible {
+    color: var(--kk-fws-single-column-ink);
+  }
+
+  @media (max-width: 989px) {
+
+    .kk-fws-single-column--decorated {
+      background-image: none;
+    }
+  }
+
+  @media (max-width: 749px) {
+
+    .kk-fws-single-column__intro {
+      gap: 2.4rem;
+      margin-bottom: 2.4rem;
+    }
+
+    .kk-fws-single-column__badge {
+      width: 14rem;
+      height: 14rem;
+    }
+
+    .kk-fws-single-column__badge::before {
+      inset: -2.8rem;
+    }
+
+    .kk-fws-single-column__text,
+    .kk-fws-single-column__text p {
+      font-size: 1.7rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Single Column",
+  "tag": "div",
+  "class": "section-kk-fws-single-column",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor id",
+      "info": "Optional, without the '#'. Link to it as #your-id."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show badge",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_image",
+      "label": "Badge image",
+      "info": "Shown at 200 x 200. Falls back to the 100-day free trial badge from the design."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Call to action",
+      "info": "The button shows only when it has both a label and a link. Add \"Trust item\" blocks for the row underneath."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "E.g. #kk-fws-offer to jump to the offer section."
+    },
+    {
+      "type": "text",
+      "id": "terms_label",
+      "label": "Terms text",
+      "info": "Small underlined line under the trust row, e.g. Terms apply."
+    },
+    {
+      "type": "url",
+      "id": "terms_link",
+      "label": "Terms link",
+      "info": "Optional. Without a link the terms text shows as plain text."
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_background",
+      "label": "Show decorative background",
+      "default": true,
+      "info": "Hidden below 990px wide, where it would sit behind the copy."
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Decorative background image",
+      "info": "Falls back to the coconut and carbon image from the design. Use a white-backed image about 1500 x 906."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background colour",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Single Column"
+    }
+  ]
+}
+{% endschema %}

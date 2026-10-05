@@ -1,3 +1,14 @@
+{%- comment -%}
+  KK FWS Rating Strip — Figma `7809:14951`.
+
+  A navy summary card (eyebrow, score, stars, review count, "read all reviews" link) followed by
+  one pale card per Quote block (stars, quote mark, quote, verified-owner line). Every piece of
+  copy is an editor field and renders nothing when empty.
+
+  The palette is fixed to the design rather than exposed as colour settings, matching the
+  kk-fws-offer panel it sits beside; only the strip background is a setting.
+{%- endcomment -%}
+
 {%- liquid
   assign quote_blocks = section.blocks | where: 'type', 'quote'
   assign stars_image = section.settings.custom_stars
@@ -5,33 +16,32 @@
 
 <section
   class="kk-fws-rating-strip"
-  style="
-    --kk-fws-rating-strip-background: {{ section.settings.background_color }};
-    --kk-fws-rating-strip-score: {{ section.settings.score_color }};
-    --kk-fws-rating-strip-text: {{ section.settings.text_color }};
-    --kk-fws-rating-strip-line: {{ section.settings.line_color }};
-  "
+  style="--kk-fws-rating-strip-background: {{ section.settings.background_color }};"
 >
   <div class="kk-fws-rating-strip__container">
-    <div class="kk-fws-rating-strip__rating">
-      {%- if section.settings.score != blank -%}
-        <p class="kk-fws-rating-strip__score">{{ section.settings.score }}</p>
+    <div class="kk-fws-rating-strip__summary" data-kk-fws-reveal>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="kk-fws-rating-strip__eyebrow">{{ section.settings.eyebrow }}</p>
       {%- endif -%}
 
-      <div class="kk-fws-rating-strip__rating-detail">
+      <div class="kk-fws-rating-strip__rating">
+        {%- if section.settings.score != blank -%}
+          <p class="kk-fws-rating-strip__score">{{ section.settings.score }}</p>
+        {%- endif -%}
+
         {%- if stars_image != blank -%}
           {{
             stars_image
-            | image_url: width: 240
+            | image_url: width: 280
             | image_tag: loading: 'lazy', class: 'kk-fws-rating-strip__stars', alt: ''
           }}
         {%- else -%}
           <img
             class="kk-fws-rating-strip__stars"
-            src="{{ 'kk-fws-icon-stars-5.svg' | asset_url }}"
+            src="{{ 'kk-fws-icon-stars-gold.svg' | asset_url }}"
             alt=""
-            width="120"
-            height="22"
+            width="140"
+            height="23"
             loading="lazy"
           >
         {%- endif -%}
@@ -40,20 +50,63 @@
           <p class="kk-fws-rating-strip__count">{{ section.settings.review_count }}</p>
         {%- endif -%}
       </div>
+
+      {%- if section.settings.link_label != blank and section.settings.link != blank -%}
+        <a class="kk-fws-rating-strip__link" href="{{ section.settings.link }}">
+          {{- section.settings.link_label -}}
+          <img
+            class="kk-fws-rating-strip__link-icon"
+            src="{{ 'kk-fws-icon-arrow-right.svg' | asset_url }}"
+            alt=""
+            width="14"
+            height="14"
+            aria-hidden="true"
+            loading="lazy"
+          >
+        </a>
+      {%- endif -%}
     </div>
 
     {%- if quote_blocks.size > 0 -%}
-      <span class="kk-fws-rating-strip__rule" aria-hidden="true"></span>
-
       <ul class="kk-fws-rating-strip__quotes">
         {%- for block in quote_blocks -%}
-          {%- assign reverse_order = quote_blocks.size | minus: forloop.index0 -%}
-          <li
-            class="kk-fws-rating-strip__quote"
-            style="--kk-fws-rating-strip-quote-order: {{ reverse_order }};"
-            {{ block.shopify_attributes }}
-          >
-            {{- block.settings.text -}}
+          {%- assign badge = block.settings.badge | default: section.settings.quote_badge -%}
+          <li class="kk-fws-rating-strip__quote" data-kk-fws-reveal {{ block.shopify_attributes }}>
+            <div class="kk-fws-rating-strip__quote-head" aria-hidden="true">
+              <img
+                class="kk-fws-rating-strip__quote-stars"
+                src="{{ 'kk-fws-icon-stars-gold.svg' | asset_url }}"
+                alt=""
+                width="96"
+                height="16"
+                loading="lazy"
+              >
+              <img
+                class="kk-fws-rating-strip__quote-mark"
+                src="{{ 'kk-fws-icon-quote.svg' | asset_url }}"
+                alt=""
+                width="30"
+                height="23"
+                loading="lazy"
+              >
+            </div>
+
+            <blockquote class="kk-fws-rating-strip__quote-text">{{ block.settings.text }}</blockquote>
+
+            {%- if badge != blank -%}
+              <p class="kk-fws-rating-strip__quote-badge">
+                <img
+                  class="kk-fws-rating-strip__quote-badge-icon"
+                  src="{{ 'kk-fws-icon-check-blue.svg' | asset_url }}"
+                  alt=""
+                  width="16"
+                  height="16"
+                  aria-hidden="true"
+                  loading="lazy"
+                >
+                {{- badge -}}
+              </p>
+            {%- endif -%}
           </li>
         {%- endfor -%}
       </ul>
@@ -61,118 +114,239 @@
   </div>
 </section>
 
+
 {% stylesheet %}
+  /* Figma `7809:14951`: a white band, 56px top and bottom, 64px gutters (the same 1312px
+     container as kk-fws-offer), and a soft shadow underneath. */
   .kk-fws-rating-strip {
-    background: var(--kk-fws-rating-strip-background, #f5f3f1);
-    padding: 3.528rem 0;
+    --kk-fws-rating-strip-ink: var(--primary);
+    --kk-fws-rating-strip-blue: var(--primary-600);
+    --kk-fws-rating-strip-pale: #e3ebff;
+
+    position: relative;
+    padding: 5.6rem 0;
+    background: var(--kk-fws-rating-strip-background, #ffffff);
+    box-shadow: 0 1rem 1.4rem rgba(11, 22, 56, 0.06);
   }
 
+  /* 300px summary + three 317px quote cards, 20px apart. */
   .kk-fws-rating-strip__container {
-    width: min(100% - 3.2rem, 118rem);
-    margin: 0 auto;
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 300fr) minmax(0, 951.9fr);
+    gap: 2rem;
     align-items: center;
-    gap: 6rem;
+    width: min(100% - 12.8rem, 131.2rem);
+    margin: 0 auto;
+  }
+
+  .kk-fws-rating-strip__summary {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+    box-sizing: border-box;
+    padding: 2.6rem;
+    border-radius: 1.8rem;
+    background: var(--kk-fws-rating-strip-ink);
+  }
+
+  .kk-fws-rating-strip__eyebrow {
+    margin: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    line-height: 1.2;
+    letter-spacing: 0.16rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-rating-strip-pale);
   }
 
   .kk-fws-rating-strip__rating {
     display: flex;
-    align-items: center;
-    gap: 1.3rem;
-    flex-shrink: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
   }
 
   .kk-fws-rating-strip__score {
     margin: 0;
     font-family: 'Value Sans Medium', sans-serif;
     font-weight: 500;
-    font-size: 4.8rem;
-    line-height: 1.105;
+    font-size: 8rem;
+    line-height: 0.9;
     white-space: nowrap;
-    color: var(--kk-fws-rating-strip-score, #153a5b);
-  }
-
-  .kk-fws-rating-strip__rating-detail {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-    width: 16.8rem;
+    color: #ffffff;
   }
 
   .kk-fws-rating-strip__stars {
     display: block;
-    width: 12rem;
-    height: 2.2387rem;
+    width: 14rem;
+    height: 2.3rem;
     object-fit: contain;
+    object-position: left center;
   }
 
   .kk-fws-rating-strip__count {
     margin: 0;
     font-family: 'Value Sans', sans-serif;
     font-weight: 400;
-    font-size: 1.8rem;
-    line-height: 1.4;
-    color: var(--kk-fws-rating-strip-text, #26303a);
+    font-size: 1.5rem;
+    line-height: 1.2;
+    color: var(--kk-fws-rating-strip-pale);
   }
 
-  .kk-fws-rating-strip__rule {
+  .kk-fws-rating-strip__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    align-self: flex-start;
+    margin-top: -0.2rem;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    text-decoration: none;
+    color: #ffffff;
+  }
+
+  .kk-fws-rating-strip__link:hover,
+  .kk-fws-rating-strip__link:focus-visible {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+
+  .kk-fws-rating-strip__link-icon {
     display: block;
     flex-shrink: 0;
-    width: 0;
-    height: 7.2747rem;
-    border-left: 1px solid var(--kk-fws-rating-strip-line, #e6e6e6);
+    width: 1.4rem;
+    height: 1.4rem;
+    transition: transform 0.2s ease;
+  }
+
+  .kk-fws-rating-strip__link:hover .kk-fws-rating-strip__link-icon {
+    transform: translateX(0.2rem);
   }
 
   .kk-fws-rating-strip__quotes {
-    display: flex;
-    align-items: center;
-    gap: 5rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
   .kk-fws-rating-strip__quote {
-    font-family: 'Value Sans', sans-serif;
-    font-weight: 400;
-    font-style: italic;
-    font-size: 2rem;
-    line-height: 1.4;
-    color: var(--kk-fws-rating-strip-text, #26303a);
-    flex: 0 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.54rem;
+    box-sizing: border-box;
     min-width: 0;
+    padding: 2.6rem;
+    border-radius: 1.8rem;
+    background: var(--light);
   }
 
-  /* Figma column widths for the three preset quotes. */
-  .kk-fws-rating-strip__quote:nth-child(1) {
-    flex-basis: 31.6825rem;
+  .kk-fws-rating-strip__quote-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
   }
 
-  .kk-fws-rating-strip__quote:nth-child(2) {
-    flex-basis: 20.6892rem;
+  .kk-fws-rating-strip__quote-stars {
+    display: block;
+    width: 9.6rem;
+    height: 1.6rem;
+    object-fit: contain;
+    object-position: left center;
   }
 
-  .kk-fws-rating-strip__quote:nth-child(3) {
-    flex-basis: 22.444rem;
+  .kk-fws-rating-strip__quote-mark {
+    display: block;
+    flex-shrink: 0;
+    width: 3rem;
+    height: 2.3rem;
+  }
+
+  /* Grows so the rule and verified line sit on one baseline across the three cards. */
+  .kk-fws-rating-strip__quote-text {
+    flex: 1 1 auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 2.2rem;
+    line-height: 1.4;
+    color: var(--kk-fws-rating-strip-ink);
+  }
+
+  .kk-fws-rating-strip__quote-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin: 0;
+    padding-top: 1.4rem;
+    border-top: 1px solid #e1e5f0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    line-height: 1.2;
+    color: var(--kk-fws-rating-strip-blue);
+  }
+
+  .kk-fws-rating-strip__quote-badge-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kk-fws-rating-strip__link-icon {
+      transition: none;
+    }
+  }
+
+  /* Tablet: the summary spans the top, the three quotes sit beneath it. */
+  @media (max-width: 1199px) {
+    .kk-fws-rating-strip__container {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kk-fws-rating-strip__summary {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: end;
+      column-gap: 2.4rem;
+        padding: 8rem 2.2rem;
+    }
+
+    .kk-fws-rating-strip__eyebrow {
+      grid-column: 1 / -1;
+    }
+
+    .kk-fws-rating-strip__rating {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      column-gap: 2rem;
+    }
+
+    .kk-fws-rating-strip__link {
+      justify-self: end;
+      align-self: end;
+    }
   }
 
   @media (max-width: 989px) {
     .kk-fws-rating-strip__container {
-      gap: 3rem;
+      width: min(100% - 4rem, 131.2rem);
     }
 
-    .kk-fws-rating-strip__score {
-      font-size: 4rem;
-    }
-
-    .kk-fws-rating-strip__quotes {
-      gap: 2.4rem;
-    }
-
-    .kk-fws-rating-strip__quote {
-      font-size: 1.7rem;
-      line-height: 1.35;
+    .kk-fws-rating-strip__quote-text {
+      font-size: 1.9rem;
     }
   }
 
@@ -183,67 +357,48 @@
 
     .kk-fws-rating-strip__container {
       width: min(100% - 4rem, 54rem);
+      gap: 1.2rem;
+    }
+
+    /* Back to a left-aligned column: the tablet grid's `align-items: end` would otherwise
+       push every child to the right edge of the card. */
+    .kk-fws-rating-strip__summary {
+      display: flex;
       flex-direction: column;
-      align-items: stretch;
-      justify-content: center;
-      gap: 1.8rem;
+      align-items: flex-start;
+      gap: 1.4rem;
+      padding: 2.2rem;
+      text-align: left;
+      border-radius: 1.6rem;
     }
 
     .kk-fws-rating-strip__rating {
-      width: 100%;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
     }
 
     .kk-fws-rating-strip__score {
-      font-size: 4rem;
+      font-size: 4.4rem;
     }
 
-    .kk-fws-rating-strip__rating-detail {
-      gap: 0.2rem;
-    }
-
-    .kk-fws-rating-strip__stars {
-      width: 9.4rem;
-      height: 1.7536rem;
-    }
-
-    .kk-fws-rating-strip__count {
-      font-size: 1.6rem;
-    }
-
-    .kk-fws-rating-strip__rule {
-      width: 100%;
-      height: 0;
-      border-left: 0;
-      border-top: 1px solid var(--kk-fws-rating-strip-line, #e6e6e6);
+    .kk-fws-rating-strip__link {
+      align-self: flex-start;
     }
 
     .kk-fws-rating-strip__quotes {
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 2rem;
-      width: 100%;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.2rem;
     }
 
-    /* Mobile reverses the quote order (see Figma 7511:105). */
     .kk-fws-rating-strip__quote {
-      order: var(--kk-fws-rating-strip-quote-order, 0);
-      font-size: 1.6rem;
-      line-height: 1.3;
+      gap: 1.2rem;
+      padding: 2.2rem;
+      border-radius: 1.6rem;
     }
 
-    .kk-fws-rating-strip__quote,
-    .kk-fws-rating-strip__quote:nth-child(1) {
-      flex: 0 1 25rem;
-    }
-
-    .kk-fws-rating-strip__quote:nth-child(2) {
-      flex: 1 1 0;
-      min-width: 0;
-    }
-
-    .kk-fws-rating-strip__quote:nth-child(3) {
-      flex: 0 0 16.8rem;
+    .kk-fws-rating-strip__quote-text {
+      font-size: 1.9rem;
     }
   }
 {% endstylesheet %}
@@ -256,10 +411,26 @@
   "max_blocks": 6,
   "settings": [
     {
+      "type": "header",
+      "content": "Summary card",
+      "info": "Leave any field empty to hide it."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
       "type": "text",
       "id": "score",
       "label": "Rating score",
       "default": "4.8"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_stars",
+      "label": "Custom star graphic",
+      "info": "Overrides the built-in 5-star graphic on the summary card."
     },
     {
       "type": "text",
@@ -268,10 +439,25 @@
       "default": "1,092 verified reviews"
     },
     {
-      "type": "image_picker",
-      "id": "custom_stars",
-      "label": "Custom star graphic",
-      "info": "Overrides the built-in 5-star graphic."
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "The link shows only when it has both a label and a URL, e.g. #kk-fws-testimonials."
+    },
+    {
+      "type": "header",
+      "content": "Quote cards"
+    },
+    {
+      "type": "text",
+      "id": "quote_badge",
+      "label": "Verified line",
+      "info": "Shown under every quote. A quote's own \"Verified line\" overrides it."
     },
     {
       "type": "header",
@@ -281,25 +467,7 @@
       "type": "color",
       "id": "background_color",
       "label": "Background",
-      "default": "#f5f3f1"
-    },
-    {
-      "type": "color",
-      "id": "score_color",
-      "label": "Rating score",
-      "default": "#153a5b"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Body text",
-      "default": "#26303a"
-    },
-    {
-      "type": "color",
-      "id": "line_color",
-      "label": "Divider",
-      "default": "#e6e6e6"
+      "default": "#ffffff"
     }
   ],
   "blocks": [
@@ -312,6 +480,12 @@
           "id": "text",
           "label": "Quote",
           "default": "“Set it up myself in five minutes flat”"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Verified line",
+          "info": "Leave empty to use the section's verified line."
         }
       ]
     }

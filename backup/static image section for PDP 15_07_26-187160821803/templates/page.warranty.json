@@ -40,11 +40,21 @@
         "button_text": "Register Here"
       }
     },
+    "custom_code_section_xdD4EC": {
+      "type": "custom-code-section",
+      "disabled": true,
+      "name": "Custom Code Section",
+      "settings": {
+        "custom_html": "<div class=\"manufacturer-info\">\n  <p>\n    <strong>Manufactured for Phoenix Gravity Water Filters LLC by:</strong><br>\n    RAMA Pure Water Private Limited<br>\n    196 Injambakkam,<br>\n    East Coast Road, Chennai – 600041<br>\n    Tamil Nadu, India.\n  </p>\n</div>",
+        "custom_css": ".manufacturer-info {\n  width: 100%;\nmax-width: 1200px;\n    margin: 0 auto;\n}\n\n.manufacturer-info p {\n  margin: 0;\n  padding: 0;\n  font-size: 14px;\n  line-height: 1.6;\n  font-weight: 400;\n  color: #555;\n  text-align: left;\n}\n\n.manufacturer-info p strong {\n  font-weight: 600;\n  color: #222;\n}\n\n@media screen and (max-width: 749px) {\n  .manufacturer-info {\n    margin: 20px 15px 25px;\n  }\n\n  .manufacturer-info p {\n    font-size: 13px;\n    line-height: 1.55;\n  }\n}",
+        "custom_js": ""
+      }
+    },
     "1746437444c5b604dc": {
       "type": "apps",
       "blocks": {
         "my_product_cares_registration_form_8i6RMY": {
-          "type": "shopify://apps/my-product-cares/blocks/registration-form/fd762697-cd8b-4acd-bd03-03c62edf58c9",
+          "type": "shopify://apps/my-product-registration/blocks/registration-form/fd762697-cd8b-4acd-bd03-03c62edf58c9",
           "settings": {
             "slug": "product-registration",
             "mode": "normal",
@@ -79,6 +89,7 @@
   "order": [
     "copy_image_rUyHJ6",
     "support_cNgXx8",
+    "custom_code_section_xdD4EC",
     "1746437444c5b604dc",
     "178289329360bf4227"
   ]

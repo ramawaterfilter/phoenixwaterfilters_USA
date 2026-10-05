@@ -11,9 +11,7 @@
   "sections": {
     "custom_code_section_QD4f49": {
       "type": "custom-code-section",
-      "custom_css": [
-        ".custom-code-section {background-color: #ffffff;}"
-      ],
+      "custom_css": [".custom-code-section {background-color: #ffffff;}"],
       "name": "Custom Code Section",
       "settings": {
         "custom_html": "<section class=\"filter-setup\">\n  <div class=\"filter-header\">\n    <h1>How to set up your filter</h1>\n  </div>\n  <ul class=\"filter-list\">\n    <li>\n      <a href=\"#shopify-block-AcFdtK1dwTHEyTWNlc__ai_gen_block_ff8d1fe_wWpEVJ\">\n        How to set up your Phoenix Gravity Water Filter System\n      </a>\n    </li>\n    <li>\n      <a href=\"#shopify-block-AcmpaQytGbEZhdTZOQ__ai_gen_block_ff8d1fe_n7Tghz\" data-target=\".ai-embed-code-container-aywhptnz3bm52y2nulaigenblockff8d1fen7tghz\">\n        How to set up your Carbon Filter Elements\n      </a>\n    </li>\n    <li>\n      <a href=\"#shopify-block-AbTIvSXlzMVdLN3VDb__ai_gen_block_ff8d1fe_K4n9Mg\" data-target=\".ai-embed-code-wrapper-aqkozmurlqnbotwtzuaigenblockff8d1fek4n9mg\">\n        How to set up your POSTreat Steel Fluoride & Arsenic Reduction Filter Elements\n      </a>\n    </li>\n    <li>\n      <a href=\"#shopify-block-AUnhkWGlmTGVSdEtpa__ai_gen_block_ff8d1fe_z4BRgt\" data-target=\".ai-embed-code-wrapper-azejmanezmtztsvzhaaigenblockff8d1fez4brgt\">\n        How to set up your Carbon Filter Elements and POSTreat Steel Fluoride & Arsenic Reduction Filter Elements\n      </a>\n    </li>\n    <li>\n      <a href=\"#shopify-block-ATThWaDRVWUFvVkQ0M__ai_gen_block_ff8d1fe_XNV4JR\" data-target=\".ai-embed-code-wrapper-azwjvodjtzhhnodvptaigenblockff8d1fexnv4jr\">\n        How to Prime Your Carbon Filter Elements\n      </a>\n    </li>\n    <li>\n      <a href=\"#shopify-block-AeTlNbXVuMzRTWDRjV__ai_gen_block_ff8d1fe_tqacKn\" data-target=\".ai-embed-code-wrapper-awk54zi9sv09xy3frbaigenblockff8d1fetqackn\">\n        How to set up your Stainless Steel Spigot\n      </a>\n    </li>\n  </ul>\n</section>\n\n<style>\n.filter-setup {\n  padding: 50px 0 20px 0;\n  color: #153A5B;\n  max-width: 1400px;\n  margin: 0 auto;\n  background-color: #fff;\n}\n.filter-header {\n  display: flex;\n  align-items: center;\n  gap: 15px;\n  margin-bottom: 25px;\n  justify-content: center;\n}\n.filter-icon {\n  width: 60px;\n  height: 60px;\n}\n.filter-header h2 {\n  font-size: 36px;\n  font-weight: 700;\n  color: #153A5B;\n  margin: 0;\n}\n.filter-list {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n}\n.filter-list li {\n  margin: 15px 0;\n}\n.filter-list a {\n  text-decoration: none;\n  color: #153A5B;\n  font-size: 18px;\n  transition: color 0.3s ease, text-decoration 0.3s ease;\n  cursor: pointer;\n}\n.filter-list a:hover {\n  color: #0e2d46;\n  text-decoration: underline;\n}\n@media (max-width: 768px) {\n  .filter-setup {\n    padding: 30px 20px;\n  }\n  .filter-header {\n    flex-direction: row;\n    align-items: center;\n    gap: 10px;\n  }\n  .filter-icon {\n    width: 50px;\n    height: 50px;\n  }\n  .filter-header h2 {\n    font-size: 26px;\n  }\n  .filter-list {\n    margin-top: 15px;\n  }\n  .filter-list a {\n    font-size: 16px;\n  }\n}\n</style>\n\n<script>\n(function () {\n  // Sticky header height ke liye offset — apni theme ke hisaab se adjust kar lena\n  var SCROLL_OFFSET = 100;\n\n  function smoothScrollTo(targetEl) {\n    if (!targetEl) return;\n    var targetTop = targetEl.getBoundingClientRect().top + window.pageYOffset - SCROLL_OFFSET;\n    window.scrollTo({\n      top: targetTop,\n      behavior: 'smooth'\n    });\n  }\n\n  function handleFilterLinkClick(e) {\n    var link = e.currentTarget;\n    e.preventDefault();\n\n    var hash = link.getAttribute('href');\n    var targetSelector = link.getAttribute('data-target');\n\n    // 1) Scroll to the hash section — hamesha fresh query, koi stale reference nahi\n    if (hash) {\n      var hashTarget = document.querySelector(hash);\n      if (hashTarget) {\n        smoothScrollTo(hashTarget);\n      }\n    }\n\n    // 2) Agar data-target diya hai, to corresponding content ko show karo aur baaki hide\n    if (targetSelector) {\n      // Sabhi possible content blocks ko hide karo (jitne bhi is section ke andar data-target values hain)\n      var allLinks = document.querySelectorAll('.filter-list a[data-target]');\n      allLinks.forEach(function (l) {\n        var sel = l.getAttribute('data-target');\n        if (!sel) return;\n        var el = document.querySelector(sel);\n        if (el) {\n          el.style.display = 'none';\n        }\n        l.classList.remove('is-active');\n      });\n\n      // Sirf current wale ko show karo\n      var currentTarget = document.querySelector(targetSelector);\n      if (currentTarget) {\n        currentTarget.style.display = '';\n      }\n      link.classList.add('is-active');\n    }\n  }\n\n  function initFilterLinks() {\n    var links = document.querySelectorAll('.filter-list a');\n    links.forEach(function (link) {\n      // Purana listener duplicate na ho, isliye clone-replace trick\n      var clone = link.cloneNode(true);\n      link.parentNode.replaceChild(clone, link);\n    });\n\n    // Fresh nodes par listener attach\n    document.querySelectorAll('.filter-list a').forEach(function (link) {\n      link.addEventListener('click', handleFilterLinkClick);\n    });\n  }\n\n  if (document.readyState === 'loading') {\n    document.addEventListener('DOMContentLoaded', initFilterLinks);\n  } else {\n    initFilterLinks();\n  }\n})();\n</script>",
@@ -45,9 +43,7 @@
           "blocks": {}
         }
       },
-      "block_order": [
-        "ai_gen_block_ff8d1fe_wWpEVJ"
-      ],
+      "block_order": ["ai_gen_block_ff8d1fe_wWpEVJ"],
       "custom_css": [
         "@media (max-width: 786px) {.ai-embed-code-heading-as1fkzmjneg5wenbbsaigenblockff8d1fewwpevj {margin-top: 0px; margin-bottom: 10px; margin-left: 0px; padding-left: 20px; font-size: 18px; }}",
         "@media (max-width: 786px) {.ai-embed-code-wrapper-as1fkzmjneg5wenbbsaigenblockff8d1fewwpevj {height: 260px; }}",
@@ -89,9 +85,7 @@
           "blocks": {}
         }
       },
-      "block_order": [
-        "ai_gen_block_ff8d1fe_n7Tghz"
-      ],
+      "block_order": ["ai_gen_block_ff8d1fe_n7Tghz"],
       "custom_css": [
         "@media (max-width: 786px) {.ai-embed-code-heading-aywhptnz3bm52y2nulaigenblockff8d1fen7tghz {margin-top: 0px; margin-bottom: 10px; margin-left: 0px; padding-left: 20px; font-size: 18px; padding-top: 3px; }}",
         "@media (max-width: 786px) {.ai-embed-code-wrapper-aywhptnz3bm52y2nulaigenblockff8d1fen7tghz {height: 212px; }}",
@@ -133,9 +127,7 @@
           "blocks": {}
         }
       },
-      "block_order": [
-        "ai_gen_block_ff8d1fe_K4n9Mg"
-      ],
+      "block_order": ["ai_gen_block_ff8d1fe_K4n9Mg"],
       "custom_css": [
         "@media (max-width: 786px) {.ai-embed-code-heading-aqkozmurlqnbotwtzuaigenblockff8d1fek4n9mg {margin-top: 10px; margin-bottom: 0px; margin-left: 0px; padding-left: 20px; font-size: 18px; padding-top: 30px !important; }}",
         "@media (min-width: 1024px) {.ai-embed-code-heading-aqkozmurlqnbotwtzuaigenblockff8d1fek4n9mg {width: 1400px; max-width: 100%; margin: 0 auto; }}",
@@ -176,9 +168,7 @@
           "blocks": {}
         }
       },
-      "block_order": [
-        "ai_gen_block_ff8d1fe_z4BRgt"
-      ],
+      "block_order": ["ai_gen_block_ff8d1fe_z4BRgt"],
       "custom_css": [
         "@media (min-width: 1024px) {.ai-embed-code-heading-azejmanezmtztsvzhaaigenblockff8d1fez4brgt {width: 1400px; max-width: 100%; margin: 0 auto; }}",
         "@media (max-width: 786px) {.ai-embed-code-heading-azejmanezmtztsvzhaaigenblockff8d1fez4brgt {margin-top: 0px; margin-bottom: 10px; margin-left: 0px; padding-left: 20px; font-size: 18px; }}",
@@ -210,9 +200,7 @@
           "blocks": {}
         }
       },
-      "block_order": [
-        "ai_gen_block_ff8d1fe_XNV4JR"
-      ],
+      "block_order": ["ai_gen_block_ff8d1fe_XNV4JR"],
       "custom_css": [
         "@media (min-width: 1024px) {.ai-embed-code-heading-azwjvodjtzhhnodvptaigenblockff8d1fexnv4jr {width: 1400px; max-width: 100%; margin: 0 auto; }}",
         "@media (max-width: 786px) {.ai-embed-code-heading-azwjvodjtzhhnodvptaigenblockff8d1fexnv4jr {margin-top: 21px; margin-bottom: 10px; margin-left: 0px; padding-left: 20px; font-size: 18px; }}",
@@ -244,9 +232,7 @@
           "blocks": {}
         }
       },
-      "block_order": [
-        "ai_gen_block_ff8d1fe_tqacKn"
-      ],
+      "block_order": ["ai_gen_block_ff8d1fe_tqacKn"],
       "custom_css": [
         "@media (min-width: 1024px) {.ai-embed-code-heading-awk54zi9sv09xy3frbaigenblockff8d1fetqackn {width: 1400px; max-width: 100%; margin: 0 auto; }}",
         "@media (max-width: 786px) {.ai-embed-code-heading-awk54zi9sv09xy3frbaigenblockff8d1fetqackn {margin-top: 20px; margin-bottom: 10px; margin-left: 0px; padding-left: 20px; font-size: 18px; }}",
@@ -312,7 +298,7 @@
           "type": "ai_gen_block_ffd217f",
           "settings": {
             "heading": "Say hello to healthier hydration.",
-            "background_color": "#2b2b4e",
+            "background_color": "#0B1638",
             "button_text": "Shop",
             "button_color": "#ffffff",
             "product_1": "gravity-water-filter",
@@ -322,9 +308,7 @@
           "blocks": {}
         }
       },
-      "block_order": [
-        "ai_gen_block_ffd217f_4hQjC3"
-      ],
+      "block_order": ["ai_gen_block_ffd217f_4hQjC3"],
       "settings": {}
     }
   },

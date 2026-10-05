@@ -18,25 +18,104 @@
         "countdown_products": []
       }
     },
-    "product-hero": {
-      "type": "product-Corbonfilter",
+    "custom_nice_product_v2_8BkiP6": {
+      "type": "custom-nice-product-v2",
       "blocks": {
-        "judge_me_reviews_preview_badge_VQwrtE": {
-          "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+        "title_YEQK39": {
+          "type": "title",
+          "settings": {
+            "show_vendor": false
+          }
+        },
+        "rating_9ifXDr": {
+          "type": "rating",
           "settings": {}
+        },
+        "description_PPMtmb": {
+          "type": "description",
+          "settings": {
+            "show_usps": true
+          }
+        },
+        "variant_picker_cdJbpM": {
+          "type": "variant_picker",
+          "settings": {
+            "show_step_numbers": true,
+            "label_prefix": "Select",
+            "hidden_variant_ids": "",
+            "show_size_guide": true,
+            "size_guide_label": "Size Guide"
+          }
+        },
+        "price_tCiWKc": {
+          "type": "price",
+          "settings": {
+            "show_stock": true,
+            "show_tax": true
+          }
+        },
+        "buy_buttons_yC9Fgw": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false
+          }
+        },
+        "shipping_xdyD7J": {
+          "type": "shipping",
+          "settings": {
+            "text": "Ships in 3–7 business days via UPS/USPS | Free on orders $99+",
+            "alignment": "center"
+          }
+        },
+        "payment_icons_RmM9kJ": {
+          "type": "payment_icons",
+          "settings": {
+            "heading": "",
+            "accessibility_label": "Accepted payment methods",
+            "icon_limit": 8
+          }
+        },
+        "trust_badges_8Hw8a8": {
+          "type": "trust_badges",
+          "settings": {
+            "columns_desktop": 3,
+            "columns_mobile": 2,
+            "badge_1_text": "Free Shipping in the US Mainland",
+            "badge_1_link": "",
+            "badge_2_text": "100 Day Trial",
+            "badge_2_link": "",
+            "badge_3_text": "10 Year Warranty",
+            "badge_3_link": "",
+            "badge_4_text": "Customer Support",
+            "badge_4_link": "",
+            "badge_5_text": "NSF Certified",
+            "badge_5_link": "",
+            "badge_6_text": "US-Based Warehouse Shipping",
+            "badge_6_link": ""
+          }
         }
       },
       "block_order": [
-        "judge_me_reviews_preview_badge_VQwrtE"
+        "title_YEQK39",
+        "rating_9ifXDr",
+        "description_PPMtmb",
+        "variant_picker_cdJbpM",
+        "price_tCiWKc",
+        "buy_buttons_yC9Fgw",
+        "shipping_xdyD7J",
+        "payment_icons_RmM9kJ",
+        "trust_badges_8Hw8a8"
       ],
       "custom_css": [
-        "@media (max-width: 1200px) {.section-producthero .control .swiper-slide {padding-bottom: 50% !important; }}"
+        "span.step-number {display: none !important;}"
       ],
+      "name": "Custom main product V2",
       "settings": {
-        "countdown_text": "",
-        "countdown_time": "",
-        "countdown_products": [],
-        "product_boost": []
+        "hide_variant_media": false,
+        "desktop_media_behavior": "static",
+        "desktop_sticky_top": 130,
+        "show_badge": true,
+        "badge_text": ""
       }
     },
     "9600faf5-31b8-4d01-817d-b44b276a1d60": {
@@ -83,7 +162,6 @@
       "settings": {
         "heading": "",
         "content": "",
-        "show_shipping": true,
         "accordion_styles": "full-width",
         "custom_id": "",
         "custom_class": ""
@@ -162,7 +240,9 @@
       ],
       "name": "Custom Embed Video",
       "settings": {
-        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/jr37r9792m.js\" async type=\"module\"></script><style>wistia-player[media-id='jr37r9792m']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/jr37r9792m/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"jr37r9792m\" aspect=\"1.7777777777777777\"></wistia-player>"
+        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/jr37r9792m.js\" async type=\"module\"></script><style>wistia-player[media-id='jr37r9792m']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/jr37r9792m/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"jr37r9792m\" aspect=\"1.7777777777777777\"></wistia-player>",
+        "visibility": "always",
+        "variant_ids": ""
       }
     },
     "secondary_details_qTHLFy": {
@@ -207,7 +287,9 @@
       ],
       "name": "Custom Embed Video",
       "settings": {
-        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/c3cghpaqz1.js\" async type=\"module\"></script><style>wistia-player[media-id='c3cghpaqz1']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/c3cghpaqz1/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"c3cghpaqz1\" aspect=\"1.7777777777777777\"></wistia-player>"
+        "embed_code": "<script src=\"https://fast.wistia.com/player.js\" async></script><script src=\"https://fast.wistia.com/embed/c3cghpaqz1.js\" async type=\"module\"></script><style>wistia-player[media-id='c3cghpaqz1']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/c3cghpaqz1/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id=\"c3cghpaqz1\" aspect=\"1.7777777777777777\"></wistia-player>",
+        "visibility": "always",
+        "variant_ids": ""
       }
     },
     "e7fc5ca3-7826-4ae3-8fda-deda4cc2fcf9": {
@@ -923,7 +1005,7 @@
   },
   "order": [
     "product_hero_og_zxMJ8i",
-    "product-hero",
+    "custom_nice_product_v2_8BkiP6",
     "9600faf5-31b8-4d01-817d-b44b276a1d60",
     "17616387558df3d2e4",
     "custom_html_JMHGbr",

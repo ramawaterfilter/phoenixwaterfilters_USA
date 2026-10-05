@@ -1,0 +1,59 @@
+{%- comment -%}
+  Shared campaign CTA: the primary button plus the row of trust badges below it.
+  Renders nothing when there's no button, no trust text and no `after` content.
+
+  Styles live in assets/kk-fws-base.css. The per-section BEM classes are still output so a
+  section can override layout from its own stylesheet.
+
+  Params:
+  - section (required): the calling section; reads settings.button_label / button_link
+  - prefix (required): the section's class root, e.g. 'kk-fws-cards'
+  - trust_blocks: the section's blocks of type 'trust'
+  - icon_size: intrinsic px size of the trust check icon (default 22)
+  - after: optional HTML rendered after the trust list, e.g. a terms link
+
+  Usage:
+  {% render 'kk-fws-cta', section: section, prefix: 'kk-fws-cards', trust_blocks: trust_blocks, icon_size: 20 %}
+{%- endcomment -%}
+
+{%- liquid
+  assign show_button = false
+  if section.settings.button_label != blank and section.settings.button_link != blank
+    assign show_button = true
+  endif
+
+  assign icon_size = icon_size | default: 22
+-%}
+
+{%- if show_button or trust_blocks.size > 0 or after != blank -%}
+  <div class="{{ prefix }}__cta kk-fws-cta">
+    {%- if show_button -%}
+      <a class="{{ prefix }}__button kk-fws-button" href="{{ section.settings.button_link }}">
+        {{- section.settings.button_label -}}
+      </a>
+    {%- endif -%}
+
+    {%- if trust_blocks.size > 0 -%}
+      <ul class="{{ prefix }}__trust-list kk-fws-trust-list">
+        {%- for block in trust_blocks -%}
+          {%- if block.settings.text != blank -%}
+            <li class="{{ prefix }}__trust kk-fws-trust-list__item" {{ block.shopify_attributes }}>
+              <img
+                class="{{ prefix }}__trust-icon kk-fws-trust-list__icon"
+                src="{{ 'kk-fws-icon-check-blue.svg' | asset_url }}"
+                alt=""
+                width="{{ icon_size }}"
+                height="{{ icon_size }}"
+                aria-hidden="true"
+                loading="lazy"
+              >
+              {{- block.settings.text -}}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {{- after -}}
+  </div>
+{%- endif -%}

@@ -1,0 +1,611 @@
+{%- comment -%}
+  KK FWS Testimonials — Figma `7809:15267`.
+
+  Replaces the reused theme `testimonials` slider and its `kk-fws-anchor` on the campaign
+  template. The section owns the `#kk-fws-testimonials` anchor itself, so the existing links
+  keep working.
+
+  Layout follows the boilerplate's TestimonialsMasonry: CSS multi-column masonry, so cards keep
+  their natural height and fill top-to-bottom, column by column. The first "Cards shown at
+  first" reviews render visible; the rest render `hidden` and the "load more" text link
+  reveals them a batch at a time. Hidden rather than absent, so the copy is in the page for
+  search engines and the link works without a request.
+{%- endcomment -%}
+
+{%- liquid
+  assign review_blocks = section.blocks | where: 'type', 'review'
+  assign trust_blocks = section.blocks | where: 'type', 'trust'
+  assign initial_count = section.settings.initial_count
+  assign has_more = false
+  if review_blocks.size > initial_count
+    assign has_more = true
+  endif
+-%}
+
+<section
+  id="kk-fws-testimonials"
+  class="kk-fws-testimonials kk-fws-section"
+  data-kk-fws-testimonials
+  style="--kk-fws-testimonials-background: {{ section.settings.background_color }};"
+>
+  <div class="kk-fws-testimonials__container kk-fws-container">
+    <div class="kk-fws-testimonials__intro">
+      {%- if section.settings.rating_text != blank or section.settings.certification_text != blank -%}
+        <div class="kk-fws-testimonials__rating">
+          {%- if section.settings.rating_text != blank -%}
+            <img
+              class="kk-fws-testimonials__rating-stars"
+              src="{{ 'kk-fws-icon-stars-gold.svg' | asset_url }}"
+              alt=""
+              width="150"
+              height="25"
+              loading="lazy"
+            >
+            <span class="kk-fws-testimonials__rating-text">{{ section.settings.rating_text }}</span>
+          {%- endif -%}
+          {%- if section.settings.rating_text != blank and section.settings.certification_text != blank -%}
+            <span class="kk-fws-testimonials__rating-dot" aria-hidden="true"></span>
+          {%- endif -%}
+          {%- if section.settings.certification_text != blank -%}
+            <span class="kk-fws-testimonials__certification">
+              <img
+                class="kk-fws-testimonials__certification-icon"
+                src="{{ 'kk-fws-icon-shield-check.svg' | asset_url }}"
+                alt=""
+                width="22"
+                height="22"
+                aria-hidden="true"
+                loading="lazy"
+              >
+              {{- section.settings.certification_text -}}
+            </span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="kk-fws-testimonials__heading kk-fws-heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+    </div>
+
+    {%- if review_blocks.size > 0 -%}
+      <ul class="kk-fws-testimonials__grid" id="kk-fws-testimonials-grid-{{ section.id }}">
+        {%- for block in review_blocks -%}
+          {%- assign reviewer = block.settings.reviewer | strip -%}
+          <li
+            class="kk-fws-testimonials__card"
+            data-kk-fws-reveal
+            {% if forloop.index > initial_count %}hidden data-kk-fws-testimonials-more{% endif %}
+            {{ block.shopify_attributes }}
+          >
+            <div class="kk-fws-testimonials__card-head">
+              <img
+                class="kk-fws-testimonials__card-stars"
+                src="{{ 'kk-fws-icon-stars-gold.svg' | asset_url }}"
+                alt="{{ section.settings.stars_label | escape }}"
+                width="116"
+                height="19"
+                loading="lazy"
+              >
+              {%- if section.settings.verified_text != blank -%}
+                <span class="kk-fws-testimonials__verified">
+                  <img
+                    class="kk-fws-testimonials__verified-icon"
+                    src="{{ 'kk-fws-icon-check-blue.svg' | asset_url }}"
+                    alt=""
+                    width="16"
+                    height="16"
+                    aria-hidden="true"
+                    loading="lazy"
+                  >
+                  {{- section.settings.verified_text -}}
+                </span>
+              {%- endif -%}
+            </div>
+
+            {%- if block.settings.quote != blank -%}
+              <blockquote class="kk-fws-testimonials__quote">{{ block.settings.quote }}</blockquote>
+            {%- endif -%}
+
+            {%- if reviewer != blank -%}
+              <p class="kk-fws-testimonials__author">
+                <span class="kk-fws-testimonials__avatar" aria-hidden="true">
+                  {{- reviewer | slice: 0 | upcase -}}
+                </span>
+                <span class="kk-fws-testimonials__name">{{ reviewer }}</span>
+              </p>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if has_more and section.settings.load_more_label != blank -%}
+      <button
+        type="button"
+        class="kk-fws-testimonials__load-more"
+        data-kk-fws-testimonials-load-more
+        aria-controls="kk-fws-testimonials-grid-{{ section.id }}"
+      >
+        {{- section.settings.load_more_label -}}
+        <img
+          class="kk-fws-testimonials__load-more-icon"
+          src="{{ 'kk-fws-icon-chevron.svg' | asset_url }}"
+          alt=""
+          width="12"
+          height="7"
+          aria-hidden="true"
+        >
+      </button>
+    {%- endif -%}
+
+    {%- render 'kk-fws-cta', section: section, prefix: 'kk-fws-testimonials', trust_blocks: trust_blocks, icon_size: 22 -%}
+  </div>
+</section>
+
+{%- if has_more -%}
+  <script>
+    (function () {
+      var root = document.currentScript && document.currentScript.previousElementSibling;
+      if (!root || !root.hasAttribute('data-kk-fws-testimonials')) return;
+
+      var button = root.querySelector('[data-kk-fws-testimonials-load-more]');
+      if (!button) return;
+
+      var step = {{ section.settings.load_more_count | default: 3 }};
+
+      button.addEventListener('click', function () {
+        var pending = root.querySelectorAll('[data-kk-fws-testimonials-more][hidden]');
+        for (var i = 0; i < pending.length && i < step; i++) {
+          pending[i].hidden = false;
+        }
+
+        // Move focus to the first newly shown card so keyboard and screen-reader users land on
+        // the new content rather than being left on a link that may be about to disappear.
+        if (pending[0]) {
+          pending[0].setAttribute('tabindex', '-1');
+          pending[0].focus({ preventScroll: true });
+        }
+
+        if (pending.length <= step) button.hidden = true;
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Figma `7809:15267`: #f5f6f8, 88px top and bottom, 1312px container (64px gutters). */
+  .kk-fws-testimonials {
+    --kk-fws-testimonials-ink: var(--primary);
+    --kk-fws-testimonials-blue: var(--primary-600);
+    /* kk-fws-base.css overrides */
+    --kk-fws-trust-gap: 1rem 3.2rem;
+
+    background: var(--kk-fws-testimonials-background, var(--light));
+    scroll-margin-top: 2rem;
+  }
+
+  .kk-fws-testimonials__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.1rem;
+    max-width: 86rem;
+    margin-bottom: 4rem;
+    text-align: center;
+  }
+
+  .kk-fws-testimonials__rating {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem 1.4rem;
+  }
+
+  .kk-fws-testimonials__rating-stars {
+    display: block;
+    width: 15rem;
+    height: 2.5rem;
+  }
+
+  .kk-fws-testimonials__rating-text {
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.9rem;
+    line-height: 1;
+    color: var(--kk-fws-testimonials-ink);
+  }
+
+  .kk-fws-testimonials__rating-dot {
+    flex-shrink: 0;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: #a3a7bf;
+  }
+
+  .kk-fws-testimonials__certification {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-testimonials-blue);
+  }
+
+  .kk-fws-testimonials__certification-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  /* Masonry — three 421px columns, 24px apart (TestimonialsMasonry's `md:columns-3`). */
+  .kk-fws-testimonials__grid {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    columns: 3;
+    column-gap: 2.4rem;
+    list-style: none;
+  }
+
+  .kk-fws-testimonials__card {
+    display: flex;
+    flex-direction: column;
+    gap: 2.2rem;
+    box-sizing: border-box;
+    margin: 0 0 2.4rem;
+    padding: 3rem 2.9rem 2.8rem;
+    break-inside: avoid;
+    border: 1px solid var(--light-alt);
+    border-radius: 1.8rem;
+    background: #ffffff;
+    box-shadow: 0 0.8rem 1.2rem rgba(11, 22, 56, 0.05);
+  }
+
+  .kk-fws-testimonials__card[hidden] {
+    display: none;
+  }
+
+  .kk-fws-testimonials__card:focus {
+    outline: none;
+  }
+
+  .kk-fws-testimonials__card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    margin-bottom: -0.4rem;
+  }
+
+  .kk-fws-testimonials__card-stars {
+    display: block;
+    width: 11.6rem;
+    height: 1.9rem;
+    object-fit: contain;
+    object-position: left center;
+  }
+
+  .kk-fws-testimonials__verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    color: var(--kk-fws-testimonials-blue);
+  }
+
+  .kk-fws-testimonials__verified-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  /* Quote marks are added here rather than in the copy, so editors can paste reviews as-is. */
+  .kk-fws-testimonials__quote {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.8rem;
+    line-height: 1.5;
+    color: var(--kk-fws-testimonials-ink);
+  }
+
+  .kk-fws-testimonials__quote p {
+    margin: 0;
+  }
+
+  .kk-fws-testimonials__quote p + p {
+    margin-top: 1em;
+  }
+
+  .kk-fws-testimonials__quote > :first-child::before {
+    content: '\201C';
+  }
+
+  .kk-fws-testimonials__quote > :last-child::after {
+    content: '\201D';
+  }
+
+  .kk-fws-testimonials__author {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin: 0;
+  }
+
+  .kk-fws-testimonials__avatar {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: 50%;
+    background: var(--kk-fws-testimonials-blue);
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1;
+    color: #ffffff;
+  }
+
+  .kk-fws-testimonials__name {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.7rem;
+    line-height: 1.2;
+    color: var(--kk-fws-testimonials-ink);
+  }
+
+  /* Tertiary "load more" — a text link, deliberately quieter than the CTA below it. */
+  .kk-fws-testimonials__load-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 1.2rem 0 0;
+    padding: 0.4rem 0;
+    border: 0;
+    background: none;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.4rem;
+    text-transform: none;
+    color: var(--kk-fws-testimonials-blue);
+    cursor: pointer;
+  }
+
+  .kk-fws-testimonials__load-more:hover,
+  .kk-fws-testimonials__load-more:focus-visible {
+    text-decoration-thickness: 2px;
+    color: var(--kk-fws-testimonials-blue);
+  }
+
+  .kk-fws-testimonials__load-more[hidden] {
+    display: none;
+  }
+
+  /* The theme chevron points up; turn it to point down. */
+  .kk-fws-testimonials__load-more-icon {
+    display: block;
+    width: 1.2rem;
+    height: 0.73rem;
+    transform: rotate(180deg);
+  }
+
+  /* CTA + trust row — Figma `7809:15464`. */
+
+  @media (max-width: 989px) {
+
+    .kk-fws-testimonials__grid {
+      columns: 2;
+      column-gap: 2rem;
+    }
+
+    .kk-fws-testimonials__card {
+      margin-bottom: 2rem;
+    }
+  }
+
+  @media (max-width: 749px) {
+
+    .kk-fws-testimonials__intro {
+      gap: 1.4rem;
+      margin-bottom: 2.4rem;
+    }
+
+    .kk-fws-testimonials__rating-stars {
+      width: 11rem;
+      height: 1.83rem;
+    }
+
+    .kk-fws-testimonials__rating-text {
+      font-size: 1.7rem;
+    }
+
+    .kk-fws-testimonials__certification {
+      font-size: 1.4rem;
+      letter-spacing: 0.1rem;
+    }
+
+    .kk-fws-testimonials__grid {
+      columns: 1;
+    }
+
+    .kk-fws-testimonials__card {
+      gap: 1.8rem;
+      margin-bottom: 1.4rem;
+      padding: 2.4rem 2.2rem;
+      border-radius: 1.6rem;
+    }
+
+    .kk-fws-testimonials__quote {
+      font-size: 1.7rem;
+    }
+
+    .kk-fws-testimonials__load-more {
+      font-size: 1.6rem;
+    }
+
+    .kk-fws-testimonials__avatar {
+      font-size: 1.7rem;
+    }
+
+    .kk-fws-testimonials__name {
+      font-size: 1.6rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Testimonials",
+  "tag": "div",
+  "class": "section-kk-fws-testimonials",
+  "max_blocks": 50,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Owns the #kk-fws-testimonials anchor. Add a \"Review\" block per testimonial."
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating text",
+      "info": "Shown beside the stars, e.g. Based on 7495 Reviews."
+    },
+    {
+      "type": "text",
+      "id": "certification_text",
+      "label": "Certification text"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "stars_label",
+      "label": "Star rating description",
+      "default": "5 out of 5 stars",
+      "info": "Read by screen readers for each card's stars."
+    },
+    {
+      "type": "text",
+      "id": "verified_text",
+      "label": "Verified label",
+      "info": "Shown on every card, e.g. Verified Review."
+    },
+    {
+      "type": "header",
+      "content": "Load more"
+    },
+    {
+      "type": "range",
+      "id": "initial_count",
+      "label": "Cards shown at first",
+      "min": 3,
+      "max": 18,
+      "step": 3,
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "load_more_count",
+      "label": "Cards added per click",
+      "min": 3,
+      "max": 12,
+      "step": 3,
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "load_more_label",
+      "label": "Load more link label",
+      "info": "Only shows when there are more reviews than \"Cards shown at first\"."
+    },
+    {
+      "type": "header",
+      "content": "Call to action",
+      "info": "The button shows only when it has both a label and a link. Add \"Trust item\" blocks for the row underneath."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "E.g. #kk-fws-offer to jump to the offer section."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f5f6f8"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "quote",
+          "label": "Quote",
+          "info": "Quote marks are added automatically."
+        },
+        {
+          "type": "text",
+          "id": "reviewer",
+          "label": "Reviewer",
+          "info": "The avatar shows the first letter."
+        }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Testimonials"
+    }
+  ]
+}
+{% endschema %}

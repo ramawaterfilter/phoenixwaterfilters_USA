@@ -3,6 +3,7 @@
 
   Accepts:
   - block: {Object} Block with an `icon` select setting and an optional `custom_icon` image.
+    `tick` renders inline; every other value loads assets/kk-fws-icon-<value>.svg.
 
   Usage:
   {% render 'kk-fws-offer-icon', block: block %}
@@ -16,6 +17,21 @@
     | image_url: width: icon_width
     | image_tag: class: 'kk-fws-offer__trust-icon', loading: 'lazy', alt: ''
   }}
+{%- elsif block.settings.icon == 'tick' -%}
+  {%- comment -%} Inline, not an asset <img>, so the fill can use the colour token. {%- endcomment -%}
+  <svg
+    class="kk-fws-offer__trust-icon"
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path d="M7.75008 14.2083C11.3169 14.2083 14.2084 11.3168 14.2084 7.74996C14.2084 4.18312 11.3169 1.29163 7.75008 1.29163C4.18324 1.29163 1.29175 4.18312 1.29175 7.74996C1.29175 11.3168 4.18324 14.2083 7.75008 14.2083Z" style="fill: var(--primary-600)"/>
+    <path d="M5.0376 7.94373L6.84593 9.75206L10.4626 6.00623" stroke="white" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
 {%- else -%}
   {%- assign icon_asset = 'kk-fws-icon-' | append: block.settings.icon | append: '.svg' -%}
   <img

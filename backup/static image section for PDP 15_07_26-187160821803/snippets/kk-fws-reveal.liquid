@@ -1,0 +1,117 @@
+{%- comment -%}
+  Scroll reveal for kk-fws campaign sections. Rendered inline in <head> by layout/theme.liquid
+  (with assets/kk-fws-base.css, which holds the styles).
+
+  Usage: add `data-kk-fws-reveal` (or a -left / -right variant, below) to any element. It
+  fades and rises in as it enters the viewport, resets once fully off screen, and replays on
+  re-entry (dropping down instead when it comes back from above). Elements arriving together,
+  e.g. a row of cards, are staggered in the order they appear.
+
+    <li class="kk-fws-foo__card" data-kk-fws-reveal>…</li>
+
+  Variants:
+  - data-kk-fws-reveal-left   desktop (990px+): fades in sliding rightwards from the left;
+                              below 990px: fades up like data-kk-fws-reveal
+  - data-kk-fws-reveal-right  desktop (990px+): fades in sliding leftwards from the right;
+                              below 990px: fades up like data-kk-fws-reveal
+
+    <div class="kk-fws-foo__media" data-kk-fws-reveal-left>…</div>
+    <div class="kk-fws-foo__copy" data-kk-fws-reveal-right>…</div>
+
+  Options (any of the three attributes):
+  - ="once"  play the first time only, never reverse, e.g. data-kk-fws-reveal-left="once"
+
+  Put it on a wrapper (a card, a column), not on an element that has its own transform or
+  transition (a button, a hover-lift card). The reveal owns both properties while active.
+
+  Progressive: the hidden start state needs `html.kk-fws-reveal-ready`, which is only set
+  here, before first paint, and never with reduced motion, without IntersectionObserver, or
+  in the theme editor (where section re-renders would replay it). In all of those cases
+  everything simply shows.
+
+  Content added after load: call `window.kkFwsReveal.scan()` to pick it up.
+{%- endcomment -%}
+<script>
+  (function () {
+    var html = document.documentElement;
+
+    if (
+      !('IntersectionObserver' in window) ||
+      (window.Shopify && window.Shopify.designMode) ||
+      (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    ) {
+      return;
+    }
+
+    html.classList.add('kk-fws-reveal-ready');
+
+    var STAGGER_MS = 120;
+    var REVEAL_RATIO = 0.2;
+    var ATTRIBUTES = ['data-kk-fws-reveal', 'data-kk-fws-reveal-left', 'data-kk-fws-reveal-right'];
+    var SELECTOR = ATTRIBUTES.map(function (name) {
+      return '[' + name + ']';
+    }).join(',');
+
+    function isOnce(el) {
+      for (var i = 0; i < ATTRIBUTES.length; i++) {
+        if (el.getAttribute(ATTRIBUTES[i]) === 'once') return true;
+      }
+      return false;
+    }
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        var arriving = [];
+
+        entries.forEach(function (entry) {
+          var el = entry.target;
+
+          if (!entry.isIntersecting) {
+            if (isOnce(el) && el.classList.contains('is-revealed')) {
+              return;
+            }
+
+            // Fully off screen: reset so it can replay, and park it on the side it will come
+            // back from. Done while it is invisible, so the start position is already right.
+            el.style.transitionDelay = '0ms';
+            el.classList.remove('is-revealed');
+            el.classList.toggle('is-from-above', entry.boundingClientRect.top < 0);
+          } else if (!el.classList.contains('is-revealed') && entry.intersectionRatio >= REVEAL_RATIO) {
+            arriving.push(entry);
+          }
+        });
+
+        arriving.forEach(function (entry, index) {
+          var el = entry.target;
+          el.style.transitionDelay = index * STAGGER_MS + 'ms';
+          el.classList.add('is-revealed');
+
+          if (isOnce(el)) {
+            observer.unobserve(el);
+          }
+        });
+      },
+      { threshold: [0, REVEAL_RATIO] }
+    );
+
+    function scan(root) {
+      var els = (root || document).querySelectorAll(SELECTOR);
+
+      for (var i = 0; i < els.length; i++) {
+        if (els[i].hasAttribute('data-kk-fws-reveal-bound')) continue;
+        els[i].setAttribute('data-kk-fws-reveal-bound', '');
+        observer.observe(els[i]);
+      }
+    }
+
+    window.kkFwsReveal = { scan: scan };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () {
+        scan();
+      });
+    } else {
+      scan();
+    }
+  })();
+</script>
