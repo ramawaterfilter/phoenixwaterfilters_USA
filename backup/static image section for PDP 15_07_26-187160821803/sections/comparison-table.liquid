@@ -1,105 +1,442 @@
+{%- comment -%}
+  Comparison Table, styled to match sections/kk-fws-comparison.liquid (Figma `7809:15681`):
+  a pale rounded panel with the company column drawn as a tall navy card that runs past the
+  panel's top and bottom. That card is the panel's ::before, sized to the company column.
+  1 to 3 comparison columns share the space left after the feature and company columns.
+
+  Uses the kk-fws compare icons and, when no company logo is picked, the white Phoenix mark.
+{%- endcomment -%} 
+
+{%- liquid
+  assign comparison_count = section.settings.number_of_comparisons | plus: 0
+  assign company_label = section.settings.company_name | default: shop.name
+-%}
+
 <div class="{{ section.settings.custom_class }}" id="{{ section.settings.custom_id }}">
   <div class="background-image-container {{ section.settings.style }}"></div>
   <div class="container">
-    <div class="row justify-content-center ">
-      <div class="col-12 col-md-9 col-lg-10 col-xl-9">
-        <h2 class="text-center">{{ section.settings.heading }}</h2>
+    {%- if section.settings.show_social_proof or section.settings.heading != blank -%}
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-9 col-lg-10 col-xl-10  ">
+          {%- if section.settings.show_social_proof -%}
+            <div class="compare-table__proof compare-table__proof--{{ section.settings.style }}">
+              {%- render 'customer-proof', settings: section.settings, align: 'center' -%}
+            </div>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="text-center">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+        </div>
       </div>
-    </div>
-    <div class="row justify-content-center ">
-      <div class="col-12 table-wrapper columns-{{ section.settings.number_of_comparisons }}">
-        <table class="table {{ section.settings.style }}">
-          <tbody>
+    {%- endif -%}
+
+    <div class="compare-table compare-table--{{ section.settings.style }}">
+      <div class="compare-table__panel">
+        <table class="compare-table__table">
+          <colgroup>
+            <col class="compare-table__col--feature">
+            <col class="compare-table__col--company">
+            {%- for i in (1..comparison_count) -%}
+              <col>
+            {%- endfor -%}
+          </colgroup>
+
+          <thead>
             <tr>
-              <th class="text-start first-column feature">
-                {{ section.settings.feature_header }}
+              <th class="compare-table__th compare-table__th--feature" scope="col">
+                {{- section.settings.feature_header -}}
               </th>
-              <th class="text-center active-cell">
-                {% if section.settings.company_logo %}
-                  {{ section.settings.company_logo | image_url: width: 1920 | image_tag: class: 'img-fluid table-logo', loading: "lazy" }}
-                {% elsif section.settings.company_name != blank %}
-                  {{ section.settings.company_name }}
-                {% else %}
-                  {{ shop.name }}
-                {% endif %}
+              <th class="compare-table__th compare-table__th--company" scope="col">
+                {%- if section.settings.company_logo != blank -%}
+                  {{
+                    section.settings.company_logo
+                    | image_url: width: 300
+                    | image_tag: class: 'compare-table__logo-image', loading: 'lazy', alt: company_label
+                  }}
+                {%- elsif section.settings.show_logo -%}
+                  <span class="compare-table__logo">
+                    <img
+                      class="compare-table__logo-mark"
+                      src="{{ 'kk-fws-phoenix-mark-white.png' | asset_url }}"
+                      alt=""
+                      width="50"
+                      height="46"
+                      loading="lazy"
+                    >
+                    <img
+                      class="compare-table__logo-word"
+                      src="{{ 'kk-fws-phoenix-wordmark-white.png' | asset_url }}"
+                      alt=""
+                      width="146"
+                      height="21"
+                      loading="lazy"
+                    >
+                  </span>
+                  <span class="compare-table__sr">{{ company_label }}</span>
+                {%- else -%}
+                  {{ company_label }}
+                {%- endif -%}
               </th>
-              <th class="text-center text-capitalize">
-                {{ section.settings.comparison_1 }}
-              </th>
-              {% if section.settings.number_of_comparisons != "1" %}
-                <th class="text-center text-capitalize">
-                  {{ section.settings.comparison_2 }}
-                </th>
-              {% endif %}
-              {% if section.settings.number_of_comparisons == "3" %}
-                <th class="text-center text-capitalize">
-                  {{ section.settings.comparison_3 }}
-                </th>
-              {% endif %}
+              {%- for i in (1..comparison_count) -%}
+                {%- assign label_key = 'comparison_' | append: i -%}
+                <th class="compare-table__th" scope="col">{{ section.settings[label_key] }}</th>
+              {%- endfor -%}
             </tr>
-            {% for block in section.blocks %}
-              <tr>
-                <td class="text-start first-column feature">
-                  {{ block.settings.feature }}
-                </td>
-                <td class="text-center active-cell sells">
-                  <p>
-                  {% if block.settings.column_1 == 'yes' %}
-  <span class="text-success"><img src=""><svg fill="#008001" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64px" height="64px" viewBox="0 0 335.765 335.765" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <polygon points="311.757,41.803 107.573,245.96 23.986,162.364 0,186.393 107.573,293.962 335.765,65.795 "></polygon> </g> </g> </g></svg>Yes</span>
-{% else %}
-  <span class="text-danger"><svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z" fill="#ff0000"></path> </g></svg>No</span>
-{% endif %}
-                  </p>
-                </td>
-                <td class="text-center text-capitalize">
-                  <p>
-              {% if block.settings.column_2 == 'yes' %}
-  <span class="text-success"><svg fill="#008001" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64px" height="64px" viewBox="0 0 335.765 335.765" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <polygon points="311.757,41.803 107.573,245.96 23.986,162.364 0,186.393 107.573,293.962 335.765,65.795 "></polygon> </g> </g> </g></svg>Yes</span>
-{% else %}
-  <span class="text-danger"><svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z" fill="#ff0000"></path> </g></svg>No</span>
-{% endif %}
-                  </p>
-                </td>
-                {% if section.settings.number_of_comparisons != "1" %}
-                  <td class="text-center text-capitalize">
-                    <p>
-                  {% if block.settings.column_3 == 'yes' %}
-  <span class="text-success"><svg fill="#008001" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64px" height="64px" viewBox="0 0 335.765 335.765" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <polygon points="311.757,41.803 107.573,245.96 23.986,162.364 0,186.393 107.573,293.962 335.765,65.795 "></polygon> </g> </g> </g></svg>Yes</span>
-{% else %}
-  <span class="text-danger"><svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z" fill="#ff0000"></path> </g></svg>No</span>
-{% endif %}
-                    </p>
+          </thead>
+
+          <tbody>
+            {%- for block in section.blocks -%}
+              <tr {{ block.shopify_attributes }}>
+                <th class="compare-table__row-header" scope="row">{{ block.settings.feature }}</th>
+                {%- assign last_column = comparison_count | plus: 1 -%}
+                {%- for i in (1..last_column) -%}
+                  {%- liquid
+                    assign value_key = 'column_' | append: i
+                    if block.settings[value_key] == 'yes'
+                      assign mark_text = 'Yes'
+                      if forloop.first
+                        assign mark_src = 'kk-fws-icon-compare-yes.svg'
+                        assign mark_modifier = 'yes-badge'
+                      else
+                        assign mark_src = 'kk-fws-icon-compare-tick.svg'
+                        assign mark_modifier = 'yes'
+                      endif
+                    else
+                      assign mark_text = 'No'
+                      assign mark_src = 'kk-fws-icon-compare-cross.svg'
+                      assign mark_modifier = 'no'
+                    endif
+                  -%}
+                  <td class="compare-table__cell{% if forloop.first %} compare-table__cell--company{% endif %}">
+                    <img
+                      class="compare-table__mark compare-table__mark--{{ mark_modifier }}"
+                      src="{{ mark_src | asset_url }}"
+                      alt=""
+                      aria-hidden="true"
+                      width="44"
+                      height="44"
+                      loading="lazy"
+                    >
+                    <span class="compare-table__sr">{{ mark_text }}</span>
                   </td>
-                {% endif %}
-                {% if section.settings.number_of_comparisons == "3" %}
-                  <td class="text-center text-capitalize">
-                    <p>
-                 {% if block.settings.column_4 == 'yes' %}
-  <span class="text-success"><svg fill="#008001" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64px" height="64px" viewBox="0 0 335.765 335.765" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <polygon points="311.757,41.803 107.573,245.96 23.986,162.364 0,186.393 107.573,293.962 335.765,65.795 "></polygon> </g> </g> </g></svg>Yes</span>
-{% else %}
-  <span class="text-danger"><svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z" fill="#ff0000"></path> </g></svg>No</span>
-{% endif %}
-                    </p>
-                  </td>
-                {% endif %}
+                {%- endfor -%}
               </tr>
-            {% endfor %}
+            {%- endfor -%}
           </tbody>
         </table>
       </div>
     </div>
 
-
     {% if section.settings.buttonlink %}
-      <div class="row justify-content-center text-center ">
+      <div class="row justify-content-center text-center">
         <div class="col-12 text-center">
-          {% render 'button'
-            , class: 'mx-auto text-center' %}
+          {% render 'button', class: 'mx-auto text-center' %}
         </div>
       </div>
     {% endif %}
   </div>
 </div>
+
+{% stylesheet %}
+  /* Same layout and sizes as .kk-fws-comparison. Column widths inside the panel's content box:
+     feature 31.11%, company 19.44%, the comparisons share the rest. */
+  .compare-table {
+    --compare-table-ink: var(--primary);
+    --compare-table-rule: #e1e4ea;
+    --compare-table-panel: var(--light);
+    --compare-table-feature-width: 31.11%;
+    --compare-table-company-width: 19.44%;
+    --compare-table-pad-x: 4.4rem;
+
+    width: 100%;
+    margin: 6.8rem 0 2.8rem;
+  }
+
+  /* Social proof row above the heading (snippets/customer-proof.liquid). The badge outline
+     matches the section background. */
+  .compare-table__proof {
+    --customer-proof-ring: #ffffff;
+
+    margin-bottom: 2.4rem;
+  }
+
+  .compare-table__proof--style-2 {
+    --customer-proof-ring: var(--light);
+  }
+
+  /* Style 2 is the light background (src/css/sections/_table.scss), so the panel goes white. */
+  .compare-table--style-2 {
+    --compare-table-panel: #ffffff;
+  }
+
+  .compare-table__sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .compare-table__panel {
+    position: relative;
+    padding: 2rem var(--compare-table-pad-x) 2.8rem;
+    border-radius: 3.2rem;
+    background: var(--compare-table-panel);
+  }
+
+  /* The navy company card, over the company column and 28px proud of the panel. */
+  .compare-table__panel::before {
+    content: '';
+    position: absolute;
+    top: -2.8rem;
+    bottom: -2.8rem;
+    left: calc(var(--compare-table-pad-x) + (100% - var(--compare-table-pad-x) * 2) * 0.3111);
+    width: calc((100% - var(--compare-table-pad-x) * 2) * 0.1944);
+    border-radius: 2rem;
+    background: var(--compare-table-ink);
+    box-shadow: 0 2.4rem 5rem rgba(11, 22, 56, 0.28);
+  }
+
+  .compare-table__table {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .compare-table__col--feature {
+    width: var(--compare-table-feature-width);
+  }
+
+  .compare-table__col--company {
+    width: var(--compare-table-company-width);
+  }
+
+  .compare-table__th {
+    height: 11.2rem;
+    padding: 0 0.8rem;
+    vertical-align: middle;
+    border: 0;
+    background: transparent;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.2rem;
+    line-height: 1.25;
+    text-align: center;
+    text-transform: none;
+    overflow-wrap: anywhere;
+    color: var(--compare-table-ink);
+  }
+
+  .compare-table__th--feature {
+    padding-left: 0.4rem;
+    text-align: left;
+  }
+
+  .compare-table__th--company {
+    color: #ffffff;
+  }
+
+  .compare-table__logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .compare-table__logo-mark {
+    display: block;
+    width: 5rem;
+    height: 4.6rem;
+  }
+
+  .compare-table__logo-word {
+    display: block;
+    width: 14.6rem;
+    max-width: 100%;
+    height: 2.1rem;
+    object-fit: contain;
+  }
+
+  .compare-table__logo-image {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 8rem;
+    margin: 0 auto;
+  }
+
+  /* Rows are ruled across the panel, but not across the navy card. */
+  .compare-table__row-header,
+  .compare-table__cell {
+    height: 7.8rem;
+    vertical-align: middle;
+    border: 0;
+    border-top: 1px solid var(--compare-table-rule);
+    background: transparent;
+  }
+
+  .compare-table__cell--company {
+    border-top-color: transparent;
+  }
+
+  .compare-table__row-header {
+    padding: 0 0.4rem;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.4rem;
+    line-height: 1.3;
+    text-align: left;
+    color: var(--compare-table-ink);
+  }
+
+  .compare-table__cell {
+    padding: 0 0.8rem;
+    text-align: center;
+  }
+
+  .compare-table__mark {
+    display: inline-block;
+    vertical-align: middle;
+    object-fit: contain;
+  }
+
+  .compare-table__mark--yes-badge {
+    width: 4.4rem;
+    height: 4.4rem;
+  }
+
+  .compare-table__mark--yes {
+    width: 3.4rem;
+    height: 3.4rem;
+  }
+
+  .compare-table__mark--no {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  @media (max-width: 989px) {
+    .compare-table {
+      --compare-table-pad-x: 2.4rem;
+
+      margin-top: 5.6rem;
+    }
+
+    .compare-table__panel {
+      padding-top: 1.6rem;
+      padding-bottom: 2.4rem;
+      border-radius: 2.4rem;
+    }
+
+    .compare-table__panel::before {
+      border-radius: 1.6rem;
+    }
+
+    .compare-table__th {
+      height: 9rem;
+      font-size: 1.7rem;
+    }
+
+    .compare-table__logo-word {
+      width: 11rem;
+      height: 1.6rem;
+    }
+
+    .compare-table__row-header,
+    .compare-table__cell {
+      height: 6.4rem;
+    }
+
+    .compare-table__row-header {
+      font-size: 1.8rem;
+    }
+  }
+
+  /* Mobile: the full table stays, scaled down, and the navy card sits inside the panel. */
+  @media (max-width: 749px) {
+    .compare-table {
+      --compare-table-feature-width: 33.8%;
+      --compare-table-company-width: 18.4%;
+      --compare-table-pad-x: 1.4rem;
+
+      margin-top: 2.4rem;
+    }
+
+    .compare-table__panel {
+      padding-top: 2rem;
+      padding-bottom: 2.8rem;
+      border-radius: 2.3rem;
+    }
+
+    .compare-table__panel::before {
+      top: 1rem;
+      bottom: 2.8rem;
+      left: calc(var(--compare-table-pad-x) + (100% - var(--compare-table-pad-x) * 2) * (0.338 + 0.184 * 0.05));
+      width: calc((100% - var(--compare-table-pad-x) * 2) * 0.184 * 0.9);
+      border-radius: 1.4rem;
+    }
+
+    .compare-table__th {
+      height: 8.4rem;
+      padding: 0 0.2rem;
+      font-size: 1.15rem;
+      line-height: 1.2;
+    }
+
+    .compare-table__logo {
+      gap: 0.8rem;
+    }
+
+    .compare-table__logo-mark {
+      width: 3rem;
+      height: 2.74rem;
+    }
+
+    .compare-table__logo-word {
+      width: 3rem;
+      height: 0.43rem;
+    }
+
+    .compare-table__logo-image {
+      max-height: 4.4rem;
+    }
+
+    .compare-table__row-header,
+    .compare-table__cell {
+      height: 5.4rem;
+    }
+
+    .compare-table__row-header {
+      padding: 0.6rem 0.4rem;
+      font-size: 1.35rem;
+      line-height: 1.25;
+    }
+
+    .compare-table__cell {
+      padding: 0 0.2rem;
+    }
+
+    .compare-table__mark--yes-badge,
+    .compare-table__mark--yes {
+      width: 2.6rem;
+      height: 2.6rem;
+    }
+
+    /* Figma `7809:11669`: every mark in a 26px box on mobile. */
+    .compare-table__mark--no {
+      width: 2.6rem;
+      height: 2.6rem;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
   {
@@ -108,8 +445,61 @@
     "tag": "section",
     "settings": [
       {
+        "type": "select",
+        "id": "style",
+        "label": "Background",
+        "info": "On the light background the table panel turns white.",
+        "default": "style-1",
+        "options": [
+          {
+            "value": "style-1",
+            "label": "White"
+          }, {
+            "value": "style-2",
+            "label": "Light"
+          }
+        ]
+      },
+      {
         "type": "header",
         "content": "Content"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_social_proof",
+        "label": "Show social proof above the heading",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "show_avatars",
+        "label": "Show customer photos",
+        "default": true
+      },
+      {
+        "type": "image_picker",
+        "id": "avatars",
+        "label": "Customer photos",
+        "info": "One image of the overlapping photos, about 360 × 96px. Leave empty to use the default photos."
+      },
+      {
+        "type": "text",
+        "id": "avatar_count",
+        "label": "Count badge",
+        "default": "700+",
+        "info": "Leave empty to hide the badge."
+      },
+      {
+        "type": "checkbox",
+        "id": "show_stars",
+        "label": "Show stars",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "proof_text",
+        "label": "Social proof text",
+        "default": "Trusted by over 700+ Families"
       },
       {
         "type": "text",
@@ -133,22 +523,6 @@
             "label": "3"
           }
         ]
-      },
-      {
-        "type": "select",
-        "id": "style",
-        "label": "Style",
-        "default": "style-1",
-        "options": [
-          {
-            "value": "style-1",
-            "label": "Style 1"
-          }, {
-            "value": "style-2",
-            "label": "Style 2"
-          }
-
-        ]
       }, {
         "type": "header",
         "content": "Table Header",
@@ -162,9 +536,16 @@
         "id": "company_logo",
         "label": "Company Logo"
       }, {
+        "type": "checkbox",
+        "id": "show_logo",
+        "label": "Show Phoenix logo",
+        "info": "White Phoenix mark on the navy column when no company logo is picked. Turn off to show the company name instead.",
+        "default": true
+      }, {
         "type": "text",
         "id": "company_name",
-        "label": "Company Name"
+        "label": "Company Name",
+        "info": "Read out by screen readers when a logo is shown."
       }, {
         "type": "text",
         "id": "comparison_1",
@@ -185,6 +566,36 @@
         "type": "text",
         "id": "buttontext",
         "label": "Button Text"
+      }, {
+        "type": "checkbox",
+        "id": "button_arrow",
+        "label": "Show arrow on button",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "button_style",
+        "label": "Button style",
+        "default": "primary",
+        "options": [
+          { "value": "primary", "label": "Primary" },
+          { "value": "secondary", "label": "Secondary" }
+        ]
+      }, {
+        "type": "checkbox",
+        "id": "show_trust_items",
+        "label": "Show trust items under the button",
+        "default": false
+      }, {
+        "type": "text",
+        "id": "trust_text_1",
+        "label": "Trust item 1",
+        "default": "100-day trial"
+      }, {
+        "type": "text",
+        "id": "trust_text_2",
+        "label": "Trust item 2",
+        "default": "Cancel any time"
       }, {
         "type": "text",
         "id": "afterbutton",

@@ -176,14 +176,15 @@
     },
     "817ca831-c432-47df-b994-812f7b308112": {
       "type": "footer",
-      "custom_css": [
-        "img {width: 100px !important;}"
-      ],
+      "custom_css": [],
       "settings": {
-        "footer-logo": "shopify://shop_images/Logo_with_Register_Mark.png",
-        "col1_text": "<p><strong>Address:-</strong> Phoenix Gravity Water Filters [LLC legal name] · 5900 Balcones Drive STE 100, Austin, TX 78731 </p><p><strong>Returns warehouse:-</strong> Save Rack LLC, 3135 Drane Field Rd, Unit 21, Lakeland, FL 33811</p><p>An easy, affordable way to enjoy clean, great-tasting filtered water.</p>",
-        "col2_text": "<p><strong>Home</strong></p><ul><li><a href=\"/collections/all-products\" title=\"All Products\">Shop All</a></li><li><a href=\"/products/gravity-water-filter\" title=\"Phoenix Gravity Water Filter\">The complete system</a></li><li><a href=\"/pages/how-it-works\" title=\"How It Works\">How It Works</a></li><li><a href=\"/pages/set-up-your-filter\" title=\"Set up your filter\">How to Set Up</a></li><li><a href=\"/blogs/post\" title=\"News\">Blog</a></li><li><a href=\"/pages/warranty-registration\" title=\"Warranty Registration\">Warranty Registration</a></li><li><a href=\"https://af.uppromote.com/phoenix-water-filters/register\" title=\"Become an ambassador\">Become an ambassador</a></li></ul><p></p>",
+        "footer-logo": "shopify://shop_images/Phoenix-wide-logo.png",
+        "col1_text": "<p><strong>Address:<br/></strong>Phoenix Gravity Water Filters [LLC legal name] · 5900 Balcones Drive STE 100, Austin, TX 78731&nbsp;</p><p><strong>Returns warehouse:<br/></strong>Save Rack LLC, 3135 Drane Field Rd, Unit 21, Lakeland, FL 33811</p>",
+        "col2_text": "<p><strong>Shop</strong></p><ul><li><a href=\"/\" title=\"Home\">Home</a></li><li><a href=\"/collections/all-products\" title=\"All Products\">Shop All</a></li><li><a href=\"/products/gravity-water-filter\" title=\"Phoenix Gravity Water Filter\">The complete system</a></li><li><a href=\"/pages/how-it-works\" title=\"How It Works\">How It Works</a></li><li><a href=\"/pages/set-up-your-filter\" title=\"Set up your filter\">How to Set Up</a></li><li><a href=\"/blogs/post\" title=\"News\">Blog</a></li><li><a href=\"/pages/warranty-registration\" title=\"Warranty Registration\">Warranty Registration</a></li><li><a href=\"https://af.uppromote.com/phoenix-water-filters/register\" title=\"Become an ambassador\">Become an ambassador</a></li></ul><p></p>",
         "col3_text": "<p><strong>Helpful Links</strong></p><ul><li><a href=\"/pages/about-us\" title=\"About Us\">About Us</a></li><li><a href=\"/pages/contact-us\" title=\"Contact Us\">Contact Us</a></li><li><a href=\"/pages/faqs\" title=\"FAQs\">FAQs</a></li><li><a href=\"/policies/shipping-policy\" title=\"Shipping Policy\">Shipping Policy</a></li><li><a href=\"/policies/privacy-policy\" title=\"Privacy Policy\">Privacy Policy</a></li><li><a href=\"/policies/refund-policy\" title=\"Refund Policy\">Return Policy</a></li><li><a href=\"/pages/warranty-registration-1\" target=\"_blank\" title=\"Warranty Policy\">Warranty Policy</a></li></ul><p></p>",
+        "newsletter_title": "Stay in the loop",
+        "newsletter_text": "<p>An easy, affordable way to enjoy clean, great-tasting filtered water.</p>",
+        "show_socials": false,
         "socials_title": "",
         "socials_fb": "https://www.facebook.com/PhoenixGravity",
         "socials_tw": "",
@@ -193,7 +194,7 @@
         "phone": "1 (800) 917-0455",
         "email": "hello@phoenixwaterfilters.com",
         "terms": "<p><strong>Terms and conditions:</strong> Applicable for purchase of Phoenix gravity systems only. Customers must bear the return shipping cost to Phoenix gravity warehouses in the USA.</p>",
-        "disclaimer": "<p>Copyright © Phoenix Gravity [dyn-year] | All Rights Reserved</p>"
+        "disclaimer": "<p>Copyright © Phoenix Gravity [dyn-year] · All Rights Reserved</p>"
       }
     }
   },

@@ -1,54 +1,84 @@
-{% assign block_direction = 'grid' %}
-{% assign step_width = '' %}
-{% assign step_layout = 'flex-column' %}
+{%- comment -%}
+  Steps Section — Figma `7809:10672`.
 
-{% if section.settings.block_direction == 'column' %}
-  {% assign block_direction = 'flex-column justify-content-start' %}
-  {% assign step_layout = 'flex-row col-12 col-md-10 mb-4' %}
-{% endif %}
+  Centred heading and optional copy, step cards (blue circular icon, a large faint step number
+  in the corner, heading and copy), then the shared CTA and its trust items. The optional video
+  or image still shows below, full width.
 
-{% assign spacer = '' %}
+  "Step Direction": Row = cards side by side (3 across), Column = stacked full width.
+  SVG icons are drawn white on the blue circle via a mask; other image types show as-is.
+  The section tag keeps .trigger-observer (in the schema class): src/js/wistia.js pairs the Nth
+  trigger on the page with the Nth Wistia video, and this section can hold one.
+{%- endcomment -%}
 
-{% if section.settings.video_id == blank and section.settings.banner_image == blank %}
-  {% assign spacer = 'pb-5' %}
-{% endif %}
+<div class="background-image-container {{ section.settings.style | default: 'bg-light' }}"></div>
 
-<div class="background-image-container"></div>
-<div class="{{ section.settings.custom_class }}" id="{{ section.settings.custom_id }} {{ spacer }}">
-  <div class="container {{ spacer }}">
-    <div class="row justify-content-center justify-content-md-start">
-      <div class="col-11 col-md-8 col-lg-7 col-xl-10  mb-5">
-        <h2>{{ section.settings.heading }}</h2>
-        {{ section.settings.paragraph }}
+<div class="{{ section.settings.custom_class }}" id="{{ section.settings.custom_id }}">
+  <div class="container steps-grid steps-grid--{{ section.settings.block_direction | default: 'row' }}">
+    {%- if section.settings.heading != blank or section.settings.paragraph != blank -%}
+      <div class="steps-grid__intro">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="steps-grid__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.paragraph != blank -%}
+          <div class="steps-grid__copy">{{ section.settings.paragraph }}</div>
+        {%- endif -%}
       </div>
-    </div>
-    <div class="row mb-5 steps {{ block_direction }}">
-      {% for block in section.blocks %}
-        <div class="step-tile p-5 d-flex {{ step_layout }}">
-          <div class="step-number {% if block.settings.icon == blank %}text-only{% endif %}">
-            {% if block.settings.icon %}
-              {{ block.settings.icon | image_url: width: 1920 | image_tag: class: 'view-animation img-fluid', loading: "lazy" }}
-            {% else: %}
-              {{ forloop.index }}
-            {% endif; %}
-          </div>
-          <div class="step-content">
-            <h3 class="step-heading h4 mb-2">{{ block.settings.heading }}</h3>
-            {{ block.settings.copy }}
-          </div>
-        </div>
+    {%- endif -%}
 
-      {% endfor %}
-    </div>
+    {%- if section.blocks.size > 0 -%}
+      <ol class="steps-grid__list">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign icon_is_svg = false
+            if block.settings.icon != blank
+              assign icon_path = block.settings.icon.src | split: '?' | first | downcase
+              if icon_path contains '.svg'
+                assign icon_is_svg = true
+              endif
+            endif
+          -%}
+          <li class="steps-grid__card" {{ block.shopify_attributes }}>
+            <span class="steps-grid__number" aria-hidden="true">
+              {%- if forloop.index < 10 -%}0{%- endif -%}
+              {{- forloop.index -}}
+            </span>
 
-    {% if section.settings.buttonlink %}
-      <div class="row justify-content-center text-center mb-5">
-        <div class="col-12 col-md-10 col-lg-8 col-xl-6">
-          {% render 'button'
-            , class: 'mx-auto' %}
-        </div>
+            <span class="steps-grid__icon" aria-hidden="true">
+              {%- if icon_is_svg -%}
+                <span
+                  class="steps-grid__icon-svg"
+                  style="--steps-grid-icon: url('{{ block.settings.icon | image_url }}');"
+                ></span>
+              {%- elsif block.settings.icon != blank -%}
+                {{
+                  block.settings.icon
+                  | image_url: width: 120
+                  | image_tag: class: 'steps-grid__icon-image', width: 30, height: 30, loading: 'lazy', alt: ''
+                }}
+              {%- else -%}
+                <span class="steps-grid__icon-number">{{ forloop.index }}</span>
+              {%- endif -%}
+            </span>
+
+            <div class="steps-grid__content">
+              {%- if block.settings.heading != blank -%}
+                <h3 class="steps-grid__title">{{ block.settings.heading }}</h3>
+              {%- endif -%}
+              {%- if block.settings.copy != blank -%}
+                <div class="steps-grid__text">{{ block.settings.copy }}</div>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
+
+    {%- if section.settings.buttonlink != blank -%}
+      <div class="steps-grid__cta">
+        {% render 'button', class: 'mx-auto text-center' %}
       </div>
-    {% endif %}
+    {%- endif -%}
   </div>
 
   {% if section.settings.video_id != blank or section.settings.banner_image != blank %}
@@ -56,19 +86,224 @@
       <div class="row">
         {% if section.settings.video_id != blank %}
           <div class="video-preview-container view-animation fade-up" data-wistia-vid-id="{{ section.settings.video_id }}"></div>
-        {% comment %} <div class="video-preview-container">
-             
-          <script src="https://fast.wistia.com/embed/medias/{{ section.settings.video_id }}.jsonp" async></script></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_embed wistia_async_{{ section.settings.video_id }} seo=true videoFoam=true" style="height:100%;position:relative;width:100%"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/{{ section.settings.video_id }}/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;"   loading="lazy"/></div></div></div></div>
-                  </div> {% endcomment %}
-        {% elsif section.settings.banner_image != blank and section.settings.video_id == blank %}
+        {% elsif section.settings.banner_image != blank %}
           {{ section.settings.banner_image | image_url: width: 1920 | image_tag }}
-        {% else %}
-
         {% endif %}
       </div>
     </div>
   {% endif %}
 </div>
+
+{% stylesheet %}
+  /* Figma `7809:10672`: three 421px cards 24px apart. The theme's "section" rule supplies the
+     top padding (8rem, 5rem below 992px); the section is pb-0, so the bottom is added here. */
+  .steps-grid {
+    --steps-grid-ink: var(--primary);
+    --steps-grid-muted: #4a5068;
+    --steps-grid-blue: var(--primary-600);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding-bottom: 8rem;
+  }
+
+  /* The legacy rule in src/css/sections/_steps.scss forces the light background. */
+  .section-steps .background-image-container.bg-white {
+    background: #ffffff;
+  }
+
+  .steps-grid__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;
+    max-width: 76.1rem;
+    text-align: center;
+  }
+
+  section.section-steps .steps-grid__heading {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  .steps-grid__copy p:last-child {
+    margin-bottom: 0;
+  }
+
+  .steps-grid__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.4rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .steps-grid--column .steps-grid__list {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 86rem;
+  }
+
+  .steps-grid__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.6rem;
+    min-width: 0;
+    margin: 0;
+    padding: 4rem 3.6rem;
+    border-radius: 2.4rem;
+    background: #ffffff;
+  }
+
+  /* On a white section the white cards need an edge. */
+  .section-steps .bg-white ~ div .steps-grid__card {
+    border: 1px solid #e6e8ec;
+  }
+
+  .steps-grid__number {
+    position: absolute;
+    top: 2.8rem;
+    right: 3.2rem;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 6.4rem;
+    line-height: 1;
+    color: #e3ebff;
+    pointer-events: none;
+  }
+
+  .steps-grid__icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 6.4rem;
+    height: 6.4rem;
+    border-radius: 50%;
+    background: var(--steps-grid-blue);
+  }
+
+  .steps-grid__icon-svg {
+    display: block;
+    width: 3rem;
+    height: 3rem;
+    background-color: #ffffff;
+    -webkit-mask: var(--steps-grid-icon) center / contain no-repeat;
+    mask: var(--steps-grid-icon) center / contain no-repeat;
+  }
+
+  .steps-grid__icon-image {
+    display: block;
+    width: 3rem;
+    height: 3rem;
+    object-fit: contain;
+  }
+
+  .steps-grid__icon-number {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 2.4rem;
+    line-height: 1;
+    color: #ffffff;
+  }
+
+  .steps-grid__content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  section.section-steps .steps-grid__title {
+    margin: 0;
+    padding: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    text-transform: capitalize;
+    font-weight: 500;
+    font-size: 2.8rem;
+    line-height: 1.25;
+    text-transform: none;
+    color: var(--steps-grid-ink);
+  }
+
+  .steps-grid__text,
+  .steps-grid__text p {
+    margin: 0;
+    font-size: 1.8rem;
+    line-height: 1.55;
+    color: var(--steps-grid-muted);
+  }
+
+  .steps-grid__text p + p {
+    margin-top: 1em;
+  }
+
+  .steps-grid__cta {
+    margin-top: -0.4rem;
+  }
+
+  .steps-grid__cta .btn-container {
+    margin: 0 auto;
+  }
+
+  @media (max-width: 991px) {
+    .steps-grid__list {
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 60rem;
+      gap: 1.6rem;
+    }
+
+    .steps-grid__card {
+      padding: 3.2rem 2.8rem;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .steps-grid {
+      gap: 2.8rem;
+      padding-bottom: 5rem;
+    }
+
+    .steps-grid__card {
+      gap: 2rem;
+      padding: 2.8rem 2.4rem;
+      border-radius: 2rem;
+    }
+
+    .steps-grid__number {
+      top: 2.2rem;
+      right: 2.4rem;
+      font-size: 4.8rem;
+    }
+
+    .steps-grid__icon {
+      width: 5.6rem;
+      height: 5.6rem;
+    }
+
+    .steps-grid__icon-svg,
+    .steps-grid__icon-image {
+      width: 2.6rem;
+      height: 2.6rem;
+    }
+
+    section.section-steps .steps-grid__title {
+      font-size: 2.2rem;
+    }
+
+    .steps-grid__text,
+    .steps-grid__text p {
+      font-size: 1.6rem;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
   {
@@ -81,6 +316,21 @@
         "content": "Content"
       },
       {
+        "type": "select",
+        "id": "style",
+        "label": "Background",
+        "default": "bg-light",
+        "options": [
+          {
+            "label": "White",
+            "value": "bg-white"
+          }, {
+            "label": "Light",
+            "value": "bg-light"
+          }
+        ]
+      },
+      {
         "type": "text",
         "id": "heading",
         "label": "Heading",
@@ -89,16 +339,18 @@
       {
         "type": "richtext",
         "id": "paragraph",
-        "label": "Paragraph"
+        "label": "Copy below heading"
       },
       {
         "type": "text",
         "id": "video_id",
-        "label": "Hero Video"
+        "label": "Video below steps",
+        "info": "Wistia video ID. Shown full width under the steps."
       }, {
         "type": "image_picker",
         "id": "banner_image",
-        "label": "Hero Image"
+        "label": "Image below steps",
+        "info": "Used when there's no video."
 
       }, {
         "type": "radio",
@@ -122,6 +374,36 @@
         "type": "url",
         "id": "buttonlink",
         "label": "Button Url"
+      }, {
+        "type": "checkbox",
+        "id": "button_arrow",
+        "label": "Show arrow on button",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "button_style",
+        "label": "Button style",
+        "default": "primary",
+        "options": [
+          { "value": "primary", "label": "Primary" },
+          { "value": "secondary", "label": "Secondary" }
+        ]
+      }, {
+        "type": "checkbox",
+        "id": "show_trust_items",
+        "label": "Show trust items under the button",
+        "default": false
+      }, {
+        "type": "text",
+        "id": "trust_text_1",
+        "label": "Trust item 1",
+        "default": "100-day trial"
+      }, {
+        "type": "text",
+        "id": "trust_text_2",
+        "label": "Trust item 2",
+        "default": "Cancel any time"
       }, {
         "type": "text",
         "id": "afterbutton",
@@ -148,7 +430,8 @@
           {
             "type": "image_picker",
             "id": "icon",
-            "label": "Step Number/Icon"
+            "label": "Icon",
+            "info": "Shown white in the blue circle (SVG). Leave empty to show the step number."
           }, {
             "type": "text",
             "id": "heading",

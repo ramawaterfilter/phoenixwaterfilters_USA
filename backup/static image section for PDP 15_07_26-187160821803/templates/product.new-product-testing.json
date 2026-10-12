@@ -77,7 +77,6 @@
       "settings": {
         "heading": "",
         "content": "",
-        "show_shipping": true,
         "accordion_styles": "full-width",
         "custom_id": "",
         "custom_class": ""
@@ -487,9 +486,9 @@
         "text_U7Yanr"
       ],
       "settings": {
+        "style": "style-2",
         "heading": "The Most Convenient And Affordable Way To Enjoy Pure, Clean Drinking In Your Home",
         "number_of_comparisons": "3",
-        "style": "style-2",
         "feature_header": "Features",
         "company_name": "Phoenix Gravity Water Filter System",
         "comparison_1": "In-Home System",
@@ -534,9 +533,9 @@
       ],
       "settings": {
         "layout": "style-1",
+        "sub_header": "Based On 7,495 Reviews",
         "heading": "🇺🇸 Americans Have Trusted Our Water Filters For Over 50 Years",
         "paragraph": "",
-        "sub_header": "Based On 7,495 Reviews",
         "button_text": "View All Reviews",
         "button_url": "shopify://pages/reviews",
         "button_aftertext": "",
@@ -611,7 +610,7 @@
         "text_b79geA"
       ],
       "settings": {
-        "style": "light-cards",
+        "style": "bg-white",
         "heading": "It’s never been this easy to enjoy safe, delicious drinking water every single day of the year!",
         "paragraph": "",
         "section_bgimg": "shopify://shop_images/filter-background-light.jpg",

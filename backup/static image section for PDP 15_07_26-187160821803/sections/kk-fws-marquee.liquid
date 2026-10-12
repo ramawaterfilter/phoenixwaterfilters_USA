@@ -10,13 +10,18 @@
   without a gap. Clones are aria-hidden, so assistive tech reads the list once. It re-measures
   on resize and after the icons load. With reduced motion requested, nothing is cloned and the
   first unit simply sits still (scrollable sideways if it overflows).
+
+  Optional title — Figma `7809:10066` (desktop), `7809:11434` (mobile): the title and a short
+  divider sit on the left of the container and the items scroll in their own window, fading out
+  before they reach the title. Items can carry a lighter description (e.g. "99.99%"), and the
+  separator dots can be turned off (that design spaces items 56px apart with no dots).
 {%- endcomment -%}
 
 {%- assign item_blocks = section.blocks | where: 'type', 'item' -%}
 
 {%- if item_blocks.size > 0 -%}
   <section
-    class="kk-fws-marquee{% if section.settings.pause_on_hover %} kk-fws-marquee--pausable{% endif %}{% if section.settings.direction == 'right' %} kk-fws-marquee--reverse{% endif %}"
+    class="kk-fws-marquee{% if section.settings.pause_on_hover %} kk-fws-marquee--pausable{% endif %}{% if section.settings.direction == 'right' %} kk-fws-marquee--reverse{% endif %}{% if section.settings.title != blank %} kk-fws-marquee--titled{% endif %}{% unless section.settings.show_dots %} kk-fws-marquee--no-dots{% endunless %}"
     data-kk-fws-marquee
     style="
       --kk-fws-marquee-background: {{ section.settings.background_color }};
@@ -24,32 +29,43 @@
       --kk-fws-marquee-duration: {{ section.settings.duration }}s;
     "
   >
-    <div class="kk-fws-marquee__track" data-kk-fws-marquee-track>
-      <ul class="kk-fws-marquee__items" data-kk-fws-marquee-items>
-        {%- for block in item_blocks -%}
-          {%- if block.settings.text != blank -%}
-            <li class="kk-fws-marquee__item" {{ block.shopify_attributes }}>
-              {%- if block.settings.custom_icon != blank -%}
-                {{
-                  block.settings.custom_icon
-                  | image_url: width: 56
-                  | image_tag: class: 'kk-fws-marquee__icon', width: 28, height: 28, loading: 'eager', alt: ''
-                }}
-              {%- elsif block.settings.icon != 'none' -%}
-                <img
-                  class="kk-fws-marquee__icon"
-                  src="{{ 'kk-fws-icon-' | append: block.settings.icon | append: '.svg' | asset_url }}"
-                  alt=""
-                  width="28"
-                  height="28"
-                  aria-hidden="true"
-                >
+    <div class="kk-fws-marquee__inner">
+      {%- if section.settings.title != blank -%}
+        <p class="kk-fws-marquee__title">{{ section.settings.title }}</p>
+        <span class="kk-fws-marquee__divider" aria-hidden="true"></span>
+      {%- endif -%}
+      <div class="kk-fws-marquee__viewport">
+        <div class="kk-fws-marquee__track" data-kk-fws-marquee-track>
+          <ul class="kk-fws-marquee__items" data-kk-fws-marquee-items>
+            {%- for block in item_blocks -%}
+              {%- if block.settings.text != blank -%}
+                <li class="kk-fws-marquee__item" {{ block.shopify_attributes }}>
+                  {%- if block.settings.custom_icon != blank -%}
+                    {{
+                      block.settings.custom_icon
+                      | image_url: width: 56
+                      | image_tag: class: 'kk-fws-marquee__icon', width: 28, height: 28, loading: 'eager', alt: ''
+                    }}
+                  {%- elsif block.settings.icon != 'none' -%}
+                    <img
+                      class="kk-fws-marquee__icon"
+                      src="{{ 'kk-fws-icon-' | append: block.settings.icon | append: '.svg' | asset_url }}"
+                      alt=""
+                      width="28"
+                      height="28"
+                      aria-hidden="true"
+                    >
+                  {%- endif -%}
+                  <span class="kk-fws-marquee__text">{{ block.settings.text }}</span>
+                  {%- if block.settings.description != blank -%}
+                    <span class="kk-fws-marquee__description">{{ block.settings.description }}</span>
+                  {%- endif -%}
+                </li>
               {%- endif -%}
-              <span class="kk-fws-marquee__text">{{ block.settings.text }}</span>
-            </li>
-          {%- endif -%}
-        {%- endfor -%}
-      </ul>
+            {%- endfor -%}
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -59,6 +75,7 @@
       if (!root || !root.hasAttribute('data-kk-fws-marquee')) return;
 
       var track = root.querySelector('[data-kk-fws-marquee-track]');
+      var viewport = track && track.parentNode;
       var unit = root.querySelector('[data-kk-fws-marquee-items]');
       if (!track || !unit) return;
 
@@ -72,7 +89,7 @@
         if (!unitWidth) return;
 
         var clones = track.querySelectorAll('[data-kk-fws-marquee-clone]');
-        var needed = Math.max(1, Math.ceil((root.clientWidth * 2) / unitWidth) - 1);
+        var needed = Math.max(1, Math.ceil((viewport.clientWidth * 2) / unitWidth) - 1);
 
         for (var i = clones.length; i < needed; i++) {
           var clone = unit.cloneNode(true);
@@ -220,6 +237,85 @@
     color: var(--kk-fws-marquee-text, #ffffff);
   }
 
+  .kk-fws-marquee__description {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.7rem;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--kk-fws-marquee-text, #ffffff);
+    opacity: 0.62;
+  }
+
+  /* No separator dots — Figma `7809:10066`: items 56px apart. */
+  .kk-fws-marquee--no-dots {
+    --kk-fws-marquee-gap: 5.6rem;
+  }
+
+  .kk-fws-marquee--no-dots .kk-fws-marquee__item::after {
+    content: none;
+  }
+
+  /* Titled — Figma `7809:10066`: 44px top and bottom; title, a 56px divider and the scrolling
+     window 28px apart inside the 1312px container. The strip-wide edge fades give way to a fade
+     on the window itself, so items dissolve before they reach the divider and the title. */
+  .kk-fws-marquee--titled {
+    padding: 4.4rem 0;
+  }
+
+  .kk-fws-marquee--titled::before,
+  .kk-fws-marquee--titled::after {
+    content: none;
+  }
+
+  .kk-fws-marquee--titled .kk-fws-marquee__inner {
+    display: flex;
+    align-items: center;
+    gap: 2.8rem;
+    width: min(100% - 12.8rem, 131.2rem);
+    margin: 0 auto;
+  }
+
+  .kk-fws-marquee__title {
+    flex-shrink: 0;
+    margin: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.2rem;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--kk-fws-marquee-text, #ffffff);
+  }
+
+  .kk-fws-marquee__divider {
+    flex-shrink: 0;
+    width: 5.6rem;
+    height: 1px;
+    background: var(--kk-fws-marquee-text, #ffffff);
+    opacity: 0.35;
+  }
+
+  .kk-fws-marquee--titled .kk-fws-marquee__viewport {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+
+  .kk-fws-marquee--titled .kk-fws-marquee__item {
+    gap: 1.4rem;
+  }
+
+  .kk-fws-marquee--titled .kk-fws-marquee__icon {
+    width: 3.6rem;
+    height: 3.6rem;
+  }
+
+  .kk-fws-marquee--titled .kk-fws-marquee__text {
+    font-size: 2.2rem;
+  }
+
   /* Reduced motion: no clones, no animation; the row can be scrolled by hand instead. */
   .kk-fws-marquee.is-static .kk-fws-marquee__track {
     width: auto;
@@ -252,7 +348,47 @@
       height: 2.2rem;
     }
 
-    .kk-fws-marquee__text {
+    .kk-fws-marquee__text,
+    .kk-fws-marquee__description {
+      font-size: 1.5rem;
+    }
+
+    .kk-fws-marquee--no-dots {
+      --kk-fws-marquee-gap: 2.2rem;
+    }
+
+    /* Titled — Figma `7809:11434`: 14px top and bottom, 20px gutters, the title wrapping onto
+       two lines at 68px, no divider. */
+    .kk-fws-marquee--titled {
+      padding: 1.4rem 0;
+    }
+
+    .kk-fws-marquee--titled .kk-fws-marquee__inner {
+      gap: 1.5rem;
+      width: calc(100% - 4rem);
+    }
+
+    .kk-fws-marquee__title {
+      max-width: 6.8rem;
+      font-size: 1.4rem;
+      line-height: 1.15;
+      white-space: normal;
+    }
+
+    .kk-fws-marquee__divider {
+      display: none;
+    }
+
+    .kk-fws-marquee--titled .kk-fws-marquee__item {
+      gap: 0.8rem;
+    }
+
+    .kk-fws-marquee--titled .kk-fws-marquee__icon {
+      width: 2.6rem;
+      height: 2.6rem;
+    }
+
+    .kk-fws-marquee--titled .kk-fws-marquee__text {
       font-size: 1.5rem;
     }
   }
@@ -265,6 +401,18 @@
   "class": "section-kk-fws-marquee",
   "max_blocks": 12,
   "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "info": "Optional, e.g. \"Our Filters Remove\". Shown on the left; the items fade out before reaching it."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show separator dots",
+      "default": true
+    },
     {
       "type": "range",
       "id": "duration",
@@ -337,6 +485,12 @@
           "id": "text",
           "label": "Text",
           "info": "An item with no text is not shown."
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "info": "Optional lighter text after the item, e.g. \"99.99%\"."
         }
       ]
     }

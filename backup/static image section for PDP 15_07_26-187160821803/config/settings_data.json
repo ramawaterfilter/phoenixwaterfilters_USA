@@ -31,7 +31,7 @@
     "exit_popup_disclaimer": "",
     "exit_popup_fineprint": "",
     "filter_image_1": "shopify://shop_images/carbon2.png",
-    "filter_image_2": "shopify://shop_images/stainless2.png",
+    "filter_image_2": "shopify://shop_images/10-removebg-preview.png",
     "size_icon_1": "shopify://shop_images/family-1.svg",
     "size_for_1": "Family of 1-2",
     "size_content_1": "<p>1.5 Gallon</p>",
@@ -130,14 +130,12 @@
         "type": "shopify://apps/inbox/blocks/chat/841fc607-4181-4ad1-842d-e24d7f8bad6b",
         "disabled": true,
         "settings": {
+          "greeting_message": "",
           "button_color": "#000000",
-          "secondary_color": "#ffffff",
-          "ternary_color": "#6a6a6a",
           "button_icon": "chat_bubble",
           "button_text": "chat_with_us",
           "button_horizontal_position": "bottom_right",
-          "button_vertical_position": "lowest",
-          "greeting_message": ""
+          "button_vertical_position": "lowest"
         }
       },
       "10436698916776057164": {
@@ -147,11 +145,6 @@
       },
       "14060646107696862457": {
         "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
-        "disabled": false,
-        "settings": {}
-      },
-      "6012664788653924950": {
-        "type": "shopify://apps/mps-buy-me/blocks/app-embed/da5cef02-d610-4c52-adf7-383273d1f67b",
         "disabled": false,
         "settings": {}
       }

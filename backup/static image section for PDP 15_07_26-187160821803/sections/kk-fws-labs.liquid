@@ -1,0 +1,787 @@
+{%- comment -%}
+  KK FWS Labs — Figma `7809:10458` (desktop), `7809:11833` (mobile).
+
+  Eyebrow and heading over a row of lab-report cards, each a mock report sheet (logo, brand,
+  "Lab report", the report title, grey placeholder lines) with an optional "Passed" stamp and
+  a "View report" button underneath. One "Report" block per card.
+
+  Desktop cards are tall, with a table of placeholder rows under the title. Below 990px the
+  cards drop to the short mobile design: title and two lines only, stamp beside the title.
+
+  The placeholder lines can shimmer like skeleton ("ghost") loading content. Turned off for
+  prefers-reduced-motion.
+
+  "Background" and "Container background" work as in KK FWS Copy Image. The cards stay white
+  on every background.
+{%- endcomment -%}
+
+{%- liquid
+  assign report_blocks = section.blocks | where: 'type', 'report'
+  assign background = section.settings.style | default: 'bg-white'
+
+  capture modifiers
+    echo ' kk-fws-labs--' | append: background
+    if section.settings.show_container
+      echo ' kk-fws-labs--container'
+    endif
+    if section.settings.shimmer
+      echo ' kk-fws-labs--shimmer'
+    endif
+  endcapture
+-%}
+
+<section
+  class="kk-fws-labs kk-fws-section{{ modifiers }}"
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handle }}"{% endif %}
+>
+  <div class="kk-fws-labs__container kk-fws-container">
+    <div class="kk-fws-labs__panel">
+      {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+        <div class="kk-fws-labs__intro" data-kk-fws-reveal>
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="kk-fws-labs__eyebrow">{{ section.settings.eyebrow }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="kk-fws-labs__heading kk-fws-heading">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if report_blocks.size > 0 -%}
+        <ul class="kk-fws-labs__list">
+          {%- for block in report_blocks -%}
+            {%- liquid
+              assign show_button = false
+              if block.settings.button_label != blank and block.settings.button_link != blank
+                assign show_button = true
+              endif
+            -%}
+            <li class="kk-fws-labs__item" data-kk-fws-reveal {{ block.shopify_attributes }}>
+              <div class="kk-fws-labs__card">
+                <div class="kk-fws-labs__card-head">
+                  <span class="kk-fws-labs__brand">
+                    {%- if section.settings.logo != blank -%}
+                      {{
+                        section.settings.logo
+                        | image_url: height: 48
+                        | image_tag: class: 'kk-fws-labs__logo', height: 20, loading: 'lazy', alt: ''
+                      }}
+                    {%- else -%}
+                      <img
+                        class="kk-fws-labs__logo"
+                        src="{{ 'kk-fws-phoenix-mark.png' | asset_url }}"
+                        alt=""
+                        width="22"
+                        height="20"
+                        loading="lazy"
+                      >
+                    {%- endif -%}
+                    {%- if section.settings.brand_text != blank -%}
+                      <span class="kk-fws-labs__brand-text">{{ section.settings.brand_text }}</span>
+                    {%- endif -%}
+                  </span>
+                  {%- if section.settings.report_label != blank -%}
+                    <span class="kk-fws-labs__label">{{ section.settings.report_label }}</span>
+                  {%- endif -%}
+                </div>
+
+                <div class="kk-fws-labs__card-body">
+                  {%- if block.settings.title != blank -%}
+                    <h3 class="kk-fws-labs__title{% if block.settings.show_passed %} kk-fws-labs__title--passed{% endif %}">
+                      {{- block.settings.title -}}
+                    </h3>
+                  {%- endif -%}
+
+                  <div class="kk-fws-labs__lines" aria-hidden="true">
+                    <span class="kk-fws-labs__bar kk-fws-labs__bar--line"></span>
+                    <span class="kk-fws-labs__bar kk-fws-labs__bar--line"></span>
+                    <span class="kk-fws-labs__bar kk-fws-labs__bar--line"></span>
+                  </div>
+                </div>
+
+                <div class="kk-fws-labs__table" aria-hidden="true">
+                  {%- for i in (1..6) -%}
+                    <div class="kk-fws-labs__row">
+                      <span class="kk-fws-labs__bar kk-fws-labs__bar--name"></span>
+                      <span class="kk-fws-labs__bar kk-fws-labs__bar--value"></span>
+                      <span class="kk-fws-labs__bar kk-fws-labs__bar--result"></span>
+                    </div>
+                  {%- endfor -%}
+                </div>
+
+                {%- if block.settings.show_passed and section.settings.passed_label != blank -%}
+                  <div class="kk-fws-labs__stamp">
+                    <img
+                      class="kk-fws-labs__stamp-icon"
+                      src="{{ 'kk-fws-icon-passed.svg' | asset_url }}"
+                      alt=""
+                      width="32"
+                      height="32"
+                      aria-hidden="true"
+                      loading="lazy"
+                    >
+                    <span class="kk-fws-labs__stamp-text">{{ section.settings.passed_label }}</span>
+                  </div>
+                {%- endif -%}
+              </div>
+
+              {%- if show_button -%}
+                <a
+                  class="kk-fws-labs__button kk-fws-button{% if section.settings.button_style == 'secondary' %} kk-fws-button--secondary{% endif %}"
+                  href="{{ block.settings.button_link }}"
+                  {% if block.settings.new_tab %}target="_blank" rel="noopener"{% endif %}
+                >
+                  {%- if section.settings.button_icon -%}
+                    <img
+                      class="kk-fws-labs__button-icon"
+                      src="{{ 'kk-fws-icon-lab-report.svg' | asset_url }}"
+                      alt=""
+                      width="20"
+                      height="20"
+                      aria-hidden="true"
+                      loading="lazy"
+                    >
+                  {%- endif -%}
+                  {{- block.settings.button_label -}}
+                  {%- if section.settings.button_arrow -%}
+                    <img
+                      class="kk-fws-button__arrow"
+                      src="{{ 'kk-fws-icon-button-arrow.svg' | asset_url }}"
+                      alt=""
+                      width="20"
+                      height="20"
+                      aria-hidden="true"
+                      loading="lazy"
+                    >
+                  {%- endif -%}
+                </a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  /* Figma `7809:10458`: 88px top and bottom, heading block 900 wide, 40px to the cards. Three
+     340px columns 48px apart; each card 26px in, the button 26px under it. */
+  .kk-fws-labs {
+    --kk-fws-labs-section: #ffffff;
+    --kk-fws-labs-panel-colour: var(--light);
+    --kk-fws-labs-eyebrow: var(--primary-600);
+    --kk-fws-labs-ink: var(--primary);
+    --kk-fws-section-padding-sm: 5.2rem;
+    --kk-fws-button-padding: 2.2rem 2.4rem;
+    --kk-fws-button-padding-md: 1.6rem 2.4rem;
+    --kk-fws-button-size: 1.6rem;
+    --kk-fws-button-size-md: 1.4rem;
+    --kk-fws-button-size-sm: 1.4rem;
+
+    background: var(--kk-fws-labs-section);
+  }
+
+  .kk-fws-labs--bg-light {
+    --kk-fws-labs-section: var(--light);
+    --kk-fws-labs-panel-colour: #ffffff;
+  }
+
+  .kk-fws-labs--bg-dark {
+    --kk-fws-labs-section: var(--primary-900);
+    --kk-fws-labs-panel-colour: #16224a;
+    --kk-fws-labs-eyebrow: #6e9bff;
+    --kk-fws-labs-ink: #ffffff;
+  }
+
+  .kk-fws-labs__panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+    width: 100%;
+  }
+
+  .kk-fws-labs--container .kk-fws-labs__panel {
+    padding: 8rem;
+    border-radius: 3.6rem;
+    background: var(--kk-fws-labs-panel-colour);
+  }
+
+  .kk-fws-labs__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.335rem;
+    max-width: 90rem;
+    text-align: center;
+  }
+
+  .kk-fws-labs__eyebrow {
+    margin: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    letter-spacing: 0.18rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-labs-eyebrow);
+  }
+
+  .kk-fws-labs__heading {
+    color: var(--kk-fws-labs-ink);
+  }
+
+  .kk-fws-labs__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 34rem));
+    justify-content: center;
+    gap: 4.8rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-labs__item {
+    display: flex;
+    flex-direction: column;
+    gap: 2.6rem;
+    min-width: 0;
+    margin: 0;
+  }
+
+  /* Card — Figma `7809:10534`: white, 12px corners, 26px in, 68px under the table. */
+  .kk-fws-labs__card {
+    position: relative;
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    gap: 1.7rem;
+    padding: 2.6rem 2.6rem 6.8rem;
+    overflow: hidden;
+    border-radius: 1.2rem;
+    background: #ffffff;
+    box-shadow: 0 3rem 6rem rgba(11, 22, 56, 0.14), 0 0.2rem 0.6rem rgba(11, 22, 56, 0.06);
+    color: var(--primary);
+  }
+
+  .kk-fws-labs__card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    padding-bottom: 1.6rem;
+    border-bottom: 1px solid #eef0f4;
+  }
+
+  .kk-fws-labs__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    min-width: 0;
+  }
+
+  .kk-fws-labs__logo {
+    display: block;
+    flex-shrink: 0;
+    width: auto;
+    max-width: 8rem;
+    height: 2rem;
+    object-fit: contain;
+  }
+
+  .kk-fws-labs__brand-text,
+  .kk-fws-labs__label {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .kk-fws-labs__brand-text {
+    font-size: 1rem;
+    letter-spacing: 0.16rem;
+    color: var(--primary);
+  }
+
+  .kk-fws-labs__label {
+    font-size: 0.9rem;
+    letter-spacing: 0.14rem;
+    color: #6b7085;
+  }
+
+  .kk-fws-labs__card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+
+  .kk-fws-labs__title {
+    margin: 0;
+    padding: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.4rem;
+    line-height: 1.22;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--primary);
+  }
+
+  /* Placeholder lines — Figma `7809:10552`: three 8px bars 10px apart, 253 / 207 / 230 of
+     the 288 content width. */
+  .kk-fws-labs__lines {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .kk-fws-labs__bar {
+    display: block;
+    height: 0.8rem;
+    border-radius: 0.4rem;
+    background-color: #e6e9f0;
+  }
+
+  .kk-fws-labs__bar--line:nth-child(1) {
+    width: 88%;
+  }
+
+  .kk-fws-labs__bar--line:nth-child(2) {
+    width: 72%;
+  }
+
+  .kk-fws-labs__bar--line:nth-child(3) {
+    width: 80%;
+  }
+
+  /* Table — Figma `7809:10558`: six rows, 1px top rule, 9px in, bars 117 / 84 / 67 of 288. */
+  .kk-fws-labs__table {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .kk-fws-labs__row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-top: 1px solid #eef0f4;
+  }
+
+  .kk-fws-labs__row .kk-fws-labs__bar {
+    height: 0.7rem;
+  }
+
+  .kk-fws-labs__bar--name {
+    width: 40.5%;
+  }
+
+  .kk-fws-labs__bar--value {
+    width: 29%;
+    background-color: #eef0f4;
+  }
+
+  .kk-fws-labs__bar--result {
+    width: 23%;
+    background-color: #cfe0ff;
+  }
+
+  /* Stamp — Figma `7809:10589`: 133px ring, 3px #2764FF, 92% opacity, over the table's
+     bottom right. */
+  .kk-fws-labs__stamp {
+    position: absolute;
+    right: 1.8rem;
+    bottom: 2.7rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 13.3rem;
+    height: 13.3rem;
+    padding-top: 0.4rem;
+    border: 0.3rem solid var(--primary-600);
+    border-radius: 50%;
+    opacity: 0.92;
+    pointer-events: none;
+  }
+
+  .kk-fws-labs__stamp-icon {
+    display: block;
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+
+  .kk-fws-labs__stamp-text {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    color: var(--primary-600);
+  }
+
+  /* Button — Figma `7809:10596`: the card's full width, 22px tall padding, 16px label, the
+     document icon before it and the arrow after, 12px apart. */
+  .kk-fws-labs .kk-fws-labs__button {
+    width: 100%;
+    gap: 1.2rem;
+    letter-spacing: 0.14rem;
+  }
+
+  .kk-fws-labs__button-icon,
+  .kk-fws-labs .kk-fws-labs__button .kk-fws-button__arrow {
+    display: block;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  /* Ghost-content shimmer: a soft highlight sweeps across each bar, row by row. */
+  @media (prefers-reduced-motion: no-preference) {
+    .kk-fws-labs--shimmer .kk-fws-labs__bar {
+      background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.75) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      background-repeat: no-repeat;
+      background-size: 300% 100%;
+      animation: kk-fws-labs-shimmer 1.8s ease-in-out infinite;
+    }
+
+    .kk-fws-labs--shimmer .kk-fws-labs__lines .kk-fws-labs__bar:nth-child(2),
+    .kk-fws-labs--shimmer .kk-fws-labs__row:nth-child(1) .kk-fws-labs__bar {
+      animation-delay: 0.1s;
+    }
+
+    .kk-fws-labs--shimmer .kk-fws-labs__lines .kk-fws-labs__bar:nth-child(3),
+    .kk-fws-labs--shimmer .kk-fws-labs__row:nth-child(2) .kk-fws-labs__bar {
+      animation-delay: 0.2s;
+    }
+
+    .kk-fws-labs--shimmer .kk-fws-labs__row:nth-child(3) .kk-fws-labs__bar {
+      animation-delay: 0.3s;
+    }
+
+    .kk-fws-labs--shimmer .kk-fws-labs__row:nth-child(4) .kk-fws-labs__bar {
+      animation-delay: 0.4s;
+    }
+
+    .kk-fws-labs--shimmer .kk-fws-labs__row:nth-child(5) .kk-fws-labs__bar {
+      animation-delay: 0.5s;
+    }
+
+    .kk-fws-labs--shimmer .kk-fws-labs__row:nth-child(6) .kk-fws-labs__bar {
+      animation-delay: 0.6s;
+    }
+  }
+
+  @keyframes kk-fws-labs-shimmer {
+    0% {
+      background-position: 100% 0;
+    }
+
+    100% {
+      background-position: 0% 0;
+    }
+  }
+
+  /* Narrow desktop: tighten the columns before they drop to one. */
+  @media (max-width: 1199px) {
+    .kk-fws-labs__list {
+      gap: 2.4rem;
+    }
+
+    .kk-fws-labs--container .kk-fws-labs__panel {
+      padding: 6rem 4rem;
+    }
+
+    .kk-fws-labs__stamp {
+      right: 1.2rem;
+      width: 11.6rem;
+      height: 11.6rem;
+    }
+  }
+
+  /* Tablet and mobile — Figma `7809:11833`: one column, short cards (title and two lines, no
+     table), stamp to the right of the title, 16px to the button, 28px between reports. */
+  @media (max-width: 989px) {
+    .kk-fws-labs__panel {
+      gap: 2.6rem;
+    }
+
+    .kk-fws-labs--container .kk-fws-labs__panel {
+      padding: 4.8rem 4rem;
+      border-radius: 2.8rem;
+    }
+
+    .kk-fws-labs__intro {
+      gap: 1rem;
+    }
+
+    .kk-fws-labs__list {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2.8rem;
+    }
+
+    .kk-fws-labs__item {
+      gap: 1.6rem;
+    }
+
+    .kk-fws-labs__card {
+      padding: 1.8rem 1.8rem 2rem;
+    }
+
+    .kk-fws-labs__label {
+      font-size: 1rem;
+    }
+
+    .kk-fws-labs__card-body {
+      gap: 0.4rem;
+    }
+
+    .kk-fws-labs__title {
+      padding-bottom: 0.1rem;
+      font-size: 1.7rem;
+    }
+
+    .kk-fws-labs__title--passed {
+      padding-right: 9.6rem;
+    }
+
+    .kk-fws-labs__bar--line:nth-child(1) {
+      width: 92%;
+    }
+
+    .kk-fws-labs__bar--line:nth-child(2) {
+      width: 75%;
+    }
+
+    .kk-fws-labs__bar--line:nth-child(3),
+    .kk-fws-labs__table {
+      display: none;
+    }
+
+    /* Figma `7809:11866`: 82px ring, 46px down. Figma runs it off the card's right edge; kept
+       inside the card instead so the ring isn't clipped. */
+    .kk-fws-labs__stamp {
+      top: 4.65rem;
+      right: 1.4rem;
+      bottom: auto;
+      gap: 0.2rem;
+      width: 8.2rem;
+      height: 8.2rem;
+      padding-top: 0.2rem;
+    }
+
+    .kk-fws-labs__stamp-icon {
+      width: 1.94rem;
+      height: 1.94rem;
+    }
+
+    .kk-fws-labs__stamp-text {
+      font-size: 1rem;
+      letter-spacing: 0.14rem;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .kk-fws-labs--container .kk-fws-labs__panel {
+      padding: 4rem 2rem;
+      border-radius: 2.4rem;
+    }
+
+    /* kk-fws-button.css sets its own mobile padding and size; Figma `7809:11873` is 16px. */
+    .kk-fws-labs .kk-fws-labs__button {
+      padding: 1.6rem 2.4rem;
+      font-size: 1.4rem;
+      letter-spacing: 0.14rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Lab Report Cards",
+  "tag": "div",
+  "class": "section-kk-fws-labs",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Background",
+      "default": "bg-white",
+      "options": [
+        {
+          "label": "White",
+          "value": "bg-white"
+        },
+        {
+          "label": "Light",
+          "value": "bg-light"
+        },
+        {
+          "label": "Dark",
+          "value": "bg-dark"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_container",
+      "label": "Container background",
+      "info": "A rounded panel behind the content in the opposite colour to the section background.",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor id",
+      "info": "Optional, without the '#'. Link to it as #your-id."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Independent lab testing"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Water Has Been Tested by Reputable 3rd Parties and Passed with Flying Colors"
+    },
+    {
+      "type": "header",
+      "content": "Report cards"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Custom logo",
+      "info": "Replaces the Phoenix logo on every card. Shown 20px tall."
+    },
+    {
+      "type": "text",
+      "id": "brand_text",
+      "label": "Brand text",
+      "default": "PHOENIX GRAVITY"
+    },
+    {
+      "type": "text",
+      "id": "report_label",
+      "label": "Report label",
+      "default": "LAB REPORT"
+    },
+    {
+      "type": "text",
+      "id": "passed_label",
+      "label": "Passed stamp text",
+      "info": "Turn the stamp on or off per report.",
+      "default": "PASSED"
+    },
+    {
+      "type": "checkbox",
+      "id": "shimmer",
+      "label": "Animate placeholder lines",
+      "info": "The grey lines shimmer like loading content.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Buttons",
+      "info": "Each report's button shows only when it has both a label and a link."
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "secondary",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "button_icon",
+      "label": "Show document icon on buttons",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "button_arrow",
+      "label": "Show arrow on buttons",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "report",
+      "name": "Report",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Card headline",
+          "default": "Lab Test Report"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_passed",
+          "label": "Show passed stamp",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "View report"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link",
+          "info": "E.g. the report PDF. Upload it in Content > Files and paste its link."
+        },
+        {
+          "type": "checkbox",
+          "id": "new_tab",
+          "label": "Open link in a new tab",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Lab Report Cards",
+      "blocks": [
+        {
+          "type": "report",
+          "settings": { "title": "PFOA PFOS Lab Test Report" }
+        },
+        {
+          "type": "report",
+          "settings": { "title": "Pharmaceuticals Test Report" }
+        },
+        {
+          "type": "report",
+          "settings": { "title": "Heavy Metals Test Report" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

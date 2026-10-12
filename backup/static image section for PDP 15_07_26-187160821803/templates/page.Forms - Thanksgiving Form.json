@@ -30,17 +30,9 @@
     "hero_cVMpXV": {
       "type": "hero",
       "disabled": true,
-      "custom_css": [
-        "h1.mb-4 {margin-top: 39px !important; margin-bottom: 13px !important;}"
-      ],
       "settings": {
-        "eyebrow": "",
         "heading": "wellness Sale - 20% Off!",
-        "content": "<p>A deal you wouldn't want to miss!</p>",
-        "sideimage": "shopify://shop_images/kitchen03_in-situ02.png",
-        "section_video_bg": "",
-        "buttonlink": "",
-        "buttontext": ""
+        "content": "<p>A deal you wouldn't want to miss!</p>"
       }
     },
     "map_Nw9MHc": {

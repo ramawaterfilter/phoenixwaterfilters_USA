@@ -1,7 +1,16 @@
+{%- comment -%}
+  Newsletter sign-up (customer form).
+
+  Accepts:
+  - hide_title: true to skip the "Subscribe" title, e.g. when the caller shows its own heading
+  - arrow: an asset filename for the submit icon, replacing the default inline arrow
+  - success_message: text shown after signing up (defaults to the message below)
+{%- endcomment -%}
+
 {% form 'customer'
   , class: 'kk-validation'
   , id: 'newsletter-footer' %}
-  {% unless template.suffix == 'article' %}
+  {% unless template.suffix == 'article' or hide_title %}
     <p>
       <strong>
         {{ 'newsletter.title' | t }}
@@ -11,7 +20,7 @@
 
   {% if form.posted_successfully? %}
     <p>
-      Thankyou, your subscription has been received.
+      {{ success_message | default: 'Thank you, your subscription has been received.' }}
     </p>
   {% else %}
 
@@ -27,7 +36,17 @@
 
 
       <button class="btn form-btn" aria-label="Submit">
-        {% unless template.suffix == 'article' %}
+        {% if arrow != blank and template.suffix != 'article' %}
+          <img
+            class="form-arrow"
+            src="{{ arrow | asset_url }}"
+            alt=""
+            width="18"
+            height="18"
+            aria-hidden="true"
+            loading="lazy"
+          >
+        {% elsif template.suffix != 'article' %}
           <svg
             class="form-arrow"
             width="18"
@@ -42,7 +61,7 @@
           </svg>
         {% else %}
           {{ 'newsletter.button_label' | t }}
-        {% endunless %}
+        {% endif %}
       </button>
     </div>
 

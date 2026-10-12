@@ -343,8 +343,8 @@
                   {{ block.shopify_attributes }}
                 >
                   <div data-description>
-                    {% if current_variant.metafields.custom.variant_level_description != blank -%}
-                      {{- current_variant.metafields.custom.variant_level_description | metafield_tag -}}
+                    {% if current_variant.metafields.custom.product_main_description_with_rich_text != blank -%}
+                      {{- current_variant.metafields.custom.product_main_description_with_rich_text | metafield_tag -}}
                     {%- else -%}
                       {{- product.description -}}
                     {%- endif %}
@@ -586,6 +586,7 @@
                 </div>
 
               {% when 'trust_badges' %}
+                <variant-visibility-scope current-variant-id="{{ current_variant.id }}">
                 <div
                   class="custom-nice-product__block below-atc-icons custom-nice-product__trust"
                   style="--trust-columns: {{ block.settings.columns_desktop }}; --trust-mobile-columns: {{ block.settings.columns_mobile }};"
@@ -596,9 +597,11 @@
                       assign icon_key = 'badge_' | append: index | append: '_icon'
                       assign text_key = 'badge_' | append: index | append: '_text'
                       assign link_key = 'badge_' | append: index | append: '_link'
+                      assign variant_ids_key = 'badge_' | append: index | append: '_variant_ids'
                       assign icon = block.settings[icon_key]
                       assign text = block.settings[text_key]
                       assign link = block.settings[link_key]
+                      assign variant_ids = block.settings[variant_ids_key]
                       assign fallback_asset = blank
                       assign fallback_url = blank
                       case index
@@ -617,7 +620,11 @@
                       endcase
                     %}
                     {% if text != blank %}
-                      <div class="custom-nice-product__trust-item">
+                      <div
+                        class="custom-nice-product__trust-item"
+                        data-variant-visibility-item
+                        {% if variant_ids != blank %}data-variant-visibility-ids="{{ variant_ids | escape }}" hidden{% endif %}
+                      >
                         {% if link != blank %}
                           <a href="{{ link }}">
                         {% endif %}
@@ -645,6 +652,7 @@
                     {% endif %}
                   {% endfor %}
                 </div>
+                </variant-visibility-scope>
 
               {% when 'text' %}
                 {% if block.settings.text != blank %}
@@ -688,9 +696,9 @@
   <script type="application/json" data-product-json>
     {
       "moneyFormat": {{ shop.money_format | json }}, "currency": {{ cart.currency.iso_code | default: shop.currency | json }},
-      "defaultDescription": {{ product.description | json }},
+      "defaultDescription": {% if current_variant.metafields.custom.product_main_description_with_rich_text != blank %}{{ current_variant.metafields.custom.product_main_description_with_rich_text | metafield_tag | strip | json }}{% else %}{{ product.description | json }}{% endif %},
       "strings": {"add":{{ 'products.product.add_to_cart' | t | json }},"sold":{{ 'products.product.sold_out' | t | json }},"preorder":{{ 'products.product.pre_order' | t | json }},"stock":{{ 'products.product.inventory_in_stock' | t | json }},"adding":"Adding…","added":"Added to cart","error":"Unable to add this item. Please try again."},
-      "variants": [{% assign rendered_variant_count = 0 %}{% for variant in product.variants %}{% capture variant_token %},{{ variant.id }},{% endcapture %}{% if hidden_variant_ids contains variant_token %}{% continue %}{% endif %}{% assign images = variant.metafields.custom.variant_images.value %}{% if rendered_variant_count > 0 %},{% endif %}{"id":{{ variant.id | json }},"options":{{ variant.options | json }},"available":{{ variant.available | json }},"price":{{ variant.price | json }},"compare":{{ variant.compare_at_price | json }},"inventory":{{ variant.inventory_quantity | json }},"management":{{ variant.inventory_management | json }},"policy":{{ variant.inventory_policy | json }},"media":{{ variant.featured_media.id | default: 0 | json }},"min":{{ variant.quantity_rule.min | default: 1 | json }},"max":{{ variant.quantity_rule.max | json }},"increment":{{ variant.quantity_rule.increment | default: 1 | json }},"customGallery":{% if images != blank and images.size > 0 %}true{% else %}false{% endif %}{% if variant.metafields.custom.variant_level_description != blank %}{% capture description_override %}{{ variant.metafields.custom.variant_level_description | metafield_tag }}{% endcapture %},"descriptionOverride":{{ description_override | strip | json }}{% endif %}}{% assign rendered_variant_count = rendered_variant_count | plus: 1 %}{% endfor %}]
+      "variants": [{% assign rendered_variant_count = 0 %}{% for variant in product.variants %}{% capture variant_token %},{{ variant.id }},{% endcapture %}{% if hidden_variant_ids contains variant_token %}{% continue %}{% endif %}{% assign images = variant.metafields.custom.variant_images.value %}{% if rendered_variant_count > 0 %},{% endif %}{"id":{{ variant.id | json }},"options":{{ variant.options | json }},"available":{{ variant.available | json }},"price":{{ variant.price | json }},"compare":{{ variant.compare_at_price | json }},"inventory":{{ variant.inventory_quantity | json }},"management":{{ variant.inventory_management | json }},"policy":{{ variant.inventory_policy | json }},"media":{{ variant.featured_media.id | default: 0 | json }},"min":{{ variant.quantity_rule.min | default: 1 | json }},"max":{{ variant.quantity_rule.max | json }},"increment":{{ variant.quantity_rule.increment | default: 1 | json }},"customGallery":{% if images != blank and images.size > 0 %}true{% else %}false{% endif %}{% if variant.metafields.custom.product_main_description_with_rich_text != blank %}{% capture description_override %}{{ variant.metafields.custom.product_main_description_with_rich_text | metafield_tag }}{% endcapture %},"descriptionOverride":{{ description_override | strip | json }}{% endif %}}{% assign rendered_variant_count = rendered_variant_count | plus: 1 %}{% endfor %}]
     }
   </script>
 </div>
@@ -2126,6 +2134,7 @@
   }
 })();
 </script>
+<script src="{{ 'variant-visibility.js' | asset_url }}" defer></script>
 {% schema %}
 {
   "name": "Custom nice product",
@@ -2274,7 +2283,7 @@
     {
       "type": "trust_badges",
       "name": "Trust badges",
-      "limit": 1,
+      "limit": 2,
       "settings": [
         {
           "type": "range",
@@ -2296,6 +2305,7 @@
         },
         { "type": "header", "content": "Badge 1" },
         { "type": "image_picker", "id": "badge_1_icon", "label": "Icon" },
+        { "type": "textarea", "id": "badge_1_variant_ids", "label": "Variant IDs", "info": "Comma-separated variant IDs. Leave blank to show for every variant." },
         {
           "type": "text",
           "id": "badge_1_text",
@@ -2305,22 +2315,27 @@
         { "type": "url", "id": "badge_1_link", "label": "Link" },
         { "type": "header", "content": "Badge 2" },
         { "type": "image_picker", "id": "badge_2_icon", "label": "Icon" },
+        { "type": "textarea", "id": "badge_2_variant_ids", "label": "Variant IDs", "info": "Comma-separated variant IDs. Leave blank to show for every variant." },
         { "type": "text", "id": "badge_2_text", "label": "Text", "default": "100 Day Trial" },
         { "type": "url", "id": "badge_2_link", "label": "Link" },
         { "type": "header", "content": "Badge 3" },
         { "type": "image_picker", "id": "badge_3_icon", "label": "Icon" },
+        { "type": "textarea", "id": "badge_3_variant_ids", "label": "Variant IDs", "info": "Comma-separated variant IDs. Leave blank to show for every variant." },
         { "type": "text", "id": "badge_3_text", "label": "Text", "default": "10 Year Warranty" },
         { "type": "url", "id": "badge_3_link", "label": "Link" },
         { "type": "header", "content": "Badge 4" },
         { "type": "image_picker", "id": "badge_4_icon", "label": "Icon" },
+        { "type": "textarea", "id": "badge_4_variant_ids", "label": "Variant IDs", "info": "Comma-separated variant IDs. Leave blank to show for every variant." },
         { "type": "text", "id": "badge_4_text", "label": "Text", "default": "Customer Support" },
         { "type": "url", "id": "badge_4_link", "label": "Link" },
         { "type": "header", "content": "Badge 5" },
         { "type": "image_picker", "id": "badge_5_icon", "label": "Icon" },
+        { "type": "textarea", "id": "badge_5_variant_ids", "label": "Variant IDs", "info": "Comma-separated variant IDs. Leave blank to show for every variant." },
         { "type": "text", "id": "badge_5_text", "label": "Text", "default": "NSF Certified" },
         { "type": "url", "id": "badge_5_link", "label": "Link" },
         { "type": "header", "content": "Badge 6" },
         { "type": "image_picker", "id": "badge_6_icon", "label": "Icon" },
+        { "type": "textarea", "id": "badge_6_variant_ids", "label": "Variant IDs", "info": "Comma-separated variant IDs. Leave blank to show for every variant." },
         {
           "type": "text",
           "id": "badge_6_text",

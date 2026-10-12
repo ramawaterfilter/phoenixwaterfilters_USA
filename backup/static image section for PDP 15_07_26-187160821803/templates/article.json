@@ -18,7 +18,7 @@
         "pagetitle": "{{ article.title }}",
         "show_breadcrumbs": false,
         "show_back": true,
-        "show_back_text": "BACK TO ALL BLOGS AND ARTICLE",
+        "show_back_text": "VIEW ALL ARTICLES",
         "show_back_url": "shopify://blogs/post"
       }
     },

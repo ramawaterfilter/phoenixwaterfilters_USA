@@ -264,11 +264,16 @@
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32 }}">
     {% endif %}
 
-    {%- comment -%} Campaign base styles. Must load before content_for_header so the kk-fws-* section stylesheets override it. {%- endcomment -%}
-    {%- if template.suffix == 'kk.free-w-shipping' -%}
-      {{ 'kk-fws-base.css' | asset_url | stylesheet_tag }}
-      {%- render 'kk-fws-reveal' -%}
-    {%- endif -%}
+    {%- comment -%} Primary CTA button, shared by the kk-fws-* sections and snippets/button.liquid. {%- endcomment -%}
+    {{ 'kk-fws-button.css' | asset_url | stylesheet_tag }}
+
+    {%- comment -%}
+      Campaign base styles and scroll reveal, loaded on every template so kk-fws-* sections work
+      wherever they're added (e.g. the gallery on the homepage). Every rule is scoped to kk-fws
+      classes. Must load before content_for_header so the kk-fws-* section stylesheets override it.
+    {%- endcomment -%}
+    {{ 'kk-fws-base.css' | asset_url | stylesheet_tag }}
+    {%- render 'kk-fws-reveal' -%}
 
     {{ content_for_header }}
 

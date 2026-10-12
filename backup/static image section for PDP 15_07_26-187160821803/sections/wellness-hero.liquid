@@ -1,0 +1,722 @@
+{%- comment -%}
+  Wellness Hero: split hero with the copy on the left and media fading in on the right.
+  Desktop Figma `7809:9821`, mobile `7809:11200` (copy centred, media stacked underneath).
+
+  Everything is editable: the pill, the social-proof row (avatars, count badge, stars, text),
+  heading, description, CTA and the trust items under it (blocks).
+
+  Media: a video picked from Files, else a direct .mp4 URL, else the image. With no image picked
+  it falls back to assets/wellness-hero-image.jpg. The mobile image is optional.
+  The CTA uses the shared button in assets/kk-fws-button.css.
+{%- endcomment -%}
+
+{%- liquid
+  assign heading = section.settings.heading
+
+  assign image_url = ''
+  if section.settings.image != blank
+    assign image_url = section.settings.image | image_url: width: 1920
+  else
+    assign image_url = 'wellness-hero-image.jpg' | asset_url
+  endif
+
+  assign show_pill = false
+  if section.settings.pill_text != blank or section.settings.pill_highlight != blank
+    assign show_pill = true
+  endif
+
+
+  assign show_button = false
+  if section.settings.button_label != blank and section.settings.button_link != blank
+    assign show_button = true
+  endif
+
+  assign trust_blocks = section.blocks | where: 'type', 'trust'
+-%}
+
+<section
+  class="wellness-hero"
+  {% if heading != blank %}aria-label="{{ heading | escape }}"{% endif %}
+  style="
+    --wellness-background: {{ section.settings.background_color }};
+    --wellness-background-clear: {{ section.settings.background_color | color_modify: 'alpha', 0 }};
+    --wellness-text: {{ section.settings.text_color }};
+    --wellness-muted: {{ section.settings.muted_color }};
+    --wellness-accent: {{ section.settings.accent_color }};
+    --customer-proof-text: {{ section.settings.muted_color }};
+    --customer-proof-accent: {{ section.settings.accent_color }};
+    --customer-proof-stars: {{ section.settings.star_color }};
+    --customer-proof-ring: {{ section.settings.background_color }};
+    --wellness-min-height: {{ section.settings.min_height }}px;
+    --wellness-media-height-sm: {{ section.settings.media_height_mobile }}px;
+  "
+>
+  <div class="wellness-hero__media">
+    {%- if section.settings.video != blank -%}
+      {{
+        section.settings.video
+        | video_tag:
+          class: 'wellness-hero__video',
+          autoplay: true,
+          muted: true,
+          loop: true,
+          playsinline: true,
+          controls: false,
+          preload: 'auto',
+          aria-hidden: 'true',
+          poster: image_url
+      }}
+    {%- elsif section.settings.video_url != blank -%}
+      <video
+        class="wellness-hero__video"
+        src="{{ section.settings.video_url | escape }}"
+        poster="{{ image_url }}"
+        autoplay
+        muted
+        loop
+        playsinline
+        aria-hidden="true"
+      ></video>
+    {%- else -%}
+      <picture>
+        {%- if section.settings.image_mobile != blank -%}
+          <source
+            media="(max-width: 767px)"
+            srcset="{{ section.settings.image_mobile | image_url: width: 800 }} 800w, {{ section.settings.image_mobile | image_url: width: 1200 }} 1200w"
+            sizes="100vw"
+          >
+        {%- endif -%}
+        {%- if section.settings.image != blank -%}
+          {{
+            section.settings.image
+            | image_url: width: 1920
+            | image_tag:
+              class: 'wellness-hero__image',
+              loading: 'eager',
+              fetchpriority: 'high',
+              alt: section.settings.image.alt,
+              sizes: '(max-width: 767px) 100vw, 77vw',
+              widths: '800, 1200, 1600, 1920'
+          }}
+        {%- else -%}
+          <img
+            class="wellness-hero__image"
+            src="{{ image_url }}"
+            alt=""
+            width="1900"
+            height="900"
+            loading="eager"
+          >
+        {%- endif -%}
+      </picture>
+    {%- endif -%}
+  </div>
+
+  <div class="wellness-hero__container container">
+    <div class="wellness-hero__content">
+      <div class="wellness-hero__intro">
+        {%- if show_pill -%}
+          <p class="wellness-hero__pill">
+            <span class="wellness-hero__pill-dot" aria-hidden="true"></span>
+            {%- if section.settings.pill_text != blank -%}
+              <span>{{ section.settings.pill_text }}</span>
+            {%- endif -%}
+            {%- if section.settings.pill_text != blank and section.settings.pill_highlight != blank -%}
+              <span class="wellness-hero__pill-separator" aria-hidden="true">·</span>
+            {%- endif -%}
+            {%- if section.settings.pill_highlight != blank -%}
+              <span>{{ section.settings.pill_highlight }}</span>
+            {%- endif -%}
+          </p>
+        {%- endif -%}
+
+        {%- render 'customer-proof', settings: section.settings, loading: 'eager' -%}
+      </div>
+
+      {%- if heading != blank or section.settings.description != blank -%}
+        <div class="wellness-hero__copy">
+          {%- if heading != blank -%}
+            <{{ section.settings.heading_tag }} class="mb-0">{{ heading }}</{{ section.settings.heading_tag }}>
+          {%- endif -%}
+          {%- if section.settings.description != blank -%}
+            <div class="wellness-hero__description">{{ section.settings.description }}</div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if show_button or trust_blocks.size > 0 -%}
+        <div class="wellness-hero__cta">
+          {%- if show_button -%}
+            <a class="wellness-hero__button kk-fws-button{% if section.settings.button_style == 'secondary' %} kk-fws-button--secondary{% endif %}" href="{{ section.settings.button_link }}">
+              <span>{{ section.settings.button_label }}</span>
+              {%- if section.settings.button_arrow -%}
+                <img
+                  class="kk-fws-button__arrow"
+                  src="{{ 'kk-fws-icon-button-arrow.svg' | asset_url }}"
+                  alt=""
+                  width="22"
+                  height="22"
+                  aria-hidden="true"
+                  loading="lazy"
+                >
+              {%- endif -%}
+            </a>
+          {%- endif -%}
+
+          {%- if trust_blocks.size > 0 -%}
+            <ul class="wellness-hero__trust-list">
+              {%- for block in trust_blocks -%}
+                {%- if block.settings.text != blank -%}
+                  <li class="wellness-hero__trust" {{ block.shopify_attributes }}>
+                    <img
+                      class="wellness-hero__trust-icon"
+                      src="{{ 'wellness-hero-check.svg' | asset_url }}"
+                      alt=""
+                      width="20"
+                      height="20"
+                      aria-hidden="true"
+                      loading="lazy"
+                    >
+                    {{- block.settings.text -}}
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .wellness-hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: var(--wellness-min-height, 590px);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: var(--wellness-background, #f5f6f8);
+    font-family: 'DM Sans', Arial, Helvetica, sans-serif;
+    color: var(--wellness-text);
+  }
+
+  .wellness-hero *,
+  .wellness-hero *::before,
+  .wellness-hero *::after {
+    box-sizing: border-box;
+  }
+
+  /* Media: from 190px into the 1140 container (the Figma frame's 340 of 1440) to the container's
+     right edge, so it never runs past the content width on wide screens. The mask fades it into
+     the background on the left (the Figma gradient) and softly on the right. */
+  .wellness-hero {
+    --wellness-container: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .wellness-hero {
+      --wellness-container: 720px;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .wellness-hero {
+      --wellness-container: 960px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .wellness-hero {
+      --wellness-container: 1140px;
+    }
+  }
+
+  .wellness-hero__media {
+    position: absolute;
+    top: 0;
+    right: calc((100% - var(--wellness-container)) / 2 + 15px);
+    bottom: 0;
+    left: calc((100% - var(--wellness-container)) / 2 + var(--wellness-container) * 0.167);
+    z-index: 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 25%, rgba(0, 0, 0, 0.15) 44%, #000 68%, #000 88%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, transparent 25%, rgba(0, 0, 0, 0.15) 44%, #000 68%, #000 88%, transparent 100%);
+  }
+
+  .wellness-hero__media picture {
+    display: contents;
+  }
+
+  .wellness-hero__video,
+  .wellness-hero__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+
+  /* The theme's .container, so the copy lines up with the header and the sections below. */
+  .wellness-hero__container {
+    position: relative;
+    z-index: 2;
+  }
+
+  .wellness-hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 25px;
+    width: 100%;
+    max-width: 620px;
+    padding: 77px 0;
+    text-align: left;
+  }
+
+  .wellness-hero__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+  }
+
+  /* Pill */
+  .wellness-hero__pill {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    padding: 16px 24px 17px 20px;
+    border-radius: 999px;
+    background: #ffffff;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.2;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--wellness-accent);
+  }
+
+  .wellness-hero__pill-dot {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--wellness-accent);
+  }
+
+  .wellness-hero__pill-separator {
+    padding: 0 2px;
+    opacity: 0.35;
+    color: var(--wellness-text);
+  }
+
+  /* Heading + description */
+  .wellness-hero__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .wellness-hero__title {
+    margin: 0;
+    padding: 0;
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(55px, 5.2vw, 104px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -2px;
+    text-align: inherit;
+    text-transform: none;
+    color: var(--wellness-text);
+  }
+
+  .wellness-hero__description,
+  .wellness-hero__description p {
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.55;
+    color: var(--wellness-muted);
+  }
+
+  .wellness-hero__description {
+    max-width: 431px;
+  }
+
+  /* Button + trust items */
+  .wellness-hero__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin-top: 3px;
+  }
+
+  .wellness-hero__trust-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 36px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .wellness-hero__trust {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 1.2;
+    color: var(--wellness-text);
+  }
+
+  .wellness-hero__trust-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Mobile: copy centred on top, media stacked underneath with a fade from the top. */
+  @media (max-width: 767px) {
+    .wellness-hero {
+      flex-direction: column;
+      align-items: stretch;
+      min-height: 0;
+    }
+
+    .wellness-hero__container {
+      order: 1;
+    }
+
+    .wellness-hero__content {
+      align-items: center;
+      gap: 22px;
+      max-width: none;
+      padding: 16px 5px 4px;
+      text-align: center;
+    }
+
+    .wellness-hero__intro {
+      align-items: center;
+      gap: 18px;
+    }
+
+    .wellness-hero__pill {
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 16px;
+      font-size: 12px;
+      letter-spacing: 1.2px;
+    }
+
+
+
+
+
+
+
+    .wellness-hero__copy {
+      align-items: center;
+      gap: 11px;
+      max-width: none;
+    }
+
+    .wellness-hero__title {
+      font-size: clamp(38px, 9vw, 70px);
+      line-height: 1;
+    }
+
+    .wellness-hero__description,
+    .wellness-hero__description p {
+      font-size: 18px;
+    }
+
+    .wellness-hero__cta {
+      align-self: stretch;
+      align-items: center;
+      gap: 12px;
+      margin-top: 0;
+    }
+
+    .wellness-hero__button {
+      width: 100%;
+    }
+
+    .wellness-hero__trust-list {
+      justify-content: center;
+      gap: 8px 18px;
+    }
+
+    .wellness-hero__trust {
+      font-size: 15px;
+    }
+
+    .wellness-hero__media {
+      position: relative;
+      order: 2;
+      inset: auto;
+      height: var(--wellness-media-height-sm, 340px);
+      margin-top: 12px;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+
+    /* Top fade instead of the side mask. */
+    .wellness-hero__media::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, var(--wellness-background) 0%, var(--wellness-background-clear) 38%);
+      pointer-events: none;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .wellness-hero__title {
+      font-size: 46px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Wellness Hero",
+  "tag": "div",
+  "class": "section-wellness-hero",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Pill"
+    },
+    {
+      "type": "text",
+      "id": "pill_text",
+      "label": "Pill text",
+      "default": "Limited time"
+    },
+    {
+      "type": "text",
+      "id": "pill_highlight",
+      "label": "Pill text after the dot",
+      "default": "55% off Subscriptions",
+      "info": "Leave both pill fields empty to hide the pill."
+    },
+    {
+      "type": "header",
+      "content": "Social proof"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_avatars",
+      "label": "Show customer photos",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "avatars",
+      "label": "Customer photos",
+      "info": "One image of the overlapping photos, about 360 × 96px. Leave empty to use the default photos."
+    },
+    {
+      "type": "text",
+      "id": "avatar_count",
+      "label": "Count badge",
+      "default": "700+",
+      "info": "Leave empty to hide the badge."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stars",
+      "label": "Show stars",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "proof_text",
+      "label": "Social proof text",
+      "default": "Trusted by over 700+ Families"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Wellness Sale"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" }
+      ],
+      "default": "h1",
+      "info": "Use H1 only when this is the first section on the page."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Crisp, lab-tested filtered water at home – for less than 5 cents per gallon.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_arrow",
+      "label": "Show arrow on button",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "primary",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Shown on the right on desktop and under the content on mobile. Also used as the video's poster. Leave empty to use the default photo."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Optional. Replaces the image on mobile when there's no video."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "info": "Plays instead of the image."
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL",
+      "info": "Direct .mp4 link. Used when no video is selected above."
+    },
+    {
+      "type": "range",
+      "id": "media_height_mobile",
+      "label": "Media height on mobile",
+      "min": 200,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "default": 340
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "info": "The media fades into this colour.",
+      "default": "#f5f6f8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#0b1638"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Secondary text",
+      "info": "Description and social proof text.",
+      "default": "#4a5068"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Pill text and dot, and the count badge.",
+      "default": "#2764ff"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Stars",
+      "default": "#fbbc04"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum height on desktop",
+      "min": 400,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "default": 590
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Button Trust Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "100-day trial"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wellness Hero",
+      "blocks": [
+        { "type": "trust", "settings": { "text": "100-day trial" } },
+        { "type": "trust", "settings": { "text": "Cancel any time" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

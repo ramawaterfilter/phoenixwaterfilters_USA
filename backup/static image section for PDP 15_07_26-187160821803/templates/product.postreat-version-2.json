@@ -22,7 +22,7 @@
         "custom_liquid_wx43j3": {
           "type": "custom_liquid",
           "settings": {
-            "custom_liquid": "<section class=\"hero\">\n  <div class=\"content\">\n    <h1>\n      <span class=\"white\">The First Refillable</span><br>\n      <span class=\"blue\">Steel Fluoride Filter</span><br>\n      <span class=\"white\">for Home Gravity</span><br>\n      <span class=\"white\">Systems</span>\n    </h1>\n\n    <!-- U.S. Tap Water Badge -->\n    <div class=\"us-water-badge\">\n      <img\n        src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/united-states-flag-icon.svg?v=1783937607\"\n        alt=\"United States Flag\"\n        class=\"us-water-badge__flag\"\n      >\n\n      <span class=\"us-water-badge__text\">\n        Designed for Universal Compatibility.\n      </span>\n    </div>\n\n    <p>\n      Clinically studied. Aluminum-free. Removes\n      <strong>95%+ of fluoride</strong>\n      — without stripping the minerals your body actually needs.\n    </p>\n  </div>\n</section>\n\n<style>\n.us-water-badge {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 12px;\n\n  padding: 10px 18px;\n\n  background: #fff;\n  border: 2px solid #2D5CC7;\n  border-radius: 999px;\n\n  width: fit-content;\n  max-width: 100%;\n  box-sizing: border-box;\n\n  margin-bottom: 20px;\n}\n\n.us-water-badge__flag {\n  width: 34px;\n  height: auto;\n  flex-shrink: 0;\n  display: block;\n}\n\n.us-water-badge__text {\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 16px;\n  font-weight: 600;\n  color: #2f2f2f;\n  line-height: 1.2;\n  white-space: nowrap;\n}\n\n/* Tablet */\n@media screen and (max-width: 768px) {\n  .us-water-badge {\n    gap: 10px;\n    padding: 9px 16px;\n  }\n\n  .us-water-badge__flag {\n    width: 30px;\n  }\n\n  .us-water-badge__text {\n    font-size: 15px;\n  }\n}\n\n/* Mobile */\n@media screen and (max-width: 480px) {\n  .us-water-badge {\n    width: 100%;\n    justify-content: center;\n    padding: 10px 14px;\n    gap: 15px;\n  }\n\n  .us-water-badge__flag {\n    width: 26px;\n  }\n\n  .us-water-badge__text {\n    font-size: 12px;\n    white-space: normal;\n    text-align: left;\n    line-height: 1.3;\n  }\n}\n</style>"
+            "custom_liquid": "<section class=\"hero\">\n  <div class=\"content\">\n    <h1>\n      <span class=\"white\">The First Refillable</span><br>\n      <span class=\"blue\">Steel Fluoride Filter</span><br>\n      <span class=\"white\">for Home Gravity</span><br>\n      <span class=\"white\">Systems</span>\n    </h1>\n\n    <!-- U.S. Tap Water Badge -->\n    <div class=\"us-water-badge\">\n      <img\n        src=\"https://cdn.shopify.com/s/files/1/2644/2852/files/united-states-flag-icon.svg?v=1783937607\"\n        alt=\"United States Flag\"\n        class=\"us-water-badge__flag\"\n      >\n\n      <span class=\"us-water-badge__text\">\n        Designed for Universal Compatibility.\n      </span>\n    </div>\n\n    <p>\n      Clinically studied. Aluminum-free. Removes\n      <strong>95%+ of fluoride</strong>\n      — without stripping the minerals your body actually needs.\n    </p>\n  </div>\n</section>\n\n<style>\n.content h1{\n font-size:6.2rem \n}\n.us-water-badge {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 12px;\n\n  padding: 10px 18px;\n\n  background: #fff;\n  border: 2px solid #2D5CC7;\n  border-radius: 999px;\n\n  width: fit-content;\n  max-width: 100%;\n  box-sizing: border-box;\n\n  margin-bottom: 20px;\n}\n\n.us-water-badge__flag {\n  width: 34px;\n  height: auto;\n  flex-shrink: 0;\n  display: block;\n}\n\n.us-water-badge__text {\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 16px;\n  font-weight: 600;\n  color: #2f2f2f;\n  line-height: 1.2;\n  white-space: nowrap;\n}\n\n/* Tablet */\n@media screen and (max-width: 768px) {\n  .us-water-badge {\n    gap: 10px;\n    padding: 9px 16px;\n  }\n\n  .us-water-badge__flag {\n    width: 30px;\n  }\n\n  .us-water-badge__text {\n    font-size: 15px;\n  }\n}\n\n/* Mobile */\n@media screen and (max-width: 480px) {\n  .us-water-badge {\n    width: 100%;\n    justify-content: center;\n    padding: 10px 14px;\n    gap: 15px;\n  }\n\n  .us-water-badge__flag {\n    width: 26px;\n  }\n\n  .us-water-badge__text {\n    font-size: 12px;\n    white-space: normal;\n    text-align: left;\n    line-height: 1.3;\n  }\n}\n</style>"
           }
         },
         "rating_xUErbe": {
@@ -654,7 +654,8 @@
       "type": "custom-addToCart-section",
       "custom_css": [
         "section {padding-top: 0px; padding-bottom: 0px;}",
-        ".custom-add-to-cart-section__action {margin-top: 1.1rem;}"
+        ".custom-add-to-cart-section__action {margin-top: 1.1rem;}",
+        "button.custom-add-to-cart-section__button {padding: 0px;}"
       ],
       "name": "Custom add to cart",
       "settings": {
@@ -930,7 +931,8 @@
     "custom_add_to_cart_section_NWce8a": {
       "type": "custom-addToCart-section",
       "custom_css": [
-        "section {padding-top: 0px; padding-bottom: 0px;}"
+        "section {padding-top: 0px; padding-bottom: 0px;}",
+        "button.custom-add-to-cart-section__button {padding: 0px;}"
       ],
       "name": "Custom add to cart",
       "settings": {

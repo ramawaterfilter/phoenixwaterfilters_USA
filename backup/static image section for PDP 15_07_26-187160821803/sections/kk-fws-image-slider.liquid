@@ -1,0 +1,423 @@
+{%- comment -%}
+  KK FWS Image Slider — Figma `7809:9999` (desktop), `7809:11367` (mobile).
+
+  A centred intro (eyebrow, heading, text), a Swiper slider of rounded photos with the theme's
+  pagination bullets underneath, then the shared CTA and trust row. Each photo is a "Slide" block.
+
+  Desktop: 560 x 420 slides, 22px apart, the active one centred and the loop's neighbours
+  bleeding off both edges of the viewport. Mobile: one 347 x 260 slide at a time (in a 375
+  frame), clipped to the 20px gutters.
+
+  Swiper is initialised by src/js/sliders.js (the `kk-fws-image-slider-swiper` branch), which
+  picks up every `.swiper-container` on load and finds `.swiper-pagination` in the same
+  <section>. Bullet styles come from the theme (src/css/vendor/swiper.scss); this section only
+  spaces them. The inline script re-runs the init when the theme editor re-renders the section.
+
+  Photography is not committed to assets/: each slide is an image_picker. A slide with no image
+  is skipped on the storefront and shows a placeholder in the theme editor.
+{%- endcomment -%}
+
+{%- liquid
+  assign trust_blocks = section.blocks | where: 'type', 'trust'
+  assign slide_blocks = section.blocks | where: 'type', 'slide'
+
+  assign slide_count = 0
+  for block in slide_blocks
+    if block.settings.image != blank or request.design_mode
+      assign slide_count = slide_count | plus: 1
+    endif
+  endfor
+
+  assign autoplay_delay = 0
+  if section.settings.autoplay
+    assign autoplay_delay = section.settings.autoplay_delay | times: 1000
+  endif
+-%}
+
+<section
+  class="kk-fws-image-slider kk-fws-section"
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handle }}"{% endif %}
+  data-kk-fws-image-slider
+  style="--kk-fws-image-slider-background: {{ section.settings.background_color }};"
+>
+  {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.text != blank -%}
+    <div class="kk-fws-image-slider__container kk-fws-container">
+      <div class="kk-fws-image-slider__intro" data-kk-fws-reveal>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="kk-fws-image-slider__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="kk-fws-image-slider__heading kk-fws-heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.text != blank -%}
+          <div class="kk-fws-image-slider__text">{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if slide_count > 0 -%}
+    <div
+      class="kk-fws-image-slider__slider swiper-container swiper kk-fws-image-slider-swiper"
+      data-autoplay-delay="{{ autoplay_delay }}"
+    >
+      <div class="kk-fws-image-slider__wrapper swiper-wrapper">
+        {%- for block in slide_blocks -%}
+          {%- if block.settings.image != blank -%}
+            <div class="kk-fws-image-slider__slide swiper-slide" {{ block.shopify_attributes }}>
+              {{
+                block.settings.image
+                | image_url: width: 1120
+                | image_tag:
+                  class: 'kk-fws-image-slider__image',
+                  widths: '400, 560, 800, 1120',
+                  sizes: '(max-width: 749px) calc(100vw - 40px), 560px',
+                  loading: 'lazy',
+                  alt: block.settings.image.alt
+              }}
+            </div>
+          {%- elsif request.design_mode -%}
+            <div class="kk-fws-image-slider__slide kk-fws-image-slider__slide--placeholder swiper-slide" {{ block.shopify_attributes }}>
+              {{ 'image' | placeholder_svg_tag: 'kk-fws-image-slider__image' }}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- if section.settings.show_pagination and slide_count > 1 -%}
+      <div class="kk-fws-image-slider__pagination swiper-pagination"></div>
+    {%- endif -%}
+  {%- endif -%}
+
+  <div class="kk-fws-image-slider__container kk-fws-container">
+    {%- render 'kk-fws-cta', section: section, prefix: 'kk-fws-image-slider', trust_blocks: trust_blocks, icon_size: 20 -%}
+  </div>
+</section>
+
+{%- if request.design_mode and slide_count > 0 -%}
+  <script>
+    (function () {
+      var root = document.currentScript && document.currentScript.previousElementSibling;
+      if (!root || !root.hasAttribute('data-kk-fws-image-slider')) return;
+
+      // On first page load main.js has not run yet and initialises every slider itself. When
+      // the editor re-renders just this section, it is already loaded, so init it here.
+      if (window.initSlider && document.body.classList.contains('ready')) {
+        window.initSlider(root.querySelector('.swiper-container'), 0, 'section, aside');
+      }
+    })();
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Figma `7809:9999`: #f5f6f8, 88px top and bottom; intro 820px wide, 48px above the slides,
+     36px from the slides to the button. */
+  .kk-fws-image-slider {
+    --kk-fws-image-slider-ink: var(--primary);
+    --kk-fws-image-slider-body: var(--primary-100);
+    --kk-fws-image-slider-eyebrow: var(--primary-600);
+    --kk-fws-image-slider-slide-width: 56rem;
+    --kk-fws-image-slider-slide-ratio: 4 / 3;
+    /* kk-fws-base.css overrides */
+    --kk-fws-container-max: 82rem;
+    --kk-fws-heading-size: 6rem;
+    --kk-fws-section-padding-sm: 5.2rem;
+    --kk-fws-heading-size-sm: 3.5rem;
+    --kk-fws-cta-margin: 3.6rem;
+    --kk-fws-cta-margin-sm: 2.7rem;
+    --kk-fws-trust-icon: 2rem;
+    --kk-fws-button-size-sm: 2rem;
+
+    overflow: hidden;
+    background: var(--kk-fws-image-slider-background, #f5f6f8);
+  }
+
+  .kk-fws-image-slider__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 4.8rem;
+    text-align: center;
+  }
+
+  .kk-fws-image-slider__eyebrow {
+    margin: 0 0 1.4rem;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    letter-spacing: 0.18rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-image-slider-eyebrow);
+  }
+
+  .kk-fws-image-slider__heading {
+    color: var(--kk-fws-image-slider-ink);
+  }
+
+  .kk-fws-image-slider__text {
+    margin-top: 1.9rem;
+  }
+
+  .kk-fws-image-slider__text,
+  .kk-fws-image-slider__text p {
+    margin-bottom: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.8rem;
+    line-height: 1.55;
+    color: var(--kk-fws-image-slider-body);
+  }
+
+  .kk-fws-image-slider__text p {
+    margin-top: 0;
+  }
+
+  .kk-fws-image-slider__text p + p {
+    margin-top: 1.6rem;
+  }
+
+  /* Slides — Swiper (src/js/sliders.js). From 750px it uses slidesPerView: 'auto', so each slide's width
+     comes from here. */
+
+  .kk-fws-image-slider__slider {
+    width: 100%;
+  }
+
+  .kk-fws-image-slider__slider .kk-fws-image-slider__slide {
+    width: var(--kk-fws-image-slider-slide-width);
+    height: auto;
+    aspect-ratio: var(--kk-fws-image-slider-slide-ratio);
+    overflow: hidden;
+    border-radius: 2.4rem;
+    background: #e6e8ee;
+  }
+
+  .kk-fws-image-slider__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .kk-fws-image-slider__slide--placeholder .kk-fws-image-slider__image {
+    fill: #c4c8d4;
+  }
+
+  /* Bullet styles are the theme's (src/css/vendor/swiper.scss); this only spaces them. */
+  .kk-fws-image-slider .kk-fws-image-slider__pagination {
+    margin-top: 2.4rem;
+  }
+
+  /* Tablet ----------------------------------------------------------------------------- */
+
+  @media (max-width: 989px) {
+    .kk-fws-image-slider {
+      --kk-fws-image-slider-slide-width: 44rem;
+      --kk-fws-heading-size-md: 4.8rem;
+    }
+
+    .kk-fws-image-slider__intro {
+      margin-bottom: 4rem;
+    }
+  }
+
+  /* Mobile — Figma `7809:11367`: 52px top and bottom, 35px under the intro, one 347 x 260 slide
+     at a time inside the 20px gutters, 27px down to a full-width button. */
+
+  @media (max-width: 749px) {
+    .kk-fws-image-slider {
+      --kk-fws-image-slider-slide-ratio: 347 / 260;
+    }
+
+    .kk-fws-image-slider__intro {
+      margin-bottom: 3.5rem;
+    }
+
+    .kk-fws-image-slider__eyebrow {
+      margin-bottom: 0.9rem;
+    }
+
+    .kk-fws-image-slider__heading {
+      letter-spacing: -0.023rem;
+    }
+
+    .kk-fws-image-slider__text {
+      margin-top: 1.3rem;
+    }
+
+    .kk-fws-image-slider__text,
+    .kk-fws-image-slider__text p {
+      font-size: 1.7rem;
+    }
+
+    .kk-fws-image-slider__slider {
+      width: min(100% - 4rem, 54rem);
+      margin: 0 auto;
+    }
+
+    .kk-fws-image-slider .kk-fws-image-slider__pagination {
+      margin-top: 2rem;
+    }
+
+    .kk-fws-image-slider .kk-fws-cta {
+      gap: 1.2rem;
+    }
+
+    .kk-fws-image-slider .kk-fws-button__arrow {
+      width: 2.6rem;
+      height: 2.6rem;
+    }
+
+    .kk-fws-image-slider .kk-fws-trust-list {
+      gap: 0.8rem 1.8rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Image Slider",
+  "tag": "div",
+  "class": "section-kk-fws-image-slider",
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor id",
+      "info": "Optional, without the '#'. Link to it as #your-id."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Slider",
+      "info": "Add \"Slide\" blocks for the photos. Slides without an image are skipped. Autoplay pauses while hovered."
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Time per slide",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "Show pagination",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Call to action",
+      "info": "The button shows only when it has both a label and a link. Add \"Trust item\" blocks for the row underneath."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_arrow",
+      "label": "Show arrow on button",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "primary",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background colour",
+      "default": "#f5f6f8"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Cropped to 4:3 (560 x 420) on desktop. The image's alt text is used."
+        }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Button Trust Item",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Image Slider",
+      "settings": {
+        "eyebrow": "Dual filtration technology",
+        "heading": "Pure Innovation, Pure Water.",
+        "text": "<p>Step into the future with our cutting-edge dual filtration technology. The Phoenix Gravity Water Filter isn't just a product; it's an experience, crafted from the finest AISI 304 Stainless Steel, ensuring durability and elegance. A simple, affordable way to enjoy clean, great-tasting filtered water.</p>",
+        "button_label": "Shop Now",
+        "button_link": "shopify://products/gravity-water-filter"
+      },
+      "blocks": [
+        { "type": "slide" },
+        { "type": "slide" },
+        { "type": "slide" },
+        { "type": "trust", "settings": { "text": "100-day trial" } },
+        { "type": "trust", "settings": { "text": "Cancel any time" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

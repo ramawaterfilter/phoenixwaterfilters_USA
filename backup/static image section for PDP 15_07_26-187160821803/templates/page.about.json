@@ -12,13 +12,8 @@
     "hero_fGiC9Y": {
       "type": "hero",
       "settings": {
-        "eyebrow": "",
         "heading": "About Us",
-        "content": "",
-        "sideimage": "shopify://shop_images/about-phoenix-water-filters.jpg",
-        "section_video_bg": "",
-        "buttonlink": "",
-        "buttontext": ""
+        "content": ""
       }
     },
     "article_callout_66xp3E": {
@@ -74,72 +69,73 @@
         "section_randoimg_position": "bottom"
       }
     },
-    "gallery_NqrkDB": {
-      "type": "gallery",
+    "kk_fws_gallery_about": {
+      "type": "kk-fws-gallery",
       "blocks": {
-        "gallery_images_block_PfRCFJ": {
+        "gallery_images_block_GTmJpj": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-01.jpg"
+            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home.png"
           }
         },
-        "gallery_images_block_CCJWT7": {
+        "gallery_images_block_D3CfhP": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-02.jpg"
+            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-1.png"
           }
         },
-        "gallery_images_block_qX3Fqd": {
+        "gallery_images_block_iPzqzW": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-03.jpg"
+            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-2.png"
           }
         },
-        "gallery_images_block_w7gYzt": {
+        "gallery_images_block_tXmUUi": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-04.jpg"
+            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-3.png"
           }
         },
-        "gallery_images_block_qRpxPB": {
+        "gallery_images_block_eUJehM": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-05.jpg"
+            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-4.png"
           }
         },
-        "gallery_images_block_TFAfTb": {
-          "type": "gallery_images_block",
+        "trust_q8bdk8": {
+          "type": "trust",
           "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-06.jpg"
+            "text": "Cancel any time"
           }
         },
-        "gallery_images_block_AHBK7Y": {
-          "type": "gallery_images_block",
+        "trust_7gggtk": {
+          "type": "trust",
           "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-07.jpg"
-          }
-        },
-        "gallery_images_block_TKg4Uz": {
-          "type": "gallery_images_block",
-          "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-08.jpg"
+            "text": "100-day trial"
           }
         }
       },
       "block_order": [
-        "gallery_images_block_PfRCFJ",
-        "gallery_images_block_CCJWT7",
-        "gallery_images_block_qX3Fqd",
-        "gallery_images_block_w7gYzt",
-        "gallery_images_block_qRpxPB",
-        "gallery_images_block_TFAfTb",
-        "gallery_images_block_AHBK7Y",
-        "gallery_images_block_TKg4Uz"
+        "gallery_images_block_GTmJpj",
+        "gallery_images_block_D3CfhP",
+        "gallery_images_block_iPzqzW",
+        "gallery_images_block_tXmUUi",
+        "gallery_images_block_eUJehM",
+        "trust_q8bdk8",
+        "trust_7gggtk"
       ],
-      "custom_css": [],
+      "name": "KK FWS Gallery",
       "settings": {
-        "gallery_heading": "",
-        "gallery_content": ""
+        "rating_text": "Based on 7495 Reviews",
+        "certification_text": "NSF/ANSI 42 & 372 Certified",
+        "heading": "Enjoy Safe Drinking Water for the Whole Family!",
+        "content": "",
+        "image_alt": "",
+        "button_label": "Shop Now",
+        "button_link": "shopify://products/gravity-water-filter",
+        "button_arrow": true,
+        "button_style": "primary",
+        "background_color": "#ffffff"
       }
     }
   },
@@ -148,6 +144,6 @@
     "article_callout_66xp3E",
     "copy_image_VPPNeV",
     "copy_image_EF7HdE",
-    "gallery_NqrkDB"
+    "kk_fws_gallery_about"
   ]
 }

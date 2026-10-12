@@ -12,13 +12,8 @@
     "hero_jweG6c": {
       "type": "hero",
       "settings": {
-        "eyebrow": "",
         "heading": "Collections",
-        "content": "",
-        "sideimage": "shopify://shop_images/view-products.jpg",
-        "section_video_bg": "",
-        "buttonlink": "",
-        "buttontext": ""
+        "content": ""
       }
     },
     "collection-grid": {

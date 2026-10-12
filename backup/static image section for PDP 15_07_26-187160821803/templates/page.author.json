@@ -42,19 +42,11 @@
     },
     "hero_T9LtRJ": {
       "type": "hero",
-      "custom_css": [
-        "{background: white;}",
-        "h1.mb-4 {text-align: center; padding-bottom: 25px; font-size: 42px; color: black;}"
-      ],
       "name": "Hero",
       "settings": {
-        "eyebrow": "",
         "heading": "Divya",
         "content": "<p>Divya is part of the Phoenix Gravity team, with a strong focus on water filtration systems and customer experience. She works closely on product development and communication, ensuring clarity, reliability, and trust across every stage of the customer journey.</p>",
-        "sideimage": "shopify://shop_images/Right_Video_f9237ad841934f5a9d2be962c3febda4_thumbnail_0000000000_small_jpg.png",
-        "section_video_bg": "",
-        "buttonlink": "",
-        "buttontext": ""
+        "style": "light"
       }
     },
     "custom_blog_Jx3EVe": {

@@ -41,6 +41,7 @@
 }
 
 /* CTA: button + trust badges (snippets/kk-fws-cta.liquid) ---------------------------------- */
+/* The button itself lives in assets/kk-fws-button.css, which loads site-wide. */
 
 .kk-fws-cta {
   display: flex;
@@ -48,34 +49,6 @@
   align-items: center;
   gap: 1.4rem;
   margin-top: var(--kk-fws-cta-margin, 3.6rem);
-}
-
-.kk-fws-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  padding: var(--kk-fws-button-padding, 2.9rem 4.4rem);
-  border-radius: 99.9rem;
-  background: var(--primary-600);
-  box-shadow: 0 1.2rem 1.3rem rgba(39, 100, 255, 0.26);
-  font-family: "Value Sans Bold", sans-serif;
-  font-weight: 700;
-  font-size: var(--kk-fws-button-size, 2.2rem);
-  line-height: 1.2;
-  letter-spacing: 0.14rem;
-  text-align: center;
-  text-decoration: none;
-  text-transform: uppercase;
-  color: #ffffff;
-  transition: opacity 0.2s ease;
-}
-
-.kk-fws-button:hover,
-.kk-fws-button:focus-visible {
-  opacity: 0.9;
-  color: #ffffff;
-  text-decoration: none;
 }
 
 .kk-fws-trust-list {
@@ -140,12 +113,6 @@
   transform: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .kk-fws-button {
-    transition: none;
-  }
-}
-
 /* Tablet -------------------------------------------------------------------------------- */
 
 @media (max-width: 989px) {
@@ -162,11 +129,6 @@
 
   .kk-fws-heading {
     font-size: var(--kk-fws-heading-size-md, 3.8rem);
-  }
-
-  .kk-fws-button {
-    padding: var(--kk-fws-button-padding-md, 2.4rem 4rem);
-    font-size: var(--kk-fws-button-size-md, 2rem);
   }
 
   .kk-fws-trust-list__item {
@@ -192,13 +154,6 @@
   .kk-fws-cta {
     align-self: stretch;
     margin-top: var(--kk-fws-cta-margin-sm, 2.8rem);
-  }
-
-  .kk-fws-button {
-    width: 100%;
-    padding: 2rem 2.4rem;
-    font-size: var(--kk-fws-button-size-sm, 1.9rem);
-    letter-spacing: 0.1rem;
   }
 
   .kk-fws-trust-list {

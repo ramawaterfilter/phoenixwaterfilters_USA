@@ -6,11 +6,16 @@
   section can override layout from its own stylesheet.
 
   Params:
-  - section (required): the calling section; reads settings.button_label / button_link
+  - section (required): the calling section; reads settings.button_label / button_link /
+    button_arrow (checkbox: show the arrow after the label)
   - prefix (required): the section's class root, e.g. 'kk-fws-cards'
   - trust_blocks: the section's blocks of type 'trust'
   - icon_size: intrinsic px size of the trust check icon (default 22)
   - after: optional HTML rendered after the trust list, e.g. a terms link
+
+  A button link of #addtocart on a product page renders snippets/basic-add-to-cart.liquid
+  instead (a real add-to-cart form for the product, as snippets/button.liquid does), styled as
+  the same button by assets/kk-fws-button.css.
 
   Usage:
   {% render 'kk-fws-cta', section: section, prefix: 'kk-fws-cards', trust_blocks: trust_blocks, icon_size: 20 %}
@@ -27,9 +32,22 @@
 
 {%- if show_button or trust_blocks.size > 0 or after != blank -%}
   <div class="{{ prefix }}__cta kk-fws-cta">
-    {%- if show_button -%}
-      <a class="{{ prefix }}__button kk-fws-button" href="{{ section.settings.button_link }}">
+    {%- if show_button and section.settings.button_link == '#addtocart' and product != blank -%}
+      {%- render 'basic-add-to-cart' -%}
+    {%- elsif show_button -%}
+      <a class="{{ prefix }}__button kk-fws-button{% if section.settings.button_style == 'secondary' %} kk-fws-button--secondary{% endif %}" href="{{ section.settings.button_link }}">
         {{- section.settings.button_label -}}
+        {%- if section.settings.button_arrow -%}
+          <img
+            class="kk-fws-button__arrow"
+            src="{{ 'kk-fws-icon-button-arrow.svg' | asset_url }}"
+            alt=""
+            width="22"
+            height="22"
+            aria-hidden="true"
+            loading="lazy"
+          >
+        {%- endif -%}
       </a>
     {%- endif -%}
 

@@ -12,13 +12,8 @@
     "hero_tLttzP": {
       "type": "hero",
       "settings": {
-        "eyebrow": "",
         "heading": "Blogs & Articles",
-        "content": "",
-        "sideimage": "shopify://shop_images/water-filter-blog.jpg",
-        "section_video_bg": "",
-        "buttonlink": "",
-        "buttontext": ""
+        "content": ""
       }
     },
     "custom_code_section_e6TAVd": {

@@ -322,6 +322,22 @@
       "info": "E.g. #kk-fws-offer to jump to the offer section."
     },
     {
+      "type": "checkbox",
+      "id": "button_arrow",
+      "label": "Show arrow on button",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "primary",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ]
+    },
+    {
       "type": "header",
       "content": "Colors"
     },
@@ -346,7 +362,7 @@
     },
     {
       "type": "trust",
-      "name": "Trust item",
+      "name": "Button Trust Item",
       "settings": [
         {
           "type": "text",

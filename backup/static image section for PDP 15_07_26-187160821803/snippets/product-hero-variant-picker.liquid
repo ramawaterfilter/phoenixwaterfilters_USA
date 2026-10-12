@@ -30,7 +30,8 @@ Renders variant image buttons and the hidden variant select for product JavaScri
 
         {% case product.handle %}
           {% when 'wooden-stand-for-gravity-water-filter-system' %}
-            {% case variant.title | strip %}
+            {%- comment -%} No | strip: Shopify drops filters on case tags (rewritten on upload). {%- endcomment -%}
+            {% case variant.title %}
               {% when '1.5 Gallon' %}
                 {% assign variant_image = 'https://cdn.shopify.com/s/files/1/2644/2852/files/01_7.jpg?v=1776065128' %}
               {% when '2.25 Gallon' %}
@@ -39,7 +40,8 @@ Renders variant image buttons and the hidden variant select for product JavaScri
                 {% assign variant_image = 'https://cdn.shopify.com/s/files/1/2644/2852/files/03_5.jpg?v=1776065128' %}
             {% endcase %}
           {% when 'stainless-steel-stand' %}
-            {% case variant.title | strip %}
+            {%- comment -%} No | strip: Shopify drops filters on case tags (rewritten on upload). {%- endcomment -%}
+            {% case variant.title %}
               {% when '1.5 Gallon' %}
                 {% assign variant_image = 'https://cdn.shopify.com/s/files/1/2644/2852/files/01.jpg?v=1779787273' %}
               {% when '2.25 Gallon' %}

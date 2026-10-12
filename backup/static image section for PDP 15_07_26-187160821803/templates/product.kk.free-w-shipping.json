@@ -211,6 +211,7 @@
         "crop_mobile": true,
         "button_label": "Free for this week only",
         "button_link": "#kk-fws-offer",
+        "button_arrow": false,
         "background_color": "#f5f6f8"
       }
     },
@@ -259,6 +260,7 @@
         "heading": "Here's Exactly How the Free Tower Works",
         "button_label": "Free for this week only",
         "button_link": "#kk-fws-offer",
+        "button_arrow": false,
         "background_color": "#ffffff"
       }
     },
@@ -477,6 +479,7 @@
         "heading": "Drinking Tap Water Makes 7.2 million Americans Sick Every Year!",
         "button_label": "Free for this week only",
         "button_link": "#kk-fws-offer",
+        "button_arrow": false,
         "background_color": "#f5f6f8"
       }
     },
@@ -590,7 +593,8 @@
         "no_label": "No",
         "button_label": "Free for this week only",
         "button_link": "#kk-fws-offer",
-        "background_color": "#ffffff"
+        "button_arrow": false,
+        "style": "bg-white"
       }
     },
     "kk_fws_testimonials": {
@@ -671,6 +675,7 @@
         "load_more_label": "Load more reviews",
         "button_label": "Free for this week only",
         "button_link": "#kk-fws-offer",
+        "button_arrow": false,
         "background_color": "#f5f6f8"
       }
     },
@@ -701,6 +706,7 @@
         "text": "<p>Worried the Phoenix Gravity Water Filter sounds too good to be true? Not sure it will really remove as many contaminants as we promise? We stand behind our product 100% - so you can try it at home for 100 days with our money-back guarantee.<\/p><p>If you’re not completely satisfied with the purity of your water, simply return it within 100 days for a full refund, no questions asked.<\/p>",
         "button_label": "Free for this week only",
         "button_link": "#kk-fws-offer",
+        "button_arrow": false,
         "terms_label": "Terms apply",
         "terms_link": "\/pages\/warranty-registration-1",
         "show_background": true,
@@ -786,6 +792,7 @@
         "heading": "It’s Never Been This Easy to Enjoy Safe, Delicious Drinking Water Every Single Day of the Year!",
         "button_label": "Free for this week only",
         "button_link": "#kk-fws-offer",
+        "button_arrow": false,
         "background_color": "#f5f6f8"
       }
     },
@@ -1075,6 +1082,7 @@
         "open_first": true,
         "button_label": "Free for this week only",
         "button_link": "#kk-fws-offer",
+        "button_arrow": false,
         "background_color": "#ffffff"
       }
     },
@@ -1162,6 +1170,7 @@
         "image_alt": "Phoenix Gravity tower in a customer home",
         "button_label": "Free for this week only",
         "button_link": "#kk-fws-offer",
+        "button_arrow": false,
         "background_color": "#ffffff"
       }
     }

@@ -11,21 +11,14 @@
   "sections": {
     "hero_rQPxAA": {
       "type": "hero",
-      "custom_css": [
-        "{background: white;}",
-        ".col-12 {padding-top: 24px; width: 100%;}"
-      ],
       "settings": {
-        "eyebrow": "",
         "heading": "Frequently Asked Questions About Gravity Water Filter Systems",
         "content": "",
-        "section_video_bg": "",
-        "buttonlink": "",
-        "buttontext": ""
+        "style": "light"
       }
     },
     "accordion_tabs_mhKUVe": {
-      "type": "accordion-tabs",
+      "type": "kk-fws-accordion-tabs",
       "blocks": {
         "tab_QEBTJn": {
           "type": "tab",
@@ -237,7 +230,7 @@
         "tab_dzULad": {
           "type": "tab",
           "settings": {
-            "tab_title": "Warranty And 100 Day Money-Back Guarantee"
+            "tab_title": "Warranty & Guarantee"
           }
         },
         "question_answer_XkkHfV": {
@@ -264,7 +257,7 @@
         "tab_TD3D8C": {
           "type": "tab",
           "settings": {
-            "tab_title": "Your Account And Subscriptions"
+            "tab_title": "Account & Subscriptions"
           }
         },
         "question_answer_kEfzth": {
@@ -330,8 +323,14 @@
         "question_answer_NgPmkA"
       ],
       "settings": {
-        "heading": "",
-        "content": "<p>Got Questions? We’ve Got Answers…</p>"
+        "heading": "Got Questions? We’ve Got Answers…",
+        "tabs_label": "FAQ topics",
+        "open_first": true,
+        "button_label": "",
+        "button_link": "",
+        "button_arrow": true,
+        "button_style": "primary",
+        "background_color": "#ffffff"
       }
     },
     "gallery_T3kMUn": {
@@ -406,12 +405,8 @@
       "disabled": true,
       "name": "Hero",
       "settings": {
-        "eyebrow": "",
         "heading": "",
-        "content": "",
-        "section_video_bg": "jr37r9792m",
-        "buttonlink": "",
-        "buttontext": ""
+        "content": ""
       }
     }
   },

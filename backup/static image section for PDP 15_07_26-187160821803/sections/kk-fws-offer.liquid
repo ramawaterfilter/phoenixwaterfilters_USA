@@ -1504,7 +1504,8 @@
                       note in the [data-kk-fws-summary-data] block below.
                     endcomment
                     assign summary_note = section.settings.subscribe_note | replace: '[price]', summary_plan_amount
-                    assign summary_footnote = section.settings.subscribe_footnote | replace: '[value]', section.settings.tower_value_cents | money_without_trailing_zeros
+                    assign summary_tower_value = summary_variant.price | money_without_trailing_zeros
+                    assign summary_footnote = section.settings.subscribe_footnote | replace: '[value]', summary_tower_value
                   else
                     comment
                       ONE-TIME: one variant, one charge. The tower row carries the whole variant
@@ -1556,9 +1557,10 @@
                         <s
                           class="kk-fws-offer__summary-strike"
                           data-kk-fws-summary-tower-strike
+                          data-kk-fws-summary-tower-value
                           {% unless summary_subscribing %}hidden{% endunless %}
                         >
-                          {{- tower_value_cents | money_without_trailing_zeros -}}
+                          {{- summary_variant.price | money_without_trailing_zeros -}}
                         </s>
                         <span class="kk-fws-offer__summary-amount" data-kk-fws-summary-tower-amount>
                           {%- if summary_subscribing -%}
@@ -1635,10 +1637,11 @@
                       {%- comment -%}
                         The tower value struck beside the total (Figma `7809:14913`). Subscription
                         face only — on a one-time purchase the tower is part of the total.
+                        The struck figure is the selected variant's one-time price.
                       {%- endcomment -%}
-                      {%- if tower_value_cents > 0 -%}
-                        <s class="kk-fws-offer__summary-due-strike" data-kk-fws-face="subscribe">
-                          {{- tower_value_cents | money_without_trailing_zeros -}}
+                      {%- if summary_variant.price > 0 -%}
+                        <s class="kk-fws-offer__summary-due-strike" data-kk-fws-face="subscribe" data-kk-fws-summary-tower-value>
+                          {{- summary_variant.price | money_without_trailing_zeros -}}
                         </s>
                       {%- endif -%}
                       <span class="kk-fws-offer__summary-total" data-kk-fws-summary-total>
@@ -1961,7 +1964,7 @@
             endif
           endif
 
-          assign v_tower_value = tower_value_cents | money_without_trailing_zeros
+          assign v_tower_value = variant.price | money_without_trailing_zeros
           assign v_sub_note = section.settings.subscribe_note | replace: '[price]', v_sub_amount
           assign v_sub_footnote = section.settings.subscribe_footnote | replace: '[value]', v_tower_value
         -%}
@@ -1976,6 +1979,7 @@
           "planLabel": {{ v_plan_label | json }},
           "filterLabel": {{ v_filter_label | json }},
           "oncePrice": {{ variant.price | money_without_trailing_zeros | json }},
+          "towerValue": {{ v_tower_value | json }},
           "onceUpgrade": {% if v_once_upgrade_cents > 0 %}{{ v_once_upgrade_cents | money_without_trailing_zeros | json }}{% else %}""{% endif %},
           "subAmount": {{ v_sub_amount | json }},
           "subUpgrade": {{ v_sub_upgrade | json }},
@@ -2203,6 +2207,12 @@
 
         text('tower-amount', subscribing ? towerFreeText : figures.oncePrice);
       }
+
+      // The struck tower value (tower row + beside the total) is the selected variant's
+      // one-time price, so it follows the size/plan choice.
+      summaryCard.querySelectorAll('[data-kk-fws-summary-tower-value]').forEach(function (node) {
+        node.textContent = figures.towerValue;
+      });
 
       // Size premium — subscribe only: the Appstle joining premium (first order above renewal),
       // already inside subTotal, so it shows only once the plan has two pricing cycles. Never on
@@ -4555,6 +4565,12 @@
       "info": "The badge and rating come from the product's metafields when it has them; the fields below are only the fallback. Leave any field empty to hide that line. The product description is shown in the accordion, not here."
     },
     {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "info": "Fallback for the custom.product_badge_text metafield."
+    },
+    {
       "type": "inline_richtext",
       "id": "headline",
       "label": "Headline",
@@ -4565,12 +4581,6 @@
       "id": "introduction",
       "label": "Introduction",
       "info": "Shown under the headline, rating and tap-water pill."
-    },
-    {
-      "type": "text",
-      "id": "badge_text",
-      "label": "Badge text",
-      "info": "Fallback for the custom.product_badge_text metafield."
     },
     {
       "type": "text",
@@ -4866,7 +4876,7 @@
       "id": "tower_value_cents",
       "label": "Tower value (cents)",
       "default": 24900,
-      "info": "Subscribe & Save only: struck through on the tower row and used in the saving line. 24900 = $249."
+      "info": "Splits the one-time price into tower + plan for the step 2 plan cards. The struck tower value and the saving line use the selected variant's one-time price. 24900 = $249."
     },
     {
       "type": "text",
@@ -4932,7 +4942,7 @@
       "id": "subscribe_footnote",
       "label": "Footnote (subscription)",
       "default": "You save [value] on the Stainless Steel Tower today",
-      "info": "[value] is replaced with the tower value."
+      "info": "[value] is replaced with the selected variant's one-time price."
     },
     {
       "type": "text",
@@ -5168,7 +5178,7 @@
     },
     {
       "type": "trust",
-      "name": "Trust item",
+      "name": "Button Trust Item",
       "settings": [
         {
           "type": "select",

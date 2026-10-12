@@ -6,12 +6,17 @@
   carbon photography at the edges). Built for the 100-day free trial message, but every piece
   is a setting, so it works for any short centred pitch.
 
+  Variant — Figma `7809:7897`: "Badge style: Phoenix logo" swaps the badge for the small 48 x 44
+  Phoenix mark (no glow, tighter spacing), and "Width: Wide" widens the heading to 1000px and
+  the text to 821px at 18px.
+
   The decorative background is purely ornamental, so it is a CSS background rather than an
   <img>, and it is dropped below 990px, where the edge photography would sit behind the copy.
 {%- endcomment -%}
 
 {%- liquid
   assign trust_blocks = section.blocks | where: 'type', 'trust'
+  assign badge_style = section.settings.badge_style | default: 'trial'
 
   assign background_url = ''
   if section.settings.show_background
@@ -24,7 +29,7 @@
 -%}
 
 <section
-  class="kk-fws-single-column kk-fws-section{% if background_url != blank %} kk-fws-single-column--decorated{% endif %}"
+  class="kk-fws-single-column kk-fws-section{% if background_url != blank %} kk-fws-single-column--decorated{% endif %}{% if section.settings.show_badge and badge_style == 'logo' %} kk-fws-single-column--logo{% endif %}{% if section.settings.layout_width == 'wide' %} kk-fws-single-column--wide{% endif %}"
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handle }}"{% endif %}
   style="
     --kk-fws-single-column-background: {{ section.settings.background_color }};
@@ -33,7 +38,16 @@
 >
   <div class="kk-fws-single-column__container kk-fws-container">
     <div class="kk-fws-single-column__intro">
-      {%- if section.settings.show_badge -%}
+      {%- if section.settings.show_badge and badge_style == 'logo' -%}
+        <img
+          class="kk-fws-single-column__logo"
+          src="{{ 'kk-fws-phoenix-mark.png' | asset_url }}"
+          alt=""
+          width="48"
+          height="44"
+          loading="lazy"
+        >
+      {%- elsif section.settings.show_badge -%}
         <div class="kk-fws-single-column__badge">
           {%- if section.settings.badge_image != blank -%}
             {{
@@ -89,7 +103,6 @@
     --kk-fws-container-max: 78rem;
     --kk-fws-trust-item-gap: 0.8rem;
     --kk-fws-trust-icon: 2rem;
-    --kk-fws-button-padding: 2.9rem 4.8rem;
 
     position: relative;
     background-color: var(--kk-fws-single-column-background, #ffffff);
@@ -137,6 +150,38 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
+  }
+
+  /* Phoenix logo variant — Figma `7809:7897`: 48 x 44 mark 23px above the heading, the
+     heading 19px above the text, 28px down to the button. */
+  .kk-fws-single-column--logo {
+    --kk-fws-cta-margin: 2.8rem;
+  }
+
+  .kk-fws-single-column--logo .kk-fws-single-column__intro {
+    gap: 2.3rem;
+    margin-bottom: 1.9rem;
+  }
+
+  .kk-fws-single-column__logo {
+    display: block;
+    width: 4.8rem;
+    height: 4.4rem;
+    object-fit: contain;
+  }
+
+  /* Wide: 1000px heading, 821px text at 18px. */
+  .kk-fws-single-column--wide {
+    --kk-fws-container-max: 100rem;
+  }
+
+  .kk-fws-single-column--wide .kk-fws-single-column__text {
+    max-width: 82.1rem;
+  }
+
+  .kk-fws-single-column--wide .kk-fws-single-column__text,
+  .kk-fws-single-column--wide .kk-fws-single-column__text p {
+    font-size: 1.8rem;
   }
 
   .kk-fws-single-column__text,
@@ -201,7 +246,9 @@
     }
 
     .kk-fws-single-column__text,
-    .kk-fws-single-column__text p {
+    .kk-fws-single-column__text p,
+    .kk-fws-single-column--wide .kk-fws-single-column__text,
+    .kk-fws-single-column--wide .kk-fws-single-column__text p {
       font-size: 1.7rem;
     }
   }
@@ -227,10 +274,32 @@
       "default": true
     },
     {
+      "type": "select",
+      "id": "badge_style",
+      "label": "Badge style",
+      "default": "trial",
+      "options": [
+        { "value": "trial", "label": "Trial badge" },
+        { "value": "logo", "label": "Phoenix logo" }
+      ],
+      "info": "Phoenix logo shows the small 48 x 44 mark with tighter spacing."
+    },
+    {
+      "type": "select",
+      "id": "layout_width",
+      "label": "Width",
+      "default": "standard",
+      "options": [
+        { "value": "standard", "label": "Standard" },
+        { "value": "wide", "label": "Wide" }
+      ],
+      "info": "Wide: 1000px heading, 821px text."
+    },
+    {
       "type": "image_picker",
       "id": "badge_image",
       "label": "Badge image",
-      "info": "Shown at 200 x 200. Falls back to the 100-day free trial badge from the design."
+      "info": "Trial badge style only. Shown at 200 x 200. Falls back to the 100-day free trial badge from the design."
     },
     {
       "type": "inline_richtext",
@@ -257,6 +326,22 @@
       "id": "button_link",
       "label": "Button link",
       "info": "E.g. #kk-fws-offer to jump to the offer section."
+    },
+    {
+      "type": "checkbox",
+      "id": "button_arrow",
+      "label": "Show arrow on button",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "primary",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ]
     },
     {
       "type": "text",
@@ -297,7 +382,7 @@
   "blocks": [
     {
       "type": "trust",
-      "name": "Trust item",
+      "name": "Button Trust Item",
       "settings": [
         {
           "type": "text",

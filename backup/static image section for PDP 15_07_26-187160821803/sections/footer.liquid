@@ -1,156 +1,121 @@
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <div class="site-footer__inner">
-        <div class="site-footer__col1">
-          {% if section.settings.footer-logo %}
-            <a href="/" aria-label="footer logo">
-              {{ section.settings.footer-logo | image_url: width: 1000 | image_tag }}
-            </a>
-          {% endif %}
+{%- comment -%}
+  Footer — Figma `7809:11029` (desktop) and `7809:12316` (mobile).
 
-          {{ section.settings.col1_text }}
-        </div>
+  Four columns over a ruled bottom bar: logo with the address details (Column 1 Text, then
+  the phone and email settings), two link columns (Column 2 / 3 Text: the first bold line is
+  the column heading, then a bulleted list of links), and the newsletter sign-up. The bottom
+  bar holds the copyright (Disclaimer, [dyn-year] = current year) and the Terms.
+  Styles: src/css/components/_footer.scss.
+{%- endcomment -%}
 
-        <div class="site-footer__col2">
-          {{ section.settings.col2_text }}
-        </div>
+<div class="site-footer__container kk-fws-container">
+  <div class="site-footer__inner">
+    <div class="site-footer__col1">
+      {% if section.settings.footer-logo %}
+        <a class="site-footer__logo" href="{{ routes.root_url }}" aria-label="Home">
+          {%- if section.settings.logo_max_width != blank -%}
+            {%- capture logo_style %}max-width: {{ section.settings.logo_max_width }}px;{% endcapture -%}
+            {{ section.settings.footer-logo | image_url: width: 1000 | image_tag: style: logo_style }}
+          {%- else -%}
+            {{ section.settings.footer-logo | image_url: width: 1000 | image_tag }}
+          {%- endif -%}
+        </a>
+      {% endif %}
 
-        <div class="site-footer__col3">
-          {{ section.settings.col3_text }}
-        </div>
-
-        <div class="site-footer__col4">
-
-          {% render 'newsletter-form' %}
-
-          <div class="footer-socials">
-
-            <p>
-              <strong>{{ section.settings.socials_title }}</strong>
-            </p>
-
-            <ul class="socials">
-              {% if section.settings.socials_fb != blank %}
-                <li>
-                  <a href="{{ section.settings.socials_fb }}" target="_blank">
-                    <img src="{{ 'icon-facebook.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
-                  </a>
-                </li>
-              {% endif %}
-              {% if section.settings.socials_tw != blank %}
-                <li>
-                  <a href="{{ section.settings.socials_tw }}" target="_blank">
-                    <img src="{{ 'icon-x-twitter.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
-                  </a>
-                </li>
-              {% endif %}
-              {% if section.settings.socials_ig != blank %}
-                <li>
-                  <a href="{{ section.settings.socials_ig }}" target="_blank">
-                    <img src="{{ 'icon-instagram.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
-                  </a>
-                </li>
-              {% endif %}
-              {% if section.settings.socials_li != blank %}
-                <li>
-                  <a href="{{ section.settings.socials_li }}" target="_blank">
-                    <img src="{{ 'icon-linkedin.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
-                  </a>
-                </li>
-              {% endif %}
-              {% if section.settings.socials_yt != blank %}
-                <li>
-                  <a href="{{ section.settings.socials_yt }}" target="_blank">
-                    <img src="{{ 'icon-youtube.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
-                  </a>
-                </li>
-              {% endif %}
-            </ul>
-          </div>
-        </div>
-
-        <div class="site-footer__col5">
-          {% comment %} <ul class="payment-methods">
-                                                {%- for type in shop.enabled_payment_types -%}
-                                                  <li class="list-payment__item">
-                                                    {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
-                                                  </li>
-                                                {%- endfor -%}
-                                        </ul> {% endcomment %}
-        </div>
-
-        <div class="site-footer__bottom">
-          <div class="col-12 d-flex justify-content-between align-items-start pb-5">
-            {% if section.settings.contact_title != blank %}
-              <p class="contact-title">{{ section.settings.contact_title }}</p>
-            {% endif %}
-          {% comment %} {% render 'localization' %} {% endcomment %}
-          </div>
-
-          {% if section.settings.email != blank or section.settings.phone != blank or section.settings.terms != blank %}
-
-            <div class="contacts d-flex">
-              {% if section.settings.phone != blank %}
-                <div class="detail col-12 col-md-4 col-lg-3">
-                  <div class="ico-bg">
-                    <img src="{{ 'icon-phone.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
-                  </div>
-                  <div class="wrap">
-                    <p class="title">Phone Number</p>
-                    <a href="tel:{{ section.settings.phone }}">{{ section.settings.phone }}</a>
-                  </div>
-                </div>
-              {% endif %}
-
-              {% if section.settings.email != blank %}
-                <div class="detail col-12 col-md-8 col-lg-4">
-                  <div class="ico-bg">
-                    <img src="{{ 'icon-mail.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
-                  </div>
-                  <div class="wrap">
-                    <p class="title">Email Address</p>
-                    <a href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a>
-                  </div>
-                </div>
-              {% endif %}
-
-              {% if section.settings.terms != blank %}
-                <div class="detail terms col-12 col-lg-5">
-                  <div class="ico-bg">
-                    <img src="{{ 'icon-alert.svg' | asset_url }}" loading="lazy" alt="Phoenix Gravity Water Filter" />
-                  </div>
-                  {{ section.settings.terms }}
-                </div>
-              {% endif %}
-            </div>
-          {% endif %}
-        </div>
+      <div class="site-footer__details">
+        {{ section.settings.col1_text }}
+        {%- if section.settings.phone != blank -%}
+          <p><strong>Phone:</strong> <a href="tel:{{ section.settings.phone | remove: ' ' }}">{{ section.settings.phone }}</a></p>
+        {%- endif -%}
+        {%- if section.settings.email != blank -%}
+          <p><strong>Email:</strong> <a href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a></p>
+        {%- endif -%}
       </div>
     </div>
-  </div>
-</div>
-<div class="copyright container-fluid">
-  <div class="row justify-content-center align-items-center">
-    <div class="col-12 p-5 text-center">
-      {% if section.settings.disclaimer != blank %}
-        {% assign current_year = 'now' | date: '%Y' %}
 
+    <div class="site-footer__col2 site-footer__links">
+      {{ section.settings.col2_text }}
+    </div>
 
-        {% assign disclaimer_with_year = section.settings.disclaimer | replace: '[dyn-year]', current_year %}
+    <div class="site-footer__col3 site-footer__links">
+      {{ section.settings.col3_text }}
+    </div>
 
+    <div class="site-footer__col4">
+      {%- if section.settings.newsletter_title != blank -%}
+        <p class="site-footer__heading">{{ section.settings.newsletter_title }}</p>
+      {%- endif -%}
+      {%- if section.settings.newsletter_text != blank -%}
+        <div class="site-footer__newsletter-text">{{ section.settings.newsletter_text }}</div>
+      {%- endif -%}
 
-        {{ disclaimer_with_year }}
-      {% endif %}
+      {% render 'newsletter-form',
+        hide_title: true,
+        arrow: 'kk-fws-icon-footer-arrow.svg',
+        success_message: section.settings.newsletter_success
+      %}
+
+      {%- if section.settings.show_socials -%}
+        <div class="footer-socials">
+          {%- if section.settings.socials_title != blank -%}
+            <p><strong>{{ section.settings.socials_title }}</strong></p>
+          {%- endif -%}
+
+          <ul class="socials">
+            {% if section.settings.socials_fb != blank %}
+              <li>
+                <a href="{{ section.settings.socials_fb }}" target="_blank">
+                  <img src="{{ 'icon-facebook.svg' | asset_url }}" loading="lazy" alt="Facebook" />
+                </a>
+              </li>
+            {% endif %}
+            {% if section.settings.socials_tw != blank %}
+              <li>
+                <a href="{{ section.settings.socials_tw }}" target="_blank">
+                  <img src="{{ 'icon-x-twitter.svg' | asset_url }}" loading="lazy" alt="X" />
+                </a>
+              </li>
+            {% endif %}
+            {% if section.settings.socials_ig != blank %}
+              <li>
+                <a href="{{ section.settings.socials_ig }}" target="_blank">
+                  <img src="{{ 'icon-instagram.svg' | asset_url }}" loading="lazy" alt="Instagram" />
+                </a>
+              </li>
+            {% endif %}
+            {% if section.settings.socials_yt != blank %}
+              <li>
+                <a href="{{ section.settings.socials_yt }}" target="_blank">
+                  <img src="{{ 'icon-youtube.svg' | asset_url }}" loading="lazy" alt="YouTube" />
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      {%- endif -%}
     </div>
   </div>
+
+  {%- if section.settings.disclaimer != blank or section.settings.terms != blank -%}
+    <div class="site-footer__bottom">
+      {%- if section.settings.disclaimer != blank -%}
+        {%- assign current_year = 'now' | date: '%Y' -%}
+        <div class="site-footer__copyright">
+          {{ section.settings.disclaimer | replace: '[dyn-year]', current_year }}
+        </div>
+      {%- endif -%}
+      {%- if section.settings.terms != blank -%}
+        <div class="site-footer__terms">{{ section.settings.terms }}</div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
 </div>
 
 {% schema %}
   {
     "name": "Footer",
     "tag": "footer",
-    "class": "site-footer pb-0",
+    "class": "site-footer",
     "settings": [
       {
         "type": "image_picker",
@@ -158,19 +123,50 @@
         "label": "Footer Logo"
       },
       {
+        "type": "number",
+        "id": "logo_max_width",
+        "label": "Footer logo max width (px)",
+        "info": "Optional. Leave blank for the default 200px."
+      },
+      {
         "type": "richtext",
         "id": "col1_text",
-        "label": "Column 1 Text"
+        "label": "Column 1 Text",
+        "info": "Address details. Start each with a bold label, e.g. **Address:** then the address. Phone and email are added underneath from their settings below."
       },
       {
         "type": "richtext",
         "id": "col2_text",
-        "label": "Column 2 Text"
+        "label": "Column 2 Text",
+        "info": "A bold first line for the column heading, then a bulleted list of links."
       },
       {
         "type": "richtext",
         "id": "col3_text",
-        "label": "Column 3 Text"
+        "label": "Column 3 Text",
+        "info": "A bold first line for the column heading, then a bulleted list of links."
+      }, {
+        "type": "text",
+        "id": "newsletter_title",
+        "label": "Newsletter heading",
+        "default": "Stay in the loop"
+      }, {
+        "type": "richtext",
+        "id": "newsletter_text",
+        "label": "Newsletter text",
+        "default": "<p>An easy, affordable way to enjoy clean, great-tasting filtered water.</p>"
+      }, {
+        "type": "text",
+        "id": "newsletter_success",
+        "label": "Newsletter success message",
+        "info": "Shown after someone signs up.",
+        "default": "Thank you, your subscription has been received."
+      }, {
+        "type": "checkbox",
+        "id": "show_socials",
+        "label": "Show social icons",
+        "info": "Under the newsletter sign-up. Not part of the current design.",
+        "default": false
       }, {
         "type": "text",
         "id": "socials_title",
@@ -195,7 +191,8 @@
       }, {
         "type": "text",
         "id": "contact_title",
-        "label": "Contacts Title"
+        "label": "Contacts Title",
+        "info": "No longer shown in the footer."
       }, {
         "type": "text",
         "id": "phone",
@@ -211,7 +208,8 @@
       }, {
         "type": "richtext",
         "id": "disclaimer",
-        "label": "Disclaimer"
+        "label": "Disclaimer",
+        "info": "Copyright line. [dyn-year] shows the current year."
       }
     ],
     "presets": [

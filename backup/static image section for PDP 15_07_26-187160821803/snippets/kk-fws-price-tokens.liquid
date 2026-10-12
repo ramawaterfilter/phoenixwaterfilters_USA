@@ -1,0 +1,23 @@
+{%- comment -%}
+  Replaces price tokens in authored copy with the live figures, so no price is ever typed
+  into a setting. Used by sections/kk-fws-offer-single.liquid.
+
+  Params:
+  - text (required): the copy
+  - tokens (required): "[token]~~value||[token]~~value…", built once by the section
+
+  Usage:
+  {% render 'kk-fws-price-tokens', text: section.settings.plan_title, tokens: price_tokens %}
+{%- endcomment -%}
+
+{%- liquid
+  assign output = text
+  if output contains '['
+    assign pairs = tokens | split: '||'
+    for pair in pairs
+      assign parts = pair | split: '~~'
+      assign output = output | replace: parts[0], parts[1]
+    endfor
+  endif
+  echo output
+-%}

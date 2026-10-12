@@ -1,96 +1,555 @@
-{% assign style_row = 'justify-content-center justify-content-md-start' %}
-{% assign style_col = 'col-11 col-md-8 col-lg-8 col-xl-10' %}
-{% assign style_class = '' %}
-{% assign style_slider = 'testimonial' %}
-{% assign style_paragraph = '' %}
+{%- comment -%}
+  Testimonial Section — restyled to match sections/kk-fws-testimonials.liquid (Figma `7809:10742`).
 
-{% if section.settings.layout == 'style-2' %}
-  {% assign style_row = 'justify-content-center' %}
-  {% assign style_col = 'col-11 col-md-10 offset-md-1' %}
-  {% assign style_class = 'alt' %}
-  {% assign style_slider = 'testimonial-alt' %}
-  {% assign style_paragraph = 'col-lg-9 pb-5' %}
-{% endif %}
-<div class="background-image-container {{ style_class }}"></div>
+  Rating strip (stars, review count, certification) above a centred heading and optional copy,
+  a 3-column masonry of review cards (stars, "Verified Review", quote, initial avatar and name),
+  an optional "load more" link, then the CTA and its trust items.
 
-<div class="{{ style_class }} {{ section.settings.custom_class }}" id="{{ section.settings.custom_id }}">
+  Existing settings keep their ids so the 35 templates using this section carry over:
+  sub_header is the review count beside the stars; "Style" is now the background (Style 1 =
+  White, Style 2 = Light, via the legacy .alt rule in src/css/sections/_testimonials.scss);
+  the button keeps button_text / button_url / button_aftertext.
+{%- endcomment -%}
+
+{%- liquid
+  assign review_blocks = section.blocks | where: 'type', 'text'
+  assign initial_count = section.settings.initial_count | default: 6
+  assign has_more = false
+  if review_blocks.size > initial_count
+    assign has_more = true
+  endif
+
+  assign show_trust = false
+  if section.settings.show_trust_items
+    if section.settings.trust_text_1 != blank or section.settings.trust_text_2 != blank
+      assign show_trust = true
+    endif
+  endif
+-%}
+
+<div class="background-image-container{% if section.settings.layout == 'style-2' %} alt{% endif %}"></div>
+
+<div
+  class="testimonials-grid {{ section.settings.custom_class }}"
+  id="{{ section.settings.custom_id }}"
+  data-testimonials-grid
+>
   <div class="container">
-    <div class="row {{ style_row }}">
-      <div class="{{ style_col }}">
-        {% if section.settings.layout == 'style-1' %}
-          <img
-            src="{{ 'stars.svg' | asset_url }}"
-            class="stars pb-3" alt="Phoenix Gravity Water Filter"
-            loading="lazy" />
-        {% endif %}
-        {% if section.settings.heading %}
-          <h2>{{ section.settings.heading }}</h2>
-        {% endif %}
-        {% if section.settings.paragraph %}
-          <div class="content {{ style_paragraph }}">
-            {{ section.settings.paragraph }}
-          </div>
-        {% endif %}
-      </div>
+    <div class="testimonials-grid__intro">
+      {%- if section.settings.sub_header != blank or section.settings.certification_text != blank -%}
+        <div class="testimonials-grid__rating">
+          {%- if section.settings.sub_header != blank -%}
+            <img
+              class="testimonials-grid__rating-stars"
+              src="{{ 'kk-fws-icon-stars-gold.svg' | asset_url }}"
+              alt=""
+              width="150"
+              height="25"
+              loading="lazy"
+            >
+            <span class="testimonials-grid__rating-text">{{ section.settings.sub_header }}</span>
+          {%- endif -%}
+          {%- if section.settings.sub_header != blank and section.settings.certification_text != blank -%}
+            <span class="testimonials-grid__rating-dot" aria-hidden="true"></span>
+          {%- endif -%}
+          {%- if section.settings.certification_text != blank -%}
+            <span class="testimonials-grid__certification">
+              <img
+                class="testimonials-grid__certification-icon"
+                src="{{ 'kk-fws-icon-shield-check.svg' | asset_url }}"
+                alt=""
+                width="22"
+                height="22"
+                aria-hidden="true"
+                loading="lazy"
+              >
+              {{- section.settings.certification_text -}}
+            </span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="testimonials-grid__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.paragraph != blank -%}
+        <div class="testimonials-grid__copy">{{ section.settings.paragraph }}</div>
+      {%- endif -%}
     </div>
 
-    {% if section.settings.layout == 'style-1' %}
-      <div class="row flex-row justify-content-center justify-content-md-start align-items-center pb-5">
-
-        <div class="col-11 ">
-          {% if section.settings.sub_header != blank %}
-
-            <p class="review-totals mb-0">{{ section.settings.sub_header }}</p>
-
-          {% endif %}
-        </div>
-
-        {% if section.settings.button_url %}
-          <div class="col-11 ">
-            <div class="btn-container">
-              <a class="btn btn-primary d-block mb-4" href="{{ section.settings.button_url }}">
-                {{ section.settings.button_text }}
-              </a>
-
-              {% if section.settings.button_aftertext %}
-                <p class="small">{{ section.settings.button_aftertext }}</p>
-              {% endif %}
+    {%- if review_blocks.size > 0 -%}
+      <ul class="testimonials-grid__grid" id="testimonials-grid-{{ section.id }}">
+        {%- for block in review_blocks -%}
+          {%- assign reviewer = block.settings.reviewer | strip -%}
+          <li
+            class="testimonials-grid__card"
+            {% if forloop.index > initial_count %}hidden data-testimonials-more{% endif %}
+            {{ block.shopify_attributes }}
+          >
+            <div class="testimonials-grid__card-head">
+              <img
+                class="testimonials-grid__card-stars"
+                src="{{ 'kk-fws-icon-stars-gold.svg' | asset_url }}"
+                alt="{{ section.settings.stars_label | escape }}"
+                width="116"
+                height="19"
+                loading="lazy"
+              >
+              {%- if section.settings.verified_text != blank -%}
+                <span class="testimonials-grid__verified">
+                  <img
+                    class="testimonials-grid__verified-icon"
+                    src="{{ 'kk-fws-icon-check-blue.svg' | asset_url }}"
+                    alt=""
+                    width="16"
+                    height="16"
+                    aria-hidden="true"
+                    loading="lazy"
+                  >
+                  {{- section.settings.verified_text -}}
+                </span>
+              {%- endif -%}
             </div>
-          </div>
-        {% endif %}
-      </div>
-    {% endif %}
 
-    <div class="row flex-row justify-space align-items-start">
+            {%- if block.settings.quote != blank -%}
+              {%- comment -%} Drop quote marks typed into the copy; the card adds its own. {%- endcomment -%}
+              {%- liquid
+                assign quote = block.settings.quote | strip
+                assign quote = quote | replace: '<p>“', '<p>' | replace: '<p>"', '<p>' | replace: '<p>‘', '<p>'
+                assign quote = quote | replace: '”</p>', '</p>' | replace: '"</p>', '</p>' | replace: '’</p>', '</p>'
+              -%}
+              <blockquote class="testimonials-grid__quote">{{ quote }}</blockquote>
+            {%- endif -%}
 
-      <div class="swiper-outer">
-        <div class="swiper-container swiper {{ style_slider }} pb-5">
-          <div class="swiper-wrapper">
-            {% for block in section.blocks %}
-              <div class="swiper-slide">
-                <div class="testimonial-tile bg-white">
-                  <div class="testimonial-quote">
-                    {{ block.settings.quote }}
-                  </div>
-                  {% if block.settings.reviewer != blank %}
-                    <h3 class="testimonial-reviewer">
-                      {{ block.settings.reviewer }}
-                      {% if block.settings.reviewer_subtext != blank %}<br/>
-                        <span>{{ block.settings.reviewer_subtext }}</span>
-                      {% endif% %}
-                    </h3>
-                  {% endif% %}
-                </div>
-              </div>
-            {% endfor %}
-          </div>
+            {%- if reviewer != blank -%}
+              <p class="testimonials-grid__author">
+                <span class="testimonials-grid__avatar" aria-hidden="true">
+                  {{- reviewer | slice: 0 | upcase -}}
+                </span>
+                <span class="testimonials-grid__name">{{ reviewer }}</span>
+              </p>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if has_more and section.settings.load_more_label != blank -%}
+      <button
+        type="button"
+        class="testimonials-grid__load-more"
+        data-testimonials-load-more
+        aria-controls="testimonials-grid-{{ section.id }}"
+      >
+        {{- section.settings.load_more_label -}}
+        <img
+          class="testimonials-grid__load-more-icon"
+          src="{{ 'kk-fws-icon-chevron.svg' | asset_url }}"
+          alt=""
+          width="12"
+          height="7"
+          aria-hidden="true"
+        >
+      </button>
+    {%- endif -%}
+
+    {%- if section.settings.button_url != blank and section.settings.button_text != blank -%}
+      {%- comment -%} Same markup as snippets/button.liquid, which reads different setting ids. {%- endcomment -%}
+      <div class="testimonials-grid__cta">
+        <div class="btn-container mx-auto text-center">
+          {%- if section.settings.button_url == '#addtocart' and product != blank -%}
+            {% render 'basic-add-to-cart' %}
+          {%- else -%}
+          <a class="kk-fws-button{% if section.settings.button_style == 'secondary' %} kk-fws-button--secondary{% endif %} {% if show_trust %}mb-0{% else %}mb-4{% endif %}" href="{{ section.settings.button_url }}">
+            {{- section.settings.button_text -}}
+            {%- if section.settings.button_arrow -%}
+              <img
+                class="kk-fws-button__arrow"
+                src="{{ 'kk-fws-icon-button-arrow.svg' | asset_url }}"
+                alt=""
+                width="22"
+                height="22"
+                aria-hidden="true"
+                loading="lazy"
+              >
+            {%- endif -%}
+          </a>
+          {%- endif -%}
+          {%- if show_trust -%}
+            <ul class="kk-fws-button-trust">
+              {%- for i in (1..2) -%}
+                {%- assign trust_key = 'trust_text_' | append: i -%}
+                {%- if section.settings[trust_key] != blank -%}
+                  <li class="kk-fws-button-trust__item">
+                    <img
+                      class="kk-fws-button-trust__icon"
+                      src="{{ 'wellness-hero-check.svg' | asset_url }}"
+                      alt=""
+                      width="20"
+                      height="20"
+                      aria-hidden="true"
+                      loading="lazy"
+                    >
+                    {{- section.settings[trust_key] -}}
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+          {%- if section.settings.button_aftertext != blank -%}
+            <p class="small">{{ section.settings.button_aftertext }}</p>
+          {%- endif -%}
         </div>
-
-        <div class="swiper-scrollbar mt-lg-5"></div>
       </div>
-    </div>
+    {%- endif -%}
   </div>
 </div>
+
+{%- if has_more -%}
+  <script>
+    (function () {
+      var root = document.currentScript && document.currentScript.previousElementSibling;
+      if (!root || !root.hasAttribute('data-testimonials-grid')) return;
+
+      var button = root.querySelector('[data-testimonials-load-more]');
+      if (!button) return;
+
+      var step = {{ section.settings.load_more_count | default: 3 }};
+
+      button.addEventListener('click', function () {
+        var pending = root.querySelectorAll('[data-testimonials-more][hidden]');
+        for (var i = 0; i < pending.length && i < step; i++) {
+          pending[i].hidden = false;
+        }
+
+        // Focus the first newly shown card so keyboard and screen-reader users land on it.
+        if (pending[0]) {
+          pending[0].setAttribute('tabindex', '-1');
+          pending[0].focus({ preventScroll: true });
+        }
+
+        if (pending.length <= step) button.hidden = true;
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Same layout and sizes as .kk-fws-testimonials. */
+  .testimonials-grid {
+    --testimonials-grid-ink: var(--primary);
+    --testimonials-grid-blue: var(--primary-600);
+  }
+
+  .testimonials-grid__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.1rem;
+    max-width: 86rem;
+    margin: 0 auto 4rem;
+    text-align: center;
+  }
+
+  .testimonials-grid__rating {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem 1.4rem;
+  }
+
+  .testimonials-grid__rating-stars {
+    display: block;
+    width: 15rem;
+    height: 2.5rem;
+  }
+
+  .testimonials-grid__rating-text {
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.9rem;
+    line-height: 1;
+    color: var(--testimonials-grid-ink);
+  }
+
+  .testimonials-grid__rating-dot {
+    flex-shrink: 0;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: #a3a7bf;
+  }
+
+  .testimonials-grid__certification {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+    color: var(--testimonials-grid-blue);
+  }
+
+  .testimonials-grid__certification-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  /* Outranks the legacy ".section-testimonials .alt h2" rule (src/css/sections/_testimonials.scss). */
+  section.section-testimonials .testimonials-grid__heading {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  .testimonials-grid__copy p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Masonry: three columns, 24px apart; cards fill top-to-bottom, column by column. */
+  .testimonials-grid__grid {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    columns: 3;
+    column-gap: 2.4rem;
+    list-style: none;
+  }
+
+  .testimonials-grid__card {
+    display: flex;
+    flex-direction: column;
+    gap: 2.2rem;
+    box-sizing: border-box;
+    margin: 0 0 2.4rem;
+    padding: 3rem 2.9rem 2.8rem;
+    break-inside: avoid;
+    border: 1px solid #e6e8ec;
+    border-radius: 1.6rem;
+    background: #ffffff;
+    box-shadow: 0 0.8rem 1.2rem rgba(11, 22, 56, 0.05);
+  }
+
+  .testimonials-grid__card[hidden] {
+    display: none;
+  }
+
+  .testimonials-grid__card:focus {
+    outline: none;
+  }
+
+  .testimonials-grid__card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    margin-bottom: -0.4rem;
+  }
+
+  .testimonials-grid__card-stars {
+    display: block;
+    width: 11.6rem;
+    height: 1.9rem;
+    object-fit: contain;
+    object-position: left center;
+  }
+
+  .testimonials-grid__verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    color: var(--testimonials-grid-blue);
+  }
+
+  .testimonials-grid__verified-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  /* Quote marks are added here rather than in the copy, so editors can paste reviews as-is. */
+  .testimonials-grid__quote {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.8rem;
+    line-height: 1.5;
+    color: var(--testimonials-grid-ink);
+  }
+
+  .testimonials-grid__quote p {
+    margin: 0;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+  }
+
+  .testimonials-grid__quote p + p {
+    margin-top: 1em;
+  }
+
+  .testimonials-grid__quote > :first-child::before {
+    content: '\201C';
+  }
+
+  .testimonials-grid__quote > :last-child::after {
+    content: '\201D';
+  }
+
+  .testimonials-grid__author {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin: 0;
+  }
+
+  .testimonials-grid__avatar {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: 50%;
+    background: var(--testimonials-grid-blue);
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1;
+    color: #ffffff;
+  }
+
+  .testimonials-grid__name {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.7rem;
+    line-height: 1.2;
+    color: var(--testimonials-grid-ink);
+  }
+
+  /* Tertiary "load more": a text link, quieter than the CTA below it. */
+  .testimonials-grid__load-more {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    width: auto;
+    margin: 1.2rem auto 0;
+    padding: 0.4rem 0;
+    border: 0;
+    background: none;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.4rem;
+    text-transform: none;
+    color: var(--testimonials-grid-blue);
+    cursor: pointer;
+  }
+
+  .testimonials-grid__load-more:hover,
+  .testimonials-grid__load-more:focus-visible {
+    background: none;
+    text-decoration-thickness: 2px;
+    color: var(--testimonials-grid-blue);
+  }
+
+  .testimonials-grid__load-more[hidden] {
+    display: none;
+  }
+
+  /* The theme chevron points up; turn it to point down. */
+  .testimonials-grid__load-more-icon {
+    display: block;
+    width: 1.2rem;
+    height: 0.73rem;
+    transform: rotate(180deg);
+  }
+
+  .testimonials-grid__cta {
+    margin-top: 3.6rem;
+  }
+
+  @media (max-width: 989px) {
+    .testimonials-grid__grid {
+      columns: 2;
+      column-gap: 2rem;
+    }
+
+    .testimonials-grid__card {
+      margin-bottom: 2rem;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .testimonials-grid__intro {
+      gap: 1.4rem;
+      margin-bottom: 2.4rem;
+    }
+
+    .testimonials-grid__rating-stars {
+      width: 11rem;
+      height: 1.83rem;
+    }
+
+    .testimonials-grid__rating-text {
+      font-size: 1.7rem;
+    }
+
+    .testimonials-grid__certification {
+      letter-spacing: 0.1rem;
+    }
+
+    .testimonials-grid__grid {
+      columns: 1;
+    }
+
+    .testimonials-grid__card {
+      gap: 1.8rem;
+      margin-bottom: 1.4rem;
+      padding: 2.4rem 2.2rem;
+    }
+
+    .testimonials-grid__quote {
+      font-size: 1.7rem;
+    }
+
+    .testimonials-grid__load-more {
+      font-size: 1.6rem;
+    }
+
+    .testimonials-grid__avatar {
+      font-size: 1.7rem;
+    }
+
+    .testimonials-grid__name {
+      font-size: 1.6rem;
+    }
+
+    .testimonials-grid__cta {
+      margin-top: 2.4rem;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
   {
@@ -105,16 +564,30 @@
       {
         "type": "select",
         "id": "layout",
-        "label": "Style",
+        "label": "Background",
+        "default": "style-1",
         "options": [
           {
             "value": "style-1",
-            "label": "Style 1"
+            "label": "White"
           }, {
             "value": "style-2",
-            "label": "Style 2"
+            "label": "Light"
           }
         ]
+      },
+      {
+        "type": "text",
+        "id": "sub_header",
+        "label": "Review count",
+        "info": "Shown beside the stars above the heading, e.g. Based on 7495 Reviews. Leave empty to hide the stars."
+      },
+      {
+        "type": "text",
+        "id": "certification_text",
+        "label": "Certification text",
+        "default": "NSF/ANSI 42 & 372 Certified",
+        "info": "Shown after the review count with a shield icon. Leave empty to hide."
       },
       {
         "type": "text",
@@ -125,12 +598,57 @@
       {
         "type": "richtext",
         "id": "paragraph",
-        "label": "Paragraph"
-      }, {
+        "label": "Copy below heading",
+        "info": "Optional."
+      },
+      {
+        "type": "header",
+        "content": "Review cards"
+      },
+      {
         "type": "text",
-        "id": "sub_header",
-        "label": "Subheader Text"
-      }, {
+        "id": "verified_text",
+        "label": "Verified label",
+        "default": "Verified Review",
+        "info": "Shown on every card. Leave empty to hide."
+      },
+      {
+        "type": "text",
+        "id": "stars_label",
+        "label": "Star rating description",
+        "default": "5 out of 5 stars",
+        "info": "Read by screen readers for each card's stars."
+      },
+      {
+        "type": "range",
+        "id": "initial_count",
+        "label": "Cards shown at first",
+        "min": 3,
+        "max": 18,
+        "step": 3,
+        "default": 6
+      },
+      {
+        "type": "range",
+        "id": "load_more_count",
+        "label": "Cards added per click",
+        "min": 3,
+        "max": 12,
+        "step": 3,
+        "default": 3
+      },
+      {
+        "type": "text",
+        "id": "load_more_label",
+        "label": "Load more link label",
+        "default": "Load more reviews",
+        "info": "Only shows when there are more reviews than \"Cards shown at first\"."
+      },
+      {
+        "type": "header",
+        "content": "Button"
+      },
+      {
         "type": "text",
         "id": "button_text",
         "label": "Button text"
@@ -138,6 +656,36 @@
         "type": "url",
         "id": "button_url",
         "label": "Button Url"
+      }, {
+        "type": "checkbox",
+        "id": "button_arrow",
+        "label": "Show arrow on button",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "button_style",
+        "label": "Button style",
+        "default": "primary",
+        "options": [
+          { "value": "primary", "label": "Primary" },
+          { "value": "secondary", "label": "Secondary" }
+        ]
+      }, {
+        "type": "checkbox",
+        "id": "show_trust_items",
+        "label": "Show trust items under the button",
+        "default": false
+      }, {
+        "type": "text",
+        "id": "trust_text_1",
+        "label": "Trust item 1",
+        "default": "100-day trial"
+      }, {
+        "type": "text",
+        "id": "trust_text_2",
+        "label": "Trust item 2",
+        "default": "Cancel any time"
       }, {
         "type": "text",
         "id": "button_aftertext",
@@ -161,15 +709,16 @@
         "type": "text",
         "name": "Testimonial",
         "settings": [
-
           {
             "type": "richtext",
             "id": "quote",
-            "label": "Quote"
+            "label": "Quote",
+            "info": "Quote marks are added automatically."
           }, {
             "type": "text",
             "id": "reviewer",
-            "label": "Reviewer Name"
+            "label": "Reviewer Name",
+            "info": "The avatar shows the first letter."
           }
         ]
       }

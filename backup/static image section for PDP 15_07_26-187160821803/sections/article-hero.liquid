@@ -11,18 +11,19 @@
     </div>
   </div>
 </section>
-
+ {% if section.settings.publisher_logo != blank %}
 <section class="article-header p-0">
   <div class="container">
     <div class="row justify-content-center align-items-center">
       <div class="col-12 text-center">
-        {% if section.settings.publisher_logo != blank %}
+       
           {{ section.settings.publisher_logo | image_url: width: 600 | image_tag: class: 'publisher' }}
-        {% endif %}
+       
       </div>
     </div>
   </div>
 </section>
+ {% endif %}
 
 
 <section class="article-author">

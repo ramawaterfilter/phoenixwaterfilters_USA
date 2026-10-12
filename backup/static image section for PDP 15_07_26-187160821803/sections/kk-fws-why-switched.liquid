@@ -138,9 +138,6 @@
     --kk-fws-trust-size: 2rem;
     --kk-fws-trust-size-md: 1.8rem;
     --kk-fws-trust-icon: 2.4rem;
-    --kk-fws-button-padding: 3.2rem 4.8rem;
-    --kk-fws-button-size: 2.4rem;
-    --kk-fws-button-size-sm: 2rem;
 
     background: var(--kk-fws-why-switched-background, var(--light));
   }
@@ -474,6 +471,22 @@
       "info": "E.g. #kk-fws-offer to jump to the offer section."
     },
     {
+      "type": "checkbox",
+      "id": "button_arrow",
+      "label": "Show arrow on button",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "primary",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ]
+    },
+    {
       "type": "header",
       "content": "Colors"
     },
@@ -523,7 +536,7 @@
     },
     {
       "type": "trust",
-      "name": "Trust item",
+      "name": "Button Trust Item",
       "settings": [
         {
           "type": "text",

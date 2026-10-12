@@ -86,10 +86,6 @@
     --kk-fws-trust-gap: 0.8rem 3.2rem;
     --kk-fws-trust-item-gap: 0.9rem;
     --kk-fws-trust-size: 1.7rem;
-    --kk-fws-button-padding: 2.8rem 4rem;
-    --kk-fws-button-padding-md: 2.8rem 4rem;
-    --kk-fws-button-size: 2rem;
-    --kk-fws-button-size-sm: 1.8rem;
 
     background: var(--kk-fws-tap-warning-background, var(--light));
   }
@@ -319,6 +315,22 @@
       "info": "E.g. #kk-fws-offer to jump to the offer section."
     },
     {
+      "type": "checkbox",
+      "id": "button_arrow",
+      "label": "Show arrow on button",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "primary",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ]
+    },
+    {
       "type": "header",
       "content": "Colors"
     },
@@ -345,7 +357,7 @@
     },
     {
       "type": "trust",
-      "name": "Trust item",
+      "name": "Button Trust Item",
       "settings": [
         {
           "type": "text",

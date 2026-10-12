@@ -223,10 +223,14 @@
     --kk-fws-faq-blue: var(--primary-600);
     --kk-fws-faq-rule: var(--light-alt);
     /* kk-fws-base.css overrides */
-    --kk-fws-container-max: 104.1rem;
+    --kk-fws-container-max: 64rem;
 
     background: var(--kk-fws-faq-background, #ffffff);
     scroll-margin-top: 2rem;
+
+    @media (min-width: 989px) {
+       --kk-fws-container-max:   104.1rem;
+    }
   }
 
   .kk-fws-faq__heading {
@@ -612,6 +616,22 @@
       "info": "E.g. #kk-fws-offer to jump to the offer section."
     },
     {
+      "type": "checkbox",
+      "id": "button_arrow",
+      "label": "Show arrow on button",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "primary",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ]
+    },
+    {
       "type": "header",
       "content": "Colors"
     },
@@ -652,7 +672,7 @@
     },
     {
       "type": "trust",
-      "name": "Trust item",
+      "name": "Button Trust Item",
       "settings": [
         {
           "type": "text",

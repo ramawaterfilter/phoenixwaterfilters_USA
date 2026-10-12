@@ -13,10 +13,7 @@
   assign trust_blocks = section.blocks | where: 'type', 'trust'
 -%}
 
-<section
-  class="kk-fws-comparison kk-fws-section"
-  style="--kk-fws-comparison-background: {{ section.settings.background_color }};"
->
+<section class="kk-fws-comparison kk-fws-comparison--{{ section.settings.style | default: 'bg-white' }} kk-fws-section">
   <div class="kk-fws-comparison__container kk-fws-container">
     {%- if section.settings.heading != blank -%}
       <h2 class="kk-fws-comparison__heading kk-fws-heading">{{ section.settings.heading }}</h2>
@@ -150,7 +147,16 @@
     --kk-fws-cta-margin: 6.4rem;
     --kk-fws-cta-margin-sm: 3.2rem;
 
-    background: var(--kk-fws-comparison-background, #ffffff);
+    --kk-fws-comparison-panel: var(--light);
+
+    background: #ffffff;
+  }
+
+  /* On the light background the panel goes white for contrast. */
+  .kk-fws-comparison--bg-light {
+    --kk-fws-comparison-panel: #ffffff;
+
+    background: var(--light);
   }
 
   .kk-fws-comparison__sr {
@@ -180,7 +186,7 @@
     position: relative;
     padding: 2rem 4.4rem 2.8rem;
     border-radius: 3.2rem;
-    background: var(--light);
+    background: var(--kk-fws-comparison-panel);
   }
 
   /* The navy Phoenix card — Figma `7809:15688`. Positioned over the Phoenix column of the
@@ -227,6 +233,7 @@
     font-size: 2.2rem;
     line-height: 1.25;
     text-align: center;
+    overflow-wrap: anywhere;
     color: var(--kk-fws-comparison-ink);
   }
 
@@ -438,16 +445,12 @@
       padding: 0 0.2rem;
     }
 
+    /* Figma `7809:11669`: every mark in a 26px box on mobile. */
     .kk-fws-comparison__mark--yes-badge,
     .kk-fws-comparison__mark--yes,
     .kk-fws-comparison__mark--no {
       width: 2.6rem;
       height: 2.6rem;
-    }
-
-    .kk-fws-comparison__mark--no {
-      width: 2.2rem;
-      height: 2.2rem;
     }
   }
 {% endstylesheet %}
@@ -459,6 +462,23 @@
   "class": "section-kk-fws-comparison",
   "max_blocks": 14,
   "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Background",
+      "info": "On the light background the table panel turns white.",
+      "default": "bg-white",
+      "options": [
+        {
+          "label": "White",
+          "value": "bg-white"
+        },
+        {
+          "label": "Light",
+          "value": "bg-light"
+        }
+      ]
+    },
     {
       "type": "inline_richtext",
       "id": "heading",
@@ -553,14 +573,20 @@
       "info": "Point this at the on-page offer section, e.g. #kk-fws-offer."
     },
     {
-      "type": "header",
-      "content": "Colors"
+      "type": "checkbox",
+      "id": "button_arrow",
+      "label": "Show arrow on button",
+      "default": true
     },
     {
-      "type": "color",
-      "id": "background_color",
-      "label": "Background",
-      "default": "#ffffff"
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "primary",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ]
     }
   ],
   "blocks": [
@@ -602,7 +628,7 @@
     },
     {
       "type": "trust",
-      "name": "Trust item",
+      "name": "Button Trust Item",
       "settings": [
         {
           "type": "text",

@@ -1,0 +1,110 @@
+{%- comment -%}
+  Social proof row: overlapping customer photos, a count badge, five stars and a line of text.
+  Figma `7809:10270` (used in the Wellness Hero and above the Comparison Table heading).
+  Styles live in assets/customer-proof.css.
+
+  Renders nothing when every part is off or empty.
+
+  Params:
+  - settings (required): the calling section's settings, read for show_avatars (checkbox),
+    avatars (image_picker; empty uses assets/wellness-hero-avatars.png), avatar_count (text),
+    show_stars (checkbox) and proof_text (text)
+  - align: 'start' (default) or 'center'
+  - loading: image loading for the photos, 'lazy' (default) or 'eager' above the fold
+  - prefix: put in front of every setting id, e.g. 'page_hero_' to read the global Theme
+    settings (settings.page_hero_proof_text …). Default: none.
+
+  Colours come from CSS custom properties the section can set: --customer-proof-text,
+  --customer-proof-accent, --customer-proof-stars and --customer-proof-ring (the badge outline,
+  usually the section background).
+
+  Usage:
+  {% render 'customer-proof', settings: section.settings, align: 'center' %}
+  {% render 'customer-proof', settings: settings, prefix: 'page_hero_', align: 'center' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign align = align | default: 'start'
+  assign loading = loading | default: 'lazy'
+  assign prefix = prefix | default: ''
+
+  assign key = prefix | append: 'show_avatars'
+  assign proof_show_avatars = settings[key]
+  assign key = prefix | append: 'avatars'
+  assign proof_avatars = settings[key]
+  assign key = prefix | append: 'avatar_count'
+  assign proof_avatar_count = settings[key]
+  assign key = prefix | append: 'show_stars'
+  assign proof_show_stars = settings[key]
+  assign key = prefix | append: 'proof_text'
+  assign proof_text = settings[key]
+
+  assign show_photos = false
+  if proof_show_avatars or proof_avatar_count != blank
+    assign show_photos = true
+  endif
+
+  assign show_rating = false
+  if proof_show_stars or proof_text != blank
+    assign show_rating = true
+  endif
+-%}
+
+{%- if show_photos or show_rating -%}
+  {{ 'customer-proof.css' | asset_url | stylesheet_tag }}
+
+  <div class="customer-proof customer-proof--{{ align }}">
+    {%- if show_photos -%}
+      <div class="customer-proof__avatars">
+        {%- if proof_show_avatars -%}
+          {%- if proof_avatars != blank -%}
+            {{
+              proof_avatars
+              | image_url: width: 360
+              | image_tag: class: 'customer-proof__avatars-image', loading: loading, alt: ''
+            }}
+          {%- else -%}
+            <img
+              class="customer-proof__avatars-image"
+              src="{{ 'wellness-hero-avatars.png' | asset_url }}"
+              alt=""
+              width="165"
+              height="44"
+              loading="{{ loading }}"
+            >
+          {%- endif -%}
+        {%- endif -%}
+        {%- if proof_avatar_count != blank -%}
+          <span class="customer-proof__count">{{ proof_avatar_count }}</span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if show_rating -%}
+      <div class="customer-proof__rating">
+        {%- if proof_show_stars -%}
+          {%- comment -%} Same shape as assets/kk-fws-icon-stars-gold.svg, inline so the colour is editable. {%- endcomment -%}
+          <svg
+            class="customer-proof__stars"
+            width="120"
+            height="20"
+            viewBox="0 0 120 20"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            role="img"
+            aria-label="5 out of 5 stars"
+          >
+            <path d="M10 1L12.6 6.6L18.6 7.3L14.2 11.4L15.3 17.4L10 14.5L4.7 17.4L5.8 11.4L1.4 7.3L7.4 6.6L10 1Z"/>
+            <path d="M34 1L36.6 6.6L42.6 7.3L38.2 11.4L39.3 17.4L34 14.5L28.7 17.4L29.8 11.4L25.4 7.3L31.4 6.6L34 1Z"/>
+            <path d="M58 1L60.6 6.6L66.6 7.3L62.2 11.4L63.3 17.4L58 14.5L52.7 17.4L53.8 11.4L49.4 7.3L55.4 6.6L58 1Z"/>
+            <path d="M82 1L84.6 6.6L90.6 7.3L86.2 11.4L87.3 17.4L82 14.5L76.7 17.4L77.8 11.4L73.4 7.3L79.4 6.6L82 1Z"/>
+            <path d="M106 1L108.6 6.6L114.6 7.3L110.2 11.4L111.3 17.4L106 14.5L100.7 17.4L101.8 11.4L97.4 7.3L103.4 6.6L106 1Z"/>
+          </svg>
+        {%- endif -%}
+        {%- if proof_text != blank -%}
+          <span class="customer-proof__text">{{ proof_text }}</span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}

@@ -1,0 +1,128 @@
+{%- comment -%}
+  Collection product card — Figma `7809:13971` (badge) and `7809:14154` (saving). Used by
+  sections/product-grid.liquid, which holds the styles.
+
+  Badge, one or none:
+  - the product's badge text (metafield custom.product_badge_text, e.g. "Best seller") as a
+    navy pill. A badged product shows its price only, no crossed-out price.
+  - otherwise, when the shown variant has a compare-at price above its price, a blue
+    "Save N%" pill and the compare-at price crossed out. N = (compare-at - price) / compare-at,
+    rounded to the nearest whole number.
+
+  Rating: Shopify's standard reviews metafields when present, else the figures in Judge.me's
+  badge metafield. Hidden when there are no reviews.
+
+  Params:
+  - product (required)
+
+  Usage:
+  {% render 'collection-card', product: product %}
+{%- endcomment -%}
+
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign price = variant.price
+  assign compare_at = variant.compare_at_price | default: 0
+  assign badge_text = product.metafields.custom.product_badge_text.value
+
+  assign saving = 0
+  if badge_text == blank and compare_at > price
+    assign saving = compare_at | minus: price | times: 100.0 | divided_by: compare_at | round
+  endif
+
+  assign rating = blank
+  assign rating_count = 0
+  if product.metafields.reviews.rating.value != blank
+    assign rating = product.metafields.reviews.rating.value.rating
+    assign rating_count = product.metafields.reviews.rating_count.value | plus: 0
+  elsif product.metafields.judgeme.badge != blank
+    assign judgeme = product.metafields.judgeme.badge
+    if judgeme contains "data-average-rating='"
+      assign rating = judgeme | split: "data-average-rating='" | last | split: "'" | first | plus: 0
+      assign rating_count = judgeme | split: "data-number-of-reviews='" | last | split: "'" | first | plus: 0
+    endif
+  endif
+
+  if rating_count > 0
+    assign rating = rating | times: 100 | round | divided_by: 100.0
+    assign rating_whole = rating | floor
+    if rating == rating_whole
+      assign rating_label = rating_whole
+    else
+      assign rating_label = rating
+    endif
+    assign rating_fill = rating | times: 20
+  endif
+-%}
+
+<a class="collection-card" href="{{ product.url }}">
+  <div class="collection-card__media">
+    {%- if badge_text != blank -%}
+      <span class="collection-card__badge">{{ badge_text }}</span>
+    {%- elsif saving > 0 -%}
+      <span class="collection-card__badge collection-card__badge--saving">Save {{ saving }}%</span>
+    {%- endif -%}
+
+    {%- if product.featured_image -%}
+      {{
+        product.featured_image
+        | image_url: width: 600
+        | image_tag:
+          class: 'collection-card__image',
+          widths: '300, 450, 600',
+          sizes: '(min-width: 990px) 160px, 40vw',
+          loading: 'lazy'
+      }}
+    {%- else -%}
+      {{ 'image' | placeholder_svg_tag: 'collection-card__image collection-card__image--placeholder' }}
+    {%- endif -%}
+  </div>
+
+  <div class="collection-card__body">
+    <div class="collection-card__info">
+      {%- if rating_count > 0 -%}
+        <div class="collection-card__rating">
+          <span class="collection-card__stars" style="--collection-card-fill: {{ rating_fill }}%;" role="img" aria-label="{{ rating_label }} out of 5 stars">
+            {%- capture stars -%}
+              <svg width="100" height="16" viewBox="0 0 100 16" aria-hidden="true" focusable="false">
+                <path d="M10 0.8L12.08 5.28L16.88 5.84L13.36 9.12L14.24 13.92L10 11.6L5.76 13.92L6.64 9.12L3.12 5.84L7.92 5.28L10 0.8Z"/>
+                <path d="M29.2 0.8L31.28 5.28L36.08 5.84L32.56 9.12L33.44 13.92L29.2 11.6L24.96 13.92L25.84 9.12L22.32 5.84L27.12 5.28L29.2 0.8Z"/>
+                <path d="M48.4 0.8L50.48 5.28L55.28 5.84L51.76 9.12L52.64 13.92L48.4 11.6L44.16 13.92L45.04 9.12L41.52 5.84L46.32 5.28L48.4 0.8Z"/>
+                <path d="M67.6 0.8L69.68 5.28L74.48 5.84L70.96 9.12L71.84 13.92L67.6 11.6L63.36 13.92L64.24 9.12L60.72 5.84L65.52 5.28L67.6 0.8Z"/>
+                <path d="M86.8 0.8L88.88 5.28L93.68 5.84L90.16 9.12L91.04 13.92L86.8 11.6L82.56 13.92L83.44 9.12L79.92 5.84L84.72 5.28L86.8 0.8Z"/>
+              </svg>
+            {%- endcapture -%}
+            <span class="collection-card__stars-empty">{{ stars }}</span>
+            <span class="collection-card__stars-full">{{ stars }}</span>
+          </span>
+          <span class="collection-card__rating-text">
+            {{- rating_label }}/5 · {{ rating_count }}
+            {{ rating_count | pluralize: 'review', 'reviews' -}}
+          </span>
+        </div>
+      {%- endif -%}
+
+      <h3 class="collection-card__title">{{ product.title }}</h3>
+
+      <p class="collection-card__price">
+        <span class="collection-card__price-now">{{ price | money }}</span>
+        {%- if saving > 0 -%}
+          <s class="collection-card__price-was">{{ compare_at | money }}</s>
+        {%- endif -%}
+      </p>
+    </div>
+
+    <span class="collection-card__button">
+      {{- 'products.product.buy_now' | t -}}
+      <img
+        class="collection-card__button-icon"
+        src="{{ 'kk-fws-icon-button-arrow.svg' | asset_url }}"
+        alt=""
+        width="18"
+        height="18"
+        aria-hidden="true"
+        loading="lazy"
+      >
+    </span>
+  </div>
+</a>

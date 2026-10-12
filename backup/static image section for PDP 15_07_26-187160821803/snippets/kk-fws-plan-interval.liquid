@@ -1,0 +1,42 @@
+{%- comment -%}
+  Outputs a selling plan's delivery cadence as words, e.g. "every 4 months", "every month".
+
+  Appstle encodes the cadence at the start of the plan's option value
+  ("4MONTH4MONTHMIN_CYCLES=NULL…"), so the count is whatever precedes the first unit name.
+  Falls back to the plan's name when the value doesn't start that way.
+
+  Params:
+  - selling_plan (required)
+
+  Usage:
+  {%- capture interval -%}{% render 'kk-fws-plan-interval', selling_plan: allocation.selling_plan %}{%- endcapture -%}
+{%- endcomment -%}
+
+{%- liquid
+  assign plan_value = selling_plan.options.first.value | default: '' | upcase
+  assign interval = ''
+
+  assign units = 'DAY,WEEK,MONTH,YEAR' | split: ','
+  for unit in units
+    if plan_value contains unit
+      assign count_text = plan_value | split: unit | first
+      assign count = count_text | plus: 0
+      assign count_check = count | append: ''
+      if count > 0 and count_check == count_text
+        assign unit_word = unit | downcase
+        if count == 1
+          assign interval = 'every ' | append: unit_word
+        else
+          assign interval = 'every ' | append: count | append: ' ' | append: unit_word | append: 's'
+        endif
+        break
+      endif
+    endif
+  endfor
+
+  if interval == blank
+    assign interval = selling_plan.name | downcase
+  endif
+
+  echo interval
+-%}
