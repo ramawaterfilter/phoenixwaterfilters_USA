@@ -8,6 +8,13 @@
   if section.settings.style == 'bg-dark'
     assign is_dark = true
   endif
+
+  assign column_image_width = section.settings.img_width | default: 0 | plus: 0
+  assign background_image_width = column_image_width
+  if column_image_width <= 0
+    assign column_image_width = section.settings.column_img.width
+    assign background_image_width = section.settings.section_bgimg.width
+  endif
 -%}
 
 <div class="{{ section.settings.custom_class }} layout-{{ section.settings.layout }}{% if is_dark %} copy-image--dark{% endif %}" id="{{ section.settings.custom_id }}">
@@ -42,7 +49,6 @@
   {% if section.settings.layout == 'centered-copy' %}
     {% assign col_one_class = 'col-10 col-lg-12 order-2 ' %}
     {% assign col_two_class = 'col-11 col-lg-8 order-1 copy-col' %}
-    {% assign animation_class = 'view-animation fade-left' %}
     {% assign row_settings = 'justify-content-center' %}
     {% assign animation_class = 'view-animation fade-up' %}
     {% assign h2_setting = 'col-10 text-center mb-5' %}
@@ -51,7 +57,6 @@
   {% if section.settings.large_image == 'img-lrg' and section.settings.layout == 'copy-image' %} 
     {% assign col_one_class = 'col-12 col-lg-4 order-1 order-lg-2 mt-5 mt-lg-0 mo-pad' %}
     {% assign col_two_class = 'col-11 col-lg-8 order-2 order-lg-1 copy-col' %}
-    {% assign animation_class = 'view-animation fade-left' %}
     {% assign row_settings = 'justify-content-center justify-content-md-start' %}
     {% assign animation_class = 'view-animation fade-up img-lrg' %}
     {% assign li_width = 'd-flex align-items-start py-2 me-lg-3 max-li-width' %}
@@ -69,7 +74,6 @@
 
     {% if section.settings.section_bgimg != blank   %} 
      {{ section.settings.section_bgimg | image_url: width: 1920 | image_tag: class: "d-none d-lg-block"  }}
-  {% elsif section.settings.section_bgimg != blank %} 
     {% endif %}
   </div>
 
@@ -78,15 +82,12 @@
     <div class="row {{ section.settings.vertical_align }} {{ row_settings }}">
 
       <div class="{{ col_one_class }}">
-        {% assign img_classes = 'img-fluid
-         d-block mx-auto mb-5 mb-lg-0 rounded' %}
+        {% assign img_classes = 'img-fluid d-block mx-auto mb-5 mb-lg-0 rounded' %}
 
-        {% if section.settings.layout == 'image-copy' %}
-          {% assign img_classes = 'img-fluid d-block mx-auto mb-5 mb-lg-0 rounded' %}
-        {% elsif section.settings.layout == 'copy' and section.settings.layout != blank %}
+        {% if section.settings.layout == 'copy' %}
           {% assign img_classes = 'img-fluid d-block mb-5 max-width-image rounded' %}
           {% if copy_centered %}{% assign img_classes = img_classes | append: ' mx-auto' %}{% endif %}
-        {% elsif section.settings.layout == 'copy-image-copy' and section.settings.layout != blank %}
+        {% elsif section.settings.layout == 'copy-image-copy' %}
           {% assign img_classes = 'img-fluid d-block mx-auto rounded mt-5' %}
         {% endif %}
 
@@ -94,19 +95,14 @@
           
           {% if section.settings.video_id != blank %}
              <div class="video-preview-container view-animation fade-up" data-wistia-vid-id="{{ section.settings.video_id }}"></div>
-            {% comment %} <div class="video-preview-container ">    
-                <script src="https://fast.wistia.com/embed/medias/{{ section.settings.video_id }}.jsonp" async></script></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_embed wistia_async_{{ section.settings.video_id }} seo=true videoFoam=true" style="height:100%;position:relative;width:100%"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/{{ section.settings.video_id }}/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;"   loading="lazy"/>
-                </div></div></div></div>
-              </div> {% endcomment %}
           {% endif %}
 
           {% if section.settings.column_img != blank %} 
             <img
               src="{{ section.settings.column_img | image_url: width: 1920 }}"
               class="{{ img_classes }} {{ animation_class }}" alt="Phoenix Gravity Water Filter"
-              {% if section.settings.img_width %}
-              width="{{ section.settings.img_width }}"
-              {% endif %}
+              width="{{ column_image_width }}"
+              height="{{ column_image_width | divided_by: section.settings.column_img.aspect_ratio | round }}"
               loading="lazy" />
 
               {% elsif section.settings.section_bgimg != blank and section.settings.layout == 'image-copy' %} 
@@ -114,15 +110,10 @@
                  <img
               src="{{ section.settings.section_bgimg | image_url: width: 1920 }}"
               class="{{ img_classes }} {{ animation_class }} d-lg-none" alt="Phoenix Gravity Water Filter"
-              {% if section.settings.img_width %}
-              width="{{ section.settings.img_width }}"
-              {% endif %}
+              width="{{ background_image_width }}"
+              height="{{ background_image_width | divided_by: section.settings.section_bgimg.aspect_ratio | round }}"
               loading="lazy" />
 
-          {% else %}
-            {% if section.settings.layout != 'copy' %}
-               
-            {% endif %}
           {% endif %}
         {% endif %}
       </div>
@@ -157,7 +148,7 @@
         {% if section.settings.layout == 'copy-image-copy' %}
           {% if section.settings.video_id != blank %}
             <div class="video-preview-container my-5">    
-                <script src="https://fast.wistia.com/embed/medias/{{ section.settings.video_id }}.jsonp" async></script></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_embed wistia_async_{{ section.settings.video_id }} seo=true videoFoam=true" style="height:100%;position:relative;width:100%"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/{{ section.settings.video_id }}/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;" />
+                <script src="https://fast.wistia.com/embed/medias/{{ section.settings.video_id }}.jsonp" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_embed wistia_async_{{ section.settings.video_id }} seo=true videoFoam=true" style="height:100%;position:relative;width:100%"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/{{ section.settings.video_id }}/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;" />
                 </div></div></div></div>
               </div>
           {% endif %}
@@ -166,12 +157,9 @@
             <img
               src="{{ section.settings.column_img | image_url: width: 1920 }}"
               class="{{ img_classes }} {{ animation_class }}" alt="Phoenix Gravity Water Filter"
-              {% if section.settings.img_width > 0 %}
-              width="{{ section.settings.img_width }}"
-              {% endif %}
+              width="{{ column_image_width }}"
+              height="{{ column_image_width | divided_by: section.settings.column_img.aspect_ratio | round }}"
               loading="lazy" />
-
-          {% else %}
 
           {% endif %}
 
@@ -192,7 +180,7 @@
                     {{ block.settings.feature_icon | image_url: width: 200 | image_tag: class: "img-fluid feature-icon  me-3", loading: "lazy" }}
                   {% else %}
                     
-                      <img src="{{ 'icon-features-tick.svg' | asset_url }}" class="img-fluid feature-icon  me-3" alt="Phoenix Gravity Water Filter" loading="lazy" />
+                      <img src="{{ 'icon-features-tick.svg' | asset_url }}" class="img-fluid feature-icon  me-3" alt="Phoenix Gravity Water Filter" width="24" height="24" loading="lazy" />
                     
                   {% endif %}
 
@@ -228,6 +216,16 @@
 </div>
 
 {% stylesheet %}
+  .section-copy-image img.img-fluid.rounded {
+    height: auto;
+    object-fit: contain;
+  }
+
+  .section-copy-image img.img-fluid.img-lrg {
+    position: static;
+    transform: none;
+  }
+
   /* Phoenix mark above the heading, as in the Cards Section (Figma `7809:10190`). */
   .copy-col__logo {
     display: block;

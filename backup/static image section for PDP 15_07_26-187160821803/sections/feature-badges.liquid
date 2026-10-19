@@ -80,7 +80,7 @@
 {% if feature_badges_items_output != blank %}
   <div
     class="feature-badges feature-badges--{{ section.settings.layout }}"
-    style="--feature-badges-background: {{ section.settings.background_color }}; --feature-badges-padding-top: {{ section.settings.padding_top }}px; --feature-badges-padding-right: {{ section.settings.padding_right }}px; --feature-badges-padding-bottom: {{ section.settings.padding_bottom }}px; --feature-badges-padding-left: {{ section.settings.padding_left }}px;"
+    style="--feature-badges-background: {{ section.settings.background_color }}; --feature-badges-padding-top: {{ section.settings.padding_top }}px; --feature-badges-padding-right: {{ section.settings.padding_right }}px; --feature-badges-padding-bottom: {{ section.settings.padding_bottom }}px; --feature-badges-padding-left: {{ section.settings.padding_left }}px; --feature-badges-icon-size: {{ section.settings.icon_size }}px; --feature-badges-icon-size-mobile: {{ section.settings.icon_size_mobile }}px;"
   >
     {% if section.settings.layout == 'marquee' %}
       <div class="feature-badges__marquee" aria-label="{{ section.settings.accessibility_label | escape }}">
@@ -146,14 +146,13 @@
 
   .feature-badges__icon {
     display: inline-flex;
-    flex: 0 0 3.6rem;
+    flex: 0 0 var(--feature-badges-icon-size, 50px);
     align-items: center;
     justify-content: center;
-    width: 3.6rem;
-    height: 3.6rem;
+    width: var(--feature-badges-icon-size, 50px);
+    height: var(--feature-badges-icon-size, 50px);
     color: #7b66d9;
     background: #ffffff;
-    border: .1rem solid #cfe1ee;
     border-radius: 50%;
     box-shadow: 0 .1rem .3rem rgba(20, 48, 72, .08);
     box-sizing: border-box;
@@ -161,8 +160,8 @@
 
   .feature-badges__icon svg {
     display: block;
-    width: 1.9rem;
-    height: 1.9rem;
+    width: 40%;
+    height: 40%;
     fill: none;
     stroke: currentColor;
     stroke-width: 1.8;
@@ -172,8 +171,8 @@
 
   .feature-badges__icon img {
     display: block;
-    width: 2rem;
-    height: 2rem;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
   }
 
@@ -226,6 +225,12 @@
     .feature-badges__grid {
       grid-template-columns: minmax(0, 1fr);
       gap: 1.4rem;
+    }
+
+    .feature-badges__icon {
+      flex-basis: var(--feature-badges-icon-size-mobile, 50px);
+      width: var(--feature-badges-icon-size-mobile, 50px);
+      height: var(--feature-badges-icon-size-mobile, 50px);
     }
   }
 </style>
@@ -303,6 +308,30 @@
       "step": 2,
       "unit": "px",
       "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Icon size"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size (desktop)",
+      "min": 20,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "icon_size_mobile",
+      "label": "Icon size (mobile)",
+      "min": 20,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 50
     },
     {
       "type": "header",

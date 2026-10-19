@@ -40,8 +40,12 @@
     "hero": {
       "type": "hero",
       "settings": {
+        "style": "light",
+        "show_breadcrumbs": true,
         "heading": "{{ collection.title }}",
-        "content": ""
+        "content": "",
+        "show_proof": true,
+        "show_usps": true
       }
     },
     "product-grid": {
@@ -101,31 +105,31 @@
         "gallery_images_block_GTmJpj": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home.png"
+            "gallery_image": "shopify://shop_images/08_e786c700-4289-4031-9d19-ac5bcef6d7a0.jpg"
           }
         },
         "gallery_images_block_D3CfhP": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-1.png"
+            "gallery_image": "shopify://shop_images/06.png"
           }
         },
         "gallery_images_block_iPzqzW": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-2.png"
+            "gallery_image": "shopify://shop_images/05_a9787c7c-d07f-41b0-b496-bacb7b953de7.jpg"
           }
         },
         "gallery_images_block_tXmUUi": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-3.png"
+            "gallery_image": "shopify://shop_images/02_b7d8044f-698c-40e5-8b04-d4fde2442522.jpg"
           }
         },
         "gallery_images_block_eUJehM": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-4.png"
+            "gallery_image": "shopify://shop_images/08.png"
           }
         },
         "trust_q8bdk8": {

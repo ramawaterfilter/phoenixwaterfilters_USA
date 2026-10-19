@@ -14,8 +14,6 @@
   <meta name="twitter:image" content="https:{{ settings.share_image | image_url: width: 1200 }}">
 {% endif %}
 {% comment %} ////////////////////////////////////////////////////////////////////twitter-tag-custom//////////////////////////////////////////////// {% endcomment %}
-
-
     <style>
       img,
       video,
@@ -453,17 +451,11 @@
       Crazy Egg re-enabled: its active A/B test replaces the product-page content and layout.
       {% endcomment %}
     <script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0120/1668.js" async="async"></script>
-     
-
-
-
-
-
 
 {% comment %} /////////////////////////////////////////////////////////////////////////href-lang start/////////////////////////////////////////////////////////////////// {% endcomment %}
 
- {% if product.metafields.custom.custom.schema != blank %}
-  {{ product.metafields.custom.custom.schema }}
+ {% if product.metafields.custom.schema != blank %}
+  {{ product.metafields.custom.schema }}
 {% endif %}
 
 
@@ -657,6 +649,34 @@
         const observer = new MutationObserver(toggleSticky);
         observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
       });
+    </script>
+    
+    <script>
+      function onTidioChatApiReady() {
+        window.tidioChatApi.adjustStyles(
+          '#tidio { left: 0 !important; right: auto !important; bottom: 50px !important; }'
+        );
+        tidioChatApi.adjustStyles(
+    '@media only screen and (max-width: 980px) { #tidio { left: -15px !important; right: auto !important; bottom: 50px !important;} }',
+    );
+        window.tidioChatApi.adjustStyles(`
+          #tidio .chat {
+            position: fixed !important;
+            inset: auto auto 70px 16px !important;
+            width: min(372px, calc(100vw - 32px)) !important;
+            height: 600px !important;
+            max-height: calc(100vh - 90px) !important;
+            max-height: calc(100dvh - 90px) !important;
+            border-radius: 16px !important;
+            overflow: hidden;
+          }
+        `);
+      }
+      if (window.tidioChatApi) {
+        window.tidioChatApi.on('ready', onTidioChatApiReady);
+      } else {
+        document.addEventListener('tidioChat-ready', onTidioChatApiReady, { once: true });
+      }
     </script>
   </body>
 </html>

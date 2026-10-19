@@ -17,7 +17,7 @@
     <div class="row justify-content-center"> 
       <div class="col-11 col-md-10 col-lg-8 d-lg-none d-flex justify-content-start">  
         <div class="sorting">
-        <label for="sort">
+        <label for="tab-selector-{{ section.id }}">
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="0 0 25 20" fill="none">
             <path d="M13.019 8.49807H19.1817C19.3101 8.49807 19.4156 8.46533 19.4979 8.39966C19.5805 8.33406 19.6218 8.25032 19.6218 8.14819V6.0491C19.6218 5.94698 19.5805 5.86323 19.4979 5.79763C19.4156 5.73211 19.3101 5.69922 19.1817 5.69922H13.019C12.8905 5.69922 12.7852 5.73196 12.7026 5.79763C12.6202 5.86323 12.5789 5.94698 12.5789 6.0491V8.14819C12.5789 8.25032 12.6201 8.33406 12.7026 8.39966C12.7852 8.46522 12.8905 8.49807 13.019 8.49807Z" style="fill: var(--secondary)"></path>
             <path d="M13.019 2.90038H16.5404C16.6689 2.90038 16.7744 2.86764 16.8566 2.80204C16.9394 2.73641 16.9801 2.65266 16.9801 2.55057V0.45141C16.9801 0.349435 16.9394 0.265573 16.8566 0.199938C16.7744 0.134456 16.6689 0.101562 16.5404 0.101562H13.019C12.8905 0.101562 12.7852 0.134303 12.7026 0.1999C12.6202 0.265573 12.5789 0.349435 12.5789 0.451371V2.55053C12.5789 2.65262 12.6201 2.73637 12.7026 2.802C12.7852 2.86748 12.8905 2.90038 13.019 2.90038Z" style="fill: var(--secondary)"></path>
@@ -28,7 +28,7 @@
           Sort By:</label>
 
         <div class="select-wrap">
-          <select class="mobile-tab-selector form-control" aria-label="Choose a tab">
+          <select id="tab-selector-{{ section.id }}" class="mobile-tab-selector form-control" aria-label="Choose a tab">
             {% for block in section.blocks %}
               {% if block.type == 'tab' %}
                 <option value="{{ block.id }}">{{ block.settings.tab_title }}</option>
@@ -72,7 +72,7 @@
               </dt>
               <dd>
                 <div class="accordion-item__inner">
-                  {{ block.settings.answer | richtext }}
+                  {{ block.settings.answer }}
                 </div>
               </dd>
             </div>

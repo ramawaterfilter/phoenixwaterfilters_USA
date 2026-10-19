@@ -20,6 +20,28 @@
   endif
   assign badge_text = section.settings.badge_text | default: product.metafields.custom.product_badge_text.value
   assign show_size_guide_modal = false
+  assign title_metafield_namespace = ''
+  assign title_metafield_key = ''
+  assign description_metafield_namespace = ''
+  assign description_metafield_key = ''
+  for block in section.blocks
+    if block.type == 'title' or block.type == 'description'
+      assign metafield_parts = block.settings.variant_metafield | strip | split: '.'
+      if metafield_parts.size == 2
+        assign metafield_namespace = metafield_parts.first | strip
+        assign metafield_key = metafield_parts.last | strip
+        if block.type == 'title'
+          assign title_metafield_namespace = metafield_namespace
+          assign title_metafield_key = metafield_key
+        else
+          assign description_metafield_namespace = metafield_namespace
+          assign description_metafield_key = metafield_key
+        endif
+      endif
+    endif
+  endfor
+  assign variant_title = current_variant.metafields[title_metafield_namespace][title_metafield_key]
+  assign variant_description = current_variant.metafields[description_metafield_namespace][description_metafield_key]
   for block in section.blocks
     if block.type == 'variant_picker' and block.settings.show_size_guide
       assign show_size_guide_modal = true
@@ -32,6 +54,7 @@
   class="custom-nice-product"
   data-section-id="{{ section.id }}"
   data-gallery-key="{% if custom_gallery %}{{ current_variant.id }}{% else %}product{% endif %}"
+  data-video-autoplay="{{ section.settings.video_autoplay | default: false }}"
   data-min="{{ min_buy }}"
   data-max="{{ max_buy }}"
 >
@@ -70,7 +93,7 @@
                     {% case media.media_type %}
                       {% when 'video' %}
                         <div class="custom-nice-product__video swiper-no-swiping">
-                          {{- media | video_tag: image_size: '1946x', controls: true, preload: 'metadata' -}}
+                          {{- media | video_tag: image_size: '1946x', controls: true, preload: 'metadata', muted: section.settings.video_autoplay, loop: section.settings.video_autoplay, playsinline: true -}}
                         </div>
                       {% else %}
                         <a
@@ -269,7 +292,13 @@
                   {% if block.settings.show_vendor %}
                     <p class="custom-nice-product__vendor">{{ product.vendor | escape }}</p>
                   {% endif %}
-                  <h1>{{ product.title }}</h1>
+                  <h1 data-product-title>
+                    {%- if variant_title.value != blank and variant_title.type == 'single_line_text_field' -%}
+                      {{- variant_title.value | escape -}}
+                    {%- else -%}
+                      {{- product.title | escape -}}
+                    {%- endif -%}
+                  </h1>
                 </div>
 
               {% when 'rating' %}
@@ -297,8 +326,8 @@
                   {{ block.shopify_attributes }}
                 >
                   <div data-description>
-                    {% if current_variant.metafields.custom.variant_level_description != blank -%}
-                      {{- current_variant.metafields.custom.variant_level_description | metafield_tag -}}
+                    {% if variant_description.value != blank and variant_description.type == 'single_line_text_field' or variant_description.value != blank and variant_description.type == 'multi_line_text_field' or variant_description.value != blank and variant_description.type == 'rich_text_field' -%}
+                      {{- variant_description | metafield_tag -}}
                     {%- else -%}
                       {{- product.description -}}
                     {%- endif %}
@@ -313,7 +342,15 @@
                 </div>
 
               {% when 'description_stats' %}
-                  {% render 'product-hero-description-stats', section: section %}
+                {% if section.settings.show_description_stats %}
+                  <variant-visibility-scope
+                    current-variant-id="{{ current_variant.id }}"
+                    {{ block.shopify_attributes }}
+                    {% render 'variant-visibility-attributes', variant_ids: block.settings.variant_ids, current_variant_id: current_variant.id %}
+                  >
+                    {% render 'product-hero-description-stats', section: section %}
+                  </variant-visibility-scope>
+                {% endif %}
 
               {% when 'variant_picker' %}
                 <div
@@ -385,6 +422,28 @@
                               elsif option_kind == 'stand'
                                 assign key = 'stand_' | append: forloop.index
                                 assign option_image = settings[key]
+                              endif
+                              if option_kind != 'generic'
+                                assign option_value_name = value | strip | downcase
+                                assign custom_image_matched = false
+                                for image_slot in (1..4)
+                                  assign name_key = option_kind | append: '_option_name_' | append: image_slot
+                                  assign image_key = option_kind | append: '_option_image_' | append: image_slot
+                                  assign custom_option_name = block.settings[name_key] | strip | downcase
+                                  if custom_option_name != blank and custom_option_name == option_value_name and block.settings[image_key] != blank
+                                    assign option_image = block.settings[image_key]
+                                    assign custom_image_matched = true
+                                    break
+                                  endif
+                                endfor
+                                unless custom_image_matched
+                                  assign name_key = option_kind | append: '_option_name_' | append: forloop.index
+                                  assign image_key = option_kind | append: '_option_image_' | append: forloop.index
+                                  assign custom_option_name = block.settings[name_key] | strip
+                                  if custom_option_name == blank and block.settings[image_key] != blank
+                                    assign option_image = block.settings[image_key]
+                                  endif
+                                endunless
                               endif
                               assign input_id = 'NiceOption-' | append: section.id | append: '-' | append: option.position | append: '-' | append: forloop.index
                             %}
@@ -612,12 +671,14 @@
                 {% endif %}
 
               {% when 'custom_liquid' %}
-                <div
+                <variant-visibility-scope
                   class="custom-nice-product__block custom-nice-product__custom-liquid"
+                  current-variant-id="{{ current_variant.id }}"
                   {{ block.shopify_attributes }}
+                  {% render 'variant-visibility-attributes', variant_ids: block.settings.variant_ids, current_variant_id: current_variant.id %}
                 >
                   {{ block.settings.custom_liquid }}
-                </div>
+                </variant-visibility-scope>
             {% endcase %}
           {% endfor %}
         {% endform %}
@@ -646,12 +707,18 @@
     {
       "moneyFormat": {{ shop.money_format | json }}, "currency": {{ cart.currency.iso_code | default: shop.currency | json }},
       "defaultDescription": {{ product.description | json }},
+      "defaultTitle": {{ product.title | json }},
       "strings": {"add":{{ 'products.product.add_to_cart' | t | json }},"sold":{{ 'products.product.sold_out' | t | json }},"preorder":{{ 'products.product.pre_order' | t | json }},"stock":{{ 'products.product.inventory_in_stock' | t | json }},"adding":"Adding…","added":"Added to cart","error":"Unable to add this item. Please try again."},
-      "variants": [{% for variant in product.variants %}{% assign images = variant.metafields.custom.variant_images.value %}{"id":{{ variant.id | json }},"options":{{ variant.options | json }},"available":{{ variant.available | json }},"price":{{ variant.price | json }},"compare":{{ variant.compare_at_price | json }},"inventory":{{ variant.inventory_quantity | json }},"management":{{ variant.inventory_management | json }},"policy":{{ variant.inventory_policy | json }},"media":{{ variant.featured_media.id | default: 0 | json }},"min":{{ variant.quantity_rule.min | default: 1 | json }},"max":{{ variant.quantity_rule.max | json }},"increment":{{ variant.quantity_rule.increment | default: 1 | json }},"customGallery":{% if images != blank and images.size > 0 %}true{% else %}false{% endif %}{% if variant.metafields.custom.variant_level_description != blank %}{% capture description_override %}{{ variant.metafields.custom.variant_level_description | metafield_tag }}{% endcapture %},"descriptionOverride":{{ description_override | strip | json }}{% endif %}}{% unless forloop.last %},{% endunless %}{% endfor %}]
+      "variants": [{% for variant in product.variants %}{% assign images = variant.metafields.custom.variant_images.value %}{"id":{{ variant.id | json }},"options":{{ variant.options | json }},"available":{{ variant.available | json }},"price":{{ variant.price | json }},"compare":{{ variant.compare_at_price | json }},"inventory":{{ variant.inventory_quantity | json }},"management":{{ variant.inventory_management | json }},"policy":{{ variant.inventory_policy | json }},"media":{{ variant.featured_media.id | default: 0 | json }},"min":{{ variant.quantity_rule.min | default: 1 | json }},"max":{{ variant.quantity_rule.max | json }},"increment":{{ variant.quantity_rule.increment | default: 1 | json }},"customGallery":{% if images != blank and images.size > 0 %}true{% else %}false{% endif %}{% assign title_override = variant.metafields[title_metafield_namespace][title_metafield_key] %}{% if title_override.value != blank and title_override.type == 'single_line_text_field' %},"titleOverride":{{ title_override.value | json }}{% endif %}{% assign description_metafield = variant.metafields[description_metafield_namespace][description_metafield_key] %}{% if description_metafield.value != blank and description_metafield.type == 'single_line_text_field' or description_metafield.value != blank and description_metafield.type == 'multi_line_text_field' or description_metafield.value != blank and description_metafield.type == 'rich_text_field' %}{% capture description_override %}{{ description_metafield | metafield_tag }}{% endcapture %},"descriptionOverride":{{ description_override | strip | json }}{% endif %}}{% unless forloop.last %},{% endunless %}{% endfor %}]
     }
   </script>
 </div>
+<script src="{{ 'variant-visibility.js' | asset_url }}" defer></script>
 <style>
+  #CustomNiceProduct-{{ section.id }} variant-visibility-scope[hidden] {
+    display: none;
+  }
+
   #CustomNiceProduct-{{ section.id }} {
     --blue: #153a5b;
     --pale: #eaf7fc;
@@ -1511,6 +1578,7 @@
         this.buttonText = root.querySelector('[data-add-text]');
         this.status = root.querySelector('[data-status]');
         this.description = root.querySelector('[data-description]');
+        this.title = root.querySelector('[data-product-title]');
         this.price = root.querySelector('[data-price]');
         this.compare = root.querySelector('[data-compare]');
         this.stock = root.querySelector('[data-stock]');
@@ -1642,6 +1710,9 @@
             : '';
         }
 
+        if (this.title) {
+          this.title.textContent = variant.titleOverride || this.data.defaultTitle || '';
+        }
         if (this.description) {
           this.description.innerHTML =
             variant.descriptionOverride || this.data.defaultDescription || '';
@@ -1849,20 +1920,32 @@
           swiper.slideToLoop(index, 0);
           swiper.on('slideChange', () => {
             this.activeThumb(swiper.realIndex ?? swiper.activeIndex ?? 0);
-            this.pauseVideos(true);
+            this.syncVideoPlayback();
           });
         }
 
         this.activeThumb(index);
-        this.pauseVideos(true);
+        this.syncVideoPlayback();
       }
 
-      pauseVideos(inactiveOnly = false) {
+      syncVideoPlayback() {
+        const swiper = this.slider.swiper;
+        const activeSlide = swiper
+          ? swiper.slides[swiper.activeIndex]
+          : this.slides.querySelector('.swiper-slide');
+
         this.slides.querySelectorAll('video').forEach(video => {
-          if (!inactiveOnly || !video.closest('.swiper-slide-active')) {
+          if (video.closest('.swiper-slide') !== activeSlide) {
             video.pause();
+          } else if (this.root.dataset.videoAutoplay === 'true') {
+            video.muted = true;
+            video.play()?.catch(() => {});
           }
         });
+      }
+
+      pauseVideos() {
+        this.slides.querySelectorAll('video').forEach(video => video.pause());
       }
 
       activeThumb(index) {
@@ -2134,6 +2217,13 @@
   "settings": [
     {
       "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "Autoplay gallery videos",
+      "info": "Automatically play the active variant gallery video, muted and looping.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
       "id": "hide_variant_media",
       "label": "Hide variant-attached fallback media",
       "default": false
@@ -2264,7 +2354,15 @@
       "type": "title",
       "name": "Product title",
       "limit": 1,
-      "settings": [{ "type": "checkbox", "id": "show_vendor", "label": "Show vendor", "default": false }]
+      "settings": [
+        { "type": "checkbox", "id": "show_vendor", "label": "Show vendor", "default": false },
+        {
+          "type": "text",
+          "id": "variant_metafield",
+          "label": "Variant title metafield",
+          "info": "Enter namespace.key, e.g. custom.variant_title. Use a single line text variant metafield. Leave blank to use the product title."
+        }
+      ]
     },
     {
       "type": "rating",
@@ -2276,12 +2374,29 @@
       "type": "description",
       "name": "Product description",
       "limit": 1,
-      "settings": [{ "type": "checkbox", "id": "show_usps", "label": "Show product USPs", "default": true }]
+      "settings": [
+        { "type": "checkbox", "id": "show_usps", "label": "Show product USPs", "default": true },
+        {
+          "type": "text",
+          "id": "variant_metafield",
+          "label": "Variant description metafield",
+          "default": "custom.variant_level_description",
+          "info": "Enter namespace.key. Use a single line, multi-line, or rich text variant metafield. Leave blank to use the product description."
+        }
+      ]
     },
     {
       "type": "description_stats",
       "name": "Description stats",
-      "limit": 1
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "variant_ids",
+          "label": "Show for variant IDs",
+          "info": "Leave blank to show for all variants. Enter comma-separated variant IDs, e.g. 123456789, 987654321. Find the ID after variant= in the product URL when selecting a variant."
+        }
+      ]
     },
     {
       "type": "variant_picker",
@@ -2291,7 +2406,35 @@
         { "type": "checkbox", "id": "show_step_numbers", "label": "Show step numbers", "default": true },
         { "type": "text", "id": "label_prefix", "label": "Option label prefix", "default": "Select" },
         { "type": "checkbox", "id": "show_size_guide", "label": "Show stand size guide", "default": true },
-        { "type": "text", "id": "size_guide_label", "label": "Size guide label", "default": "Size Guide" }
+        { "type": "text", "id": "size_guide_label", "label": "Size guide label", "default": "Size Guide" },
+        { "type": "paragraph", "content": "Choose an image for each option. Add its product option value name to keep the match when options are reordered; names ignore capitalization and surrounding spaces. Leave the name blank to match by slot order. Unmatched options keep their existing theme images." },
+        { "type": "header", "content": "Size option images" },
+        { "type": "text", "id": "size_option_name_1", "label": "Size 1 option name" },
+        { "type": "image_picker", "id": "size_option_image_1", "label": "Size 1 image" },
+        { "type": "text", "id": "size_option_name_2", "label": "Size 2 option name" },
+        { "type": "image_picker", "id": "size_option_image_2", "label": "Size 2 image" },
+        { "type": "text", "id": "size_option_name_3", "label": "Size 3 option name" },
+        { "type": "image_picker", "id": "size_option_image_3", "label": "Size 3 image" },
+        { "type": "text", "id": "size_option_name_4", "label": "Size 4 option name" },
+        { "type": "image_picker", "id": "size_option_image_4", "label": "Size 4 image" },
+        { "type": "header", "content": "Filter option images" },
+        { "type": "text", "id": "filter_option_name_1", "label": "Filter 1 option name" },
+        { "type": "image_picker", "id": "filter_option_image_1", "label": "Filter 1 image" },
+        { "type": "text", "id": "filter_option_name_2", "label": "Filter 2 option name" },
+        { "type": "image_picker", "id": "filter_option_image_2", "label": "Filter 2 image" },
+        { "type": "text", "id": "filter_option_name_3", "label": "Filter 3 option name" },
+        { "type": "image_picker", "id": "filter_option_image_3", "label": "Filter 3 image" },
+        { "type": "text", "id": "filter_option_name_4", "label": "Filter 4 option name" },
+        { "type": "image_picker", "id": "filter_option_image_4", "label": "Filter 4 image" },
+        { "type": "header", "content": "Stand option images" },
+        { "type": "text", "id": "stand_option_name_1", "label": "Stand 1 option name" },
+        { "type": "image_picker", "id": "stand_option_image_1", "label": "Stand 1 image" },
+        { "type": "text", "id": "stand_option_name_2", "label": "Stand 2 option name" },
+        { "type": "image_picker", "id": "stand_option_image_2", "label": "Stand 2 image" },
+        { "type": "text", "id": "stand_option_name_3", "label": "Stand 3 option name" },
+        { "type": "image_picker", "id": "stand_option_image_3", "label": "Stand 3 image" },
+        { "type": "text", "id": "stand_option_name_4", "label": "Stand 4 option name" },
+        { "type": "image_picker", "id": "stand_option_image_4", "label": "Stand 4 image" }
       ]
     },
     {
@@ -2476,7 +2619,15 @@
     {
       "type": "custom_liquid",
       "name": "Custom Liquid",
-      "settings": [{ "type": "liquid", "id": "custom_liquid", "label": "Custom Liquid" }]
+      "settings": [
+        { "type": "liquid", "id": "custom_liquid", "label": "Custom Liquid" },
+        {
+          "type": "text",
+          "id": "variant_ids",
+          "label": "Show for variant IDs",
+          "info": "Leave blank to show for all variants. Enter comma-separated variant IDs, e.g. 123456789, 987654321. Find the ID after variant= in the product URL when selecting a variant."
+        }
+      ]
     }
   ],
   "max_blocks": 20,

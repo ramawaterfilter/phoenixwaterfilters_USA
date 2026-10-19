@@ -75,7 +75,20 @@
             {{ block.shopify_attributes }}
           >
             {% if badge_text != blank %}
-              <span class="custom-certificate-info-card__mobile-number" aria-hidden="true">{{ badge_text | escape }}</span>
+              <span class="custom-certificate-info-card__mobile-number"{% unless section.settings.mobile_layout == 'circle_grid' and block.settings.icon != blank %} aria-hidden="true"{% endunless %}>
+                {% if section.settings.mobile_layout == 'circle_grid' and block.settings.icon != blank %}
+                  {{
+                    block.settings.icon
+                    | image_url: width: 180
+                    | image_tag:
+                      class: 'custom-certificate-info-card__icon-image',
+                      loading: 'lazy',
+                      alt: block.settings.icon_alt
+                  }}
+                {% else %}
+                  {{ badge_text | escape }}
+                {% endif %}
+              </span>
             {% endif %}
 
             {% if block.settings.icon != blank %}
@@ -421,9 +434,16 @@
     .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__step:first-child .custom-certificate-info-card__mobile-number {
       width: 5.6rem;
       height: 5.6rem;
-      border: .5rem solid color-mix(in srgb, var(--certificate-accent) 35%, transparent);
-      background: var(--certificate-accent);
+      /* border: .5rem solid color-mix(in srgb, var(--certificate-accent) 35%, transparent);
+      background: var(--certificate-accent); */
       color: var(--certificate-icon-background);
+    }
+
+    .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__mobile-number > .custom-certificate-info-card__icon-image {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      border-radius: inherit;
     }
 
     .custom-certificate-info-card--mobile-circle_grid .custom-certificate-info-card__icon-wrap {

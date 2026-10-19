@@ -26,7 +26,7 @@
 
         <dl class="accordion">
           {% if description != blank
-            and product.handle != 'phoenix-gravity-carbon-filter-elements-this-product-not-for-sale'
+            and product.handle == 'phoenix-gravity-carbon-filter-elements-this-product-not-for-sale'
           %}
             <div class="accordion-item">
               <dt>{{ 'products.product.description' | t }}</dt>
@@ -1303,12 +1303,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 {% assign show_accordion_block = false %}
               {% endif %}
             {% endif %}
-            {% if block.settings.question and block.settings.answer and show_accordion_block %}
-              <div class="accordion-item">
+            {% assign has_accordion_answer = false %}
+            {% if block.settings.answer != blank or block.settings.variant_metafield != blank %}
+              {% assign has_accordion_answer = true %}
+            {% endif %}
+            {% if block.settings.question != blank and has_accordion_answer and show_accordion_block %}
+              <div class="accordion-item" {{ block.shopify_attributes }}>
                 <dt>{{ block.settings.question }}</dt>
                 <dd>
                   <div class="accordion-item__inner">
-                    {% if block.settings.question == 'Technical Specifications' %}
+                    {% if block.settings.variant_metafield != blank %}
+                      {% render 'variant-accordion-content', product: product, metafield_path: block.settings.variant_metafield, fallback: block.settings.answer %}
+                    {% elsif block.settings.question == 'Technical Specifications' %}
                       <div id="variant-specs-block"></div>
                     {% else %}
                       {{ block.settings.answer }}

@@ -34,6 +34,11 @@
 {% endif %}
 
 {% stylesheet %}
+  .section-custom-html > variant-visibility-scope[hidden],
+  .section-custom-html:has(> variant-visibility-scope[hidden]) {
+    display: none !important;
+  }
+
   .custom-embed-video-container {
     max-width: 100%;
     margin: 0 auto;
@@ -61,6 +66,7 @@
 {
   "name": "Custom Embed Video",
   "tag": "section",
+  "class": "section-custom-html",
   "settings": [
     {
       "type": "textarea",

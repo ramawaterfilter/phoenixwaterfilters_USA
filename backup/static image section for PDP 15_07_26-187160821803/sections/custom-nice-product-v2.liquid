@@ -71,9 +71,9 @@
     <div class="row justify-content-center custom-nice-product__layout">
       <div class="col-12 col-lg-6{% if section.settings.desktop_media_behavior == 'sticky' %} custom-nice-product__media-column--sticky{% endif %}">
         <div class="custom-nice-product__media">
-          {% if section.settings.show_badge and badge_text != blank %}
+          {% comment %} {% if section.settings.show_badge and badge_text != blank %}
             <div class="product-badge">{{ badge_text | escape }}</div>
-          {% endif %}
+          {% endif %} {% endcomment %}
           <div
             id="CustomNiceProductSlider-{{ section.id }}"
             class="swiper-container swiper custom-nice-product__slider"

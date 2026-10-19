@@ -1,3 +1,10 @@
+{% liquid
+  assign current_variant_id = product.selected_or_first_available_variant.id | append: ''
+%}
+<variant-visibility-scope
+  current-variant-id="{{ current_variant_id }}"
+  {% render 'variant-visibility-attributes', variant_ids: section.settings.variant_ids, current_variant_id: current_variant_id %}
+>
 <section
   class="custom-product-details-tabular-form"
   style="
@@ -45,7 +52,7 @@
         {% if section.blocks.size > 0 %}
           <div class="custom-product-details-tabular-form__table" role="table" aria-label="{{ section.settings.heading | strip_html | escape }}">
             {% for block in section.blocks %}
-              <div class="custom-product-details-tabular-form__row" role="row" {{ block.shopify_attributes }}>
+              <div class="custom-product-details-tabular-form__row" role="row" {{ block.shopify_attributes }} {% render 'variant-visibility-attributes', variant_ids: block.settings.variant_ids, current_variant_id: current_variant_id %}>
                 {% if block.settings.label != blank %}
                   <div class="custom-product-details-tabular-form__label" role="rowheader">
                     {{ block.settings.label | escape }}
@@ -65,8 +72,17 @@
     </div>
   </div>
 </section>
+</variant-visibility-scope>
+
+<script src="{{ 'variant-visibility.js' | asset_url }}" defer></script>
 
 {% stylesheet %}
+  .section-custom-product-details-tabular-form > variant-visibility-scope[hidden],
+  .section-custom-product-details-tabular-form [data-variant-visibility-item][hidden],
+  .section-custom-product-details-tabular-form:has(> variant-visibility-scope[hidden]) {
+    display: none !important;
+  }
+
   .custom-product-details-tabular-form {
     background: var(--product-details-background);
     color: var(--product-details-text);
@@ -239,6 +255,12 @@
   "class": "section-custom-product-details-tabular-form",
   "settings": [
     {
+      "type": "textarea",
+      "id": "variant_ids",
+      "label": "Variant IDs",
+      "info": "Comma-separated variant IDs. Leave blank to show for every variant."
+    },
+    {
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow text",
@@ -345,6 +367,12 @@
       "type": "detail",
       "name": "Detail row",
       "settings": [
+        {
+          "type": "textarea",
+          "id": "variant_ids",
+          "label": "Variant IDs",
+          "info": "Comma-separated variant IDs. Leave blank to show for every variant."
+        },
         {
           "type": "text",
           "id": "label",

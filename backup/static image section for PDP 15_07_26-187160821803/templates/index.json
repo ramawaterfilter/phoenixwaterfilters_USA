@@ -178,19 +178,19 @@
         "slide_kitchen": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-2.png"
+            "image": "shopify://shop_images/08_e786c700-4289-4031-9d19-ac5bcef6d7a0.jpg"
           }
         },
         "slide_tap": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-1.png"
+            "image": "shopify://shop_images/06.png"
           }
         },
         "slide_tower": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-3.png"
+            "image": "shopify://shop_images/05_a9787c7c-d07f-41b0-b496-bacb7b953de7.jpg"
           }
         },
         "trust_trial": {
@@ -235,12 +235,18 @@
         "copy_position": "left",
         "show_container": false,
         "anchor_id": "",
+        "show_social_proof": false,
+        "show_avatars": true,
+        "avatar_count": "700+",
+        "show_stars": true,
+        "proof_text": "Trusted by over 700+ Families",
         "eyebrow": "How it works",
         "heading": "Revolutionary ‘Nano Adsorption’ Filter Technology",
         "text": "<p>Ordinary filters can load up with trapped material over time, which can reduce flow and affect taste. To solve this crucial problem, we’ve developed revolutionary Nano Adsorption technology.</p>",
         "subheading": "How does it work?",
         "text_2": "<p>First, we use granular activated carbon derived from natural coconut husks to remove chemicals, toxins, and heavy metals such as zinc and lead. We use a dense, high-grade carbon structure engineered to maintain consistent flow and long filter life. This filtration process mimics nature and keeps oxygen and mineral content unchanged, giving the water a spring-like freshness and a wholesome taste that’s second to none.</p>",
         "image": "shopify://shop_images/Water_Filter.png",
+        "image_contain": false,
         "copy_max_width": 592,
         "image_max_width": 640,
         "button_label": "",
@@ -313,12 +319,18 @@
         "copy_position": "right",
         "show_container": false,
         "anchor_id": "",
+        "show_social_proof": false,
+        "show_avatars": true,
+        "avatar_count": "700+",
+        "show_stars": true,
+        "proof_text": "Trusted by over 700+ Families",
         "eyebrow": "",
         "heading": "Impressively Beautiful. Impossibly Affordable.",
         "text": "<p>Whole-home filtration systems, while effective, come with steep costs - typically $500 to $5,000 upfront - along with ongoing maintenance expenses. They also require professional servicing, which adds to the inconvenience. Alternatively, bottled water involves significant yearly spending and takes up valuable storage space.</p><p>The Phoenix Gravity Water Filter offers an elegant solution, delivering clean, delicious water for just $0.05 per gallon. This user-friendly filter is easy to set up, simple to maintain, and allows hassle-free filter replacement, eliminating the need for costly and complex systems.</p>",
         "subheading": "",
         "text_2": "",
-        "image": "shopify://shop_images/water-filter-home.webp",
+        "image": "shopify://shop_images/25_e88b85be-a789-47f8-a022-57926990a4a9.jpg",
+        "image_contain": false,
         "copy_max_width": 570,
         "image_max_width": 655,
         "button_label": "",
@@ -352,12 +364,18 @@
         "copy_position": "left",
         "show_container": false,
         "anchor_id": "",
+        "show_social_proof": false,
+        "show_avatars": true,
+        "avatar_count": "700+",
+        "show_stars": true,
+        "proof_text": "Trusted by over 700+ Families",
         "eyebrow": "",
         "heading": "Simplicity in Design, Complexity in Science.",
         "text": "<p>The Phoenix Gravity Water Filter is more than just a utility - it’s a centerpiece for your home. Its sleek, minimalist design complements any space, while the advanced filtration system works silently to ensure every glass you pour reflects purity. Setup is effortless, maintenance is minimal, and the taste is truly unparalleled.</p>",
         "subheading": "",
         "text_2": "",
-        "image": "shopify://shop_images/Kitchen_Water_Filter.png",
+        "image": "shopify://shop_images/10_19e6dbeb-0695-45cb-b318-d2ca49b966e6.jpg",
+        "image_contain": false,
         "copy_max_width": 569,
         "image_max_width": 654,
         "button_label": "Shop Now",
@@ -392,11 +410,17 @@
         "show_container": true,
         "container_image": "shopify://shop_images/carbon.jpg",
         "anchor_id": "",
+        "show_social_proof": false,
+        "show_avatars": true,
+        "avatar_count": "700+",
+        "show_stars": true,
+        "proof_text": "Trusted by over 700+ Families",
         "eyebrow": "50 years in the making",
         "heading": "Our Most Advanced Water Filter Ever",
         "text": "<p>The Phoenix Gravity Water Filter represents the pinnacle of our 50 years of dedication to research and development. Crafted to redefine your water experience, it embodies both elegance and efficiency.</p>",
         "subheading": "",
         "text_2": "",
+        "image_contain": false,
         "button_label": "Shop Now",
         "button_link": "shopify://products/gravity-water-filter",
         "button_arrow": true,
@@ -605,7 +629,7 @@
             "title": "PFOA PFOS Lab Test Report",
             "show_passed": true,
             "button_label": "View report",
-            "button_link": "",
+            "button_link": "https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_Gravity_USA_Report.pdf?v=1789408627",
             "new_tab": true
           }
         },
@@ -615,7 +639,7 @@
             "title": "Pharmaceuticals Test Report",
             "show_passed": true,
             "button_label": "View report",
-            "button_link": "",
+            "button_link": "https://info.nsf.org/Certified/DWTU/Listings.asp?Company=C0799666&Standard=042",
             "new_tab": true
           }
         },
@@ -625,7 +649,7 @@
             "title": "Heavy Metals Test Report",
             "show_passed": true,
             "button_label": "View report",
-            "button_link": "",
+            "button_link": "https://cdn.shopify.com/s/files/1/2644/2852/files/20231120_Atom_Lab_-_Phoenix_Carbon_Filter_-_Heavy_Metals.pdf?v=1713736816",
             "new_tab": true
           }
         }
@@ -815,31 +839,31 @@
         "gallery_images_block_GTmJpj": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home.png"
+            "gallery_image": "shopify://shop_images/Life_style_18.jpg"
           }
         },
         "gallery_images_block_D3CfhP": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-1.png"
+            "gallery_image": "shopify://shop_images/03_a97dcc32-8928-4e70-bdda-96fa9af46f91.jpg"
           }
         },
         "gallery_images_block_iPzqzW": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-2.png"
+            "gallery_image": "shopify://shop_images/02_b7d8044f-698c-40e5-8b04-d4fde2442522.jpg"
           }
         },
         "gallery_images_block_tXmUUi": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-3.png"
+            "gallery_image": "shopify://shop_images/26.jpg"
           }
         },
         "gallery_images_block_eUJehM": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-4.png"
+            "gallery_image": "shopify://shop_images/Life_style_7.jpg"
           }
         },
         "trust_q8bdk8": {

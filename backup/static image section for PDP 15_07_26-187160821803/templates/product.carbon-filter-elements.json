@@ -137,6 +137,7 @@
         },
         "text_DPA6Va": {
           "type": "text",
+          "disabled": true,
           "settings": {
             "question": "Warranty",
             "answer": "<p>The Phoenix Gravity Stainless Steel Spigot and Carbon Filter Elements come with a <strong>1-year warranty</strong>, covering any defects in materials and workmanship.</p><p><br/>With these warranties, you’re protected against any defects in materials and workmanship.</p>"

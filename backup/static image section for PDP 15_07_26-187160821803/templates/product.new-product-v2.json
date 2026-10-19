@@ -83,16 +83,22 @@
           "settings": {
             "columns_desktop": 3,
             "columns_mobile": 2,
+            "badge_1_variant_ids": "",
             "badge_1_text": "Free Shipping in the US Mainland",
             "badge_1_link": "",
+            "badge_2_variant_ids": "",
             "badge_2_text": "100 Day Trial",
             "badge_2_link": "",
+            "badge_3_variant_ids": "",
             "badge_3_text": "10 Year Warranty",
             "badge_3_link": "",
+            "badge_4_variant_ids": "",
             "badge_4_text": "Customer Support",
             "badge_4_link": "",
+            "badge_5_variant_ids": "",
             "badge_5_text": "NSF Certified",
             "badge_5_link": "",
+            "badge_6_variant_ids": "",
             "badge_6_text": "US-Based Warehouse Shipping",
             "badge_6_link": ""
           }
@@ -180,6 +186,11 @@
         "content": "<p>Traditional filters simply trap unwanted pollutants, allowing them to accumulate and multiply where they become a breeding ground for contaminants within just two weeks - instantly contaminating any water that passes through it. To solve this crucial problem, we’ve developed activated carbon filtration technology. <br/><br/><strong>How does it work?</strong><br/><br/>First, we use granular activated carbon derived from natural coconut husks to remove chemicals, toxins, and heavy metals such as zinc and lead. Then we’ve impregnated every filter with carbon adsorbents to prevent contaminant growth inside the filter itself.</p>",
         "buttonlink": "",
         "buttontext": "",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": false,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
         "afterbutton": "",
         "custom_id": ""
       }
@@ -364,7 +375,8 @@
       "custom_css": [
         "section {padding-top: 10px; padding-bottom: 0px;}",
         ".custom-certificate-info-card__eyebrow {color: #153a5b;}",
-        ".custom-certificate-info-card__mobile-number {background: #153a5b; color: #fff;}"
+        ".custom-certificate-info-card__mobile-number {background: #153a5b; color: #fff;}",
+        ".custom-certificate-info-card__header {max-width: 94rem; margin: 0 auto 2.8rem; text-align: center;}"
       ],
       "name": "HIW-post",
       "settings": {
@@ -449,7 +461,8 @@
         "section {padding-top: 10px; padding-bottom: 0px;}",
         ".custom-certificate-info-card__eyebrow {color: #153a5b;}",
         ".custom-certificate-info-card__mobile-number {background: #153a5b; color: #fff;}",
-        "section.custom-certificate-info-card.custom-certificate-info-card--mobile-card_list {padding-top: 0px; margin-top: -5px;}"
+        "section.custom-certificate-info-card.custom-certificate-info-card--mobile-card_list {padding-top: 0px; margin-top: -5px;}",
+        ".custom-certificate-info-card__header {max-width: 94rem; margin: 0 auto 2.8rem; text-align: center;}"
       ],
       "name": "HIW",
       "settings": {
@@ -517,6 +530,11 @@
         "column_img": "shopify://shop_images/filter_bg.png",
         "buttonlink": "#addtocart",
         "buttontext": "Add to Cart",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": false,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
         "afterbutton": "",
         "custom_id": "",
         "custom_class": ""
@@ -549,6 +567,8 @@
         "style": "bg-white",
         "layout": "copy",
         "vertical_align": "align-items-center",
+        "content_align": "left",
+        "show_logo": false,
         "heading": "Engineered to last using premium quality materials",
         "content": "<p>Most filters are made from plastic, which can leach harmful chemicals into your drinking water. In contrast, we use high-grade coconut shell activated carbon — one of the most effective filtration materials on earth — along with granular activated carbon derived from natural coconut husks, to remove impurities and heavy metals like lead and zinc. All of this advanced natural filtration is housed in high-quality, food-grade AISI 304 Stainless Steel. The result is a refined, durable filtration system that delivers crisp, clean drinking water for years to come.</p>",
         "video_id": "",
@@ -556,6 +576,11 @@
         "second_content": "",
         "buttonlink": "",
         "buttontext": "",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": false,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
         "afterbutton": "",
         "custom_id": "",
         "custom_class": "",
@@ -581,6 +606,11 @@
         "content": "<p><br/>Fluoride is added to public drinking water for approximately three out of four Americans. However, there is growing concern in the scientific community that excessive fluoride levels could potentially be toxic to the brain or even increase the risk of the rare cancer, osteosarcoma.<br/><br/>Designed as an essential add-on to our Gravity Water Filter system, our scientists have developed a first-of-its-kind fluoride filtration system that removes more than 95% of fluoride from drinking water while retaining essential nutrients. Housed in rust-resistant AISI 304 Stainless Steel, the POSTreat Fluoride Removal Filter Elements also remove arsenic without leaching polyurethane or microplastics into your water like other filtration systems.<br/><br/>Engineered for everyday use, the filter requires a simple top-up of the proprietary filtration media every four months or after treating up to 1,060 gallons of water. This makes it the most effective and sustainable fluoride removal system on the market, helping you maintain a healthy lifestyle.<br/></p>",
         "buttonlink": "",
         "buttontext": "",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": false,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
         "afterbutton": "",
         "custom_id": ""
       }
@@ -635,15 +665,22 @@
         "style": "bg-white",
         "layout": "copy-image-copy",
         "vertical_align": "align-items-center",
+        "content_align": "left",
+        "show_logo": false,
         "heading": "Save $1,000s on bottled water or a whole-home system.",
         "content": "<p><br/>Bottled water might be clean, but it’s expensive. It can cost over $1,000 per year, create waste that harms the environment, and take up valuable space in your home. You could install an in-home filtration system, but those are costly too - with a substantial upfront investment, ongoing maintenance, and repairs. Plus, they aren’t portable if you’re renting or decide to move.<br/><br/>Phoenix Gravity Water Filters offer a more convenient and affordable solution, delivering delicious, filtered water every day without the hassle or expense of bottled water or large home systems.</p>",
-        "column_img": "shopify://shop_images/filter-system.png",
+        "column_img": "shopify://shop_images/image_6.png",
         "video_id": "",
         "img_width": 0,
         "large_image": "img-standard",
         "second_content": "",
         "buttonlink": "",
         "buttontext": "",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": false,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
         "afterbutton": "",
         "custom_id": "",
         "custom_class": "",
@@ -658,6 +695,8 @@
         "style": "bg-light",
         "layout": "image-copy",
         "vertical_align": "align-items-center",
+        "content_align": "left",
+        "show_logo": false,
         "heading": "WARNING: Drinking tap water makes 7.2 million americans sick every year!",
         "content": "<p>Every year, millions of Americans fall ill from ingesting harmful chemicals in tap water. Phoenix Gravity is designed to improve taste and reduce certain non-microbiological contaminants in municipally treated tap water. It is not a microbiological purifier.<br/><br/>These contaminants have been linked to a range of serious health issues, including liver and kidney damage, thyroid disease, cancer, and even “blue baby syndrome” in infants.<br/><br/>Phoenix Gravity Water Filters use activated carbon filtration technology to remove 99.9% of contaminants from tap water.</p>",
         "video_id": "",
@@ -665,6 +704,11 @@
         "second_content": "",
         "buttonlink": "",
         "buttontext": "",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": false,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
         "afterbutton": "",
         "custom_id": "",
         "custom_class": "",
@@ -679,6 +723,8 @@
         "style": "bg-white",
         "layout": "copy",
         "vertical_align": "align-items-center",
+        "content_align": "left",
+        "show_logo": false,
         "heading": "Why risk harmful toxins when you can enjoy fresh, clean, completely safe water?",
         "content": "<p><br/>Your tap water could be contaminated without you even knowing. Chemicals can enter from nearby farms, industrial operations, or stormwater. Harmful substances such as lead, copper, and nitrate may leach into your drinking water at the source or even after treatment in the distribution system.<br/><br/>Why take the risk when you don’t know what’s lurking in your water? Phoenix Gravity Water Filters remove 99.9% of contaminants instantly, providing fresh, great-tasting water and peace of mind for your whole family.</p>",
         "video_id": "",
@@ -686,6 +732,11 @@
         "second_content": "",
         "buttonlink": "#addtocart",
         "buttontext": "Add to Cart",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": false,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
         "afterbutton": "",
         "custom_id": "",
         "custom_class": "",
@@ -783,16 +834,27 @@
         "text_U7Yanr"
       ],
       "settings": {
+        "style": "style-2",
+        "show_social_proof": false,
+        "show_avatars": true,
+        "avatar_count": "700+",
+        "show_stars": true,
+        "proof_text": "Trusted by over 700+ Families",
         "heading": "The Most Convenient and Affordable Way to Enjoy Pure, Clean Drinking Water in Your Home",
         "number_of_comparisons": "3",
-        "style": "style-2",
         "feature_header": "Features",
+        "show_logo": true,
         "company_name": "Phoenix Gravity Water Filter System",
         "comparison_1": "In-Home System",
         "comparison_2": "Bottled Water",
         "comparison_3": "Pitchers",
         "buttonlink": "#addtocart",
         "buttontext": "Add To Cart",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": false,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
         "afterbutton": "",
         "custom_id": "",
         "custom_class": ""
@@ -830,11 +892,22 @@
       ],
       "settings": {
         "layout": "style-1",
+        "sub_header": "Based On customer Reviews",
+        "certification_text": "NSF/ANSI 42 & 372 Certified",
         "heading": "🇺🇸 Americans Have Trusted Our Water Filters For Over 50+ Years",
         "paragraph": "",
-        "sub_header": "Based On customer Reviews",
+        "verified_text": "Verified Review",
+        "stars_label": "5 out of 5 stars",
+        "initial_count": 6,
+        "load_more_count": 3,
+        "load_more_label": "Load more reviews",
         "button_text": "View All Reviews",
         "button_url": "shopify://pages/reviews",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": false,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
         "button_aftertext": "",
         "custom_id": "",
         "custom_class": ""
@@ -908,11 +981,17 @@
       ],
       "settings": {
         "style": "bg-white",
+        "show_logo": true,
         "heading": "It’s never been this easy to enjoy safe, delicious drinking water every single day of the year!",
         "paragraph": "",
         "section_bgimg": "shopify://shop_images/filter-background-light.jpg",
         "buttontext": "",
         "buttonlink": "",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": false,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
         "afterbutton": "",
         "custom_id": "",
         "custom_class": ""
@@ -924,6 +1003,8 @@
         "style": "bg-white",
         "layout": "copy",
         "vertical_align": "align-items-center",
+        "content_align": "left",
+        "show_logo": false,
         "heading": "100-Day Free Trial",
         "content": "<p>Worried the Phoenix Gravity Water Filter is too good to be true? Don’t believe it will really remove as many contaminants as we promise?<br/><br/>We stand behind our product 100% – so you can try our filter in your own home for 100 days risk-free. If you aren't fully satisfied with the purity of your water, send it back within 100 days for a full refund, no questions asked!<br/><br/>*Terms apply<br/>Customer pays return shipping.</p>",
         "column_img": "shopify://shop_images/phoenix-guarantee.v1.png",
@@ -932,6 +1013,11 @@
         "second_content": "",
         "buttonlink": "",
         "buttontext": "",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": false,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
         "afterbutton": "",
         "custom_id": "",
         "custom_class": "",
@@ -1296,63 +1382,35 @@
     "gallery_9QfaL3": {
       "type": "gallery",
       "blocks": {
-        "gallery_images_block_PfRCFJ": {
+        "gallery_images_block_TFAfTb": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-01.jpg"
+            "gallery_image": "shopify://shop_images/10_19e6dbeb-0695-45cb-b318-d2ca49b966e6.jpg"
           }
         },
         "gallery_images_block_CCJWT7": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-02.jpg"
+            "gallery_image": "shopify://shop_images/08_e786c700-4289-4031-9d19-ac5bcef6d7a0.jpg"
           }
         },
-        "gallery_images_block_qX3Fqd": {
+        "gallery_images_block_PfRCFJ": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-03.jpg"
-          }
-        },
-        "gallery_images_block_w7gYzt": {
-          "type": "gallery_images_block",
-          "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-04.jpg"
-          }
-        },
-        "gallery_images_block_qRpxPB": {
-          "type": "gallery_images_block",
-          "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-05.jpg"
-          }
-        },
-        "gallery_images_block_TFAfTb": {
-          "type": "gallery_images_block",
-          "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-06.jpg"
-          }
-        },
-        "gallery_images_block_AHBK7Y": {
-          "type": "gallery_images_block",
-          "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-07.jpg"
+            "gallery_image": "shopify://shop_images/Life_style_18.jpg"
           }
         },
         "gallery_images_block_TKg4Uz": {
           "type": "gallery_images_block",
           "settings": {
-            "gallery_image": "shopify://shop_images/water-filter-08.jpg"
+            "gallery_image": "shopify://shop_images/Life_style_7.jpg"
           }
         }
       },
       "block_order": [
-        "gallery_images_block_PfRCFJ",
-        "gallery_images_block_CCJWT7",
-        "gallery_images_block_qX3Fqd",
-        "gallery_images_block_w7gYzt",
-        "gallery_images_block_qRpxPB",
         "gallery_images_block_TFAfTb",
-        "gallery_images_block_AHBK7Y",
+        "gallery_images_block_CCJWT7",
+        "gallery_images_block_PfRCFJ",
         "gallery_images_block_TKg4Uz"
       ],
       "settings": {

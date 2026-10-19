@@ -1,3 +1,10 @@
+{% liquid
+  assign current_variant_id = product.selected_or_first_available_variant.id | append: ''
+%}
+<variant-visibility-scope
+  current-variant-id="{{ current_variant_id }}"
+  {% render 'variant-visibility-attributes', variant_ids: section.settings.variant_ids, current_variant_id: current_variant_id %}
+>
 <section
   class="custom-info-cards"
   style="
@@ -36,7 +43,7 @@
 
       <div class="custom-info-cards__grid">
         {% for block in section.blocks limit: cards_limit %}
-          <article class="custom-info-card" {{ block.shopify_attributes }}>
+          <article class="custom-info-card" {{ block.shopify_attributes }} {% render 'variant-visibility-attributes', variant_ids: block.settings.variant_ids, current_variant_id: current_variant_id %}>
             {% assign desktop_image = block.settings.desktop_image | default: block.settings.mobile_image %}
             {% assign mobile_image = block.settings.mobile_image | default: desktop_image %}
             {% if block.settings.desktop_image != blank or block.settings.mobile_image != blank %}
@@ -136,8 +143,17 @@
     {% endif %}
   </div>
 </section>
+</variant-visibility-scope>
+
+<script src="{{ 'variant-visibility.js' | asset_url }}" defer></script>
 
 {% stylesheet %}
+  .section-custom-info-cards > variant-visibility-scope[hidden],
+  .section-custom-info-cards [data-variant-visibility-item][hidden],
+  .section-custom-info-cards:has(> variant-visibility-scope[hidden]) {
+    display: none !important;
+  }
+
   .custom-info-cards {
     background: var(--info-cards-background);
     color: var(--info-cards-text);
@@ -381,6 +397,12 @@
   "class": "section-custom-info-cards",
   "settings": [
     {
+      "type": "textarea",
+      "id": "variant_ids",
+      "label": "Variant IDs",
+      "info": "Comma-separated variant IDs. Leave blank to show for every variant."
+    },
+    {
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow text",
@@ -458,6 +480,12 @@
       "type": "info_card",
       "name": "Info card",
       "settings": [
+        {
+          "type": "textarea",
+          "id": "variant_ids",
+          "label": "Variant IDs",
+          "info": "Comma-separated variant IDs. Leave blank to show for every variant."
+        },
         {
           "type": "image_picker",
           "id": "desktop_image",
