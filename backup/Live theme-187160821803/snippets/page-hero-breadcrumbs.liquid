@@ -1,0 +1,64 @@
+{%- comment -%}
+  Breadcrumb trail for the Hero section (sections/hero.liquid), Figma `7809:13911`:
+  "Home / Shop All", earlier crumbs grey and linked, the current page navy.
+
+  Built from request.page_type, so it follows whichever page the Hero is placed on. The
+  BreadcrumbList JSON-LD is already output by layout/theme.liquid.
+
+  Usage:
+  {% render 'page-hero-breadcrumbs' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign page_type = request.page_type
+  assign current = page_title
+
+  case page_type
+    when 'page'
+      assign current = page.title
+    when 'collection'
+      assign current = collection.title
+    when 'list-collections'
+      assign current = 'Collections'
+    when 'blog'
+      assign current = blog.title
+    when 'article'
+      assign current = article.title
+    when 'product'
+      assign current = product.title
+    when 'search'
+      assign current = 'Search'
+    when 'cart'
+      assign current = 'Cart'
+  endcase
+-%}
+
+<nav class="page-hero__breadcrumbs" aria-label="Breadcrumb">
+  <ol class="page-hero__crumbs">
+    <li class="page-hero__crumb">
+      <a class="page-hero__crumb-link" href="{{ routes.root_url }}">Home</a>
+    </li>
+
+    {%- if page_type == 'collection' and current_tags -%}
+      <li class="page-hero__crumb">
+        <a class="page-hero__crumb-link" href="{{ collection.url }}">{{ collection.title }}</a>
+      </li>
+      {%- assign current = current_tags | join: ' + ' -%}
+    {%- elsif page_type == 'blog' and current_tags -%}
+      <li class="page-hero__crumb">
+        <a class="page-hero__crumb-link" href="{{ blog.url }}">{{ blog.title }}</a>
+      </li>
+      {%- assign current = current_tags | join: ' + ' | replace: 'cat-', '' -%}
+    {%- elsif page_type == 'article' -%}
+      <li class="page-hero__crumb">
+        <a class="page-hero__crumb-link" href="{{ blog.url }}">{{ blog.title }}</a>
+      </li>
+    {%- elsif page_type == 'product' and collection.url -%}
+      <li class="page-hero__crumb">
+        <a class="page-hero__crumb-link" href="{{ collection.url }}">{{ collection.title }}</a>
+      </li>
+    {%- endif -%}
+
+    <li class="page-hero__crumb page-hero__crumb--current" aria-current="page">{{ current }}</li>
+  </ol>
+</nav>

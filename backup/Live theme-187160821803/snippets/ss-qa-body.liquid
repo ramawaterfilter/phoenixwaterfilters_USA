@@ -1,0 +1,31 @@
+{%- comment -%} Renders richtext with %%QA1%%/%%QA2%%/%%QA3%% replaced by QA-marked values. {%- endcomment -%}
+{%- liquid
+  assign v1 = qa_1 | default: '' | escape
+  assign v2 = qa_2 | default: '' | escape
+  assign v3 = qa_3 | default: '' | escape
+  assign m1 = v1
+  assign m2 = v2
+  assign m3 = v3
+  if v1 != blank
+    capture m1
+      echo '<mark class="qa" title="QA placeholder — Phoenix must confirm before launch"><span class="qa-label">QA</span>'
+      echo v1
+      echo '</mark>'
+    endcapture
+  endif
+  if v2 != blank
+    capture m2
+      echo '<mark class="qa" title="QA placeholder — Phoenix must confirm before launch"><span class="qa-label">QA</span>'
+      echo v2
+      echo '</mark>'
+    endcapture
+  endif
+  if v3 != blank
+    capture m3
+      echo '<mark class="qa" title="QA placeholder — Phoenix must confirm before launch"><span class="qa-label">QA</span>'
+      echo v3
+      echo '</mark>'
+    endcapture
+  endif
+-%}
+{{- body | replace: '%%QA1%%', m1 | replace: '%%QA2%%', m2 | replace: '%%QA3%%', m3 -}}

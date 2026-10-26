@@ -1,0 +1,192 @@
+{{ 'subscribe-save.css' | asset_url | stylesheet_tag }}
+{% style %}
+#shopify-section-{{ section.id }} .ss-intervals { --ss-bg: {{ section.settings.background_color }}; --ss-ink: {{ section.settings.text_color }}; --ss-pad: {{ section.settings.desktop_padding }}px; --ss-pad-mobile: {{ section.settings.mobile_padding }}px; }
+{% endstyle %}
+<section id="{{ section.settings.anchor_id | escape }}" class="ss ss-intervals"><div class="ss-wrap">
+<header class="ss-intro"><p class="ss-eyebrow">{{ section.settings.eyebrow | escape }}</p><h2>{{ section.settings.heading }}</h2><div class="ss-intro-copy">{% render 'ss-qa-body', body: section.settings.body, qa_1: section.settings.qa_1, qa_2: section.settings.qa_2, qa_3: section.settings.qa_3 %}</div></header><div class="ss-table-wrap"><table><caption class="ss-visually-hidden">Filter replacement intervals</caption><thead><tr><th scope="col">Filter</th><th scope="col">Replace every</th><th scope="col">Rated capacity</th><th scope="col">How you know it’s due</th><th scope="col">Plan interval</th></tr></thead><tbody>{% for block in section.blocks %}{% if block.type == 'interval_item' %}<tr {{ block.shopify_attributes }}><th scope="row">{{ block.settings.filter | escape }}<small>{{ block.settings.filter_note | escape }}</small></th><td data-label="Replace every">{{ block.settings.replace | escape }}</td><td data-label="Rated capacity">{{ block.settings.capacity | escape }}</td><td data-label="How you know it’s due">{{ block.settings.due | escape }}</td><td data-label="Plan interval">{{ block.settings.plan | escape }}</td></tr>{% endif %}{% endfor %}</tbody></table></div><div class="ss-copy ss-schedule-note">{{ section.settings.schedule_note }}</div><div class="timeline-block"><h3>{{ section.settings.timeline_heading }}</h3><ol class="timeline">{% for block in section.blocks %}{% if block.type == 'timeline_event' %}<li class="{% if block.settings.emphasis %}carbon-dot{% else %}fluoride-dot{% endif %}" {{ block.shopify_attributes }}><span class="time-dot" aria-hidden="true"></span><span class="ss-mono">{{ block.settings.period | escape }}</span><strong>{{ block.settings.title | escape }}</strong>{% if block.settings.description != blank %}<p>{{ block.settings.description | escape }}</p>{% endif %}</li>{% endif %}{% endfor %}</ol><div class="timeline-legend"><span><i aria-hidden="true"></i> Carbon + fluoride</span><span><i aria-hidden="true"></i> Fluoride only</span></div></div><div class="ss-copy ss-schedule-note">{{ section.settings.interval_explanation }}</div>
+</div></section>
+{% schema %}
+{
+  "name": "Subscribe Save Intervals",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body copy"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "intervals"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f5f3f1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#153a5b"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop vertical spacing",
+      "default": 88,
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile vertical spacing",
+      "default": 56,
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "richtext",
+      "id": "schedule_note",
+      "label": "Carbon-only note"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "timeline_heading",
+      "label": "Timeline heading"
+    },
+    {
+      "type": "richtext",
+      "id": "interval_explanation",
+      "label": "Interval explanation"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "interval_item",
+      "name": "Interval row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "filter",
+          "label": "Filter"
+        },
+        {
+          "type": "text",
+          "id": "filter_note",
+          "label": "Filter note"
+        },
+        {
+          "type": "text",
+          "id": "replace",
+          "label": "Replace every"
+        },
+        {
+          "type": "text",
+          "id": "capacity",
+          "label": "Rated capacity"
+        },
+        {
+          "type": "text",
+          "id": "due",
+          "label": "How you know"
+        },
+        {
+          "type": "text",
+          "id": "plan",
+          "label": "Plan interval"
+        }
+      ]
+    },
+    {
+      "type": "timeline_event",
+      "name": "Timeline event",
+      "settings": [
+        {
+          "type": "text",
+          "id": "period",
+          "label": "Period"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "product_type",
+          "label": "Product type"
+        },
+        {
+          "type": "checkbox",
+          "id": "emphasis",
+          "label": "Emphasize",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subscribe Save Intervals",
+      "blocks": [
+        {
+          "type": "interval_item",
+          "settings": {
+            "filter": "Carbon Filter Elements",
+            "filter_note": "Pack of 2",
+            "replace": "12 months",
+            "capacity": "5,500 gal / pair",
+            "due": "Flow slows noticeably, or a chlorine taste returns. Most families reach 12 months before 5,500 gallons.",
+            "plan": "Every 12 months"
+          }
+        },
+        {
+          "type": "interval_item",
+          "settings": {
+            "filter": "POSTreat FluoRid Media",
+            "filter_note": "250g × 2",
+            "replace": "4–6 months",
+            "capacity": "1,060 gal / pair",
+            "due": "Track time and water use. Some households replace media closer to 6 months; stay within its time and capacity ratings.",
+            "plan": "Every 4 months"
+          }
+        },
+        {
+          "type": "interval_item",
+          "settings": {
+            "filter": "POSTreat Steel Housing",
+            "filter_note": "The stainless shell",
+            "replace": "Not consumable",
+            "capacity": "—",
+            "due": "Warranted for 10 years. Replace only if it is dented, cracked or the thread is damaged.",
+            "plan": "n/a"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

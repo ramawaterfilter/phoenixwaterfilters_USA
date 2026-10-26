@@ -1,0 +1,935 @@
+
+
+
+
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+<div class="container">
+  <div class="row justify-content-center jk">
+    <div class="col-11 col-lg-6">
+      <div class="position-relative {% if product.images.size <= 0 %}h-100{% endif %}">
+        {% render 'product-badge'
+          , product: product %}
+
+        {% if product.images.size > 1 %}
+
+          <div
+            class="swiper-container swiper"
+            data-slidestoshow="1"
+            id="product-slider">
+            <div class="swiper-wrapper">
+              {% for media in product.media %}
+                {% assign thisVariantID = "" %}
+
+                {% for variant in product.variants %}
+                  {% if variant.featured_image == media.src %}
+                    {% assign thisVariantID = variant.id %}
+                  {% endif %}
+                {% endfor %}
+
+                {% if media.media_type == "image" %}
+                  <div
+                    class="swiper-slide"
+                    data-variant-id="{{ thisVariantID }}"
+                    data-slide-index="{{ forloop.index }}">
+                    <a
+                      data-fancybox="gallery"
+                      href="{{ media | image_url: width: 2560 }}"
+                      class="product-image d-block">
+                      {{ media | image_url: width: 1200 | image_tag }}
+                    </a>
+                  </div>
+                {% elsif media.media_type == "external_video" %}
+                  <div
+                    class="swiper-slide"
+                    data-variant-id="{{ thisVariantID }}"
+                    data-slide-index="{{ forloop.index }}">
+                    <a
+                      data-fancybox="gallery"
+                      href="{{ media | external_video_url: autoplay: 'true' }}"
+                      class="product-image product-image--video d-block">
+                      {{ media.preview_image | image_url: width: 1200 | image_tag }}
+                    </a>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="swiper-container swiper control {% if product.media.size == 3 %} control-three {% endif %} {% if product.media.size == 5 %}control-five{% endif %}" id="product-slider-nav">
+            <div class="swiper-wrapper {% if product.media.size == 3 or product.media.size == 5 %}wide{% endif %}">
+              {% for media in product.media %}
+                {% if media.media_type == "external_video" %}
+                  <div class="swiper-slide">
+                    {{ media.preview_image | image_url: width: 600 | image_tag }}
+                  </div>
+                {% elsif media.media_type == "image" %}
+                  <div class="swiper-slide">
+                    {{ media | image_url: width: 1200 | image_tag }}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="swiper-nav">
+            <div class="swiper-button-prev swiper-prev"></div>
+            <div class="swiper-button-next swiper-next"></div>
+          </div>
+
+        {% elsif product.featured_image %}
+          <a
+            data-fancybox="gallery"
+            href="{{ product.featured_image | image_url: width: 2560 }}"
+            class="product-image d-block">
+            {{ product.featured_image | image_url: width: 1200 | image_tag }}
+          </a>
+        {% else %}
+
+          <div class="placeholder">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+
+        {% endif %}
+
+      </div>
+    </div>
+    <div class="col-11 col-lg-6 mt-3 mt-lg-0">
+
+      {% render 'product-hero-countdown'
+        , section: section %}
+
+      <h1>{{ product.title }}</h1>
+      <div class="product-rating">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when '@app' %}
+              {% render block %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+
+      {% comment %} {% render 'best-for-tag' %} {% endcomment %}
+
+      
+ 
+
+      {% if product.description != blank or product.metafields.custom.product_usps.value.size > 0 %}
+        <div class="product-description">
+          {{ product.description }}
+
+          {% if product.metafields.custom.product_usps.value.size > 0 %}
+            <ul class="product-description__usps">
+              {% for usp in product.metafields.custom.product_usps.value %}
+                <li>{{ usp }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if settings.enable_minmax_buys %}
+        {% assign min_buy = settings.min_buy_qty %}
+        {% assign max_buy = settings.max_buy_qty %}
+      {% endif %}
+
+      {% if min_buy == nil %}
+        {% assign min_buy = 1 %}
+      {% endif %}
+
+      {% if product.available and product.variants.size > 1 %}
+
+                        <!-- Display Controllers -->
+            
+           <div id="product-variants" class="d-flex flex-column justify-content-start align-items-start">  
+
+            <!-- Loop through each option and display its name and values -->
+
+            {% for option in product.options_with_values %}
+                <div class="step step-{{ option.name }}">
+                    <div class="step-number">{{ forloop.index }}</div>
+                    <div class="step-title">Select {{ option.name }}
+                      - 
+            
+                      {% for value in option.values %}
+                        <span class="{{ value }}" style="display:{% if forloop.first %}unset;{% else %} none;{% endif %}">
+                           {% if option.name == 'Size' %}
+  {% capture size_for_key %}size_for_{{ forloop.index }}{% endcapture %}
+      {{ settings[size_for_key] }}
+      {% else %}
+    {{ value }}
+     {% endif %}</span>
+                      {% endfor %}
+                   
+                    </div>
+                    </div>
+
+                    <div id="{{ option.name | downcase | replace: ' ', '-' }}-options" class="info-field-container d-flex  flex-row  radio-selectors ">
+                   
+                  {% for value in option.values %}
+                    <div class="radio-option d-flex">
+                      
+                    <input type="radio" id="{{ option.name | downcase | append: '-' | append: value }}" name="{{ option.name | downcase }}" value="{{ value }}"  {% if forloop.first %}checked{% endif %}>
+
+                  {% if option.name == 'Filter' %}
+                      {% capture filter_image_key %}filter_image_{{ forloop.index }}{% endcapture %}
+              
+                      <div class="details product-image">
+                        <img src="{{ settings[filter_image_key]  | image_url: width: 180 }}" alt="size {{ forloop.index }}" class="size-icon" />
+                      </div>
+                    
+
+                  {% elsif option.name == 'Size' %}
+                      {% capture size_icon_key %}size_icon_{{ forloop.index }}{% endcapture %}
+                       {% capture size_content_key %}size_content_{{ forloop.index }}{% endcapture %}
+                     {% capture size_for_key %}size_for_{{ forloop.index }}{% endcapture %}
+     
+                      <div class="details h-100">
+                        <div class="product-icon">
+                          <img src="{{ settings[size_icon_key]  | image_url: width: 40 }}" alt="size {{ forloop.index }}" class="size-icon" />
+                        </div>
+                      <p><strong>{{ settings[size_for_key] }}</strong></p> 
+                      {{ settings[size_content_key] }}
+
+                      </div>
+
+                  {% else %}
+                       <div class="details">
+                        <p>
+                         <strong>
+                          {{ value }}
+                        </strong>
+                        </p>
+                      </div>
+                  {% endif %}
+              </div>
+            {% endfor %}
+            </div>
+
+         
+          {% endfor %}
+          </div>
+             
+    
+    {% endif %}
+
+      <form
+        action="/cart/add"
+        method="post"
+        enctype="multipart/form-data"
+        id="add-to-cart"
+        data-min="{{ min_buy }}"
+        data-max="{{ max_buy }}">
+
+
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when '@app' %}
+              {% render block %}
+          {% endcase %}
+        {% endfor %}
+
+  
+
+       
+        <input
+          type="hidden"
+          name="handle"
+          value="{{ product.handle }}">
+
+
+{% comment %} Selling Plans  {% endcomment %}
+
+ <div id="variants" class="info-field-container d-flex flex-column justify-content-start align-items-center">          
+        <div class="selector-wrap sr-only">
+                         <select  id="product-selectors" name="id" data-productid="{{ product.id }}" data-label="{% if product.options.size == 1 %}{{ product.options[0] }}{% endif %}" >
+                            {% for variant in product.variants %}
+                              {% if variant.available %}
+                               
+                                <option 
+                                  {% if variant == current_variant %} selected="selected" {% endif %} 
+                                  value="{{ variant.id }}" 
+                                  data-price="{{ variant.price | money_with_currency }}" 
+                                  name="id" 
+                                  id="variant_{{ variant.id }}"
+                                  data-sub-id="{{ variant.selling_plan_allocations
+                          [0].selling_plan_group_id  }}"
+                                
+                                  >
+                                  {{ variant.title }}
+                                </option>
+                              {% else %}
+                                <option disabled="disabled">{{ variant.title }} - {{ 'products.product.inventory_out_of_stock' | t }}</option>
+                              {% endif %}
+                            {% endfor %}
+                          </select>
+            <style>
+                #product-selectors{
+                    display: block !important;
+                }
+            </style>
+           </div>
+            </div>
+
+            <input type="hidden" id="subby" value="" >
+
+        {% if product.selling_plan_groups.size > 0 %}
+          
+
+          <div class="subscriptions">
+            <div class="step">
+              <div class="step-number">
+                3
+              </div>
+              <div class="step-title">
+                Select Filter Plan 
+              </div>
+            </div>
+
+            {% for group in product.selling_plan_groups %}
+              {% assign loop1 = forloop.index %}
+
+              <div class="subscriptions__group my-3 sr-only" data-group-name="{{ group.name }}"  data-sub-id="{{ group.id }}">
+
+                {% for selling_plan in group.selling_plans %}
+
+                    {% comment %} Savings banner  {% endcomment %}               
+
+                <div class="savings-banner">YOU SAVE {{ group.selling_plans[0].price_adjustments[0].value | money_without_trailing_zeros }} OFF!</div>
+                  <div class="sparkles">
+                    <svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g id="sparkles">
+                      <g id="star-03">
+                      <path id="Vector" d="M121.59 60.83L107.66 56.34C98.75 53.4 93.53 46.19 91.08 37.13L84.95 7.27C84.79 6.68 84.4 5.89 83.2 5.89C82.19 5.89 81.61 6.68 81.45 7.27L75.32 37.14C72.86 46.2 67.65 53.41 58.74 56.35L44.81 60.84C42.84 61.48 42.81 64.26 44.77 64.93L58.8 69.76C67.68 72.71 72.86 79.91 75.32 88.93L81.46 118.46C81.62 119.05 81.95 120.11 83.21 120.11C84.54 120.11 84.8 119.05 84.96 118.46L91.1 88.93C93.56 79.9 98.74 72.7 107.62 69.76L121.65 64.93C123.59 64.25 123.56 61.47 121.59 60.83Z" fill="#FDD835"/>
+                      <path id="Vector_2" d="M122.91 62.08C122.69 61.53 122.26 61.05 121.59 60.83L107.66 56.34C98.75 53.4 93.53 46.19 91.08 37.13L84.95 7.27C84.86 6.93 84.54 6.31 84.17 6.13L86.15 36.1C87.62 49.78 88.88 56.22 99.8 58.1C109.18 59.72 120.03 61.58 122.91 62.08Z" fill="#FFEE58"/>
+                      <path id="Vector_3" d="M122.94 63.64L98.78 69.18C90.27 71.34 85.58 76.27 85.58 89.17L83.21 120.11C84.02 120.03 84.68 119.59 84.96 118.46L91.1 88.93C93.56 79.9 98.74 72.7 107.62 69.76L121.65 64.93C122.31 64.69 122.73 64.2 122.94 63.64Z" fill="#F4B400"/>
+                      </g>
+                      <g id="star-02">
+                      <path id="Vector_4" d="M41.81 86.81C33.48 84.06 32.72 80.96 31.32 75.73L27.83 63.49C27.62 62.7 25.56 62.7 25.34 63.49L22.97 74.8C21.56 80.01 18.56 84.15 13.44 85.84L5.28 89.38C4.15 89.75 4.13 91.35 5.26 91.73L13.48 94.64C18.58 96.33 21.56 100.47 22.98 105.66L25.35 116.48C25.57 117.27 27.62 117.27 27.83 116.48L30.61 105.71C32.02 100.49 34.18 96.34 41.11 94.64L48.83 91.73C49.96 91.34 49.95 89.74 48.81 89.37L41.81 86.81Z" fill="#FDD835"/>
+                      <path id="Vector_5" d="M28.49 75.55C29.34 83.41 29.77 85.59 36.14 87.22L49.41 89.81C49.27 89.62 49.07 89.46 48.8 89.38L41.8 86.81C34.49 84.31 32.47 81.13 31.1 74.77C29.73 68.41 28.27 64.26 28.27 64.26C27.76 62.89 27.03 62.96 27.03 62.96L28.49 75.55Z" fill="#FFEE58"/>
+                      <path id="Vector_6" d="M28.73 102.99C28.73 95.58 32.78 91.91 39.22 91.91L49.24 91.5C49.24 91.5 48.66 92.27 47.65 92.51L41.11 94.64C35.56 96.87 33.03 97.99 31.31 105.58C31.31 105.58 29.09 114.41 28.67 115.34C28.09 116.64 27.4 116.91 27.4 116.91L28.73 102.99Z" fill="#F4B400"/>
+                      </g>
+                      <path id="star-01" d="M59.74 28.14C60.3 27.95 60.28 27.15 59.71 26.99L51.99 24.91C50.37 24.47 49.11 23.22 48.65 21.61L45.61 9.06C45.46 8.45 44.59 8.45 44.44 9.07L41.58 21.57C41.14 23.23 39.84 24.51 38.18 24.94L30.51 26.93C29.94 27.08 29.9 27.88 30.46 28.08L38.55 30.88C40 31.38 41.12 32.56 41.56 34.03L44.45 45.62C44.6 46.22 45.46 46.23 45.61 45.62L48.6 33.99C49.05 32.52 50.18 31.35 51.64 30.86L59.74 28.14Z" fill="#F4B400" stroke="#F4B400" stroke-miterlimit="10"/>
+                      </g>
+                    </svg>
+                  </div>
+
+
+                
+           
+                  <div class="d-flex flex-row justify-content-between align-items-start align-items-lg-center divider">
+
+                    <div class="label">
+                      <input
+                          type="radio"
+                          id="{{ group.name }}"
+                          data-sub-id="{{ group.id }}"
+                          name="selling_plan"
+                          value="{{ selling_plan.id }}"
+                          {% if forloop.parentloop.index == 1 and forloop.index == 1 %}
+                          checked{% endif %} />
+
+                      <label for="{{ group.name }}}"> 
+                
+                        <svg class="active-circle" width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="13" cy="13" r="12" fill="#F5F3F1" stroke="#153A5B" stroke-width="2"/>
+                          <circle class="active" cx="13" cy="13" r="4" fill="#153A5B"/>
+                        </svg>  
+                        {{ selling_plan.name }} ✨
+                      </label>
+                    </div>
+
+                  {% assign discount_amount = group.selling_plans[0].price_adjustments[0].value %}
+                  
+                   
+                    <div class="sub-price">
+
+ <input type="hidden" id="discount-amount" value="{{ discount_amount  | money_without_currency }}">
+                    <span data-price-discount>
+{{ product.variants.first.price | money_without_trailing_zeros }} 
+                      </span> 
+                     <s> 
+                      <span data-price>
+                        {{ product.variants.first.price | money_without_trailing_zeros }} 
+                      </span> 
+                    </s>
+                  </div>
+                </div>
+
+                {% endfor %}
+
+                  <div class="d-flex flex-column-reverse flex-lg-row justify-content-between align-items-start ">
+                    <div class="benefits">
+                  
+ 
+<ul class="mb-0">
+
+
+
+
+                                
+                 <li>You Save {{ group.selling_plans[0].price_adjustments[0].value | money_without_trailing_zeros }} Off!</li>
+                  <li>{{ group.options[0].name }}</li>
+                 <li>{{ group.selling_plans[0].description }}</li>
+                 <li class="d-none">{{ group.name }}</li>
+                   
+                  
+</ul>
+
+                     {{ settings.complete_plan_content }} 
+                       
+                    </div>
+                    <div class="delivery">
+                  <p>
+                    Only {{ group.selling_plans[0].price_adjustments[1].value | money_without_trailing_zeros }} every {{ group.options[0].values[0] }}
+                   </p>
+                    </div>
+                  </div>
+              </div>
+            {% endfor %}
+
+            {% comment %} One Time Purchase option always visible {% endcomment %}
+
+            <div class="one-time-option mb-3" >
+              <div class="d-flex flex-row justify-content-between align-items-center align-items-lg-center ">
+              <div class="label">
+              <label for="plan-none" class="mb-0">
+               <svg class="active-circle" width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="13" cy="13" r="12" fill="#F5F3F1" stroke="#153A5B" stroke-width="2"/>
+                          <circle class="active" cx="13" cy="13" r="4" fill="#153A5B"/>
+                        </svg>  
+
+                <input
+                  type="radio"
+                  id="plan-none"
+                  name="selling_plan"
+                  value=""
+                    />
+                {{ 'products.product.no_selling_plan' | t }}
+              </label></div>
+
+              <div class="sub-price">
+                    <span data-price>
+                  {{ product.variants.first.price | money }} 
+                        </span> 
+                      
+                  </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+ 
+        {% comment %} <div id="afterpay-element"></div> {% endcomment %}
+
+        {% if product.available %}
+            
+            {% if current_variant.inventory_quantity > 0 or current_variant.inventory_management == null %}
+              
+              <button
+                class="btn btn-secondary btn-product d-flex flex-row justify-content-center align-items-center"
+                type="submit"
+                name="add"
+                id="product-add-to-cart">
+                {{ 'products.product.add_to_cart' | t }} &nbsp;
+          
+                <div class="sub-price">
+                  <span data-price toggle-price></span>
+                 <span get-data-price-discount toggle-discount></span> 
+               </div>
+           
+   
+              </button>
+
+            {% comment %} Continue selling when out of stock is checked {% endcomment %}
+
+            {% elsif current_variant.inventory_policy == "continue" %}
+              <button
+                class="btn btn-primary  btn-product"
+                type="submit"
+                name="add"
+                id="product-add-to-cart">
+                {{ 'products.product.pre_order' | t }}
+              </button>
+            {% endif %}
+
+              {% comment %} <div class="trust-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="26" viewBox="0 0 25 26" fill="none">
+                  <path d="M22.5 0.5H2.5C1.96957 0.5 1.46086 0.710714 1.08579 1.08579C0.710714 1.46086 0.5 1.96957 0.5 2.5V9.5C0.5 16.09 3.69 20.0837 6.36625 22.2738C9.24875 24.6313 12.1163 25.4312 12.2413 25.465C12.4131 25.5118 12.5944 25.5118 12.7663 25.465C12.8913 25.4312 15.755 24.6313 18.6413 22.2738C21.31 20.0837 24.5 16.09 24.5 9.5V2.5C24.5 1.96957 24.2893 1.46086 23.9142 1.08579C23.5391 0.710714 23.0304 0.5 22.5 0.5ZM18.21 9.2075L11.21 16.2075C11.1171 16.3005 11.0068 16.3742 10.8854 16.4246C10.764 16.4749 10.6339 16.5008 10.5025 16.5008C10.3711 16.5008 10.241 16.4749 10.1196 16.4246C9.99816 16.3742 9.88787 16.3005 9.795 16.2075L6.795 13.2075C6.60736 13.0199 6.50194 12.7654 6.50194 12.5C6.50194 12.2346 6.60736 11.9801 6.795 11.7925C6.98264 11.6049 7.23714 11.4994 7.5025 11.4994C7.76786 11.4994 8.02236 11.6049 8.21 11.7925L10.5 14.0863L16.7925 7.7925C16.8854 7.69959 16.9957 7.62589 17.1171 7.57561C17.2385 7.52532 17.3686 7.49944 17.5 7.49944C17.6314 7.49944 17.7615 7.52532 17.8829 7.57561C18.0043 7.62589 18.1146 7.69959 18.2075 7.7925C18.3004 7.88541 18.3741 7.99571 18.4244 8.1171C18.4747 8.2385 18.5006 8.36861 18.5006 8.5C18.5006 8.6314 18.4747 8.7615 18.4244 8.8829C18.3741 9.00429 18.3004 9.11459 18.2075 9.2075H18.21Z" fill="#153A5B"/> 
+                  
+                </svg>
+         Try It Risk Free! 100-Day Money Back Guarantee
+            </div> {% endcomment %}
+                     <div class="payment-icons d-flex justify-content-center align-items-center gap-3">
+   <img src="{{ 'visa.png' | asset_url }}" alt="visa" height="20.42" width="45.15" />
+            <img src="{{ 'mastercard.png' | asset_url }}" height="20.7" width="32.45" alt="mastercard" />
+            <img src="{{ 'paypal.png' | asset_url }}"  alt="paypal"   height="25.41" width="20.99" />
+            <img src="{{ 'amex.png' | asset_url }}" height="20.11" width="54.44"alt="amex" />
+               <img src="https://cdn.shopify.com/s/files/1/2644/2852/files/Shop_Pay_logo.png?v=1761737843" alt="Shop Pay" height="23.11" width="74.44" />
+          </div>
+          </div>
+
+        {% else %}
+
+          <input
+            name="id"
+            data-productid="{{ product.id }}"
+            value="{{ product.variants.first.id }}"
+            type="hidden" />
+
+          <button
+            class="btn btn-primary  btn-product"
+            name="add"
+            disabled
+            type="submit">
+            {{ 'products.product.sold_out' | t }}
+          </button>
+
+        {% endif %}
+
+      
+      </form>
+
+    </div>
+  </div>
+</div>
+ 
+ 
+ 
+
+{% render 'sticky-add-to-cart' %}
+
+
+{% unless product == empty %}
+	<script>
+	    window.product = {{ product | json }} || {};
+
+		// If product exists, add this metafield to to the product json.
+		{% if product.metafields.custom.product_badge_text.value != blank %}
+			if(typeof product !== "undefined"){
+				product['badge'] = "{{ product.metafields.custom.product_badge_text.value }}";
+			}
+		{% endif %}
+
+		let metaInfo = product.handle + '?view=metafields'
+
+		// Get the metaInfo and add it to the product json.
+		fetch(metaInfo)
+			.then(response => response.json())
+			.then(pageMeta => {
+				// Combine all the information to 1 object
+				window.product = Object.assign(product, pageMeta);
+
+				if( document.readyState !== 'loading' ) {
+					initProductScript(window.product, 'product-selectors', document);
+				} else {
+					document.addEventListener('DOMContentLoaded', function () {
+						initProductScript(window.product, 'product-selectors', document);
+					});
+				}
+
+			})
+			.catch(error => {
+				console.error('Error fetching page meta:', error);
+			});
+
+
+  ///  Variant Controller
+
+  const selectElement = document.querySelector("#product-selectors");
+  
+  
+  document.addEventListener('DOMContentLoaded', function() {
+      
+  // General function to set up synchronization between radio button groups
+    function setupRadioSync(primarySelector, secondarySelector) {
+      const primaryRadioButtons = document.querySelectorAll(primarySelector);
+
+      // Function to update secondary radio buttons and dispatch a change event
+      const updateSecondaryRadios = (selectedValue) => {
+        const secondaryRadioButtons = document.querySelectorAll(secondarySelector);
+        let foundMatch = false;
+
+        secondaryRadioButtons.forEach(radio => {
+          if (radio.value === selectedValue) {
+            if (!radio.checked) {
+              radio.checked = true;
+              foundMatch = true;
+              // Dispatch the change event
+              radio.dispatchEvent(new Event('change', { 'bubbles': true }));
+              selectElement.dispatchEvent(new Event('change', { 'bubbles': true }));
+            }
+          } else {
+            if (radio.checked) {
+              radio.checked = false;
+              // Dispatch the change event for unchecked state as well if needed
+              radio.dispatchEvent(new Event('change', { 'bubbles': true }));
+              selectElement.dispatchEvent(new Event('change', { 'bubbles': true }));
+            }
+          }
+        });
+        if (!foundMatch) {
+          console.log('No match found in secondary radios for value:', selectedValue);
+        }
+      };
+
+      // Listen for changes on primary radio buttons
+      primaryRadioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+          if (radio.checked) {
+            updateSecondaryRadios(radio.value);
+          }
+        });
+      });
+    }
+
+    // Setup synchronization for both filter and size options
+    setupRadioSync('#filter-typeoptions input[type="radio"]', '.radio-selector__option input[name="filter-type-radio"]');
+    setupRadioSync('#size-options input[type="radio"]', '.radio-selector__option input[name="size-radio"]');
+  });
+
+     // add the id
+
+  
+<div id="variant-radio-wrapper">
+  {% for variant in product.variants %}
+    <label class="radio-selector__option">
+      <input type="radio"
+             name="variant-radio"
+             value="{{ variant.id }}"
+             data-variant-id="{{ variant.id }}"
+             id="variant-{{ variant.id }}">
+      {{ variant.title }}
+    </label>
+              
+  {% endfor %}
+</div>
+	<script>
+    // Setup synchronization
+setupRadioSync('#filter-typeoptions input[type="radio"]', '.radio-selector__option input[name="filter-type-radio"]');
+setupRadioSync('#size-options input[type="radio"]', '.radio-selector__option input[name="size-radio"]');
+
+// Handle your new variant radios
+document.querySelectorAll('input[name="variant-radio"]').forEach((radio) => {
+  radio.addEventListener('change', (e) => {
+    const variantId = e.target.dataset.variantId;
+    console.log('Variant selected:', variantId);
+
+    // Call function to update dynamic content here
+    updateContentByVariantId(variantId);
+  });
+});
+
+    </script>
+  ///  Toggle Variant Titles
+
+document.addEventListener('DOMContentLoaded', function() {
+    // General function to handle changes in option containers
+    function handleOptionChange(containerId, stepClass) {
+      const container = document.getElementById(containerId);
+      if (container) {
+        container.addEventListener('change', function(event) {
+          if (event.target.type === 'radio' && event.target.name === stepClass.toLowerCase()) {
+            
+          // Get all span elements in the specified .step class container
+            const spans = document.querySelectorAll(`.step.step-${stepClass} span`);
+            
+            // Hide all spans first
+            spans.forEach(span => {
+              span.style.display = 'none';
+            });
+  
+            // Construct a selector that matches the class attribute exactly
+            const optionValue = event.target.value;
+            const escapedOptionValue = optionValue.replace(/([\.\s])/g, "\\$1");
+            const selector = `.step.step-${stepClass} span[class="${escapedOptionValue}"]`;
+  
+            // Find the span that matches the value of the selected radio button and show it
+            const selectedSpan = document.querySelector(selector);
+            if (selectedSpan) {
+              selectedSpan.style.display = 'unset';  
+            }
+          }
+        });
+      } else {
+        console.log(`Container #${containerId} not found.`);
+      }
+    }
+  
+    // Setup listeners for 'Size' and 'Filter'
+    handleOptionChange('size-options', 'Size');
+    handleOptionChange('filter-type-options', 'Filter');
+  });
+
+
+  /// Toggle Sub Plans
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const selectElement = document.querySelector("#product-selectors");
+      const subby = document.querySelector("#subby");
+      const subscriptionGroups = document.querySelectorAll('.subscriptions__group');
+      const oneTimeOption = document.querySelector('.one-time-option');
+      const oneTimeRadio = oneTimeOption.querySelector('input[type="radio"]');
+
+      const toggleDiscountPrice = document.querySelectorAll('[toggle-discount]');
+      const togglePrice = document.querySelectorAll('[toggle-price]');
+
+
+      
+
+      function selectPlan() {
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        const subPlanValue = selectedOption.getAttribute('data-sub-id').trim();
+        subby.value = subPlanValue;
+
+        
+          let isSubPlanActive = false;
+         
+          subscriptionGroups.forEach(group => {
+            const groupSubId = group.getAttribute('data-sub-id').trim();
+            let radio = group.querySelector('input[type="radio"]');
+
+            if(groupSubId === subPlanValue) {
+              group.classList.add('active');
+              group.classList.remove('sr-only');
+              radio.checked = true;
+              radio.dispatchEvent(new Event('change', { 'bubbles': true }));
+              isSubPlanActive = true;  
+              togglePrice.forEach(price => {
+                price.classList.add('sr-only')
+              });
+              toggleDiscountPrice.forEach(price => {
+                price.classList.remove('sr-only')
+              });
+            } else {
+              group.classList.remove('active');
+              group.classList.add('sr-only');
+              radio.checked = false;
+            }
+          });
+
+          // Manage the visibility and activity of the one-time option
+          oneTimeOption.classList.remove('active');
+          oneTimeRadio.checked = false;
+
+          if (!isSubPlanActive) {
+            oneTimeOption.classList.add('active');
+            oneTimeRadio.checked = true;
+          }
+        
+      }
+
+      // Event listener for changes in the select element
+      selectElement.addEventListener('change', selectPlan);
+
+      // Click event for subscription group radios
+      subscriptionGroups.forEach(group => {
+        const radios = group.querySelectorAll('input[type="radio"]');
+        radios.forEach(radio => {
+          radio.addEventListener('click', function() {
+            // Activate this group and deactivate others
+            subscriptionGroups.forEach(innerGroup => {
+              innerGroup.classList.remove('active');
+              innerGroup.classList.add('sr-only');
+              innerGroup.querySelector('input[type="radio"]').checked = false;
+            });
+            group.classList.add('active');
+            group.classList.remove('sr-only');
+            radio.checked = true;
+            oneTimeOption.classList.remove('active');
+            oneTimeRadio.checked = false;
+
+            toggleDiscountPrice.forEach(price => {
+                price.classList.remove('sr-only')
+              });
+              togglePrice.forEach(price => {
+                price.classList.add('sr-only')
+              });
+          });
+        });
+      });
+
+      // Click event for one-time option
+
+      oneTimeRadio.addEventListener('click', function() {
+              toggleDiscountPrice.forEach(price => {
+                price.classList.add('sr-only')
+              });
+              togglePrice.forEach(price => {
+                price.classList.remove('sr-only')
+              });
+
+        subscriptionGroups.forEach(group => {
+          group.classList.remove('active');
+          group.querySelector('input[type="radio"]').checked = false;
+        });
+        oneTimeOption.classList.add('active');
+        oneTimeRadio.checked = true;
+      });
+
+      // Initialize on load
+      selectPlan();  
+      // Ensure the one-time option is always visible
+      oneTimeOption.classList.remove('sr-only');
+    });
+
+
+
+
+
+
+  /// Display Subscription discount
+
+  const priceElements = document.querySelectorAll("span[data-price]");
+
+  // Create a MutationObserver instance to handle mutations
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      // Handle the mutation appropriately if it involves text changes
+      if (mutation.type === "characterData" || mutation.addedNodes.length > 0) {
+        const targetElement =
+          mutation.target.nodeType === Node.TEXT_NODE
+            ? mutation.target.parentNode
+            : mutation.target;
+        updateDiscountedPrice(targetElement);
+      }
+    });
+  });
+  
+
+  // Set up the observer for each price element
+
+  priceElements.forEach((element) => {
+    observer.observe(element, {
+      characterData: true,
+      childList: true,
+      subtree: true,
+    });
+    // Trigger an initial update to set the discounted price
+    updateDiscountedPrice(element);
+  });
+
+  // Function to update the discount based on the price in 'data-price'
+
+  function updateDiscountedPrice(priceElement) {
+
+  const fullPriceText = priceElement.textContent;
+  const fullPrice = parseFloat(fullPriceText.replace(/[^0-9.]/g, ""));
+
+  let planDiscount = priceElement
+      .closest(".sub-price")
+      .querySelector("#discount-amount");
+
+      if (planDiscount) {
+        const discountedPrice = fullPrice - planDiscount.value; // 
+
+        const discountDisplay = priceElement
+          .closest(".sub-price")
+          .querySelector("[data-price-discount]");
+
+          if (discountDisplay) {
+            discountDisplay.textContent = formatCurrency(discountedPrice);
+          }
+      }
+  }
+
+  // Helper function to format the number as currency
+  function formatCurrency(amount) {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(amount);
+  }
+
+
+  /// Show Discount Price in Button & Sticky Buy Now
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const subscriptionGroups = document.querySelectorAll('.subscriptions__group');
+    let priceDiscountElements = document.querySelectorAll('[get-data-price-discount]');
+    
+
+    // Function to update price discounts on the page
+    function updatePriceDiscounts(discountAmount) {
+      priceDiscountElements.forEach(element => {
+        element.textContent = discountAmount; 
+      });
+    }
+
+    
+
+    // MutationObserver callback to handle class changes
+    const callback = function(mutationsList, observer) {
+      for (const mutation of mutationsList) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          let targetElement = mutation.target;
+       
+          const discountContainer = targetElement.querySelector('.sub-price [data-price-discount]');
+          if (targetElement.classList.contains('active')) {
+              discountContainer.classList.add('show');
+            // When a group becomes active, find the discount amount and update
+            const discountAmount = targetElement.querySelector('.sub-price [data-price-discount]').innerHTML;
+            updatePriceDiscounts(discountAmount);
+          }
+          else {
+              discountContainer.classList.remove('show');
+          }
+        }
+      }
+    };
+
+    // Creating a MutationObserver instance to observe class changes
+    const observer = new MutationObserver(callback);
+    subscriptionGroups.forEach(group => {
+      observer.observe(group, { attributes: true, attributeFilter: ['class'] });
+    });
+
+    // Optionally, initialize with the active group's discount if needed
+    const activeGroup = document.querySelector('.subscriptions__group.active');
+    if (activeGroup) {
+      const initialDiscount = activeGroup.querySelector('.sub-price [data-price-discount]').innerHTML;
+      updatePriceDiscounts(initialDiscount);
+    }
+  });
+
+
+	</script>
+
+{% endunless %}
+
+
+{% schema %}
+  {
+    "name": "Product Hero OG",
+    "tag": "section",
+    "class": "section-producthero og",
+    "settings": [
+      {
+        "type": "text",
+        "id": "countdown_text",
+        "label": "Countdown Text",
+        "info": "Use the [month] shortcode to output the current month, and the [time] shortcode to output the countdown timer."
+      }, {
+        "type": "text",
+        "id": "countdown_time",
+        "label": "Countdown Time",
+        "info": "Date, time and timezone in the format: YYYY-MM-DDTHH:mm:ss+10:00. OR for an evergreen timer, enter the number of minutes followed by the word 'minutes'. e.g. 15 minutes"
+      }, {
+        "type": "product_list",
+        "id": "countdown_products",
+        "label": "Show Countdown On Products",
+        "info": "Only show the countdown on these products. Leave blank to show on all."
+      }
+    ],
+    "blocks": [
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product Hero Subscription"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["product"]
+    }
+  }
+{% endschema %}

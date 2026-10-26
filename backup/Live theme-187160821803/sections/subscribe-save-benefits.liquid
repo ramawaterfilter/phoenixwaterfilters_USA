@@ -1,0 +1,224 @@
+{{ 'subscribe-save.css' | asset_url | stylesheet_tag }}
+{% style %}
+  #shopify-section-{{ section.id }} .ss-benefits { --ss-bg: {{ section.settings.background_color }}; --ss-ink: {{ section.settings.text_color }}; --ss-pad: {{ section.settings.desktop_padding }}px; --ss-pad-mobile: {{ section.settings.mobile_padding }}px; }
+{% endstyle %}
+<section class="ss ss-benefits">
+  <div class="ss-wrap">
+    <header class="ss-intro">
+      <p class="ss-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h2>{{ section.settings.heading }}</h2>
+      <div class="ss-intro-copy">
+        {% render 'ss-qa-body', body: section.settings.body, qa_1: section.settings.qa_1, qa_2: section.settings.qa_2, qa_3: section.settings.qa_3 %}
+      </div>
+    </header>
+    <div class="ss-benefits-grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'benefit' %}
+          <article
+            class="ss-card"
+            {{ block.shopify_attributes }}
+          >
+            <span class="ss-benefit-icon" aria-hidden="true">
+              {%- case block.settings.icon -%}
+                {%- when 'price' -%}
+                  ↘
+                {%- when 'shipping' -%}
+                  ✦
+                {%- when 'calendar' -%}
+                  ◷
+                {%- when 'control' -%}
+                  ✓
+                {%- else -%}
+                  $
+              {% endcase -%}
+            </span>
+            {%- if block.settings.eyebrow != blank -%}
+              <span class="ss-mono">{{ block.settings.eyebrow | escape }}</span>
+            {%- endif %}
+            <h3>{{ block.settings.title }}</h3>
+            <div class="ss-copy">{{ block.settings.body }}</div>
+          </article>
+        {% else %}
+          <div class="savings-band" {{ block.shopify_attributes }}>
+            <div>
+              <strong>{{ block.settings.amount | escape }}</strong><span>{{ block.settings.label | escape }}</span>
+            </div>
+            <div>
+              <h3>{{ block.settings.heading }}</h3>
+              <div class="ss-copy_save" >{{ block.settings.body }}</div>
+            </div>
+          </div>
+        {% endif -%}
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+<style>
+  .ss-copy_save > p {
+    color: #fff !important
+  }
+  </style>
+{% schema %}
+{
+  "name": "Subscribe Save Benefits",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body copy"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f5f3f1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#153a5b"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop vertical spacing",
+      "default": 88,
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile vertical spacing",
+      "default": 56,
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "price",
+          "options": [
+            {
+              "value": "price",
+              "label": "Price"
+            },
+            {
+              "value": "shipping",
+              "label": "Shipping"
+            },
+            {
+              "value": "calendar",
+              "label": "Calendar"
+            },
+            {
+              "value": "control",
+              "label": "Control"
+            },
+            {
+              "value": "savings",
+              "label": "Savings"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "body",
+          "label": "Body",
+        }
+      ]
+    },
+    {
+      "type": "savings_band",
+      "name": "Savings band",
+      "settings": [
+        {
+          "type": "text",
+          "id": "amount",
+          "label": "Amount",
+          "default": "$40"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "SAVED PER YEAR"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subscribe Save Benefits",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "price",
+            "title": "A lower price, every order",
+            "body": "<p>Subscriber pricing applies to your first order and every one after it — up to $10 off per delivery. It is not an introductory discount. Any price changes require advance notice; see the billing details.</p>"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "shipping",
+            "title": "Free shipping, no minimum",
+            "body": "<p>Every subscription order ships free, whatever it costs. One-time orders have to reach $99 first — which a $69 refill never does.</p>"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "calendar",
+            "title": "A replacement routine",
+            "body": "<p>Keep track of replacement dates with scheduled deliveries. Replace by time or rated capacity, whichever comes first.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

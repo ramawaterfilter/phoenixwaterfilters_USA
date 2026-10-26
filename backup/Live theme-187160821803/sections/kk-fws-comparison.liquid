@@ -1,0 +1,719 @@
+{%- comment -%}
+  KK FWS Comparison — Figma `7809:15681`.
+
+  A real <table> on a pale rounded panel, with the Phoenix column drawn as a tall navy card
+  that runs 28px past the panel's top and bottom (Figma `7809:15688`). That card is the
+  panel's ::before, sized to the Phoenix column, so the table itself stays a plain table. On
+  mobile the whole table stays, scaled down (Figma `7809:13095`).
+{%- endcomment -%}
+
+{%- liquid
+  assign column_keys = 'phoenix,in_home,bottled,pitchers' | split: ','
+  assign feature_blocks = section.blocks | where: 'type', 'feature'
+  assign trust_blocks = section.blocks | where: 'type', 'trust'
+-%}
+
+<section class="kk-fws-comparison kk-fws-comparison--{{ section.settings.style | default: 'bg-white' }} kk-fws-section">
+  <div class="kk-fws-comparison__container kk-fws-container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="kk-fws-comparison__heading kk-fws-heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if feature_blocks.size > 0 -%}
+      <div class="kk-fws-comparison__table-wrap">
+        <div class="kk-fws-comparison__panel">
+          <table class="kk-fws-comparison__table">
+            <caption class="kk-fws-comparison__sr">{{ section.settings.table_label }}</caption>
+
+            <colgroup>
+              <col class="kk-fws-comparison__col kk-fws-comparison__col--feature">
+              <col class="kk-fws-comparison__col kk-fws-comparison__col--phoenix">
+              <col class="kk-fws-comparison__col">
+              <col class="kk-fws-comparison__col">
+              <col class="kk-fws-comparison__col">
+            </colgroup>
+
+            <thead>
+              <tr>
+                <th class="kk-fws-comparison__th kk-fws-comparison__th--feature" scope="col">
+                  <span class="kk-fws-comparison__sr">{{ section.settings.feature_column_label }}</span>
+                </th>
+                {%- for key in column_keys -%}
+                  {%- assign label_key = 'column_' | append: key | append: '_label' -%}
+                  {%- if forloop.first -%}
+                    <th class="kk-fws-comparison__th kk-fws-comparison__th--phoenix" scope="col">
+                      {%- if section.settings.show_phoenix_logo -%}
+                        <span class="kk-fws-comparison__logo">
+                          {%- if section.settings.phoenix_logo != blank -%}
+                            {{
+                              section.settings.phoenix_logo
+                              | image_url: width: 300
+                              | image_tag: class: 'kk-fws-comparison__logo-image', loading: 'lazy', alt: ''
+                            }}
+                          {%- else -%}
+                            <img
+                              class="kk-fws-comparison__logo-mark"
+                              src="{{ 'kk-fws-phoenix-mark-white.png' | asset_url }}"
+                              alt=""
+                              width="50"
+                              height="46"
+                              loading="lazy"
+                            >
+                            <img
+                              class="kk-fws-comparison__logo-word"
+                              src="{{ 'kk-fws-phoenix-wordmark-white.png' | asset_url }}"
+                              alt=""
+                              width="146"
+                              height="21"
+                              loading="lazy"
+                            >
+                          {%- endif -%}
+                        </span>
+                        <span class="kk-fws-comparison__sr">{{ section.settings[label_key] }}</span>
+                      {%- else -%}
+                        <span class="kk-fws-comparison__th-label">{{ section.settings[label_key] }}</span>
+                      {%- endif -%}
+                    </th>
+                  {%- else -%}
+                    <th class="kk-fws-comparison__th" scope="col">
+                      <span class="kk-fws-comparison__th-label">{{ section.settings[label_key] }}</span>
+                    </th>
+                  {%- endif -%}
+                {%- endfor -%}
+              </tr>
+            </thead>
+
+            <tbody>
+              {%- for block in feature_blocks -%}
+                <tr class="kk-fws-comparison__row" {{ block.shopify_attributes }}>
+                  <th class="kk-fws-comparison__row-header" scope="row">{{ block.settings.feature }}</th>
+
+                  {%- for key in column_keys -%}
+                    {%- liquid
+                      assign has_feature = block.settings[key]
+                      if has_feature
+                        assign mark_text = section.settings.yes_label
+                        if forloop.first
+                          assign mark_src = 'kk-fws-icon-compare-yes.svg'
+                          assign mark_modifier = 'yes-badge'
+                        else
+                          assign mark_src = 'kk-fws-icon-compare-tick.svg'
+                          assign mark_modifier = 'yes'
+                        endif
+                      else
+                        assign mark_src = 'kk-fws-icon-compare-cross.svg'
+                        assign mark_modifier = 'no'
+                        assign mark_text = section.settings.no_label
+                      endif
+                    -%}
+                    <td class="kk-fws-comparison__cell{% if forloop.first %} kk-fws-comparison__cell--phoenix{% endif %}">
+                      <img
+                        class="kk-fws-comparison__mark kk-fws-comparison__mark--{{ mark_modifier }}"
+                        src="{{ mark_src | asset_url }}"
+                        alt=""
+                        aria-hidden="true"
+                        loading="lazy"
+                        width="44"
+                        height="44"
+                      >
+                      <span class="kk-fws-comparison__sr">{{ mark_text }}</span>
+                    </td>
+                  {%- endfor -%}
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- render 'kk-fws-cta', section: section, prefix: 'kk-fws-comparison', trust_blocks: trust_blocks, icon_size: 22 -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  /* Figma `7809:15681`: white, 88px top and bottom, 1168px table panel. */
+  .kk-fws-comparison {
+    --kk-fws-comparison-ink: var(--primary);
+    --kk-fws-comparison-rule: #e1e4ea;
+    /* Column widths inside the 1080px panel content box: 336 / 210 / 178 x 3. */
+    --kk-fws-comparison-feature-width: 31.11%;
+    --kk-fws-comparison-phoenix-width: 19.44%;
+    /* kk-fws-base.css overrides */
+    --kk-fws-section-padding-md: 6.4rem;
+    --kk-fws-container-max: 116.8rem;
+    --kk-fws-container-gutter-sm: 2.4rem;
+    --kk-fws-heading-size-md: 3.6rem;
+    --kk-fws-cta-margin: 6.4rem;
+    --kk-fws-cta-margin-sm: 3.2rem;
+
+    --kk-fws-comparison-panel: var(--light);
+
+    background: #ffffff;
+  }
+
+  /* On the light background the panel goes white for contrast. */
+  .kk-fws-comparison--bg-light {
+    --kk-fws-comparison-panel: #ffffff;
+
+    background: var(--light);
+  }
+
+  .kk-fws-comparison__sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .kk-fws-comparison__heading {
+    max-width: 90.1rem;
+    text-align: center;
+  }
+
+  .kk-fws-comparison__table-wrap {
+    width: 100%;
+    margin-top: 6.8rem;
+  }
+
+  .kk-fws-comparison__panel {
+    position: relative;
+    padding: 2rem 4.4rem 2.8rem;
+    border-radius: 3.2rem;
+    background: var(--kk-fws-comparison-panel);
+  }
+
+  /* The navy Phoenix card — Figma `7809:15688`. Positioned over the Phoenix column of the
+     panel's content box, 28px proud of the panel at the top and bottom. */
+  .kk-fws-comparison__panel::before {
+    content: '';
+    position: absolute;
+    top: -2.8rem;
+    bottom: -2.8rem;
+    left: calc(4.4rem + (100% - 8.8rem) * 0.3111);
+    width: calc((100% - 8.8rem) * 0.1944);
+    border-radius: 2rem;
+    background: var(--kk-fws-comparison-ink);
+    box-shadow: 0 2.4rem 5rem rgba(11, 22, 56, 0.28);
+  }
+
+  .kk-fws-comparison__table {
+    position: relative;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .kk-fws-comparison__col {
+    width: 16.48%;
+  }
+
+  .kk-fws-comparison__col--feature {
+    width: var(--kk-fws-comparison-feature-width);
+  }
+
+  .kk-fws-comparison__col--phoenix {
+    width: var(--kk-fws-comparison-phoenix-width);
+  }
+
+  .kk-fws-comparison__th {
+    height: 11.2rem;
+    padding: 0 0.8rem;
+    vertical-align: middle;
+    background: transparent;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.2rem;
+    line-height: 1.25;
+    text-align: center;
+    overflow-wrap: anywhere;
+    color: var(--kk-fws-comparison-ink);
+  }
+
+  .kk-fws-comparison__th--phoenix .kk-fws-comparison__th-label {
+    color: #ffffff;
+  }
+
+  .kk-fws-comparison__th-label {
+    display: block;
+  }
+
+  .kk-fws-comparison__logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .kk-fws-comparison__logo-mark {
+    display: block;
+    width: 5rem;
+    height: 4.6rem;
+  }
+
+  .kk-fws-comparison__logo-word {
+    display: block;
+    width: 14.6rem;
+    height: 2.1rem;
+    object-fit: contain;
+  }
+
+  .kk-fws-comparison__logo-image {
+    display: block;
+    width: auto;
+    max-width: 15rem;
+    max-height: 8rem;
+  }
+
+  /* Rows are ruled across the panel, but not across the navy card. */
+  .kk-fws-comparison__row-header,
+  .kk-fws-comparison__cell {
+    height: 7.8rem;
+    vertical-align: middle;
+    border-top: 1px solid var(--kk-fws-comparison-rule);
+  }
+
+  .kk-fws-comparison__cell--phoenix {
+    border-top-color: transparent;
+  }
+
+  .kk-fws-comparison__row-header {
+    padding: 0 0.4rem;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.4rem;
+    line-height: 1.3;
+    text-align: left;
+    color: var(--kk-fws-comparison-ink);
+  }
+
+  .kk-fws-comparison__cell {
+    padding: 0 0.8rem;
+    text-align: center;
+  }
+
+  .kk-fws-comparison__mark {
+    display: inline-block;
+    vertical-align: middle;
+    object-fit: contain;
+  }
+
+  .kk-fws-comparison__mark--yes-badge {
+    width: 4.4rem;
+    height: 4.4rem;
+  }
+
+  .kk-fws-comparison__mark--yes {
+    width: 3.4rem;
+    height: 3.4rem;
+  }
+
+  .kk-fws-comparison__mark--no {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  /* CTA + trust row — Figma `7809:15830`. 64px under the panel (the navy card's 28px
+     overhang included). */
+
+  @media (max-width: 989px) {
+
+    .kk-fws-comparison__table-wrap {
+      margin-top: 5.6rem;
+    }
+
+    .kk-fws-comparison__panel {
+      padding: 1.6rem 2.4rem 2.4rem;
+      border-radius: 2.4rem;
+    }
+
+    .kk-fws-comparison__panel::before {
+      left: calc(2.4rem + (100% - 4.8rem) * 0.3111);
+      width: calc((100% - 4.8rem) * 0.1944);
+      border-radius: 1.6rem;
+    }
+
+    .kk-fws-comparison__th {
+      height: 9rem;
+      font-size: 1.7rem;
+    }
+
+    .kk-fws-comparison__logo-word {
+      width: 11rem;
+      height: 1.6rem;
+    }
+
+    .kk-fws-comparison__row-header,
+    .kk-fws-comparison__cell {
+      height: 6.4rem;
+    }
+
+    .kk-fws-comparison__row-header {
+      font-size: 1.8rem;
+    }
+  }
+
+  /* Mobile — Figma `7809:13095`: the full table stays, scaled down. Columns are 109 / 59 / 51
+     x 3 of the 323px content box, and the navy card sits inside the panel (10px in from the
+     top) rather than overhanging it. */
+  @media (max-width: 749px) {
+    .kk-fws-comparison {
+      --kk-fws-comparison-feature-width: 33.8%;
+      --kk-fws-comparison-phoenix-width: 18.4%;
+
+    }
+
+    .kk-fws-comparison__heading {
+      max-width: none;
+    }
+
+    .kk-fws-comparison__table-wrap {
+      margin-top: 2.4rem;
+    }
+
+    .kk-fws-comparison__panel {
+      padding: 2rem 1.4rem 2.8rem;
+      border-radius: 2.3rem;
+    }
+
+    .kk-fws-comparison__panel::before {
+      top: 1rem;
+      bottom: 2.8rem;
+      left: calc(1.4rem + (100% - 2.8rem) * 0.338 + (100% - 2.8rem) * 0.184 * 0.05);
+      width: calc((100% - 2.8rem) * 0.184 * 0.9);
+      border-radius: 1.4rem;
+    }
+
+    .kk-fws-comparison__col {
+      width: 15.93%;
+    }
+
+    /* Restated after the rule above, which would otherwise win on source order. */
+    .kk-fws-comparison__col--feature {
+      width: var(--kk-fws-comparison-feature-width);
+    }
+
+    .kk-fws-comparison__col--phoenix {
+      width: var(--kk-fws-comparison-phoenix-width);
+    }
+
+    .kk-fws-comparison__th {
+      height: 8.4rem;
+      padding: 0 0.2rem;
+      font-size: 1.15rem;
+      line-height: 1.2;
+    }
+
+    .kk-fws-comparison__logo {
+      gap: 0.8rem;
+    }
+
+    .kk-fws-comparison__logo-mark {
+      width: 3rem;
+      height: 2.74rem;
+    }
+
+    .kk-fws-comparison__logo-word {
+      width: 3rem;
+      height: 0.43rem;
+    }
+
+    .kk-fws-comparison__logo-image {
+      max-width: 4rem;
+      max-height: 4.4rem;
+    }
+
+    .kk-fws-comparison__row-header,
+    .kk-fws-comparison__cell {
+      height: 5.4rem;
+    }
+
+    .kk-fws-comparison__row-header {
+      padding: 0.6rem 0.4rem;
+      font-size: 1.35rem;
+      line-height: 1.25;
+    }
+
+    .kk-fws-comparison__cell {
+      padding: 0 0.2rem;
+    }
+
+    /* Figma `7809:11669`: every mark in a 26px box on mobile. */
+    .kk-fws-comparison__mark--yes-badge,
+    .kk-fws-comparison__mark--yes,
+    .kk-fws-comparison__mark--no {
+      width: 2.6rem;
+      height: 2.6rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Comparison",
+  "tag": "div",
+  "class": "section-kk-fws-comparison",
+  "max_blocks": 14,
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Background",
+      "info": "On the light background the table panel turns white.",
+      "default": "bg-white",
+      "options": [
+        {
+          "label": "White",
+          "value": "bg-white"
+        },
+        {
+          "label": "Light",
+          "value": "bg-light"
+        }
+      ]
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The most convenient and affordable way to enjoy pure, clean drinking in your home"
+    },
+    {
+      "type": "header",
+      "content": "Columns"
+    },
+    {
+      "type": "text",
+      "id": "feature_column_label",
+      "label": "Feature column label",
+      "info": "Visually hidden — read by screen readers only.",
+      "default": "Feature"
+    },
+    {
+      "type": "text",
+      "id": "column_phoenix_label",
+      "label": "Column 1 (highlighted)",
+      "info": "Read by screen readers. The header shows the Phoenix logo instead unless it is switched off below.",
+      "default": "Phoenix Water Filter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phoenix_logo",
+      "label": "Show Phoenix logo in column 1 header",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "phoenix_logo",
+      "label": "Custom column 1 logo",
+      "info": "Overrides the built-in white Phoenix Gravity logo. Use a light logo on a transparent background."
+    },
+    {
+      "type": "text",
+      "id": "column_in_home_label",
+      "label": "Column 2",
+      "default": "In-Home System"
+    },
+    {
+      "type": "text",
+      "id": "column_bottled_label",
+      "label": "Column 3",
+      "default": "Bottled Water"
+    },
+    {
+      "type": "text",
+      "id": "column_pitchers_label",
+      "label": "Column 4",
+      "default": "Pitchers"
+    },
+    {
+      "type": "header",
+      "content": "Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "table_label",
+      "label": "Table description",
+      "default": "Phoenix Water Filter compared with in-home systems, bottled water and pitchers"
+    },
+    {
+      "type": "text",
+      "id": "yes_label",
+      "label": "Included label",
+      "default": "Yes"
+    },
+    {
+      "type": "text",
+      "id": "no_label",
+      "label": "Not included label",
+      "default": "No"
+    },
+    {
+      "type": "header",
+      "content": "Call to action",
+      "info": "The button shows only when it has both a label and a link. Add \"Trust item\" blocks for the row underneath."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Send Me My Free Tower"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Point this at the on-page offer section, e.g. #kk-fws-offer."
+    },
+    {
+      "type": "checkbox",
+      "id": "button_arrow",
+      "label": "Show arrow on button",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "primary",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature",
+          "label": "Feature",
+          "default": "Affordable"
+        },
+        {
+          "type": "checkbox",
+          "id": "phoenix",
+          "label": "Phoenix Water Filter",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "in_home",
+          "label": "In-Home System",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "bottled",
+          "label": "Bottled Water",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "pitchers",
+          "label": "Pitchers",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Button Trust Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Comparison",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "Affordable",
+            "phoenix": true,
+            "in_home": false,
+            "bottled": false,
+            "pitchers": true
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "Portable",
+            "phoenix": true,
+            "in_home": false,
+            "bottled": true,
+            "pitchers": true
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "Durable Stainless Steel",
+            "phoenix": true,
+            "in_home": true,
+            "bottled": false,
+            "pitchers": false
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "100-day Risk-Free Trial",
+            "phoenix": true,
+            "in_home": false,
+            "bottled": false,
+            "pitchers": false
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "Easy To Maintain",
+            "phoenix": true,
+            "in_home": false,
+            "bottled": true,
+            "pitchers": true
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "Large Capacity",
+            "phoenix": true,
+            "in_home": true,
+            "bottled": false,
+            "pitchers": false
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature": "No Plumbing Required",
+            "phoenix": true,
+            "in_home": false,
+            "bottled": true,
+            "pitchers": true
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

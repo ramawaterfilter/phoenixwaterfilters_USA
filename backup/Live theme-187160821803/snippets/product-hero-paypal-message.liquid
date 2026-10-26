@@ -1,0 +1,17 @@
+{% doc %}
+Renders PayPal messaging placeholder.
+@param {product} product - Product used for the current price amount.
+@example
+{% render 'product-hero-paypal-message', product: product %}
+{% enddoc %}
+
+{% if product.available %}
+  <div
+    data-pp-message
+    data-pp-style-layout="text"
+    data-pp-style-logo-type="inline"
+    data-pp-style-text-color="black"
+    data-pp-amount="{{ product.selected_or_first_available_variant.price | divided_by: 100.0 }}"
+    data-pp-language=""
+  ></div>
+{% endif %}

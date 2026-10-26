@@ -1,0 +1,148 @@
+    <div
+    class="dynamicy-padding-sections"
+    style="padding-top: {{ section.settings.padding_top | default: 20 }}px; padding-bottom: {{ section.settings.padding_bottom | default: 20 }}px;"
+    >
+    
+    {% if section.settings.text_content != blank %}
+    <div class="read-more-section">
+    <div class="text-wrapper" style="--visible-lines: {{ section.settings.visible_lines }};">
+    <div class="read-more-text" id="readMoreText">
+    {{ section.settings.text_content }}
+    </div>
+    </div>
+    
+    <button id="toggleButton" class="read-more-btn">
+    {{ section.settings.read_more_label }}
+    </button>
+    </div>
+    {% endif %}
+    
+    
+    </div>
+    <style>
+    .read-more-section span {
+    text-decoration: none !important;
+    }
+    .read-more-section {
+    max-width: {{ section.settings.w1 }}%;
+    margin: auto;
+    }
+    .dynamicy-padding-sections {
+    background: {{section.settings.c1}};
+    margin-bottom: 28px;
+    }
+    .read-more-text {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: var(--visible-lines);
+    -webkit-box-orient: vertical;
+    transition: all 0.3s ease-in-out;
+    }
+    .read-more-text.expanded {
+    -webkit-line-clamp: unset;
+    display: block;
+    }
+    .read-more-btn {
+    margin-top: 10px;
+    color: black;
+    padding-top: 40px;
+    border: none;
+    cursor: pointer;
+    }
+    .read-more-btn:hover {
+    background: white;
+    color: #4b1407;
+    }
+    div#readMoreText a {
+    color: #4c1405;
+    font-weight: bold !important;
+    }
+    div#readMoreText a strong {
+    color: #4c1405;
+    font-weight: bold !important;
+    }
+    </style>
+    
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const text = document.getElementById("readMoreText");
+    const button = document.getElementById("toggleButton");
+    const moreLabel = "{{ section.settings.read_more_label }}";
+    const lessLabel = "{{ section.settings.read_less_label }}";
+    
+    button.addEventListener("click", function() {
+    text.classList.toggle("expanded");
+    button.innerText = text.classList.contains("expanded") ? lessLabel : moreLabel;
+    });
+    });
+    </script>
+    {% schema %}
+    {
+    "name": "Read More Text",
+    "tag": "section",
+    "settings": [
+    {
+    "type": "richtext",
+    "id": "text_content",
+    "label": "Text Content",
+    "default": "<p>Lorem Ipsum <strong>demo text</strong> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a t<em>&lt;br&gt;, &lt;strong&gt;, &lt;ul&gt; etc.</em></p>"
+    },
+    {
+    "type": "text",
+    "id": "read_more_label",
+    "label": "Read More Button Label",
+    "default": "Read More"
+    },
+    {
+    "type": "text",
+    "id": "read_less_label",
+    "label": "Read Less Button Label",
+    "default": "Read Less"
+    },
+    {
+    "type": "number",
+    "id": "visible_lines",
+    "label": "Number of visible lines before Read More",
+    "default": 5
+    },
+    {
+    "type": "color",
+    "id": "c1",
+    "label": "BG Color",
+    "default": "#f5eedd"
+    },
+    {
+    "type": "range",
+    "id": "w1",
+    "label": "Section Width",
+    "min": 20,
+    "max": 100,
+    "step": 5,
+    "default": 75
+    },
+    {
+    "type": "range",
+    "id": "padding_top",
+    "label": "Padding Top",
+    "min": 0,
+    "max": 100,
+    "step": 1,
+    "default": 20
+    },
+    {
+    "type": "range",
+    "id": "padding_bottom",
+    "label": "Padding Bottom",
+    "min": 0,
+    "max": 100,
+    "step": 1,
+    "default": 20
+    }
+    ],
+    "presets": [
+    {
+    "name": "Read More Text Section"
+    }
+    ]
+    }
+    {% endschema %}

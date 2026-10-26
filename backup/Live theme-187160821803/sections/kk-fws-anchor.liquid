@@ -1,0 +1,49 @@
+{%- comment -%}
+  A stable scroll target.
+
+  Why this exists
+  ---------------
+  Shopify ids a template section `shopify-section-template--<theme_id>__<key>`, not
+  `shopify-section-<key>`. The theme id differs per theme and per environment, so an href
+  cannot hardcode it. Our own campaign sections solve this by putting a plain `id` on their
+  own root element, but items 9 (testimonials) and 12 (FAQ) are REUSED theme sections whose
+  .liquid files we are not permitted to edit.
+
+  So this section is placed immediately before each of those in the template order and
+  provides the anchor instead. It renders one empty element and nothing else.
+
+  `scroll-margin-top` keeps the heading clear of the viewport edge on jump.
+{%- endcomment -%}
+
+{%- if section.settings.anchor_id != blank -%}
+  <div
+    id="{{ section.settings.anchor_id | handle }}"
+    class="kk-fws-anchor"
+    aria-hidden="true"
+  ></div>
+{%- endif -%}
+
+{% stylesheet %}
+  .kk-fws-anchor {
+    display: block;
+    height: 0;
+    scroll-margin-top: 2rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Anchor",
+  "tag": "div",
+  "class": "section-kk-fws-anchor",
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor id",
+      "info": "Without the '#'. Link to it as #your-id.",
+      "default": "kk-fws-anchor"
+    }
+  ]
+}
+{% endschema %}

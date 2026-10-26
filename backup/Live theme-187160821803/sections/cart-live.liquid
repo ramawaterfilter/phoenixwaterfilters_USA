@@ -1,0 +1,15 @@
+{%- comment -%}
+  Minimal cart payload used by the AJAX add-to-cart flow.
+  Requested via the Section Rendering API (?sections=cart-live) on /cart/add.js
+  so the full cart can be fetched in the SAME request as the add, instead of a
+  second sequential /cart.js round-trip. Output is the cart JSON wrapped in a
+  marker so it can be extracted from the rendered section HTML.
+{%- endcomment -%}
+<!--CARTJSON-->{{ cart | json }}<!--/CARTJSON-->
+{% schema %}
+{
+  "name": "Cart live payload",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

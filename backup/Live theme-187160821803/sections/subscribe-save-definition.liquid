@@ -1,0 +1,167 @@
+{{ 'subscribe-save.css' | asset_url | stylesheet_tag }}
+{% style %}
+  #shopify-section-{{ section.id }} .ss-definition { --ss-bg: {{ section.settings.background_color }}; --ss-ink: {{ section.settings.text_color }}; --ss-pad: {{ section.settings.desktop_padding }}px; --ss-pad-mobile: {{ section.settings.mobile_padding }}px; }
+  #shopify-section-{{ section.id }} .ss-definition .ss-wrap { width: min(1280px, calc(100% - 80px)); grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: center; gap: 80px; }
+  #shopify-section-{{ section.id }} .ss-definition .ss-intro { max-width: none; margin-bottom: 0; }
+  #shopify-section-{{ section.id }} .ss-definition .ss-text-link { margin-top: 20px; }
+  #shopify-section-{{ section.id }} .ss-definition .ss-definition-grid { gap: 0; overflow: hidden; background: #f5f3f1; border-radius: 12px; }
+  #shopify-section-{{ section.id }} .ss-definition .ss-comparison { padding: 25px 30px; border: 0; border-radius: 0; box-shadow: none; }
+  #shopify-section-{{ section.id }} .ss-definition .ss-comparison--positive { background: #edf5fa; }
+  #shopify-section-{{ section.id }} .ss-definition .ss-comparison--negative { background: #f5f3f1; }
+
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} .ss-definition .ss-wrap { width: calc(100% - 40px); grid-template-columns: 1fr; gap: 28px; }
+    #shopify-section-{{ section.id }} .ss-definition .ss-comparison { padding: 24px; }
+  }
+{% endstyle %}
+<section class="ss ss-definition">
+  <div class="ss-wrap">
+    <header class="ss-intro">
+      <p class="ss-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h2>{{ section.settings.heading }}</h2>
+      <div class="ss-intro-copy">
+        {% render 'ss-qa-body', body: section.settings.body, qa_1: section.settings.qa_1, qa_2: section.settings.qa_2, qa_3: section.settings.qa_3 %}
+      </div>
+      <a class="ss-text-link" href="{{ section.settings.link_url | default: '#billing' }}">
+        {{- section.settings.link_label | escape -}}
+      </a>
+    </header>
+    <aside class="ss-definition-grid">
+      {% for block in section.blocks %}
+        <article class="ss-card ss-comparison ss-comparison--{{ block.settings.state }}" {{ block.shopify_attributes }}>
+          <span class="ss-mono">{{ block.settings.label | escape }}</span>
+          <h3>{{ block.settings.title }}</h3>
+          <div class="ss-copy">{{ block.settings.body }}</div>
+        </article>
+      {% endfor %}
+    </aside>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Subscribe Save Definition",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body copy"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#153a5b"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop vertical spacing",
+      "default": 88,
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile vertical spacing",
+      "default": 56,
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "comparison_item",
+      "name": "Comparison item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "state",
+          "label": "State",
+          "default": "positive",
+          "options": [
+            {
+              "value": "positive",
+              "label": "Positive"
+            },
+            {
+              "value": "negative",
+              "label": "Negative"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Short label"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subscribe Save Definition",
+      "blocks": [
+        {
+          "type": "comparison_item",
+          "settings": {
+            "state": "positive",
+            "label": "IT IS",
+            "title": "Filters on a schedule.",
+            "body": "<p>Subscribe &amp; Save means automatic filter deliveries and recurring charges.</p>"
+          }
+        },
+        {
+          "type": "comparison_item",
+          "settings": {
+            "state": "negative",
+            "label": "IT ISN’T",
+            "title": "A newsletter signup.",
+            "body": "<p>Phoenix email updates mean news and offers. Joining or leaving the email list does not start or stop a filter subscription.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

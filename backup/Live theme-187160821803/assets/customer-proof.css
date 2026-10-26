@@ -1,0 +1,108 @@
+/* Social proof row (snippets/customer-proof.liquid), Figma `7809:10270`.
+   Photos + count badge beside the stars and text; on mobile they stack, centred. */
+
+.customer-proof {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.customer-proof--center {
+  justify-content: center;
+}
+
+.customer-proof__avatars {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.customer-proof__avatars-image {
+  display: block;
+  width: 165px;
+  height: 44px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.customer-proof__count {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 46px;
+  height: 46px;
+  margin-left: -8px;
+  padding: 0 5px;
+  border: 3px solid var(--customer-proof-ring, #f5f6f8);
+  border-radius: 50px;
+  background: var(--customer-proof-accent, #2764ff);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.customer-proof__rating {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.customer-proof__stars {
+  display: block;
+  flex-shrink: 0;
+  width: 120px;
+  height: 20px;
+  color: var(--customer-proof-stars, #fbbc04);
+}
+
+.customer-proof__text {
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.2;
+  text-align: left;
+  color: var(--customer-proof-text, #4a5068);
+}
+
+@media (max-width: 767px) {
+  .customer-proof {
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .customer-proof__avatars-image {
+    width: 135px;
+    height: 36px;
+  }
+
+  .customer-proof__count {
+    min-width: 38px;
+    height: 38px;
+    margin-left: -14px;
+    padding: 0 4px;
+    border-width: 2px;
+    border-color: #ffffff;
+    font-size: 11px;
+  }
+
+  .customer-proof__rating {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .customer-proof__stars {
+    width: 80px;
+    height: 13px;
+  }
+
+  .customer-proof__text {
+    font-size: 14px;
+    text-align: center;
+  }
+}

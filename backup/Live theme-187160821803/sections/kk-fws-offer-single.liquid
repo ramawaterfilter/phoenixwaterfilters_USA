@@ -1,0 +1,1478 @@
+{%- comment -%}
+  KK FWS Offer — Single — Figma `7809:7653` (with a subscription), `8028:157` (without).
+
+  The buy box for a product with ONE variant (e.g. POSTreat Steel): the KK FWS Offer's gallery,
+  intro, white buy card, button, payments and product accordion, without the size / plan
+  steps and order summary that only make sense for the multi-variant campaign tower.
+
+  - The product has a selling plan (an Appstle subscription) on its variant: the intro sits
+    above the card, and the card opens with the Subscribe & Save / One-Time toggle. Subscribe
+    shows the subscription panel (save ribbon, struck price, subscription price, details and
+    points) and posts the plan; One-Time posts none.
+  - No selling plan: no toggle and no subscription panel — the intro moves into the card and
+    the button follows it (Figma `8028:157`).
+
+  NO PRICE IS TYPED INTO A SETTING. Every figure comes from the product: the variant's price
+  and compare-at price, its first selling plan allocation (Appstle), and that plan's cadence.
+  Authored copy refers to them with tokens, replaced by snippets/kk-fws-price-tokens.liquid:
+
+    [price] [compare_price] [subscription_price] [save] [interval]   this product
+    [refill_title] [refill_price] [refill_compare_price]
+    [refill_subscription_price] [refill_save] [refill_interval]       the "Replacement product"
+    [free_shipping]                                                   Theme settings > Your cart
+
+  The refill tokens fall back to this product when no replacement product is picked. Token
+  figures drop trailing zeros; the panel's own figures keep them.
+
+  STYLES. The markup reuses the KK FWS Offer's `.kk-fws-offer__*` classes, so it inherits that
+  section's stylesheet (Shopify bundles every section's stylesheet tag into one file that
+  loads on every page). This file only adds what the offer doesn't have: the breadcrumb, the
+  subscription panel, the "Subscription detail" disclosure, the button arrow, the shipping line
+  and the two-column perks. A change to the offer's gallery, toggle, card or accordion styling
+  therefore lands here too, which is the point — the two buy boxes stay one design.
+
+  SCRIPTS are this section's own (the offer's are keyed to `#kk-fws-offer`, which this section
+  deliberately does not use, so both can sit on one page without clashing): the pay toggle,
+  the gallery thumbnails / video posters, and the Appstle guard.
+{%- endcomment -%}
+
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+
+  assign allocation = blank
+  if variant.selling_plan_allocations.size > 0
+    assign allocation = variant.selling_plan_allocations.first
+  endif
+
+  assign subscription_offered = false
+  if allocation != blank
+    assign subscription_offered = true
+  endif
+
+  comment
+    A product that can only be bought on a plan gets no One-Time option, so no toggle either.
+  endcomment
+  assign show_toggle = subscription_offered
+  if product.requires_selling_plan
+    assign show_toggle = false
+  endif
+
+  assign default_pay = 'onetime'
+  if subscription_offered
+    if section.settings.default_pay == 'subscribe' or product.requires_selling_plan
+      assign default_pay = 'subscribe'
+    endif
+  endif
+
+  assign onetime_price = variant.price
+  assign compare_price = variant.compare_at_price | default: 0
+  assign subscription_price = onetime_price
+  assign save_cents = 0
+  assign selling_plan_id = ''
+  if subscription_offered
+    assign subscription_price = allocation.price
+    assign save_cents = onetime_price | minus: subscription_price
+    assign selling_plan_id = allocation.selling_plan.id
+  endif
+
+  comment
+    The subscription panel strikes the compare-at price when there is one above the
+    subscription price, else the one-time price.
+  endcomment
+  assign struck_price = 0
+  if compare_price > subscription_price
+    assign struck_price = compare_price
+  elsif onetime_price > subscription_price
+    assign struck_price = onetime_price
+  endif
+
+  assign onetime_money = onetime_price | money
+  assign subscription_money = subscription_price | money
+
+  assign interval = ''
+  if subscription_offered
+    capture interval
+      render 'kk-fws-plan-interval', selling_plan: allocation.selling_plan
+    endcapture
+  endif
+
+  comment
+    The replacement product (e.g. the refill media a subscription delivers), for the refill
+    tokens. Falls back to this product.
+  endcomment
+  assign refill = section.settings.replacement_product | default: product
+  assign refill_variant = refill.selected_or_first_available_variant
+  assign refill_price = refill_variant.price
+  assign refill_compare = refill_variant.compare_at_price | default: 0
+  assign refill_subscription_price = refill_price
+  assign refill_interval = ''
+  if refill_variant.selling_plan_allocations.size > 0
+    assign refill_allocation = refill_variant.selling_plan_allocations.first
+    assign refill_subscription_price = refill_allocation.price
+    capture refill_interval
+      render 'kk-fws-plan-interval', selling_plan: refill_allocation.selling_plan
+    endcapture
+  endif
+  assign refill_save = refill_price | minus: refill_subscription_price
+
+  assign free_shipping_cents = settings.free_shipping_threshold | times: 100
+
+  assign t_price = onetime_price | money_without_trailing_zeros
+  assign t_compare = compare_price | money_without_trailing_zeros
+  assign t_subscription = subscription_price | money_without_trailing_zeros
+  assign t_save = save_cents | money_without_trailing_zeros
+  assign t_refill_price = refill_price | money_without_trailing_zeros
+  assign t_refill_compare = refill_compare | money_without_trailing_zeros
+  assign t_refill_subscription = refill_subscription_price | money_without_trailing_zeros
+  assign t_refill_save = refill_save | money_without_trailing_zeros
+  assign t_free_shipping = free_shipping_cents | money_without_trailing_zeros
+
+  capture price_tokens
+    echo '[price]~~' | append: t_price
+    echo '||[compare_price]~~' | append: t_compare
+    echo '||[subscription_price]~~' | append: t_subscription
+    echo '||[save]~~' | append: t_save
+    echo '||[interval]~~' | append: interval
+    echo '||[refill_title]~~' | append: refill.title
+    echo '||[refill_price]~~' | append: t_refill_price
+    echo '||[refill_compare_price]~~' | append: t_refill_compare
+    echo '||[refill_subscription_price]~~' | append: t_refill_subscription
+    echo '||[refill_save]~~' | append: t_refill_save
+    echo '||[refill_interval]~~' | append: refill_interval
+    echo '||[free_shipping]~~' | append: t_free_shipping
+  endcapture
+
+  comment
+    Rating — the reviews app's metafields, else the "Rating score" / "Rating count" settings.
+  endcomment
+  assign rating_score = section.settings.rating_score
+  assign rating_count = section.settings.rating_count
+  if product.metafields.reviews.rating.value != blank
+    assign rating_score = product.metafields.reviews.rating.value.rating | round: 2
+  endif
+  if product.metafields.reviews.rating_count.value > 0
+    assign rating_count = product.metafields.reviews.rating_count.value
+  endif
+  assign rating_text = ''
+  if rating_score != blank and section.settings.rating_text != blank
+    assign rating_text = section.settings.rating_text | replace: '[score]', rating_score | replace: '[count]', rating_count
+  endif
+
+  assign intro_headline = section.settings.headline | default: product.title
+
+  assign media_limit = section.settings.media_limit
+  assign gallery_count = 0
+
+  assign perk_blocks = section.blocks | where: 'type', 'perk'
+  assign point_blocks = section.blocks | where: 'type', 'subscription_point'
+-%}
+
+{%- capture intro -%}
+  <div class="kk-fws-offer__intro">
+    {%- if rating_text != blank -%}
+      <div class="kk-fws-offer__rating kk-fws-offer-single__rating">
+        <img
+          class="kk-fws-offer__rating-stars"
+          src="{{ 'kk-fws-icon-stars-gold.svg' | asset_url }}"
+          alt=""
+          width="126"
+          height="21"
+          aria-hidden="true"
+          loading="lazy"
+        >
+        <span class="kk-fws-offer__rating-count">{{ rating_text }}</span>
+      </div>
+    {%- endif -%}
+
+    <h1 class="kk-fws-offer__title">{{ intro_headline }}</h1>
+
+    {%- if section.settings.tap_badge_text != blank -%}
+      <p class="kk-fws-offer__tap-badge">
+        {%- if section.settings.tap_badge_icon != blank -%}
+          {{
+            section.settings.tap_badge_icon
+            | image_url: width: 52
+            | image_tag: class: 'kk-fws-offer__tap-badge-icon', width: 26, height: 18, loading: 'lazy', alt: ''
+          }}
+        {%- elsif section.settings.tap_badge_flag -%}
+          <img
+            class="kk-fws-offer__tap-badge-icon"
+            src="{{ 'kk-fws-icon-flag-us.svg' | asset_url }}"
+            alt=""
+            width="26"
+            height="18"
+            aria-hidden="true"
+            loading="lazy"
+          >
+        {%- endif -%}
+        {{- section.settings.tap_badge_text -}}
+      </p>
+    {%- endif -%}
+
+    {%- if section.settings.introduction != blank -%}
+      <div class="kk-fws-offer__introduction">{%- render 'kk-fws-price-tokens', text: section.settings.introduction, tokens: price_tokens -%}</div>
+    {%- endif -%}
+  </div>
+{%- endcapture -%}
+
+<section
+  class="kk-fws-offer kk-fws-offer-single{% unless subscription_offered %} kk-fws-offer-single--no-subscription{% endunless %}"
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handle }}"{% endif %}
+  data-kk-fws-offer-single
+  data-kk-fws-pay-mode="{{ default_pay }}"
+  style="
+    --kk-fws-offer-background: {{ section.settings.background_color }};
+    --kk-fws-offer-single-arrow: url('{{ 'kk-fws-icon-button-arrow.svg' | asset_url }}');
+  "
+>
+  <div class="kk-fws-offer__container kk-fws-container">
+    {%- if product == blank -%}
+      <p class="kk-fws-offer__notice">
+        This section needs a product. Preview it on a product template.
+      </p>
+    {%- else -%}
+      {%- if section.settings.show_breadcrumb -%}
+        <nav class="kk-fws-offer-single__breadcrumb" aria-label="Breadcrumb">
+          <ol class="kk-fws-offer-single__breadcrumb-list">
+            <li><a href="{{ routes.root_url }}">{{ section.settings.breadcrumb_home }}</a></li>
+            {%- if section.settings.breadcrumb_parent != blank -%}
+              <li><a href="{{ section.settings.breadcrumb_parent_link | default: routes.all_products_collection_url }}">{{ section.settings.breadcrumb_parent }}</a></li>
+            {%- endif -%}
+            <li aria-current="page">{{ section.settings.breadcrumb_current | default: product.title }}</li>
+          </ol>
+        </nav>
+      {%- endif -%}
+
+      <div class="kk-fws-offer__layout">
+        <div class="kk-fws-offer__media">
+          {%- comment -%}
+            id="product-slider" is what src/js/sliders.js keys its gallery options on (no loop,
+            no autoplay, not centred) and the name it registers the instance under, which the
+            thumbnail script below drives. One per page: don't pair this section with another
+            gallery that uses the same id.
+          {%- endcomment -%}
+          <div
+            id="product-slider"
+            class="swiper-container swiper kk-fws-offer__slider"
+            data-slidestoshow="1"
+            aria-label="{{ section.settings.gallery_label | replace: '[title]', product.title | escape }}"
+          >
+            <div class="swiper-wrapper">
+              {%- for media in product.media -%}
+                {%- if media.media_type == 'image' or media.media_type == 'video' or media.media_type == 'external_video' -%}
+                  {%- if media_limit > 0 and gallery_count >= media_limit -%}
+                    {%- break -%}
+                  {%- endif -%}
+                  {%- assign gallery_count = gallery_count | plus: 1 -%}
+                  {%- assign media_alt = media.alt | default: product.title -%}
+                  <div class="swiper-slide kk-fws-offer__slide">
+                    {%- if media.media_type == 'image' -%}
+                      {{
+                        media.preview_image
+                        | image_url: width: 1140
+                        | image_tag:
+                          class: 'kk-fws-offer__slide-image',
+                          loading: 'lazy',
+                          widths: '375, 570, 750, 1140',
+                          sizes: '(max-width: 749px) calc(100vw - 4rem), 569px',
+                          alt: media_alt
+                      }}
+                    {%- else -%}
+                      <div
+                        class="kk-fws-offer__video"
+                        data-kk-fws-video
+                        {% if media.media_type == 'external_video' %}
+                          data-kk-fws-video-embed="{{ media | external_video_url: autoplay: 'true' | escape }}"
+                        {% else %}
+                          data-kk-fws-video-src="{{ media.sources.last.url | escape }}"
+                        {% endif %}
+                      >
+                        {{
+                          media.preview_image
+                          | image_url: width: 1140
+                          | image_tag:
+                            class: 'kk-fws-offer__slide-image',
+                            loading: 'lazy',
+                            widths: '375, 570, 750, 1140',
+                            sizes: '(max-width: 749px) calc(100vw - 4rem), 569px',
+                            alt: media_alt
+                        }}
+                        <button class="kk-fws-offer__play" type="button">
+                          <span class="sr-only">{{ section.settings.play_video_label }}</span>
+                        </button>
+                      </div>
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if gallery_count == 0 -%}
+                <div class="swiper-slide kk-fws-offer__slide">
+                  {{ 'product-1' | placeholder_svg_tag: 'kk-fws-offer__slide-image' }}
+                </div>
+              {%- endif -%}
+            </div>
+
+            <button
+              class="swiper-prev kk-fws-offer__nav kk-fws-offer__nav--prev"
+              type="button"
+              aria-label="{{ section.settings.previous_label | escape }}"
+            >
+              <img
+                class="kk-fws-offer__nav-icon"
+                src="{{ 'kk-fws-icon-gallery-arrow.svg' | asset_url }}"
+                alt=""
+                width="18"
+                height="18"
+                aria-hidden="true"
+              >
+            </button>
+            <button
+              class="swiper-next kk-fws-offer__nav kk-fws-offer__nav--next"
+              type="button"
+              aria-label="{{ section.settings.next_label | escape }}"
+            >
+              <img
+                class="kk-fws-offer__nav-icon"
+                src="{{ 'kk-fws-icon-gallery-arrow.svg' | asset_url }}"
+                alt=""
+                width="18"
+                height="18"
+                aria-hidden="true"
+              >
+            </button>
+          </div>
+
+          {%- comment -%} A plain grid, not a `.control` Swiper — see the note in kk-fws-offer.liquid. {%- endcomment -%}
+          {%- if gallery_count > 1 -%}
+            {%- assign thumb_index = 0 -%}
+            {%- liquid
+              assign thumb_columns = gallery_count
+              if thumb_columns > 5
+                assign thumb_columns = 5
+              endif
+            -%}
+            <div
+              class="kk-fws-offer__thumbs"
+              data-kk-fws-thumbs
+              role="tablist"
+              aria-label="{{ section.settings.thumbs_label | escape }}"
+              style="--kk-fws-offer-single-thumbs: {{ thumb_columns }};"
+            >
+              {%- for media in product.media -%}
+                {%- if media.media_type == 'image' or media.media_type == 'video' or media.media_type == 'external_video' -%}
+                  {%- if thumb_index >= gallery_count -%}
+                    {%- break -%}
+                  {%- endif -%}
+                  <button
+                    class="kk-fws-offer__thumb"
+                    type="button"
+                    role="tab"
+                    data-kk-fws-thumb="{{ thumb_index }}"
+                    aria-label="Show image {{ thumb_index | plus: 1 }}"
+                    aria-selected="{% if thumb_index == 0 %}true{% else %}false{% endif %}"
+                  >
+                    {{
+                      media.preview_image
+                      | image_url: width: 300
+                      | image_tag:
+                        class: 'kk-fws-offer__thumb-image',
+                        loading: 'lazy',
+                        widths: '150, 300',
+                        sizes: '135px',
+                        alt: ''
+                    }}
+                    {%- unless media.media_type == 'image' -%}
+                      <span class="kk-fws-offer__thumb-play" aria-hidden="true"></span>
+                    {%- endunless -%}
+                  </button>
+                  {%- assign thumb_index = thumb_index | plus: 1 -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="kk-fws-offer__panel">
+          {%- if subscription_offered -%}
+            {{ intro }}
+          {%- endif -%}
+
+          {%- form 'product', product, class: 'kk-fws-offer__form', novalidate: 'novalidate' -%}
+            {%- unless subscription_offered -%}
+              {{ intro }}
+            {%- endunless -%}
+
+            <input type="hidden" name="id" value="{{ variant.id }}" data-variant-select>
+
+            {%- comment -%}
+              The posted plan. Disabled = not submitted, which is the One-Time state (Shopify
+              rejects an empty `selling_plan`). `data-kk-fws-selling-plan` marks it as ours for
+              the Appstle guard below.
+            {%- endcomment -%}
+            {%- if subscription_offered -%}
+              <input
+                type="hidden"
+                name="selling_plan"
+                value="{{ selling_plan_id }}"
+                data-kk-fws-selling-plan
+                {% if default_pay != 'subscribe' %}disabled{% endif %}
+              >
+            {%- endif -%}
+
+            {%- if show_toggle -%}
+              <fieldset class="kk-fws-offer__pays">
+                <legend class="kk-fws-offer__step kk-fws-offer__step--hidden">
+                  <span class="kk-fws-offer__step-title">{{ section.settings.pay_legend }}</span>
+                </legend>
+
+                <div class="kk-fws-offer__pay-list">
+                  <label class="kk-fws-offer__pay">
+                    <input
+                      class="kk-fws-offer__pay-input"
+                      type="radio"
+                      name="kk-fws-single-pay-{{ section.id }}"
+                      value="subscribe"
+                      data-kk-fws-pay="subscribe"
+                      {% if default_pay == 'subscribe' %}checked{% endif %}
+                    >
+                    <span class="kk-fws-offer__pay-card">
+                      {%- if section.settings.subscribe_ribbon != blank and save_cents > 0 -%}
+                        <span class="kk-fws-offer__pay-ribbon">
+                          {%- render 'kk-fws-price-tokens', text: section.settings.subscribe_ribbon, tokens: price_tokens -%}
+                        </span>
+                      {%- endif -%}
+                      <span class="kk-fws-offer__pay-body">
+                        <span class="kk-fws-offer__pay-name">
+                          <span class="kk-fws-offer__pay-label">{%- render 'kk-fws-price-tokens', text: section.settings.subscribe_label, tokens: price_tokens -%}</span>
+                        </span>
+                      </span>
+                    </span>
+                  </label>
+
+                  <label class="kk-fws-offer__pay">
+                    <input
+                      class="kk-fws-offer__pay-input"
+                      type="radio"
+                      name="kk-fws-single-pay-{{ section.id }}"
+                      value="onetime"
+                      data-kk-fws-pay="onetime"
+                      {% if default_pay != 'subscribe' %}checked{% endif %}
+                    >
+                    <span class="kk-fws-offer__pay-card">
+                      <span class="kk-fws-offer__pay-body">
+                        <span class="kk-fws-offer__pay-name">
+                          <span class="kk-fws-offer__pay-label">
+                            {%- render 'kk-fws-price-tokens', text: section.settings.onetime_label, tokens: price_tokens -%}
+                            {%- if section.settings.onetime_show_price -%}
+                              <span class="kk-fws-offer-single__pay-dot" aria-hidden="true"> · </span>
+                              <span class="kk-fws-offer-single__pay-price">{{ onetime_money }}</span>
+                            {%- endif -%}
+                          </span>
+                        </span>
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              </fieldset>
+            {%- endif -%}
+
+            {%- if subscription_offered -%}
+              {%- comment -%} Subscribe & Save only — Figma `7809:7801`. {%- endcomment -%}
+              <div class="kk-fws-offer-single__subscription" data-kk-fws-face="subscribe">
+                <div class="kk-fws-offer-single__plan">
+                  {%- if section.settings.plan_ribbon != blank and save_cents > 0 -%}
+                    <span class="kk-fws-offer-single__plan-ribbon">
+                      {%- render 'kk-fws-price-tokens', text: section.settings.plan_ribbon, tokens: price_tokens -%}
+                    </span>
+                  {%- endif -%}
+
+                  <div class="kk-fws-offer-single__plan-head">
+                    <p class="kk-fws-offer-single__plan-title">{%- render 'kk-fws-price-tokens', text: section.settings.plan_title, tokens: price_tokens -%}</p>
+                    <p class="kk-fws-offer-single__plan-price">
+                      {%- if struck_price > 0 -%}
+                        <s class="kk-fws-offer-single__plan-compare">{{ struck_price | money }}</s>
+                      {%- endif -%}
+                      <span class="kk-fws-offer-single__plan-amount">{{ subscription_money }}</span>
+                    </p>
+                  </div>
+
+                  {%- if section.settings.plan_text != blank or point_blocks.size > 0 -%}
+                    <hr class="kk-fws-offer-single__plan-rule">
+
+                    <div class="kk-fws-offer-single__plan-details">
+                      {%- if section.settings.plan_text != blank -%}
+                        <div class="kk-fws-offer-single__plan-text">{%- render 'kk-fws-price-tokens', text: section.settings.plan_text, tokens: price_tokens -%}</div>
+                      {%- endif -%}
+
+                      {%- if point_blocks.size > 0 -%}
+                        <ul class="kk-fws-offer-single__points">
+                          {%- for block in point_blocks -%}
+                            <li class="kk-fws-offer-single__point" {{ block.shopify_attributes }}>
+                              <img
+                                class="kk-fws-offer-single__point-icon"
+                                src="{{ 'kk-fws-icon-check-blue.svg' | asset_url }}"
+                                alt=""
+                                width="20"
+                                height="20"
+                                aria-hidden="true"
+                                loading="lazy"
+                              >
+                              <span class="kk-fws-offer-single__point-text">{%- render 'kk-fws-price-tokens', text: block.settings.text, tokens: price_tokens -%}</span>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                    </div>
+                  {%- endif -%}
+                </div>
+
+                {%- if section.settings.detail_label != blank and section.settings.detail_content != blank -%}
+                  <details class="kk-fws-offer-single__detail">
+                    <summary class="kk-fws-offer-single__detail-summary">
+                      <img
+                        class="kk-fws-offer-single__detail-icon"
+                        src="{{ 'kk-fws-icon-clock.svg' | asset_url }}"
+                        alt=""
+                        width="18"
+                        height="18"
+                        aria-hidden="true"
+                        loading="lazy"
+                      >
+                      {%- render 'kk-fws-price-tokens', text: section.settings.detail_label, tokens: price_tokens -%}
+                    </summary>
+                    <div class="kk-fws-offer-single__detail-content">{%- render 'kk-fws-price-tokens', text: section.settings.detail_content, tokens: price_tokens -%}</div>
+                  </details>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            <div class="kk-fws-offer__button-wrap">
+              {%- if variant.available -%}
+                <button
+                  class="kk-fws-offer__button kk-fws-offer-single__button{% if section.settings.button_arrow %} kk-fws-offer-single__button--arrow{% endif %}"
+                  type="submit"
+                  name="add"
+                >
+                  {%- render 'kk-fws-price-tokens', text: section.settings.button_label, tokens: price_tokens -%}
+                </button>
+              {%- else -%}
+                <button class="kk-fws-offer__button kk-fws-offer-single__button" type="button" disabled>
+                  {{- section.settings.sold_out_text -}}
+                </button>
+              {%- endif -%}
+
+              {%- if section.settings.shipping_text != blank -%}
+                <p class="kk-fws-offer-single__shipping">{%- render 'kk-fws-price-tokens', text: section.settings.shipping_text, tokens: price_tokens -%}</p>
+              {%- endif -%}
+            </div>
+
+            {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+              <ul class="kk-fws-offer__payments" aria-label="{{ section.settings.payments_label | escape }}">
+                {%- for type in shop.enabled_payment_types -%}
+                  <li class="kk-fws-offer__payment">{{ type | payment_type_svg_tag: class: 'kk-fws-offer__payment-icon' }}</li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+
+            {%- if perk_blocks.size > 0 -%}
+              <ul class="kk-fws-offer-single__perks">
+                {%- for block in perk_blocks -%}
+                  <li class="kk-fws-offer-single__perk" {{ block.shopify_attributes }}>
+                    <span class="kk-fws-offer-single__perk-tile" aria-hidden="true">
+                      {%- if block.settings.custom_icon != blank -%}
+                        {{
+                          block.settings.custom_icon
+                          | image_url: width: 44
+                          | image_tag: class: 'kk-fws-offer-single__perk-icon', width: 22, height: 22, loading: 'lazy', alt: ''
+                        }}
+                      {%- else -%}
+                        <img
+                          class="kk-fws-offer-single__perk-icon"
+                          src="{{ 'kk-fws-icon-' | append: block.settings.icon | append: '.svg' | asset_url }}"
+                          alt=""
+                          width="22"
+                          height="22"
+                          loading="lazy"
+                        >
+                      {%- endif -%}
+                    </span>
+                    <span class="kk-fws-offer-single__perk-text">{%- render 'kk-fws-price-tokens', text: block.settings.text, tokens: price_tokens -%}</span>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          {%- endform -%}
+        </div>
+
+        {%- comment -%}
+          Product accordion — same panels as the KK FWS Offer (snippets/accordion-panels.liquid),
+          under the gallery on desktop and after the buy card when stacked. `section-accordion`
+          is what main.css scopes every accordion rule under; see kk-fws-offer.liquid.
+        {%- endcomment -%}
+        {%- if section.settings.show_accordion -%}
+          {%- assign accordion_blocks = section.blocks | where: 'type', 'accordion_item' -%}
+          <div class="kk-fws-offer__accordion section-accordion">
+            {% render 'accordion-panels', blocks: accordion_blocks %}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{%- if product != blank -%}
+  <script>
+    (function () {
+      var root = document.currentScript && document.currentScript.previousElementSibling;
+      if (!root || !root.hasAttribute('data-kk-fws-offer-single')) return;
+
+      var form = root.querySelector('form[action*="/cart/add"]');
+      var planInput = root.querySelector('[data-kk-fws-selling-plan]');
+
+      // Pay toggle: the root's data-kk-fws-pay-mode drives the toggle thumb and shows the
+      // matching [data-kk-fws-face] (both styled by the KK FWS Offer's stylesheet); the
+      // plan input is only submitted while subscribing.
+      [].forEach.call(root.querySelectorAll('[data-kk-fws-pay]'), function (input) {
+        input.addEventListener('change', function () {
+          if (!input.checked) return;
+          var mode = input.getAttribute('data-kk-fws-pay');
+          root.setAttribute('data-kk-fws-pay-mode', mode);
+          if (planInput) planInput.disabled = mode !== 'subscribe';
+        });
+      });
+
+      // Appstle guard: the app injects its own selling_plan radios into every product form and
+      // pre-checks one. Only this section's input may set the plan, so disable the app's.
+      if (form) {
+        var neutralise = function () {
+          [].forEach.call(form.querySelectorAll('[name="selling_plan"]:not([data-kk-fws-selling-plan])'), function (el) {
+            el.checked = false;
+            el.disabled = true;
+          });
+        };
+        neutralise();
+        document.addEventListener('DOMContentLoaded', neutralise);
+        window.addEventListener('load', neutralise);
+        if (window.MutationObserver) {
+          new MutationObserver(neutralise).observe(form, { childList: true, subtree: true });
+        }
+      }
+
+      // Gallery: the theme initialises the slider (src/js/sliders.js) and registers it at
+      // window.sliders['product-slider']; this only drives the thumbnails and video posters.
+      var slider = root.querySelector('.kk-fws-offer__slider');
+      var thumbs = [].slice.call(root.querySelectorAll('[data-kk-fws-thumb]'));
+      var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function syncThumbs(active) {
+        thumbs.forEach(function (thumb) {
+          var on = parseInt(thumb.getAttribute('data-kk-fws-thumb'), 10) === active;
+          thumb.setAttribute('aria-selected', on ? 'true' : 'false');
+          thumb.classList.toggle('is-active', on);
+        });
+      }
+
+      if (slider && thumbs.length) {
+        var attempts = 0;
+        (function poll() {
+          var instance = window.sliders ? window.sliders[slider.id] : null;
+          if (!instance || typeof instance.slideTo !== 'function') {
+            if (++attempts <= 60) window.setTimeout(poll, 100);
+            return;
+          }
+          syncThumbs(instance.activeIndex);
+          thumbs.forEach(function (thumb) {
+            thumb.addEventListener('click', function () {
+              instance.slideTo(parseInt(thumb.getAttribute('data-kk-fws-thumb'), 10), reduced ? 0 : 400);
+            });
+          });
+          instance.on('slideChange', function () {
+            syncThumbs(instance.activeIndex);
+          });
+        })();
+      }
+
+      root.addEventListener('click', function (event) {
+        var trigger = event.target.closest ? event.target.closest('.kk-fws-offer__play') : null;
+        if (!trigger) return;
+        var holder = trigger.closest('[data-kk-fws-video]');
+        if (!holder || holder.querySelector('video, iframe')) return;
+
+        var embed = holder.getAttribute('data-kk-fws-video-embed');
+        var src = holder.getAttribute('data-kk-fws-video-src');
+        var player;
+        if (embed) {
+          player = document.createElement('iframe');
+          player.setAttribute('src', embed);
+          player.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+          player.setAttribute('allowfullscreen', 'allowfullscreen');
+          player.setAttribute('title', 'Product video');
+        } else if (src) {
+          player = document.createElement('video');
+          player.setAttribute('src', src);
+          player.setAttribute('controls', 'controls');
+          player.setAttribute('playsinline', 'playsinline');
+          player.setAttribute('autoplay', 'autoplay');
+        } else {
+          return;
+        }
+        player.className = 'kk-fws-offer__video-player';
+        holder.appendChild(player);
+        trigger.hidden = true;
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Only what the KK FWS Offer's stylesheet doesn't already cover — see the note at the top. */
+
+  /* Breadcrumb — Figma `7809:7654`: 14px, muted trail, the current page in navy, 28px above
+     the columns. */
+  .kk-fws-offer-single__breadcrumb {
+    align-self: stretch;
+    margin: 0.8rem 0 2.8rem;
+  }
+
+  .kk-fws-offer-single__breadcrumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    color: #6b7085;
+  }
+
+  .kk-fws-offer-single__breadcrumb-list li + li::before {
+    content: '/';
+  }
+
+  .kk-fws-offer-single__breadcrumb-list a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .kk-fws-offer-single__breadcrumb-list a:hover {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+
+  .kk-fws-offer-single__breadcrumb-list [aria-current] {
+    color: var(--primary);
+  }
+
+  /* Thumbnails — Figma `7809:7672`: one row of up to five (the offer's strip is four across). */
+  .kk-fws-offer-single .kk-fws-offer__thumbs {
+    grid-template-columns: repeat(var(--kk-fws-offer-single-thumbs, 4), minmax(0, 1fr));
+  }
+
+  /* Intro — Figma `7809:7726`: the rating sits above the title here, 11px gaps. */
+  .kk-fws-offer-single .kk-fws-offer__intro {
+    gap: 1.09rem;
+  }
+
+  .kk-fws-offer-single .kk-fws-offer__title {
+    font-size: 4.4rem;
+    line-height: 1.12;
+    letter-spacing: -0.06rem;
+  }
+
+  .kk-fws-offer-single__rating .kk-fws-offer__rating-count {
+    font-size: 1.7rem;
+  }
+
+  /* Without a subscription the intro sits inside the card (Figma `8028:230`). */
+  .kk-fws-offer-single--no-subscription .kk-fws-offer__form {
+    gap: 2.6rem;
+    padding: 2.8rem;
+  }
+
+  /* "One-Time Purchase · [variant price]" — Figma `7809:7799`. */
+  .kk-fws-offer-single__pay-dot {
+    color: #a3a7bf;
+  }
+
+  /* Subscription panel — Figma `7809:7801`: pale blue, 2px blue border, 16px corners, the save
+     ribbon hanging over the top edge. */
+  .kk-fws-offer-single__subscription {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  .kk-fws-offer-single__plan {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    padding: 2.8rem 2.2rem 2.2rem;
+    border: 2px solid var(--primary-600);
+    border-radius: 1.6rem;
+    background: #f2f6ff;
+  }
+
+  .kk-fws-offer-single__plan-ribbon {
+    position: absolute;
+    top: -1.1rem;
+    left: 2.4rem;
+    padding: 0.64rem 1.2rem;
+    border-radius: 0.8rem;
+    background: var(--primary-600);
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    letter-spacing: 0.14rem;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+
+  .kk-fws-offer-single__plan-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem 1.6rem;
+    padding-left: 0.2rem;
+  }
+
+  .kk-fws-offer-single__plan-title {
+    margin: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 2.3rem;
+    line-height: 1.2;
+    color: var(--primary);
+  }
+
+  .kk-fws-offer-single__plan-price {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0;
+  }
+
+  .kk-fws-offer-single__plan-compare {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.7rem;
+    line-height: 1.2;
+    color: #a3a7bf;
+  }
+
+  .kk-fws-offer-single__plan-amount {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 3.1rem;
+    line-height: 1;
+    letter-spacing: -0.06rem;
+    color: var(--primary);
+  }
+
+  .kk-fws-offer-single__plan-rule {
+    width: auto;
+    height: 1px;
+    margin: 0 0.2rem;
+    border: 0;
+    background: #d9e3ff;
+  }
+
+  .kk-fws-offer-single__plan-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 0 0.2rem;
+  }
+
+  .kk-fws-offer-single__plan-text,
+  .kk-fws-offer-single__plan-text p {
+    margin: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.75rem;
+    line-height: 1.5;
+    color: var(--primary);
+  }
+
+  .kk-fws-offer-single__points {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-offer-single__point {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .kk-fws-offer-single__point-icon {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    margin-top: 0.3rem;
+  }
+
+  /* Bold reads navy, italic is struck through (an old price, e.g. "at [refill_price] [refill_subscription_price]"). */
+  .kk-fws-offer-single__point-text {
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.75rem;
+    line-height: 1.5;
+    color: var(--primary-100);
+  }
+
+  .kk-fws-offer-single__point-text strong,
+  .kk-fws-offer-single__point-text b {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .kk-fws-offer-single__point-text em,
+  .kk-fws-offer-single__point-text i {
+    font-style: normal;
+    text-decoration: line-through;
+  }
+
+  /* "Subscription detail" — Figma `7809:7839`: a small blue disclosure under the panel. */
+  .kk-fws-offer-single__detail-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.6rem;
+    line-height: 1.2;
+    color: var(--primary-600);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .kk-fws-offer-single__detail-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .kk-fws-offer-single__detail-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .kk-fws-offer-single__detail-content {
+    margin-top: 1.2rem;
+    font-family: 'Value Sans', sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    color: var(--primary-100);
+  }
+
+  .kk-fws-offer-single__detail-content p {
+    margin: 0 0 0.8rem;
+  }
+
+  /* Button — Figma `7809:7848`: ADD TO CART with a 24px arrow. The arrow is a pseudo-element
+     because the theme's ajax cart rewrites the button's textContent while adding; its URL
+     comes in as a custom property from the markup (Liquid doesn't run in the stylesheet tag). */
+  .kk-fws-offer-single__button--arrow::after {
+    content: '';
+    flex-shrink: 0;
+    width: 2.4rem;
+    height: 2.4rem;
+    background: var(--kk-fws-offer-single-arrow) center / contain no-repeat;
+  }
+
+  .kk-fws-offer-single .kk-fws-offer-single__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.4rem;
+    width: 100%;
+  }
+
+  .kk-fws-offer-single .kk-fws-offer__button-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.2rem;
+  }
+
+  .kk-fws-offer-single__shipping {
+    margin: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--primary);
+  }
+
+  /* Perks — Figma `7809:7860`: two columns of icon tiles (44px, pale blue, 12px corners). */
+  .kk-fws-offer-single__perks {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    justify-content: space-between;
+    gap: 1.2rem 2.4rem;
+    margin: 0;
+    padding: 0.6rem 0.8rem 0.2rem;
+    list-style: none;
+  }
+
+  .kk-fws-offer-single__perk {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .kk-fws-offer-single__perk-tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: 1.2rem;
+    background: #f2f6ff;
+  }
+
+  .kk-fws-offer-single__perk-icon {
+    display: block;
+    width: 2.2rem;
+    height: 2.2rem;
+    object-fit: contain;
+  }
+
+  .kk-fws-offer-single__perk-text {
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.8rem;
+    line-height: 1.3;
+    color: var(--primary);
+  }
+
+  @media (max-width: 749px) {
+    .kk-fws-offer-single .kk-fws-offer__title {
+      font-size: 3.2rem;
+    }
+
+    /* The narrow toggle wraps: price on its own line, no orphaned dot. */
+    .kk-fws-offer-single__pay-dot {
+      display: none;
+    }
+
+    .kk-fws-offer-single__pay-price {
+      display: block;
+    }
+
+    .kk-fws-offer-single--no-subscription .kk-fws-offer__form {
+      padding: 2rem;
+    }
+
+    .kk-fws-offer-single__plan {
+      padding: 2.4rem 1.6rem 1.8rem;
+    }
+
+    .kk-fws-offer-single__plan-title {
+      font-size: 2rem;
+    }
+
+    .kk-fws-offer-single__plan-amount {
+      font-size: 2.6rem;
+    }
+
+    .kk-fws-offer-single__plan-text,
+    .kk-fws-offer-single__plan-text p,
+    .kk-fws-offer-single__point-text {
+      font-size: 1.6rem;
+    }
+
+    .kk-fws-offer-single__perks {
+      grid-template-columns: minmax(0, 1fr);
+      padding: 0;
+    }
+
+    .kk-fws-offer-single__perk-text {
+      font-size: 1.6rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Offer - Single",
+  "tag": "div",
+  "class": "section-kk-fws-offer section-kk-fws-offer-single",
+  "max_blocks": 24,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "For products with one variant. The Subscribe & Save toggle and subscription panel show only when the variant has a selling plan; otherwise the card goes straight to the button."
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor id",
+      "info": "Optional, without the '#'."
+    },
+    {
+      "type": "header",
+      "content": "Breadcrumb"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Show breadcrumb",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb_home",
+      "label": "Home label",
+      "default": "Home"
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb_parent",
+      "label": "Middle label",
+      "default": "Shop All",
+      "info": "Leave empty to go straight from Home to the product."
+    },
+    {
+      "type": "url",
+      "id": "breadcrumb_parent_link",
+      "label": "Middle link",
+      "info": "Defaults to the all-products collection."
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb_current",
+      "label": "Product label",
+      "info": "Defaults to the product title."
+    },
+    {
+      "type": "header",
+      "content": "Product intro"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "headline",
+      "label": "Headline",
+      "info": "Defaults to the product title."
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating text",
+      "default": "([score]/5) · [count] Reviews",
+      "info": "[score] and [count] come from the reviews app, else the two fields below. Empty hides the rating."
+    },
+    {
+      "type": "text",
+      "id": "rating_score",
+      "label": "Rating score fallback"
+    },
+    {
+      "type": "text",
+      "id": "rating_count",
+      "label": "Rating count fallback"
+    },
+    {
+      "type": "text",
+      "id": "tap_badge_text",
+      "label": "Tap water pill",
+      "default": "Specially Formulated for U.S. Tap Water"
+    },
+    {
+      "type": "checkbox",
+      "id": "tap_badge_flag",
+      "label": "Show US flag on the pill",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "tap_badge_icon",
+      "label": "Pill icon",
+      "info": "Overrides the flag."
+    },
+    {
+      "type": "richtext",
+      "id": "introduction",
+      "label": "Introduction"
+    },
+    {
+      "type": "header",
+      "content": "Subscription",
+      "info": "Shown only when the product's variant has a selling plan. Never type a price: use [price], [compare_price], [subscription_price], [save] and [interval] (this product), the [refill_…] versions (the replacement product below) and [free_shipping]. They work in every text field here and in the blocks."
+    },
+    {
+      "type": "product",
+      "id": "replacement_product",
+      "label": "Replacement product",
+      "info": "What the subscription delivers, e.g. the refill media. Fills [refill_title], [refill_price], [refill_compare_price], [refill_subscription_price], [refill_save] and [refill_interval]. Defaults to this product."
+    },
+    {
+      "type": "select",
+      "id": "default_pay",
+      "label": "Selected by default",
+      "default": "subscribe",
+      "options": [
+        { "value": "subscribe", "label": "Subscribe & Save" },
+        { "value": "onetime", "label": "One-Time Purchase" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "pay_legend",
+      "label": "Toggle accessible name",
+      "default": "How would you like to pay?"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_label",
+      "label": "Subscribe label",
+      "default": "Subscribe & Save"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_ribbon",
+      "label": "Subscribe pill",
+      "default": "Save [save]"
+    },
+    {
+      "type": "text",
+      "id": "onetime_label",
+      "label": "One-time label",
+      "default": "One-Time Purchase"
+    },
+    {
+      "type": "checkbox",
+      "id": "onetime_show_price",
+      "label": "Show the one-time price after the label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "plan_ribbon",
+      "label": "Panel ribbon",
+      "default": "Save [save]"
+    },
+    {
+      "type": "text",
+      "id": "plan_title",
+      "label": "Panel title",
+      "default": "Subscribe Now & Save"
+    },
+    {
+      "type": "richtext",
+      "id": "plan_text",
+      "label": "Panel text",
+      "info": "Above the \"Subscription point\" blocks."
+    },
+    {
+      "type": "text",
+      "id": "detail_label",
+      "label": "Detail link label",
+      "default": "Subscription detail"
+    },
+    {
+      "type": "richtext",
+      "id": "detail_content",
+      "label": "Detail content",
+      "info": "Opens under the link. Empty hides the link."
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Add to cart"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_arrow",
+      "label": "Show arrow on button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sold_out_text",
+      "label": "Sold out label",
+      "default": "Sold out"
+    },
+    {
+      "type": "text",
+      "id": "shipping_text",
+      "label": "Shipping line",
+      "default": "Ships in 3–7 business days via UPS/USPS | Free on orders [free_shipping]+",
+      "info": "[free_shipping] is the threshold in Theme settings > Your cart."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Gallery"
+    },
+    {
+      "type": "range",
+      "id": "media_limit",
+      "label": "Images shown",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "default": 5,
+      "info": "0 shows every image."
+    },
+    {
+      "type": "header",
+      "content": "Product accordion"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_accordion",
+      "label": "Show product accordion",
+      "default": true,
+      "info": "Description, technical specifications and other product panels, then the \"Accordion item\" blocks."
+    },
+    {
+      "type": "header",
+      "content": "Accessibility labels"
+    },
+    {
+      "type": "text",
+      "id": "gallery_label",
+      "label": "Gallery",
+      "default": "[title] media gallery"
+    },
+    {
+      "type": "text",
+      "id": "previous_label",
+      "label": "Previous",
+      "default": "Previous image"
+    },
+    {
+      "type": "text",
+      "id": "next_label",
+      "label": "Next",
+      "default": "Next image"
+    },
+    {
+      "type": "text",
+      "id": "thumbs_label",
+      "label": "Thumbnails",
+      "default": "Gallery thumbnails"
+    },
+    {
+      "type": "text",
+      "id": "play_video_label",
+      "label": "Play video",
+      "default": "Play video"
+    },
+    {
+      "type": "text",
+      "id": "payments_label",
+      "label": "Payment icons",
+      "default": "Accepted payment methods"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f5f6f8"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "subscription_point",
+      "name": "Subscription point",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Text",
+          "info": "Bold reads navy; italic is struck through (e.g. <em>[refill_price]</em> [refill_subscription_price]). Use the price tokens, never typed prices."
+        }
+      ]
+    },
+    {
+      "type": "perk",
+      "name": "Perk",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "perk-shipping",
+          "options": [
+            { "value": "perk-shipping", "label": "Shipping" },
+            { "value": "perk-warranty", "label": "Warranty" },
+            { "value": "perk-trial", "label": "Trial" },
+            { "value": "perk-nsf", "label": "NSF certified" }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon",
+          "info": "Overrides the icon above. Shown at 22 x 22."
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free shipping in the US mainland"
+        }
+      ]
+    },
+    {
+      "type": "accordion_item",
+      "name": "Accordion item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Heading",
+          "info": "Both fields are required — a block missing either one is skipped."
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Body"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Offer - Single",
+      "settings": {
+        "plan_text": "<p>For Replacement Filters – when you select a subscription, you will receive:</p>"
+      },
+      "blocks": [
+        { "type": "subscription_point", "settings": { "text": "Automatic delivery of replacement <strong>[refill_title]</strong> at <em>[refill_price]</em> [refill_subscription_price] [refill_interval] thereafter." } },
+        { "type": "subscription_point", "settings": { "text": "<strong>No Lock-in, No Commitment.</strong> Pause or cancel at any time." } },
+        { "type": "perk", "settings": { "icon": "perk-shipping", "text": "Free shipping in the US mainland" } },
+        { "type": "perk", "settings": { "icon": "perk-trial", "text": "100 day trial" } },
+        { "type": "perk", "settings": { "icon": "perk-warranty", "text": "10 year warranty" } },
+        { "type": "perk", "settings": { "icon": "perk-nsf", "text": "NSF certified" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

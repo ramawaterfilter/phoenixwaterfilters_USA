@@ -1,0 +1,113 @@
+{{ 'subscribe-save.css' | asset_url | stylesheet_tag }}
+{% style %}
+#shopify-section-{{ section.id }} .ss-video { --ss-bg: {{ section.settings.background_color }}; --ss-ink: {{ section.settings.text_color }}; --ss-pad: {{ section.settings.desktop_padding }}px; --ss-pad-mobile: {{ section.settings.mobile_padding }}px; }
+{% endstyle %}
+<section id="{{ section.settings.anchor_id | escape }}" class="ss ss-video"><div class="ss-wrap">
+<div class="ss-video-layout"><div class="ss-video-frame">{% if section.settings.video != blank %}<video controls preload="none" playsinline{% if section.settings.poster != blank %} poster="{{ section.settings.poster | image_url: width: 1600 }}"{% endif %}>{% for source in section.settings.video.sources %}<source src="{{ source.url }}" type="{{ source.mime_type }}">{% endfor %}</video>{% elsif section.settings.external_video != blank %}<button type="button" class="ss-video-launch" aria-label="{{ section.settings.play_label | escape }}" data-video-type="{{ section.settings.external_video.type }}" data-video-id="{{ section.settings.external_video.id | escape }}">{% if section.settings.poster != blank %}{{ section.settings.poster | image_url: width: 1600 | image_tag: widths: '480, 720, 960, 1280, 1600', sizes: '(min-width: 900px) 52vw, 100vw', loading: 'lazy', alt: section.settings.poster_alt }}{% else %}<span class="ss-media-placeholder"></span>{% endif %}<span class="ss-play" aria-hidden="true">▶</span></button>{% elsif section.settings.poster != blank %}{{ section.settings.poster | image_url: width: 1600 | image_tag: widths: '480, 720, 960, 1280, 1600', sizes: '(min-width: 900px) 52vw, 100vw', loading: 'lazy', alt: section.settings.poster_alt }}{% else %}<div class="ss-media-placeholder" role="img" aria-label="{{ section.settings.poster_alt | escape }}"></div>{% endif %}</div><div class="ss-video-copy"><p class="ss-eyebrow">{{ section.settings.eyebrow | escape }}</p><h2 id="ss-video-title-{{ section.id }}">{{ section.settings.heading }}</h2><div class="ss-copy">{{ section.settings.body }}</div><p class="ss-small">{{ section.settings.status | escape }}</p><details class="ss-disclosure"><summary>Read transcript</summary><div class="ss-copy">{{ section.settings.transcript }}</div></details></div></div><script>(function(){const id='shopify-section-{{ section.id }}';const key='__ssVideo_'+id;if(window[key])window[key].abort();const controller=new AbortController();window[key]=controller;function init(root){if(!root)return;root.querySelectorAll('.ss-video-launch:not([data-ready])').forEach(button=>{button.dataset.ready='1';button.addEventListener('click',()=>{const type=button.dataset.videoType,videoId=button.dataset.videoId;if(!videoId)return;const iframe=document.createElement('iframe');iframe.title=button.getAttribute('aria-label');iframe.allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';iframe.allowFullscreen=true;iframe.referrerPolicy='strict-origin-when-cross-origin';iframe.src=type==='youtube'?'https://www.youtube-nocookie.com/embed/'+encodeURIComponent(videoId)+'?autoplay=1':'https://player.vimeo.com/video/'+encodeURIComponent(videoId)+'?autoplay=1';button.replaceWith(iframe)})})}init(document.getElementById(id));document.addEventListener('shopify:section:load',e=>{if(e.target.id===id)init(e.target)},{signal:controller.signal})})();</script>
+</div></section>
+{% schema %}
+{
+  "name": "Subscribe Save Video",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body copy"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "how-it-works"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#153a5b"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop vertical spacing",
+      "default": 88,
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile vertical spacing",
+      "default": 56,
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Shopify hosted video"
+    },
+    {
+      "type": "video_url",
+      "id": "external_video",
+      "label": "External video",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "poster",
+      "label": "Poster image"
+    },
+    {
+      "type": "text",
+      "id": "poster_alt",
+      "label": "Poster alt text"
+    },
+    {
+      "type": "text",
+      "id": "play_label",
+      "label": "Play button label"
+    },
+    {
+      "type": "text",
+      "id": "status",
+      "label": "Media note"
+    },
+    {
+      "type": "richtext",
+      "id": "transcript",
+      "label": "Transcript"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Subscribe Save Video",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}

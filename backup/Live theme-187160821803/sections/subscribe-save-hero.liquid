@@ -1,0 +1,420 @@
+{{ 'subscribe-save.css' | asset_url | stylesheet_tag }}
+{% style %}
+  #shopify-section-{{ section.id }}
+  .ss-hero { --ss-bg: {{ section.settings.background_color }};
+  --ss-ink: {{ section.settings.text_color }};
+  --ss-pad: {{ section.settings.desktop_padding }}px;
+  --ss-pad-mobile: {{ section.settings.mobile_padding }}px; }
+
+  #shopify-section-{{ section.id }} .ss-hero .ss-wrap { width: min(1280px, calc(100% - 80px)); }
+  #shopify-section-{{ section.id }} .ss-hero-grid { grid-template-columns: 1.05fr 1fr; gap: 64px; }
+  #shopify-section-{{ section.id }} .ss-hero-stage { display: block; align-self: auto; padding: 36px 30px 20px; position: relative; overflow: hidden; background: radial-gradient(at 50% 34%, #fff 8%, #f5f3f1 78%); border-radius: 180px 180px 12px 12px; }
+  #shopify-section-{{ section.id }} .ss-stage-label { display: flex; justify-content: center; flex-wrap: wrap; gap: 4px 15px; padding-top: 12px; color: #536779; font-family: var(--font-body-family, "IBM Plex Sans", Arial, sans-serif); font-size: 12px; font-weight: 600; line-height: normal; letter-spacing: .09em; }
+  #shopify-section-{{ section.id }} .ss-stage-label span:last-child { color: #153a5b; }
+  #shopify-section-{{ section.id }} .ss-stand-images { display: block; position: relative; width: auto; height: auto; aspect-ratio: 1.16; max-height: 390px; margin: 16px 0 12px; }
+  #shopify-section-{{ section.id }} .ss-stand-images > .ss-stand-steel-image,
+  #shopify-section-{{ section.id }} .ss-stand-images > .ss-stand-teak-image { display: block; width: 88%; height: 100%; margin: 0; object-fit: contain; object-position: left center; mix-blend-mode: multiply; filter: drop-shadow(0 15px 12px rgb(21 58 91 / 7%)); }
+  #shopify-section-{{ section.id }} .ss-stand-teak-image { display: none !important; }
+  #shopify-section-{{ section.id }} .ss-hero-stage:has(input[value="teak"]:checked) .ss-stand-steel-image { display: none; }
+  #shopify-section-{{ section.id }} .ss-hero-stage:has(input[value="teak"]:checked) .ss-stand-teak-image { display: block !important; }
+  #shopify-section-{{ section.id }} .ss-hero-media { display: flex; position: absolute; right: -3px; bottom: 2px; flex-direction: column; align-items: center; gap: 5px; width: 22%; }
+  #shopify-section-{{ section.id }} .ss-hero-media img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; mix-blend-mode: multiply; }
+  #shopify-section-{{ section.id }} .ss-hero-media span { display: block; color: var(--ss-navy); font-family: var(--font-body-family, "IBM Plex Sans", Arial, sans-serif); font-size: 12px; font-weight: 500; line-height: 1.3; text-align: center; }
+  #shopify-section-{{ section.id }} .ss-stage-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding-top: 16px; border-top: 1px solid #c9cabe; }
+  #shopify-section-{{ section.id }} .ss-stage-bottom > div { min-width: 0; }
+  #shopify-section-{{ section.id }} .ss-stage-bottom strong { display: block; color: var(--ss-navy); font-family: var(--font-heading-family, Archivo, Arial, sans-serif); font-size: 21px; font-weight: 700; line-height: 1.3; letter-spacing: -.03em; }
+  #shopify-section-{{ section.id }} .ss-stage-bottom > div > span { display: block; max-width: 270px; color: #496165; font-size: 14px; line-height: 1.5; }
+  #shopify-section-{{ section.id }} .ss-stand-options { display: grid; grid-template-columns: auto auto; column-gap: 6px; row-gap: 0; min-width: 0; padding: 0; margin: 0; border: 0; }
+  #shopify-section-{{ section.id }} .ss-stand-options legend { grid-column: 1 / -1; width: auto; height: auto; padding: 0 0 6px; color: #536779; font-family: var(--font-body-family, "IBM Plex Sans", Arial, sans-serif); font-size: 12px; font-weight: 500; line-height: normal; }
+  #shopify-section-{{ section.id }} .ss-stand-options label { display: block; position: relative; cursor: pointer; }
+  #shopify-section-{{ section.id }} .ss-stand-options input { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  #shopify-section-{{ section.id }} .ss-stand-options label span { display: flex; justify-content: center; align-items: center; min-height: 48px; padding: 10px 15px; color: var(--ss-navy); background: #fff; border: 1px solid #a9bbc9; border-radius: 24px; font-family: var(--font-body-family, "IBM Plex Sans", Arial, sans-serif); font-size: 14px; font-weight: 500; line-height: normal; }
+  #shopify-section-{{ section.id }} .ss-stand-options input:checked + span { color: #fff; background: var(--ss-navy); border-color: var(--ss-navy); }
+  #shopify-section-{{ section.id }} .ss-stand-options input:focus-visible + span { outline: 3px solid var(--ss-navy); outline-offset: 3px; }
+  #shopify-section-{{ section.id }} .ss-stage-disclaimer { margin: 12px 0 0; color: #536c70; font-size: 12px; line-height: 1.6; }
+
+  @media (min-width: 768px) and (max-width: 1050px) {
+    #shopify-section-{{ section.id }} .ss-hero .ss-wrap { width: min(1280px, calc(100% - 80px)); }
+    #shopify-section-{{ section.id }} .ss-hero-grid { grid-template-columns: 1.05fr 1fr; gap: 36px; }
+    #shopify-section-{{ section.id }} .ss-hero-stage { max-width: none; padding-inline: 22px; }
+    #shopify-section-{{ section.id }} .ss-stage-bottom { flex-direction: column; align-items: flex-start; gap: 12px; }
+    #shopify-section-{{ section.id }} .ss-stand-options { grid-template-columns: 1fr 1fr; width: 100%; }
+    #shopify-section-{{ section.id }} .ss-stand-options label { flex: 1; }
+  }
+
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} .ss-hero .ss-wrap { width: calc(100% - 40px); }
+    #shopify-section-{{ section.id }} .ss-hero-grid { grid-template-columns: 1fr; gap: 26px; }
+    #shopify-section-{{ section.id }} .ss-hero-stage { order: 0; max-width: 680px; padding: 28px 20px 20px; border-radius: 120px 120px 10px 10px; }
+    #shopify-section-{{ section.id }} .ss-stand-images { max-height: 310px; margin: 14px 0; }
+    #shopify-section-{{ section.id }} .ss-hero-media { right: -2px; bottom: 0; width: 23%; }
+    #shopify-section-{{ section.id }} .ss-stage-bottom { flex-direction: column; align-items: stretch; gap: 14px; }
+    #shopify-section-{{ section.id }} .ss-stage-bottom strong { font-size: 22px; }
+    #shopify-section-{{ section.id }} .ss-stand-options { grid-template-columns: 1fr 1fr; width: 100%; }
+    #shopify-section-{{ section.id }} .ss-stand-options label { flex: 1; }
+    #shopify-section-{{ section.id }} .ss-stage-disclaimer { margin-top: 14px; }
+  }
+{% endstyle %}
+<section class="ss ss-hero">
+  <div class="ss-wrap">
+    <div class="ss-hero-grid">
+      <div class="ss-hero-copy">
+        <p class="ss-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        <h1 id="ss-hero-title-{{ section.id }}">{{ section.settings.heading }}</h1>
+        <div class="ss-lead">{{ section.settings.body }}</div>
+        <div class="ss-actions">
+          <a class="ss-button" href="{{ section.settings.primary_link | default: '#plans' }}">
+            {{- section.settings.primary_label | escape -}}</a
+          ><a class="ss-text-link" href="{{ section.settings.secondary_link | default: '#how-it-works' }}">
+            {{- section.settings.secondary_label | escape -}}
+          </a>
+        </div>
+        <div class="ss-proof">
+          <strong>{{ section.settings.proof_heading | escape }}</strong>{{ section.settings.proof_body }}
+        </div>
+      </div>
+      <div class="ss-hero-stage">
+        <div class="ss-stage-label">
+          <span>{{ section.settings.media_label | escape }}</span>
+          <span>{{ section.settings.media_label_secondary | escape }}</span>
+        </div>
+        <div class="ss-stand-images">
+          {%- if section.settings.image != blank -%}
+            {{-
+              section.settings.image
+              | image_url: width: 1600
+              | image_tag:
+                class: 'ss-stand-steel-image',
+                widths: '480, 720, 960, 1280, 1600',
+                sizes: '(min-width: 1280px) 465px, (min-width: 900px) 39vw, calc(88vw - 35px)',
+                loading: 'eager',
+                fetchpriority: 'high',
+                alt: section.settings.image_alt
+            -}}
+          {%- else -%}
+            <img
+              class="ss-stand-steel-image"
+              src="{{ 'subscribe-save-hero-steel.webp' | asset_url }}"
+              width="1400"
+              height="1350"
+              alt="{{ section.settings.image_alt | escape }}"
+              fetchpriority="high"
+            >
+          {%- endif -%}
+          {%- if section.settings.teak_image != blank -%}
+            {{-
+              section.settings.teak_image
+              | image_url: width: 1600
+              | image_tag:
+                class: 'ss-stand-teak-image',
+                widths: '480, 720, 960, 1280, 1600',
+                sizes: '(min-width: 1280px) 465px, (min-width: 900px) 39vw, calc(88vw - 35px)',
+                loading: 'lazy',
+                alt: section.settings.teak_image_alt
+            -}}
+          {%- else -%}
+            <img
+              class="ss-stand-teak-image"
+              src="{{ 'subscribe-save-hero-teak.webp' | asset_url }}"
+              width="1400"
+              height="1350"
+              alt="{{ section.settings.teak_image_alt | escape }}"
+              loading="lazy"
+            >
+          {%- endif -%}
+          <div class="ss-hero-media">
+            {%- if section.settings.refill_image != blank -%}
+              {{-
+                section.settings.refill_image
+                | image_url: width: 320
+                | image_tag:
+                  widths: '120, 160, 240, 320',
+                  sizes: '(min-width: 900px) 100px, 23vw',
+                  loading: 'lazy',
+                  alt: section.settings.refill_image_alt
+              -}}
+            {%- else -%}
+              <img
+                src="{{ 'subscribe-save-refill-media.webp' | asset_url }}"
+                width="160"
+                height="160"
+                alt="{{ section.settings.refill_image_alt | escape }}"
+                loading="lazy"
+              >
+            {%- endif -%}
+            {% comment %} <span>{{ section.settings.refill_label | escape | newline_to_br }}</span> {% endcomment %}
+          </div>
+        </div>
+        <div class="ss-stage-bottom">
+          <div>
+            <strong>{{ section.settings.media_heading | escape }}</strong>
+            <span>{{ section.settings.media_body | strip_html | escape }}</span>
+          </div>
+          <fieldset class="ss-stand-options">
+            <legend>{{ section.settings.stand_view_label | escape }}</legend>
+            <label>
+              <input type="radio" name="ss-stand-{{ section.id }}" value="steel" checked>
+              <span>{{ section.settings.steel_label | escape }}</span>
+            </label>
+            <label>
+              <input type="radio" name="ss-stand-{{ section.id }}" value="teak">
+              <span>{{ section.settings.teak_label | escape }}</span>
+            </label>
+          </fieldset>
+        </div>
+        <p class="ss-stage-disclaimer">{{ section.settings.media_note | escape }}</p>
+      </div>
+    </div>
+    <div class="ss-proof-bar-wrap">
+      <strong class="ss-mono">{{ section.settings.proof_bar_label | escape }}</strong>
+      <ul class="ss-proof-bar">
+        {% for block in section.blocks -%}
+          {%- if block.type == 'proof_item' %}
+            <li {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</li>
+          {% endif -%}
+        {%- endfor %}
+      </ul>
+    </div>
+    <nav class="ss-page-nav" aria-label="Subscription page">
+      <strong>{{ section.settings.nav_title | escape }}</strong>
+      <div>
+        {% for block in section.blocks -%}
+          {%- if block.type == 'nav_link' -%}
+            <a href="{{ block.settings.url }}" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</a>
+          {%- endif -%}
+        {%- endfor %}
+      </div>
+    </nav>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Subscribe Save Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body copy"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#153a5b"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop vertical spacing",
+      "default": 88,
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile vertical spacing",
+      "default": 56,
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Primary button label"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary link label"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary link"
+    },
+    {
+      "type": "text",
+      "id": "proof_heading",
+      "label": "Proof heading"
+    },
+    {
+      "type": "richtext",
+      "id": "proof_body",
+      "label": "Proof copy"
+    },
+    {
+      "type": "text",
+      "id": "proof_bar_label",
+      "label": "Proof bar label"
+    },
+    {
+      "type": "text",
+      "id": "nav_title",
+      "label": "Navigation title"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text"
+    },
+    {
+      "type": "image_picker",
+      "id": "teak_image",
+      "label": "Teak stand image"
+    },
+    {
+      "type": "text",
+      "id": "teak_image_alt",
+      "label": "Teak image alt text",
+      "default": "Phoenix Gravity system with carbon cartridges, optional POSTreat elements and teakwood stand"
+    },
+    {
+      "type": "image_picker",
+      "id": "refill_image",
+      "label": "Refill media image"
+    },
+    {
+      "type": "text",
+      "id": "refill_image_alt",
+      "label": "Refill media image alt text",
+      "default": "FluoRid refill media pouch"
+    },
+    {
+      "type": "text",
+      "id": "media_label",
+      "label": "Media eyebrow",
+      "default": "PHOENIX GRAVITY"
+    },
+    {
+      "type": "text",
+      "id": "media_label_secondary",
+      "label": "Media secondary eyebrow",
+      "default": "MADE TO KEEP."
+    },
+    {
+      "type": "text",
+      "id": "media_heading",
+      "label": "Media heading"
+    },
+    {
+      "type": "richtext",
+      "id": "media_body",
+      "label": "Media copy"
+    },
+    {
+      "type": "text",
+      "id": "media_note",
+      "label": "Media note"
+    },
+    {
+      "type": "textarea",
+      "id": "refill_label",
+      "label": "Refill image label",
+      "default": "FluoRid\nrefill media"
+    },
+    {
+      "type": "text",
+      "id": "stand_view_label",
+      "label": "Stand selector label",
+      "default": "View stand"
+    },
+    {
+      "type": "text",
+      "id": "steel_label",
+      "label": "Steel option label",
+      "default": "Steel"
+    },
+    {
+      "type": "text",
+      "id": "teak_label",
+      "label": "Teak option label",
+      "default": "Teakwood"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "proof_item",
+      "name": "Proof item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    },
+    {
+      "type": "nav_link",
+      "name": "Navigation link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Label"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subscribe Save Hero",
+      "blocks": [
+        {
+          "type": "proof_item",
+          "settings": {
+            "text": "Price + frequency before checkout"
+          }
+        },
+        {
+          "type": "proof_item",
+          "settings": {
+            "text": "Automatic recurring filter orders"
+          }
+        },
+        {
+          "type": "proof_item",
+          "settings": {
+            "text": "Skip, pause or cancel online"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

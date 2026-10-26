@@ -1,0 +1,89 @@
+{% assign description = product.metafields.custom.product_description %}
+{% assign specifications = product.metafields.custom.product_specifications %}
+{% assign return_policy = product.metafields.custom.product_return_policy %}
+
+{% if return_policy == blank %}
+	{% assign return_policy = shop['refund_policy'].body %}
+{% endif %}
+
+{% if description == blank and specifications == blank and return_policy == blank %}
+{% else %}
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-12 col-lg-11 tabs">
+				<ul class="tabs__nav d-flex align-items-center justify-content-between flex-wrap" role="tablist">
+					{% if description != blank %}
+						<li class="tabs__nav__item mr-md-5">
+							<a data-toggle="tab" href="#description" role="tab" aria-controls="description" aria-selected="true">
+								{{ 'products.product.description' | t }}
+							</a>
+
+							<div class="tabs__content__mob">
+								{{ description | metafield_tag }}
+							</div>
+						</li>
+					{% endif %}
+					{% if specifications != blank %}
+						<li class="tabs__nav__item ml-md-5">
+							<a data-toggle="tab" href="#specifications" role="tab" aria-controls="specifications" aria-selected="false">
+								{{ 'products.product.specifications' | t }}
+							</a>
+
+							<div class="tabs__content__mob">
+								{{ specifications | metafield_tag }}
+							</div>
+						</li>
+					{% endif %}
+                    {% if return_policy != blank %}
+						<li class="tabs__nav__item ml-md-5">
+							<a data-toggle="tab" href="#return_policy" role="tab" aria-controls="return_policy" aria-selected="false">
+								{{ 'products.product.return_policy' | t }}
+							</a>
+
+							<div class="tabs__content__mob">
+								{{ return_policy }}
+							</div>
+
+						</li>
+					{% endif %}
+				</ul>
+				<div class="tabs__content" id="myTabContent">
+					{% if description != blank %}
+						<div class="tabs__content__pane active" id="description" role="tabpanel" aria-labelledby="description">
+							{{ description | metafield_tag }}
+						</div>
+					{% endif %}
+
+					{% if specifications != blank %}
+						<div class="tabs__content__pane" id="specifications" role="tabpanel" aria-labelledby="specifications">
+							{{ specifications | metafield_tag }}
+						</div>
+					{% endif %}
+
+                    {% if return_policy != blank %}
+						<div class="tabs__content__pane" id="return_policy" role="tabpanel" aria-labelledby="return_policy">
+							{{ return_policy }}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
+
+{% schema %}
+{
+    "name": "Product Tabs",
+    "tag": "section",
+	"class": "section-tabs",
+    "presets":[
+        {
+            "name":"Product Tabs"
+        }
+    ],
+    "enabled_on": {
+        "templates": ["product"]
+    }
+}
+{% endschema %}

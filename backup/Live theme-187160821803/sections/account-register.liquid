@@ -1,0 +1,53 @@
+<div class="container">
+    <div class="row justify-content-center text-center">
+        <div class="col-12 col-lg-7">
+            <p>Please fill out the form below to create an account.</p>
+
+            {% form 'create_customer' %}
+
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <input type="text" name="customer[first_name]" id="first_name" placeholder="{{ 'customer.register.first_name' | t }}*" required="">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <input type="text" name="customer[last_name]" id="last_name" placeholder="{{ 'customer.register.last_name' | t }}*" required="">
+                        </div>
+                    </div>
+                </div>
+ 
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <input type="email" name="customer[email]" id="email" placeholder="{{ 'customer.register.email' | t }}*" required="">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="customer[password]" id="password" placeholder="{{ 'customer.register.password' | t }}*" required="">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" type="submit">
+                    {{ 'customer.register.submit' | t }}
+                </button>
+
+                {{ form.errors | default_errors }}
+            {% endform %}
+
+        </div>
+    </div>
+</div>
+
+
+{% schema %}
+{
+    "name": "Register",
+    "tag": "section",
+    "class": "section-register",
+    "enabled_on": {
+        "templates": ["customers/register"]
+    }
+}
+{% endschema %}

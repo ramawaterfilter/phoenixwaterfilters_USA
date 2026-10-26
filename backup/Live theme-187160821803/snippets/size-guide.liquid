@@ -1,0 +1,100 @@
+<div
+  class="modal fade"
+  id="sizeGuide"
+  role="dialog"
+  aria-labelledby="sizeGuide"
+  aria-hidden="true">
+  <div tabindex="-1" data-micromodal-close>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sizeGuide-title"
+      class="modal__dialog">
+      <div id="sizeGuide-content" class="modal__inner justify-content-center">
+
+        <span data-micromodal-close>
+          <svg
+            width="17"
+            height="17"
+            viewBox="0 0 17 17"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.7071 1.70711C17.0976 1.31658 17.0976 0.683417 16.7071 0.292893C16.3166 -0.0976311 15.6834 -0.0976311 15.2929 0.292893L16.7071 1.70711ZM0.292893 15.2929C-0.0976311 15.6834 -0.0976311 16.3166 0.292893 16.7071C0.683417 17.0976 1.31658 17.0976 1.70711 16.7071L0.292893 15.2929ZM1.70711 0.292893C1.31658 -0.0976311 0.683417 -0.0976311 0.292893 0.292893C-0.0976311 0.683417 -0.0976311 1.31658 0.292893 1.70711L1.70711 0.292893ZM15.2929 16.7071C15.6834 17.0976 16.3166 17.0976 16.7071 16.7071C17.0976 16.3166 17.0976 15.6834 16.7071 15.2929L15.2929 16.7071ZM15.2929 0.292893L0.292893 15.2929L1.70711 16.7071L16.7071 1.70711L15.2929 0.292893ZM0.292893 1.70711L15.2929 16.7071L16.7071 15.2929L1.70711 0.292893L0.292893 1.70711Z" fill="black" />
+          </svg>
+        </span>
+
+        <div class="col-md-7 mx-auto p-5">
+          {% if settings.sizeguide_popup_eyebrow != blank %}
+            <p class="eyebrow mx-auto">
+              {{ settings.sizeguide_popup_eyebrow }}
+            </p>
+          {% endif %}
+          {% if settings.sizeguide_popup_heading != blank %}
+            <h2 class="size_title" id="sizeGuide-title">
+              {{ settings.sizeguide_popup_heading }}
+            </h2>
+          {% endif %}
+          {% if settings.sizeguide_popup_content != blank %}
+            {{ settings.sizeguide_popup_content }}
+          {% endif %}
+        </div>
+
+
+        <div class="col-12 mx-auto p-5 d-flex sizes mb-5">
+
+          {% assign size_cols = 'col-12 col-md-4 size' %}
+
+          <div class=" {{ size_cols }}">
+            {% if settings.size_1_title != blank %}
+              <h2 class="size">
+                {{ settings.size_1_title }}
+              </h2>
+            {% endif %}
+            {% if settings.size_1_image != blank %}
+              <img src="{{ settings.size_1_image  | img_url: '300x' }}" class="size" />
+            {% endif %}
+            <div class="divider size"></div>
+            {% if settings.size_1_description != blank %}
+              <p class="size">
+                {{ settings.size_1_description }}</p>
+            {% endif %}
+          </div>
+
+          <div class=" {{ size_cols }}">
+            {% if settings.size_2_title != blank %}
+              <h2 class="size">
+                {{ settings.size_2_title }}
+              </h2>
+            {% endif %}
+            {% if settings.size_2_image != blank %}
+              <img src="{{ settings.size_2_image  | img_url: '300x' }}" class="size" />
+            {% endif %}
+            <div class="divider size"></div>
+            {% if settings.size_2_description != blank %}
+              <p class="size">
+                {{ settings.size_2_description }}</p>
+            {% endif %}
+          </div>
+
+          <div class=" {{ size_cols }}">
+            {% if settings.size_3_title != blank %}
+              <h2 class="size">
+                {{ settings.size_3_title }}
+              </h2>
+            {% endif %}
+            {% if settings.size_3_image != blank %}
+              <img src="{{ settings.size_3_image  | img_url: '300x' }}" class="size" />
+            {% endif %}
+            <div class="divider size"></div>
+            {% if settings.size_3_description != blank %}
+              <p class="size">
+                {{ settings.size_3_description }}</p>
+            {% endif %}
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

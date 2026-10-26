@@ -1,0 +1,38 @@
+{% if section.settings.announcement_link != blank %}
+  <a href="{{ section.settings.announcement_link }}" class="announcement">
+    {{ section.settings.announcement_text }}
+  </a>
+{% else %}
+  <span class="announcement">
+    {{ section.settings.announcement_text }}
+  </span>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Announcement Bar",
+    "tag": "section",
+    "class": "section-announcement d-none d-lg-block",
+    "settings": [
+      {
+        "type": "text",
+        "id": "announcement_text",
+        "label": "Announcement Bar Text",
+        "default": "Click here to see all collections"
+      }, {
+        "type": "url",
+        "id": "announcement_link",
+        "label": "Announcement Bar Link"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Announcement Bar"
+      }
+    ],
+    "enabled_on": {
+      "groups": ["header"]
+    }
+  }
+{% endschema %}
+

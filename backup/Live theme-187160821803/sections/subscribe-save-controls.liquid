@@ -1,0 +1,357 @@
+{{ 'subscribe-save.css' | asset_url | stylesheet_tag }}
+{% style %}
+#shopify-section-{{ section.id }} .ss-controls { --ss-bg: {{ section.settings.background_color }}; --ss-ink: {{ section.settings.text_color }}; --ss-pad: {{ section.settings.desktop_padding }}px; --ss-pad-mobile: {{ section.settings.mobile_padding }}px; }
+{% endstyle %}
+<section id="{{ section.settings.anchor_id | escape }}" class="ss ss-controls"><div class="ss-wrap">
+<div class="ss-video-layout ss-account-video"><div class="ss-video-frame">{% if section.settings.account_video != blank %}<video controls preload="none" playsinline{% if section.settings.account_video_poster != blank %} poster="{{ section.settings.account_video_poster | image_url: width: 1600 }}"{% endif %}>{% for source in section.settings.account_video.sources %}<source src="{{ source.url }}" type="{{ source.mime_type }}">{% endfor %}</video>{% elsif section.settings.account_external_video != blank %}<button type="button" class="ss-video-launch" aria-label="{{ section.settings.account_video_play | escape }}" data-video-type="{{ section.settings.account_external_video.type }}" data-video-id="{{ section.settings.account_external_video.id | escape }}">{% if section.settings.account_video_poster != blank %}{{ section.settings.account_video_poster | image_url: width: 1600 | image_tag: widths: '480, 720, 960, 1280, 1600', sizes: '(min-width: 900px) 52vw, 100vw', loading: 'lazy', alt: section.settings.account_video_alt }}{% else %}<span class="ss-media-placeholder"></span>{% endif %}<span class="ss-play" aria-hidden="true">▶</span></button>{% elsif section.settings.account_video_poster != blank %}{{ section.settings.account_video_poster | image_url: width: 1600 | image_tag: widths: '480, 720, 960, 1280, 1600', sizes: '(min-width: 900px) 52vw, 100vw', loading: 'lazy', alt: section.settings.account_video_alt }}{% else %}<div class="ss-media-placeholder" aria-hidden="true"></div>{% endif %}</div><div><p class="ss-eyebrow">{{ section.settings.account_video_eyebrow | escape }}</p><h2>{{ section.settings.account_video_heading }}</h2><div class="ss-copy">{{ section.settings.account_video_body }}</div><p class="ss-small">{{ section.settings.account_video_status | escape }}</p><details class="ss-disclosure"><summary>Read transcript</summary><div class="ss-copy">{{ section.settings.account_video_transcript }}</div></details></div></div><div class="ss-portal-layout"><div><header class="ss-intro"><p class="ss-eyebrow">{{ section.settings.eyebrow | escape }}</p><h2>{{ section.settings.heading }}</h2><div class="ss-intro-copy">{% render 'ss-qa-body', body: section.settings.body, qa_1: section.settings.qa_1, qa_2: section.settings.qa_2, qa_3: section.settings.qa_3 %}</div></header><div class="ss-copy">{{ section.settings.promises }}</div><a class="ss-button" href="{{ routes.account_url }}">{{ section.settings.account_button | escape }}</a><div class="ss-small">{{ section.settings.canceled_note }}</div></div>{% assign ss_portal_product = section.settings.portal_product %}{% assign ss_portal_variant = ss_portal_product.selected_or_first_available_variant %}{% if section.settings.portal_variant_id_override != blank %}{% assign ss_portal_variant = nil %}{% for candidate in ss_portal_product.variants %}{% assign candidate_id = candidate.id | append: '' %}{% if candidate_id == section.settings.portal_variant_id_override %}{% assign ss_portal_variant = candidate %}{% break %}{% endif %}{% endfor %}{% endif %}{% assign ss_portal_allocation = nil %}{% if ss_portal_variant != blank %}{% for candidate in ss_portal_variant.selling_plan_allocations %}{% assign candidate_id = candidate.selling_plan.id | append: '' %}{% if section.settings.portal_plan_id_override == blank or candidate_id == section.settings.portal_plan_id_override %}{% assign ss_portal_allocation = candidate %}{% break %}{% endif %}{% endfor %}{% endif %}<div class="portal-demo" data-portal-demo>
+  <div class="portal-top">
+    <strong>{{ section.settings.account_label | escape }}</strong>
+    <span class="demo-badge">Interactive demo</span>
+  </div>
+  <div class="portal-product">
+    {% if section.settings.portal_image != blank %}
+      {{ section.settings.portal_image | image_url: width: 320 | image_tag: widths: '160, 320', sizes: '100px', loading: 'lazy', alt: section.settings.portal_title }}
+    {% endif %}
+    <div>
+      <h3>{{ section.settings.portal_title }}</h3>
+      {% if ss_portal_allocation != blank %}<p>{{ ss_portal_allocation.price | money }} {{ section.settings.portal_interval | escape }}</p>{% endif %}
+      <span class="portal-status">{{ section.settings.portal_status | escape }}</span>
+    </div>
+  </div>
+  <div class="portal-next">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v3M16 2v3M3 9h18"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01M16 17h.01"/></svg>
+    <div><span>{{ section.settings.portal_next_label | escape }}</span><strong>{{ section.settings.portal_next_value | escape }}</strong></div>
+  </div>
+  <div class="portal-tabs">
+    <div class="portal-tab-list" role="tablist" aria-label="Explore subscription controls">
+      {% for block in section.blocks %}
+        <button type="button" role="tab" id="portal-tab-{{ section.id }}-{{ block.id }}" aria-controls="portal-panel-{{ section.id }}-{{ block.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" tabindex="{% if forloop.first %}0{% else %}-1{% endif %}" {{ block.shopify_attributes }}>{{ block.settings.title | escape }}</button>
+      {% endfor %}
+    </div>
+    {% for block in section.blocks %}
+      <div class="portal-tab-panel" id="portal-panel-{{ section.id }}-{{ block.id }}" role="tabpanel" aria-labelledby="portal-tab-{{ section.id }}-{{ block.id }}" tabindex="0"{% unless forloop.first %} hidden{% endunless %}>
+        <h4>{% if forloop.first %}{{ section.settings.portal_example_heading | escape }}{% else %}{{ block.settings.title | escape }}{% endif %}</h4>
+        {% if forloop.first %}<p>{{ section.settings.portal_example_body | escape }}</p>{% else %}<div class="portal-panel-copy">{{ block.settings.body }}</div>{% endif %}
+        <button type="button" class="demo-action" data-demo-action data-action-title="{{ block.settings.title | escape }}">Try {{ block.settings.title | escape | downcase }}</button>
+      </div>
+    {% endfor %}
+  </div>
+  <p class="demo-feedback" role="status" aria-live="polite"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg><span data-demo-feedback>Try a control above. This example does not change any real subscription.</span></p>
+  <button type="button" class="reset-demo" data-demo-reset>Reset demo</button>
+  <p class="portal-disclosure">{{ section.settings.portal_disclosure | escape }}</p>
+  <script>(function(){const id='shopify-section-{{ section.id }}';const key='__ssPortal_'+id;if(window[key])window[key].abort();const controller=new AbortController();window[key]=controller;const initial='Try a control above. This example does not change any real subscription.';function init(root){const demo=root&&root.querySelector('[data-portal-demo]');if(!demo||demo.dataset.ready)return;demo.dataset.ready='true';const tabs=[...demo.querySelectorAll('[role="tab"]')];const panels=[...demo.querySelectorAll('[role="tabpanel"]')];const feedback=demo.querySelector('[data-demo-feedback]');function select(tab,focus){tabs.forEach(item=>{const active=item===tab;item.setAttribute('aria-selected',String(active));item.tabIndex=active?0:-1});panels.forEach(panel=>{panel.hidden=panel.id!==tab.getAttribute('aria-controls')});if(focus)tab.focus()}tabs.forEach((tab,index)=>{tab.addEventListener('click',()=>select(tab,false),{signal:controller.signal});tab.addEventListener('keydown',event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();let next=index;if(event.key==='ArrowLeft')next=(index-1+tabs.length)%tabs.length;if(event.key==='ArrowRight')next=(index+1)%tabs.length;if(event.key==='Home')next=0;if(event.key==='End')next=tabs.length-1;select(tabs[next],true)},{signal:controller.signal})});demo.querySelectorAll('[data-demo-action]').forEach(button=>button.addEventListener('click',()=>{feedback.textContent=button.dataset.actionTitle+' selected. This demo does not change a real subscription.'},{signal:controller.signal}));const reset=demo.querySelector('[data-demo-reset]');if(reset)reset.addEventListener('click',()=>{if(tabs[0])select(tabs[0],false);feedback.textContent=initial},{signal:controller.signal})}init(document.getElementById(id));document.addEventListener('shopify:section:load',event=>{if(event.target.id===id)init(event.target)},{signal:controller.signal})})();</script>
+</div></div><details class="ss-disclosure ss-actions-reference"><summary>{{ section.settings.controls_heading | escape }}</summary><div class="ss-table-wrap"><table><thead><tr><th scope="col">What you want to do</th><th scope="col">Where</th><th scope="col">When it takes effect</th></tr></thead><tbody>{% for block in section.blocks %}<tr {{ block.shopify_attributes }}><th scope="row">{{ block.settings.title | escape }}</th><td data-label="Where"><a href="{{ block.settings.link_url | default: routes.account_url }}">{{ block.settings.link_label | escape }}</a></td><td data-label="When it takes effect">{{ block.settings.body }}</td></tr>{% endfor %}</tbody></table></div></details><div class="ss-notes-grid"><article class="ss-card"><p class="ss-eyebrow">{{ section.settings.cutoff_eyebrow | escape }}</p><h3>{{ section.settings.cutoff_heading }}</h3><div class="ss-copy">{% render 'ss-qa-body', body: section.settings.cutoff_body, qa_1: section.settings.cutoff_qa %}</div></article><article class="ss-card"><p class="ss-eyebrow">{{ section.settings.help_eyebrow | escape }}</p><h3>{{ section.settings.help_heading }}</h3><p><a href="mailto:{{ section.settings.help_email | escape }}">{{ section.settings.help_email | escape }}</a></p><p><a href="tel:+18009170455">{{ section.settings.help_phone | escape }}</a> · {% render 'ss-qa-body', body: '%%QA1%%', qa_1: section.settings.help_hours %}</p><p>{{ section.settings.help_note | escape }}</p></article></div><a class="ss-button" href="{{ routes.account_url }}">{{ section.settings.account_button | escape }}</a><script>(function(){const id='shopify-section-{{ section.id }}';const key='__ssVideo_'+id;if(window[key])window[key].abort();const controller=new AbortController();window[key]=controller;function init(root){if(!root)return;root.querySelectorAll('.ss-video-launch:not([data-ready])').forEach(button=>{button.dataset.ready='1';button.addEventListener('click',()=>{const type=button.dataset.videoType,videoId=button.dataset.videoId;if(!videoId)return;const iframe=document.createElement('iframe');iframe.title=button.getAttribute('aria-label');iframe.allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';iframe.allowFullscreen=true;iframe.referrerPolicy='strict-origin-when-cross-origin';iframe.src=type==='youtube'?'https://www.youtube-nocookie.com/embed/'+encodeURIComponent(videoId)+'?autoplay=1':'https://player.vimeo.com/video/'+encodeURIComponent(videoId)+'?autoplay=1';button.replaceWith(iframe)})})}init(document.getElementById(id));document.addEventListener('shopify:section:load',e=>{if(e.target.id===id)init(e.target)},{signal:controller.signal})})();</script>
+</div></section>
+{% schema %}
+{
+  "name": "Subscribe Save Controls",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body copy"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "manage"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#153a5b"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop vertical spacing",
+      "default": 88,
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile vertical spacing",
+      "default": 56,
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "image_picker",
+      "id": "account_video_poster",
+      "label": "Account video poster"
+    },
+    {
+      "type": "video",
+      "id": "account_video",
+      "label": "Account hosted video"
+    },
+    {
+      "type": "video_url",
+      "id": "account_external_video",
+      "label": "Account external video",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ]
+    },
+    {
+      "type": "text",
+      "id": "account_video_alt",
+      "label": "Video poster alt"
+    },
+    {
+      "type": "text",
+      "id": "account_video_play",
+      "label": "Video play label"
+    },
+    {
+      "type": "text",
+      "id": "account_video_eyebrow",
+      "label": "Video eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "account_video_heading",
+      "label": "Video heading"
+    },
+    {
+      "type": "richtext",
+      "id": "account_video_body",
+      "label": "Video copy"
+    },
+    {
+      "type": "text",
+      "id": "account_video_status",
+      "label": "Video status"
+    },
+    {
+      "type": "richtext",
+      "id": "account_video_transcript",
+      "label": "Video transcript"
+    },
+    {
+      "type": "richtext",
+      "id": "promises",
+      "label": "Account promises"
+    },
+    {
+      "type": "text",
+      "id": "account_button",
+      "label": "Account button label"
+    },
+    {
+      "type": "richtext",
+      "id": "canceled_note",
+      "label": "Canceled note"
+    },
+    {
+      "type": "text",
+      "id": "account_label",
+      "label": "Example account label"
+    },
+    {
+      "type": "image_picker",
+      "id": "portal_image",
+      "label": "Example product image"
+    },
+    {
+      "type": "text",
+      "id": "portal_title",
+      "label": "Example product title"
+    },
+    {
+      "type": "text",
+      "id": "portal_status",
+      "label": "Example status"
+    },
+    {
+      "type": "text",
+      "id": "portal_next_label",
+      "label": "Next date label"
+    },
+    {
+      "type": "text",
+      "id": "portal_next_value",
+      "label": "Next date value"
+    },
+    {
+      "type": "text",
+      "id": "portal_example_heading",
+      "label": "Example action heading"
+    },
+    {
+      "type": "text",
+      "id": "portal_example_body",
+      "label": "Example action copy"
+    },
+    {
+      "type": "text",
+      "id": "portal_disclosure",
+      "label": "Example disclosure"
+    },
+    {
+      "type": "text",
+      "id": "controls_heading",
+      "label": "Controls table heading"
+    },
+    {
+      "type": "text",
+      "id": "cutoff_eyebrow",
+      "label": "Cut-off eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "cutoff_heading",
+      "label": "Cut-off heading"
+    },
+    {
+      "type": "richtext",
+      "id": "cutoff_body",
+      "label": "Cut-off copy"
+    },
+    {
+      "type": "text",
+      "id": "cutoff_qa",
+      "label": "Cut-off period",
+      "default": "[24 HOURS]"
+    },
+    {
+      "type": "text",
+      "id": "help_eyebrow",
+      "label": "Support eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "help_heading",
+      "label": "Support heading"
+    },
+    {
+      "type": "text",
+      "id": "help_email",
+      "label": "Support email"
+    },
+    {
+      "type": "text",
+      "id": "help_phone",
+      "label": "Support phone"
+    },
+    {
+      "type": "text",
+      "id": "help_hours",
+      "label": "Support hours",
+      "default": "[MON–FRI, 9AM–5PM CT]"
+    },
+    {
+      "type": "text",
+      "id": "help_note",
+      "label": "Support note"
+    },
+    {
+      "type": "product",
+      "id": "portal_product",
+      "label": "Example product"
+    },
+    {
+      "type": "text",
+      "id": "portal_variant_id_override",
+      "label": "Example variant ID"
+    },
+    {
+      "type": "text",
+      "id": "portal_plan_id_override",
+      "label": "Example selling plan ID"
+    },
+    {
+      "type": "text",
+      "id": "portal_interval",
+      "label": "Example interval"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "control_action",
+      "name": "Account action",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Action"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "When it takes effect"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Account path label"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "URL override"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subscribe Save Controls",
+      "blocks": [
+        {
+          "type": "control_action",
+          "settings": {
+            "title": "Skip the next delivery",
+            "body": "<p>Immediately</p>",
+            "link_label": "Account → Subscriptions → Skip ↗",
+            "link_url": ""
+          }
+        },
+        {
+          "type": "control_action",
+          "settings": {
+            "title": "Move a delivery earlier or later",
+            "body": "<p>Immediately</p>",
+            "link_label": "Account → Subscriptions → Reschedule ↗",
+            "link_url": ""
+          }
+        },
+        {
+          "type": "control_action",
+          "settings": {
+            "title": "Change how often it ships",
+            "body": "<p>From the next order</p>",
+            "link_label": "Account → Subscriptions → Frequency ↗",
+            "link_url": ""
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

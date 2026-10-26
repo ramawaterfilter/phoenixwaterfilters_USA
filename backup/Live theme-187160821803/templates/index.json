@@ -1,0 +1,922 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "wellness_hero": {
+      "type": "wellness-hero",
+      "blocks": {
+        "trust_trial": {
+          "type": "trust",
+          "settings": {
+            "text": "100-day trial"
+          }
+        },
+        "trust_cancel": {
+          "type": "trust",
+          "disabled": true,
+          "settings": {
+            "text": "Cancel any time"
+          }
+        }
+      },
+      "block_order": [
+        "trust_trial",
+        "trust_cancel"
+      ],
+      "custom_css": [
+        ".wellness-hero__cta {align-items: center;}"
+      ],
+      "settings": {
+        "pill_text": "Limited time",
+        "pill_highlight": "55% off Subscriptions",
+        "show_avatars": true,
+        "avatar_count": "700+",
+        "show_stars": true,
+        "proof_text": "Trusted by over 700+ Families",
+        "heading": "Wellness Sale",
+        "heading_tag": "h1",
+        "description": "<p>Crisp, lab-tested filtered water at home – for less than 5 cents per gallon.</p>",
+        "button_label": "Shop Now",
+        "button_link": "shopify://products/gravity-water-filter",
+        "button_arrow": true,
+        "button_style": "primary",
+        "video_url": "https://cdn.shopify.com/videos/c/o/v/a45ee002798d4e069b28162e1d4b4e87.mp4",
+        "media_height_mobile": 340,
+        "background_color": "#f5f6f8",
+        "text_color": "#0b1638",
+        "muted_color": "#4a5068",
+        "accent_color": "#2764ff",
+        "star_color": "#fbbc04",
+        "min_height": 590
+      }
+    },
+    "kk_fws_marquee_XgjVnc": {
+      "type": "kk-fws-marquee",
+      "blocks": {
+        "item_H7qFkq": {
+          "type": "item",
+          "settings": {
+            "icon": "lab-report",
+            "text": "Full Lab Report Published, Not Just Claimed",
+            "description": ""
+          }
+        },
+        "item_qcCdVn": {
+          "type": "item",
+          "settings": {
+            "icon": "shield-outline",
+            "text": "100-Day Money-Back Trial + 10-Year Warranty",
+            "description": ""
+          }
+        },
+        "item_98WDrx": {
+          "type": "item",
+          "settings": {
+            "icon": "water-drop",
+            "text": "Less Than 5 Cents Per Gallon",
+            "description": ""
+          }
+        }
+      },
+      "block_order": [
+        "item_H7qFkq",
+        "item_qcCdVn",
+        "item_98WDrx"
+      ],
+      "name": "KK FWS Marquee",
+      "settings": {
+        "title": "",
+        "show_dots": true,
+        "duration": 40,
+        "direction": "left",
+        "pause_on_hover": true,
+        "background_color": "#0b1638",
+        "text_color": "#ffffff"
+      }
+    },
+    "features_3cPHFm": {
+      "type": "features",
+      "blocks": {
+        "feature_col_1_UQD4Xx": {
+          "type": "feature_col_1",
+          "settings": {
+            "title": "50+ Years Of Experience",
+            "icon": "shopify://shop_images/icon-experience_f6894dcc-6eee-4f64-a979-3ca16ab0bcf5.svg"
+          }
+        },
+        "feature_col_1_QxmRRi": {
+          "type": "feature_col_1",
+          "settings": {
+            "title": "Reduces up to 99.9% of tested chemical contaminants and heavy metals",
+            "icon": "shopify://shop_images/icon-water-drop-lg.svg"
+          }
+        },
+        "feature_col_1_DpaR6m": {
+          "type": "feature_col_1",
+          "settings": {
+            "title": "No Plumbing Required",
+            "icon": "shopify://shop_images/icon-bolt.svg"
+          }
+        },
+        "feature_col_2_GNtLwD": {
+          "type": "feature_col_2",
+          "settings": {
+            "title": "800k Happy Customers",
+            "icon": "shopify://shop_images/icon-star.svg"
+          }
+        },
+        "feature_col_2_WkkhPV": {
+          "type": "feature_col_2",
+          "settings": {
+            "title": "$1,000s Cheaper Than Bottles & In-Home Systems",
+            "icon": "shopify://shop_images/icon-drop.svg"
+          }
+        },
+        "feature_col_2_zYTKTF": {
+          "type": "feature_col_2",
+          "settings": {
+            "title": "Less than 5 cents Per Gallon",
+            "icon": "shopify://shop_images/icon-tag.svg"
+          }
+        }
+      },
+      "block_order": [
+        "feature_col_1_UQD4Xx",
+        "feature_col_1_QxmRRi",
+        "feature_col_1_DpaR6m",
+        "feature_col_2_GNtLwD",
+        "feature_col_2_WkkhPV",
+        "feature_col_2_zYTKTF"
+      ],
+      "custom_css": [
+        "@media (min-width: 1200px) {.section-features ul.features li.feature-item p.title {width: 151px !important; }}"
+      ],
+      "settings": {
+        "style": "bg-white",
+        "show_logo": true,
+        "heading": "Redefine your water experience with a Phoenix Gravity Water Filter",
+        "content": "<p>A new age of filtration is here. Enjoy crisp drinking water at home from just less than 5 cents per gallon.</p>",
+        "section_video_bg": "gshkwot1gv",
+        "buttonlink": "shopify://products/gravity-water-filter",
+        "buttontext": "Shop Now",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": false,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "kk_fws_image_slider": {
+      "type": "kk-fws-image-slider",
+      "blocks": {
+        "slide_kitchen": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/08_e786c700-4289-4031-9d19-ac5bcef6d7a0.jpg"
+          }
+        },
+        "slide_tap": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/06.png"
+          }
+        },
+        "slide_tower": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/05_a9787c7c-d07f-41b0-b496-bacb7b953de7.jpg"
+          }
+        },
+        "trust_trial": {
+          "type": "trust",
+          "settings": {
+            "text": "100-day trial"
+          }
+        },
+        "trust_cancel": {
+          "type": "trust",
+          "disabled": true,
+          "settings": {
+            "text": "Cancel any time"
+          }
+        }
+      },
+      "block_order": [
+        "slide_kitchen",
+        "slide_tap",
+        "slide_tower",
+        "trust_trial",
+        "trust_cancel"
+      ],
+      "settings": {
+        "anchor_id": "",
+        "eyebrow": "Dual filtration technology",
+        "heading": "Pure Innovation, Pure Water.",
+        "text": "<p>Step into the future with our cutting-edge dual filtration technology. The Phoenix Gravity Water Filter isn't just a product; it's an experience, crafted from the finest AISI 304 Stainless Steel, ensuring durability and elegance. A simple, affordable way to enjoy clean, great-tasting filtered water.</p>",
+        "autoplay": true,
+        "autoplay_delay": 4,
+        "show_pagination": true,
+        "button_label": "Shop Now",
+        "button_link": "shopify://products/gravity-water-filter",
+        "button_arrow": true,
+        "button_style": "primary",
+        "background_color": "#f5f6f8"
+      }
+    },
+    "kk_fws_copy_image_nano": {
+      "type": "kk-fws-copy-image",
+      "settings": {
+        "style": "bg-dark",
+        "copy_position": "left",
+        "show_container": false,
+        "anchor_id": "",
+        "show_social_proof": false,
+        "show_avatars": true,
+        "avatar_count": "700+",
+        "show_stars": true,
+        "proof_text": "Trusted by over 700+ Families",
+        "eyebrow": "How it works",
+        "heading": "Revolutionary ‘Nano Adsorption’ Filter Technology",
+        "text": "<p>Ordinary filters can load up with trapped material over time, which can reduce flow and affect taste. To solve this crucial problem, we’ve developed revolutionary Nano Adsorption technology.</p>",
+        "subheading": "How does it work?",
+        "text_2": "<p>First, we use granular activated carbon derived from natural coconut husks to remove chemicals, toxins, and heavy metals such as zinc and lead. We use a dense, high-grade carbon structure engineered to maintain consistent flow and long filter life. This filtration process mimics nature and keeps oxygen and mineral content unchanged, giving the water a spring-like freshness and a wholesome taste that’s second to none.</p>",
+        "image": "shopify://shop_images/Water_Filter.png",
+        "image_contain": false,
+        "copy_max_width": 592,
+        "image_max_width": 640,
+        "button_label": "",
+        "button_link": "",
+        "button_arrow": true,
+        "button_style": "primary"
+      }
+    },
+    "kk_fws_marquee_D7pnVY": {
+      "type": "kk-fws-marquee",
+      "blocks": {
+        "item_cErAtN": {
+          "type": "item",
+          "settings": {
+            "icon": "lab-report",
+            "custom_icon": "shopify://shop_images/icon-micro-plastics.svg",
+            "text": "Microplastics",
+            "description": "99.99%"
+          }
+        },
+        "item_LyNRpm": {
+          "type": "item",
+          "settings": {
+            "icon": "shield-outline",
+            "custom_icon": "shopify://shop_images/icon-lead.svg",
+            "text": "Lead",
+            "description": ""
+          }
+        },
+        "item_B8eygk": {
+          "type": "item",
+          "settings": {
+            "icon": "water-drop",
+            "custom_icon": "shopify://shop_images/icon-pfa.svg",
+            "text": "PFAs",
+            "description": "99.99%"
+          }
+        },
+        "item_Cx4awX": {
+          "type": "item",
+          "settings": {
+            "icon": "lab-report",
+            "custom_icon": "shopify://shop_images/icon-Chlorine_322d5c10-b4c7-4ff2-95ae-72210f81024d.svg",
+            "text": "Chlorine",
+            "description": "99.99%"
+          }
+        }
+      },
+      "block_order": [
+        "item_cErAtN",
+        "item_LyNRpm",
+        "item_B8eygk",
+        "item_Cx4awX"
+      ],
+      "name": "KK FWS Marquee",
+      "settings": {
+        "title": "Our Filters Remove",
+        "show_dots": true,
+        "duration": 40,
+        "direction": "left",
+        "pause_on_hover": true,
+        "background_color": "#0b1638",
+        "text_color": "#ffffff"
+      }
+    },
+    "kk_fws_copy_image_beautiful": {
+      "type": "kk-fws-copy-image",
+      "settings": {
+        "style": "bg-light",
+        "copy_position": "right",
+        "show_container": false,
+        "anchor_id": "",
+        "show_social_proof": false,
+        "show_avatars": true,
+        "avatar_count": "700+",
+        "show_stars": true,
+        "proof_text": "Trusted by over 700+ Families",
+        "eyebrow": "",
+        "heading": "Impressively Beautiful. Impossibly Affordable.",
+        "text": "<p>Whole-home filtration systems, while effective, come with steep costs - typically $500 to $5,000 upfront - along with ongoing maintenance expenses. They also require professional servicing, which adds to the inconvenience. Alternatively, bottled water involves significant yearly spending and takes up valuable storage space.</p><p>The Phoenix Gravity Water Filter offers an elegant solution, delivering clean, delicious water for just $0.05 per gallon. This user-friendly filter is easy to set up, simple to maintain, and allows hassle-free filter replacement, eliminating the need for costly and complex systems.</p>",
+        "subheading": "",
+        "text_2": "",
+        "image": "shopify://shop_images/25_e88b85be-a789-47f8-a022-57926990a4a9.jpg",
+        "image_contain": false,
+        "copy_max_width": 570,
+        "image_max_width": 655,
+        "button_label": "",
+        "button_link": "",
+        "button_arrow": true,
+        "button_style": "primary"
+      }
+    },
+    "kk_fws_copy_image_simplicity": {
+      "type": "kk-fws-copy-image",
+      "blocks": {
+        "trust_kNa01": {
+          "type": "trust",
+          "settings": {
+            "text": "100-day trial"
+          }
+        }
+      },
+      "block_order": [
+        "trust_kNa01"
+      ],
+      "custom_css": [
+        ".kk-fws-copy-image__cta {align-items: center !important;}"
+      ],
+      "settings": {
+        "style": "bg-white",
+        "copy_position": "left",
+        "show_container": false,
+        "anchor_id": "",
+        "show_social_proof": false,
+        "show_avatars": true,
+        "avatar_count": "700+",
+        "show_stars": true,
+        "proof_text": "Trusted by over 700+ Families",
+        "eyebrow": "",
+        "heading": "Simplicity in Design, Complexity in Science.",
+        "text": "<p>The Phoenix Gravity Water Filter is more than just a utility - it’s a centerpiece for your home. Its sleek, minimalist design complements any space, while the advanced filtration system works silently to ensure every glass you pour reflects purity. Setup is effortless, maintenance is minimal, and the taste is truly unparalleled.</p>",
+        "subheading": "",
+        "text_2": "",
+        "image": "shopify://shop_images/10_19e6dbeb-0695-45cb-b318-d2ca49b966e6.jpg",
+        "image_contain": false,
+        "copy_max_width": 569,
+        "image_max_width": 654,
+        "button_label": "Shop Now",
+        "button_link": "shopify://products/gravity-water-filter",
+        "button_arrow": true,
+        "button_style": "primary"
+      }
+    },
+    "kk_fws_copy_image_advanced": {
+      "type": "kk-fws-copy-image",
+      "blocks": {
+        "trust_kNa01": {
+          "type": "trust",
+          "settings": {
+            "text": "100-day trial"
+          }
+        }
+      },
+      "block_order": [
+        "trust_kNa01"
+      ],
+      "custom_css": [
+        ".kk-fws-copy-image__cta {align-items: center !important;}"
+      ],
+      "settings": {
+        "style": "bg-light",
+        "copy_position": "left",
+        "show_container": true,
+        "container_image": "shopify://shop_images/carbon.jpg",
+        "anchor_id": "",
+        "show_social_proof": false,
+        "show_avatars": true,
+        "avatar_count": "700+",
+        "show_stars": true,
+        "proof_text": "Trusted by over 700+ Families",
+        "eyebrow": "50 years in the making",
+        "heading": "Our Most Advanced Water Filter Ever",
+        "text": "<p>The Phoenix Gravity Water Filter represents the pinnacle of our 50 years of dedication to research and development. Crafted to redefine your water experience, it embodies both elegance and efficiency.</p>",
+        "subheading": "",
+        "text_2": "",
+        "image_contain": false,
+        "button_label": "Shop Now",
+        "button_link": "shopify://products/gravity-water-filter",
+        "button_arrow": true,
+        "button_style": "primary"
+      }
+    },
+    "cards_yt3YmD": {
+      "type": "cards",
+      "blocks": {
+        "text_9GRAe7": {
+          "type": "text",
+          "settings": {
+            "heading": "",
+            "copy": "<p>AISI 304 Stainless Steel is lightweight, rust-resistant, and durable</p>",
+            "icon": "shopify://shop_images/icon-06.svg",
+            "video_id": ""
+          }
+        },
+        "text_XEBQBh": {
+          "type": "text",
+          "settings": {
+            "heading": "",
+            "copy": "<p>Dual filtration system filters up to 4.2 gallons of water per hour</p>",
+            "icon": "shopify://shop_images/icon-05.svg",
+            "video_id": ""
+          }
+        },
+        "text_HHrWik": {
+          "type": "text",
+          "settings": {
+            "heading": "",
+            "copy": "<p><em>Reduces up to 99.9% of tested chemical contaminants and heavy metals.</em></p>",
+            "icon": "shopify://shop_images/icon-04.svg",
+            "video_id": ""
+          }
+        },
+        "text_dhXfnP": {
+          "type": "text",
+          "settings": {
+            "heading": "",
+            "copy": "<p>Drip-free metal tap dispenses delicious-tasting water</p>",
+            "icon": "shopify://shop_images/icon-03.svg",
+            "video_id": ""
+          }
+        },
+        "text_kYG8qy": {
+          "type": "text",
+          "settings": {
+            "heading": "",
+            "copy": "<p>Filters last up to 50% longer than leading brands.</p>",
+            "icon": "shopify://shop_images/icon-02.svg",
+            "video_id": ""
+          }
+        },
+        "text_ibmL7H": {
+          "type": "text",
+          "settings": {
+            "heading": "",
+            "copy": "<p>Granular activated carbon from natural coconut shells removes PFAS and other chemical toxins.</p>",
+            "icon": "shopify://shop_images/icon-01.svg",
+            "video_id": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_9GRAe7",
+        "text_XEBQBh",
+        "text_HHrWik",
+        "text_dhXfnP",
+        "text_kYG8qy",
+        "text_ibmL7H"
+      ],
+      "settings": {
+        "style": "bg-white",
+        "show_logo": true,
+        "heading": "Designed For Perfection",
+        "paragraph": "",
+        "buttontext": "Shop Now",
+        "buttonlink": "shopify://products/gravity-water-filter",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": true,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "comparison_table_hhGEed": {
+      "type": "comparison-table",
+      "blocks": {
+        "text_AfqEh7": {
+          "type": "text",
+          "settings": {
+            "feature": "Affordable",
+            "column_1": "yes",
+            "column_2": "no",
+            "column_3": "no",
+            "column_4": "yes"
+          }
+        },
+        "text_tCYjnk": {
+          "type": "text",
+          "settings": {
+            "feature": "Portable",
+            "column_1": "yes",
+            "column_2": "no",
+            "column_3": "yes",
+            "column_4": "yes"
+          }
+        },
+        "text_KF9RdL": {
+          "type": "text",
+          "settings": {
+            "feature": "Durable Stainless Steel",
+            "column_1": "yes",
+            "column_2": "yes",
+            "column_3": "no",
+            "column_4": "no"
+          }
+        },
+        "text_7imQmV": {
+          "type": "text",
+          "settings": {
+            "feature": "100-day Risk-Free Trial",
+            "column_1": "yes",
+            "column_2": "no",
+            "column_3": "no",
+            "column_4": "no"
+          }
+        },
+        "text_9iNwDV": {
+          "type": "text",
+          "settings": {
+            "feature": "Easy To Maintain",
+            "column_1": "yes",
+            "column_2": "no",
+            "column_3": "yes",
+            "column_4": "yes"
+          }
+        },
+        "text_naHJTg": {
+          "type": "text",
+          "settings": {
+            "feature": "Large Capacity",
+            "column_1": "yes",
+            "column_2": "yes",
+            "column_3": "no",
+            "column_4": "no"
+          }
+        },
+        "text_pDgX7H": {
+          "type": "text",
+          "settings": {
+            "feature": "No Plumbing Required",
+            "column_1": "yes",
+            "column_2": "no",
+            "column_3": "yes",
+            "column_4": "yes"
+          }
+        }
+      },
+      "block_order": [
+        "text_AfqEh7",
+        "text_tCYjnk",
+        "text_KF9RdL",
+        "text_7imQmV",
+        "text_9iNwDV",
+        "text_naHJTg",
+        "text_pDgX7H"
+      ],
+      "settings": {
+        "style": "style-2",
+        "show_social_proof": true,
+        "show_avatars": true,
+        "avatar_count": "700+",
+        "show_stars": true,
+        "proof_text": "Trusted by over 700+ Families",
+        "heading": "The most convenient and affordable way to enjoy pure, clean drinking water in your home.",
+        "number_of_comparisons": "3",
+        "feature_header": "",
+        "show_logo": true,
+        "company_name": "PhoenixWater Filter",
+        "comparison_1": "In-Home System",
+        "comparison_2": "Bottled Water",
+        "comparison_3": "Pitchers",
+        "buttonlink": "shopify://products/gravity-water-filter",
+        "buttontext": "Shop Now",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": true,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "kk_fws_labs_tew6Bw": {
+      "type": "kk-fws-labs",
+      "blocks": {
+        "report_EK8CDy": {
+          "type": "report",
+          "settings": {
+            "title": "PFOA PFOS Lab Test Report",
+            "show_passed": true,
+            "button_label": "View report",
+            "button_link": "https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_Gravity_USA_Report.pdf?v=1789408627",
+            "new_tab": true
+          }
+        },
+        "report_8paRyj": {
+          "type": "report",
+          "settings": {
+            "title": "Pharmaceuticals Test Report",
+            "show_passed": true,
+            "button_label": "View report",
+            "button_link": "https://info.nsf.org/Certified/DWTU/Listings.asp?Company=C0799666&Standard=042",
+            "new_tab": true
+          }
+        },
+        "report_kdDDjJ": {
+          "type": "report",
+          "settings": {
+            "title": "Heavy Metals Test Report",
+            "show_passed": true,
+            "button_label": "View report",
+            "button_link": "https://cdn.shopify.com/s/files/1/2644/2852/files/20231120_Atom_Lab_-_Phoenix_Carbon_Filter_-_Heavy_Metals.pdf?v=1713736816",
+            "new_tab": true
+          }
+        }
+      },
+      "block_order": [
+        "report_EK8CDy",
+        "report_8paRyj",
+        "report_kdDDjJ"
+      ],
+      "name": "KK FWS Lab Report Cards",
+      "settings": {
+        "style": "bg-white",
+        "show_container": false,
+        "anchor_id": "",
+        "eyebrow": "Independent lab testing",
+        "heading": "Our Water Has Been Tested by Reputable 3rd Parties and Passed with Flying Colors",
+        "brand_text": "PHOENIX GRAVITY",
+        "report_label": "LAB REPORT",
+        "passed_label": "PASSED",
+        "shimmer": true,
+        "button_style": "secondary",
+        "button_icon": true,
+        "button_arrow": true
+      }
+    },
+    "a9f94ca6-ea37-4e60-86af-50e014e0180b": {
+      "type": "steps-section",
+      "blocks": {
+        "dd79e78c-9109-46f1-88d0-fa50384207b5": {
+          "type": "text",
+          "settings": {
+            "icon": "shopify://shop_images/icon-01_0bcaf4fa-91c1-4565-b84b-441ee01f433a.svg",
+            "heading": "1. Assemble Your Filter",
+            "copy": "<p>Simply follow the instructions included in the box to put together your filter – it’s super easy to set up and only takes 5 minutes.</p>"
+          }
+        },
+        "ae3a8a7c-6589-4a11-9248-ea5265b2025e": {
+          "type": "text",
+          "settings": {
+            "icon": "shopify://shop_images/icon-02_b6cead04-d231-4b7d-92b9-66e32eaffb3c.svg",
+            "heading": "2. Add Tap Water",
+            "copy": "<p>Take off the lid and pour in tap water. The dual filters use natural carbon filtration from high-grade coconut shell activated carbon to remove toxins.</p>"
+          }
+        },
+        "7fcf3a4c-3022-4703-be3e-700c540135a8": {
+          "type": "text",
+          "settings": {
+            "icon": "shopify://shop_images/icon-03_ac3f58c6-222e-469f-985e-22288130fbbe.svg",
+            "heading": "3. Enjoy great-tasting water!",
+            "copy": "<p>Pour yourself a glass – you’ll notice a clean, crisp taste you only get from filtered water that’s had all the nasty contaminants absorbed!</p>"
+          }
+        }
+      },
+      "block_order": [
+        "dd79e78c-9109-46f1-88d0-fa50384207b5",
+        "ae3a8a7c-6589-4a11-9248-ea5265b2025e",
+        "7fcf3a4c-3022-4703-be3e-700c540135a8"
+      ],
+      "settings": {
+        "style": "bg-light",
+        "heading": "Enjoy crystal-clear, great tasting water in 3 easy steps!",
+        "paragraph": "",
+        "video_id": "",
+        "block_direction": "row",
+        "buttontext": "Shop Now",
+        "buttonlink": "shopify://products/gravity-water-filter",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": false,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "f3652b52-770f-47a5-882c-ea56bdea2b10": {
+      "type": "testimonials",
+      "blocks": {
+        "38b198d0-82ba-49a6-963f-d5aeea6a39d3": {
+          "type": "text",
+          "settings": {
+            "quote": "<p>We were looking for a solid filter that would be easy to maintain, easy to build, long lasting, and effective. Meets the mark on all accounts!</p>",
+            "reviewer": "Andrew Narduzzi"
+          }
+        },
+        "text_f86zpb": {
+          "type": "text",
+          "settings": {
+            "quote": "<p><strong>Makes the water taste better</strong></p><p>I've been using this water filter for a few months now. It's been fantastic. I can smell a strong chlorine odor when filling the system, and after its filtered, there is no smell. The taste is so much better after its filtered as well. Highly recommend!</p>",
+            "reviewer": "Justin"
+          }
+        },
+        "text_Tf3LMc": {
+          "type": "text",
+          "settings": {
+            "quote": "<p><strong>Amazing solution to a big problem!</strong></p><p>I absolutely love that there's an option to remove fluoride from our water. Most filtration systems are not able to unless it's reverse osmosis, from my research. These are easy to install and give me peace of mind that we are consuming the purest water possible!</p>",
+            "reviewer": "Jenny"
+          }
+        },
+        "0cc7a6ba-eb83-4ad4-aa8e-a1be39607916": {
+          "type": "text",
+          "settings": {
+            "quote": "<p><strong>I had the other well named one from another company and Phoenix is better</strong>,&nbsp;</p><p>The other company is terribly bad at customer services and rude and don’t care if you have a problem like when I ordered things that didn’t come and they literally said I was wrong and I got my things but I didn’t and called me a thief….very rude and unprofessional.</p>",
+            "reviewer": "David"
+          }
+        },
+        "text_YhR4Xi": {
+          "type": "text",
+          "settings": {
+            "quote": "<p><strong>I love it! We have such peace of mind knowing our drinking and cooking water has been filtered</strong></p><p>2.5 gallons is perfect for 2 people using it for drinking and cooking water + water for our pets.</p>",
+            "reviewer": "Cheryl Shepard"
+          }
+        },
+        "268fbfd8-392e-437f-b2bf-8b826c84550c": {
+          "type": "text",
+          "settings": {
+            "quote": "<p><strong>I’m really happy that I made this choice.</strong>&nbsp;</p><p>I looked into electric and natural steam filters and found that they would cost a lot of time and energy waste by needing up to 4hrs to purify water.&nbsp;</p>",
+            "reviewer": "Victoria"
+          }
+        }
+      },
+      "block_order": [
+        "38b198d0-82ba-49a6-963f-d5aeea6a39d3",
+        "text_f86zpb",
+        "text_Tf3LMc",
+        "0cc7a6ba-eb83-4ad4-aa8e-a1be39607916",
+        "text_YhR4Xi",
+        "268fbfd8-392e-437f-b2bf-8b826c84550c"
+      ],
+      "settings": {
+        "layout": "style-1",
+        "sub_header": "Based On 7,495 global Reviews",
+        "certification_text": "NSF/ANSI 42 & 372 Certified",
+        "heading": "🇺🇸 Americans have trusted our water filters for over 50 years.",
+        "paragraph": "",
+        "verified_text": "Verified Review",
+        "stars_label": "5 out of 5 stars",
+        "initial_count": 6,
+        "load_more_count": 3,
+        "load_more_label": "Load more reviews",
+        "button_text": "Shop Now",
+        "button_url": "shopify://products/gravity-water-filter",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": true,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "",
+        "button_aftertext": "",
+        "custom_id": "",
+        "custom_class": ""
+      }
+    },
+    "copy_image_gEH4nM": {
+      "type": "copy-image",
+      "settings": {
+        "style": "bg-white",
+        "layout": "copy",
+        "vertical_align": "align-items-center",
+        "content_align": "center",
+        "show_logo": false,
+        "heading": "100-Day Free Trial",
+        "content": "<p>Worried the Phoenix Gravity Water Filter sounds too good to be true? Not sure it will really remove as many contaminants as we promise? We stand behind our product 100% - so you can try it at home for 100 days with our money-back guarantee.&nbsp;<br/><br/>If you’re not completely satisfied with the purity of your water, simply return it within 100 days for a full refund.<br/><br/>Terms apply<br/><br/></p>",
+        "column_img": "shopify://shop_images/100-Day_Free_Trial_badge.png",
+        "video_id": "",
+        "img_width": 200,
+        "large_image": "img_standard",
+        "second_content": "",
+        "buttonlink": "",
+        "buttontext": "",
+        "button_arrow": true,
+        "button_style": "primary",
+        "show_trust_items": false,
+        "trust_text_1": "100-day trial",
+        "trust_text_2": "Cancel any time",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "section_bgimg": "shopify://shop_images/filter-background-light.jpg",
+        "bg_image_style": "cover",
+        "section_randoimg_position": "top"
+      }
+    },
+    "kk_fws_gallery_jdfKmi": {
+      "type": "kk-fws-gallery",
+      "blocks": {
+        "gallery_images_block_GTmJpj": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/Life_style_18.jpg"
+          }
+        },
+        "gallery_images_block_D3CfhP": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/03_a97dcc32-8928-4e70-bdda-96fa9af46f91.jpg"
+          }
+        },
+        "gallery_images_block_iPzqzW": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/02_b7d8044f-698c-40e5-8b04-d4fde2442522.jpg"
+          }
+        },
+        "gallery_images_block_tXmUUi": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/26.jpg"
+          }
+        },
+        "gallery_images_block_eUJehM": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/Life_style_7.jpg"
+          }
+        },
+        "trust_q8bdk8": {
+          "type": "trust",
+          "disabled": true,
+          "settings": {
+            "text": "Cancel any time"
+          }
+        },
+        "trust_7gggtk": {
+          "type": "trust",
+          "settings": {
+            "text": "100-day trial"
+          }
+        }
+      },
+      "block_order": [
+        "gallery_images_block_GTmJpj",
+        "gallery_images_block_D3CfhP",
+        "gallery_images_block_iPzqzW",
+        "gallery_images_block_tXmUUi",
+        "gallery_images_block_eUJehM",
+        "trust_q8bdk8",
+        "trust_7gggtk"
+      ],
+      "name": "KK FWS Gallery",
+      "settings": {
+        "rating_text": "Based on 7495 Reviews",
+        "certification_text": "NSF/ANSI 42 & 372 Certified",
+        "heading": "Enjoy Safe Drinking Water for the Whole Family!",
+        "content": "",
+        "image_alt": "",
+        "button_label": "Shop Now",
+        "button_link": "shopify://products/gravity-water-filter",
+        "button_arrow": true,
+        "button_style": "primary",
+        "background_color": "#ffffff"
+      }
+    }
+  },
+  "order": [
+    "wellness_hero",
+    "kk_fws_marquee_XgjVnc",
+    "features_3cPHFm",
+    "kk_fws_image_slider",
+    "kk_fws_copy_image_nano",
+    "kk_fws_marquee_D7pnVY",
+    "kk_fws_copy_image_beautiful",
+    "kk_fws_copy_image_simplicity",
+    "kk_fws_copy_image_advanced",
+    "cards_yt3YmD",
+    "comparison_table_hhGEed",
+    "kk_fws_labs_tew6Bw",
+    "a9f94ca6-ea37-4e60-86af-50e014e0180b",
+    "f3652b52-770f-47a5-882c-ea56bdea2b10",
+    "copy_image_gEH4nM",
+    "kk_fws_gallery_jdfKmi"
+  ]
+}

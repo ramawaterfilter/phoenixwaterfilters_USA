@@ -1,0 +1,75 @@
+<div class="cart-upsell mb-3"></div>
+
+<template id="cart-upsell-tmpl">
+  #SLIDES#
+</template>
+
+<template id="cart-upsell-slide-tmpl">
+  <div class="product-boost p-0">
+    <div class="cart-upsell__product boosted-product d-flex flex-row align-items-center justify-content-start" data-id="#ID#">
+      <div class="product-tile__meta cart-upsell__info d-flex align-items-center">
+        <div class="upsell__info">
+          <h4 class="product-tile__title mb-2 w-100 pe-5">
+            <a href="#URL#">
+              #TITLE#
+            </a>
+          </h4>
+          <p class="cart-upsell__info__price">
+            #PRICE#
+          </p>
+          <p class="cart-upsell__info__compare_price d-none">
+            #COMPAREPRICE#
+          </p>
+        </div>
+        <a
+          class="btn"
+          href="/cart/add/#ID#"
+          data-upsell="#ID#">
+          Add To Cart
+        </a>
+
+      </div>
+      <a class="cart-upsell__image tile__img order-first" href="#URL#">
+        #IMAGE#
+      </a>
+    </div>
+  </div>
+</template>
+
+
+<script>
+
+    
+
+
+  // populate template
+  if (typeof _upsellProducts !== "undefined" && _upsellProducts.length > 0) {
+    let upsellElements = document.querySelectorAll('.cart-upsell');
+    let mainTemplate = document.querySelector('#cart-upsell-tmpl').innerHTML;
+    let slideTemplate = document.querySelector('#cart-upsell-slide-tmpl').innerHTML;
+
+    upsellElements.forEach(function (el) {
+        let temporaryHTML = mainTemplate.replace('#HEADING#', _upsellHeading);
+        let slidesHTML = '';
+
+       _upsellProducts.forEach((product) => {
+  let slideHTML = slideTemplate;
+
+  slideHTML = slideHTML.replaceAll('#ID#', product.id)
+      .replaceAll('#URL#', product.url)
+      .replaceAll('#IMAGE#', product.image)
+      .replaceAll('#TITLE#', product.title)
+      .replaceAll('#PRICE#', Shopify.formatMoney(product.price))
+      .replaceAll('#SIZE#', product.size); 
+
+  slidesHTML += slideHTML;
+  });
+
+
+        temporaryHTML = temporaryHTML.replace('#SLIDES#', slidesHTML);
+
+        el.innerHTML = temporaryHTML;
+    });
+  }
+
+</script>

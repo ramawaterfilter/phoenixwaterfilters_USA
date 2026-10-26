@@ -1,0 +1,196 @@
+{{ 'subscribe-save.css' | asset_url | stylesheet_tag }}
+{% style %}
+  #shopify-section-{{ section.id }} .ss-terms { --ss-bg: {{ section.settings.background_color }}; --ss-ink: {{ section.settings.text_color }}; --ss-pad: {{ section.settings.desktop_padding }}px; --ss-pad-mobile: {{ section.settings.mobile_padding }}px; }
+{% endstyle %}
+<section id="{{ section.settings.anchor_id | escape }}" class="ss ss-terms">
+  <div class="ss-wrap">
+    <header class="ss-intro">
+      <p class="ss-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h2>{{ section.settings.heading }}</h2>
+    </header>
+    <p class="ss-small">
+      Last updated {{ section.settings.last_updated }}. These terms apply in
+      addition to our
+      <a href="{{ shop.terms_of_service.url | default: section.settings.terms_link }}">Terms of Service</a>,
+      <a href="{{ shop.shipping_policy.url | default: section.settings.shipping_link }}">Shipping Policy</a>,
+      <a href="{{ shop.refund_policy.url | default: section.settings.return_link }}">Return Policy</a> and
+      <a href="{{ shop.privacy_policy.url | default: section.settings.privacy_link }}">Privacy Policy</a>.
+    </p>
+    <ol class="ss-terms-list">
+      {% for block in section.blocks %}
+        <li id="{{ block.settings.anchor_id | escape }}" {{ block.shopify_attributes }}>
+          <span class="ss-mono">{{ block.settings.number | escape }}</span>
+          <div>
+            <h3>{{ block.settings.title }}</h3>
+            <div class="ss-copy">
+              {% render 'ss-qa-body',
+                body: block.settings.body,
+                qa_1: block.settings.qa_1,
+                qa_2: block.settings.qa_2,
+                qa_3: block.settings.qa_3
+              %}
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Subscribe Save Terms",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "terms"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f5f3f1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#153a5b"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop vertical spacing",
+      "default": 88,
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile vertical spacing",
+      "default": 56,
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "last_updated",
+      "label": "Last updated",
+      "default": "[DATE]"
+    },
+    {
+      "type": "url",
+      "id": "terms_link",
+      "label": "Terms of Service URL"
+    },
+    {
+      "type": "url",
+      "id": "shipping_link",
+      "label": "Shipping Policy URL"
+    },
+    {
+      "type": "url",
+      "id": "return_link",
+      "label": "Return Policy URL"
+    },
+    {
+      "type": "url",
+      "id": "privacy_link",
+      "label": "Privacy Policy URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "term",
+      "name": "Term",
+      "settings": [
+        {
+          "type": "text",
+          "id": "anchor_id",
+          "label": "Stable anchor ID"
+        },
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Full term text"
+        },
+        {
+          "type": "text",
+          "id": "qa_1",
+          "label": "QA value 1"
+        },
+        {
+          "type": "text",
+          "id": "qa_2",
+          "label": "QA value 2"
+        },
+        {
+          "type": "text",
+          "id": "qa_3",
+          "label": "QA value 3"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subscribe Save Terms",
+      "blocks": [
+        {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-1",
+            "number": "01",
+            "title": "What these terms cover",
+            "body": "<p>They govern the Phoenix Gravity Subscribe &amp; Save program on phoenixwaterfilters.com for customers in the United States. Enrolling in a plan means you accept them.</p>"
+          }
+        },
+        {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-2",
+            "number": "02",
+            "title": "Eligibility and account",
+            "body": "<p>You must be 18 or over, have a valid payment method and a US shipping address. A Phoenix account is created for you at checkout so you can manage the subscription yourself.</p>"
+          }
+        },
+        {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-3",
+            "number": "03",
+            "title": "Enrolling",
+            "body": "<p>Select Subscribe &amp; Save instead of One-time purchase on an eligible product page and complete checkout. Before you pay we show you the subscriber price, the delivery interval and the date of your next charge. Completing checkout is your authorization for recurring charges on that schedule. Newsletter opt-in is separate and is not authorization for recurring product charges. Review the recurring amount and frequency and actively agree to the subscription before paying.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

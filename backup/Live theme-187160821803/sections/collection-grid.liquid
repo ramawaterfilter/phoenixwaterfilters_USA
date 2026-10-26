@@ -1,0 +1,75 @@
+<div class="container jj">
+    {% paginate collections by 20 %}
+        <div class="row  mb-5">
+            {% for collection in collections %}
+                {% assign exclude = false %}
+
+                {% for exclusion in section.settings.exclude_collections %}
+                    {% if collection.id == exclusion.id %}
+                        {% assign exclude = true %}
+                    {% endif %}
+                {% endfor %}
+
+                {% unless exclude %}
+                <div class="col-6 col-lg-3 mb-5">
+                    {% render 'collection-tile', collection: collection %}
+                </div>
+                {% endunless %}
+            {% endfor %}
+        </div>
+
+        {% if paginate.pages > 1 %}
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    {% render 'pagination', paginate: paginate %}
+                </div>
+            </div>
+        {% endif %}
+
+    {% endpaginate %}
+</div>
+{% if template == 'collection' %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "{{ shop.url }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "{{ collection.title | escape }}",
+        "item": "{{ shop.url }}{{ collection.url }}"
+      }
+    ]
+  }
+  </script>
+{% endif %}
+
+{% schema %}
+    {
+        "name":  "Collection Grid",
+        "tag": "section",
+        "class": "section-collectiongrid",
+        "settings": [
+            {
+                "type": "collection_list",
+                "id": "exclude_collections",
+                "label": "Exclude Collections From Listing"
+            }
+        ],
+        "presets": [
+            {
+                "name": "Collection Grid"
+            }
+        ],
+        "enabled_on": {
+            "templates": ["list-collections"]
+        }
+    }
+{% endschema %}

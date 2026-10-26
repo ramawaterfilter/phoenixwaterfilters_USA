@@ -1,0 +1,151 @@
+{{ 'subscribe-save.css' | asset_url | stylesheet_tag }}
+{% style %}
+#shopify-section-{{ section.id }} .ss-billing { --ss-bg: {{ section.settings.background_color }}; --ss-ink: {{ section.settings.text_color }}; --ss-pad: {{ section.settings.desktop_padding }}px; --ss-pad-mobile: {{ section.settings.mobile_padding }}px; }
+{% endstyle %}
+<section id="{{ section.settings.anchor_id | escape }}" class="ss ss-billing"><div class="ss-wrap">
+<header class="ss-intro"><p class="ss-eyebrow">{{ section.settings.eyebrow | escape }}</p><h2>{{ section.settings.heading }}</h2><div class="ss-intro-copy">{% render 'ss-qa-body', body: section.settings.body, qa_1: section.settings.qa_1, qa_2: section.settings.qa_2, qa_3: section.settings.qa_3 %}</div></header><div class="ss-table-wrap hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors has-aria-expanded:bg-muted/50"><table><caption class="ss-visually-hidden">Billing and delivery details</caption><thead><tr><th scope="col"></th><th scope="col">What happens</th></tr></thead><tbody>{% for block in section.blocks %}{% if block.settings.mode == 'row' %}<tr {{ block.shopify_attributes }}><th scope="row">{{ block.settings.title | escape }}</th><td data-label="What happens">{% render 'ss-qa-body', body: block.settings.body, qa_1: block.settings.qa_1, qa_2: block.settings.qa_2, qa_3: block.settings.qa_3 %}</td></tr>{% endif %}{% endfor %}</tbody></table></div><div class="ss-billing-cards">{% for block in section.blocks %}{% if block.settings.mode == 'card' %}<article class="ss-card" {{ block.shopify_attributes }}><h3>{{ block.settings.title }}</h3><div class="ss-copy">{% render 'ss-qa-body', body: block.settings.body, qa_1: block.settings.qa_1, qa_2: block.settings.qa_2, qa_3: block.settings.qa_3 %}</div></article>{% endif %}{% endfor %}</div>
+</div></section>
+{% schema %}
+{
+  "name": "Subscribe Save Billing",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body copy"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "billing"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f5f3f1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#153a5b"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop vertical spacing",
+      "default": 88,
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile vertical spacing",
+      "default": 56,
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "billing_step",
+      "name": "Billing item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "mode",
+          "label": "Display as",
+          "default": "row",
+          "options": [
+            {
+              "value": "row",
+              "label": "Table row"
+            },
+            {
+              "value": "card",
+              "label": "Card"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Number or label"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body"
+        },
+        {
+          "type": "text",
+          "id": "qa_1",
+          "label": "QA value 1"
+        },
+        {
+          "type": "text",
+          "id": "qa_2",
+          "label": "QA value 2"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subscribe Save Billing",
+      "blocks": [
+        {
+          "type": "billing_step",
+          "settings": {
+            "mode": "row",
+            "label": "01",
+            "title": "When you’re charged",
+            "body": "<p>Your first order is charged at checkout. After that we charge automatically on each renewal date — every 12 months for carbon elements, every 4 months for fluoride.</p>"
+          }
+        },
+        {
+          "type": "billing_step",
+          "settings": {
+            "mode": "row",
+            "label": "02",
+            "title": "What you’re charged",
+            "body": "<p>The subscriber price in effect on the renewal date, plus applicable sales tax. No shipping charge, ever.</p>"
+          }
+        },
+        {
+          "type": "billing_step",
+          "settings": {
+            "mode": "row",
+            "label": "03",
+            "title": "Advance notice",
+            "body": "<p>We email you %%QA1%% before every renewal, with the date, the amount and a link to skip or cancel.</p>",
+            "qa_1": "[3 DAYS]"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

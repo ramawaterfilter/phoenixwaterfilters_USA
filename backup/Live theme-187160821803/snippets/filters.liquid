@@ -1,0 +1,36 @@
+<form class="filters" action="" method="get">
+    {% comment %}
+        
+    Filters come from the Search & Discovery App (shopify provided app)
+
+    {% endcomment %}
+
+    {% if template == "search" %}
+        <input type="hidden" name="q" value="{{ search.terms }}"/>
+    {% endif %}
+
+    <input type="hidden" name="sort_by" value="{{ collection.sort_by }}">
+
+    {% for filter in collection.filters %}
+        <div class="filters__group {% if filter.active_values.size > 0 %}open{% endif %}">
+            <div class="filters__title">
+                {{ filter.label}}
+            </div>
+
+            <div class="filters__options">
+
+                {% for option in filter.values %}
+
+                    <div class="filters__options__item">
+                        <input type="checkbox" id="filter-{{ option.param_name }}-{{ option.value }}" name="{{ option.param_name }}" value="{{ option.value }}" {% if filter.active_values contains option %}checked{% endif %}>
+                        <label for="filter-{{ option.param_name }}-{{ option.value }}">
+                            {{ option.label | replace: '_',' ' | downcase }}
+                        </label>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+        </div>
+    {% endfor %}
+</form>

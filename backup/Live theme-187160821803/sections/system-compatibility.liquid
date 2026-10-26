@@ -1,0 +1,144 @@
+{%- liquid
+  assign current_variant_id = product.selected_or_first_available_variant.id | append: ''
+  assign image_loading = 'lazy'
+  if section.index <= 2
+    assign image_loading = 'eager'
+  endif
+-%}
+
+<variant-visibility-scope
+  current-variant-id="{{ current_variant_id }}"
+  {% render 'variant-visibility-attributes', variant_ids: section.settings.variant_ids, current_variant_id: current_variant_id %}
+>
+  <section class="system-compatibility" aria-labelledby="compatibility-heading-{{ section.id }}">
+    <div class="system-compatibility__inner">
+      <figure class="system-compatibility__figure">
+        {% if section.settings.image_label != blank %}
+          <span class="system-compatibility__image-label">{{ section.settings.image_label | escape }}</span>
+        {% endif %}
+        {% if section.settings.video_embed != blank %}
+          <div class="system-compatibility__video">{{ section.settings.video_embed }}</div>
+        {% elsif section.settings.image != blank %}
+          {{ section.settings.image | image_url: width: 1400 | image_tag: widths: '320, 480, 640, 960, 1400', sizes: '(min-width: 990px) 44vw, 100vw', loading: image_loading, class: 'system-compatibility__image' }}
+        {% else %}
+          {{ 'image' | placeholder_svg_tag: 'system-compatibility__placeholder' }}
+        {% endif %}
+        {% if section.settings.image_caption != blank %}
+          <figcaption>{{ section.settings.image_caption | escape }}</figcaption>
+        {% endif %}
+      </figure>
+
+      <div class="system-compatibility__content">
+        {% if section.settings.eyebrow != blank %}
+          <p class="system-compatibility__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {% endif %}
+        <h2 id="compatibility-heading-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+        <ul class="system-compatibility__list" role="list">
+          {% for block in section.blocks %}
+            <li class="system-compatibility__row" {{ block.shopify_attributes }}>
+              <span class="system-compatibility__icon{% if block.settings.status == 'warning' %} system-compatibility__icon--warning{% endif %}" aria-hidden="true">
+                {% if block.settings.status == 'warning' %}
+                  !
+                {% else %}
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="m4 8 2.5 2.5L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                {% endif %}
+              </span>
+              <div>
+                <h3>{{ block.settings.title | escape }}</h3>
+                <p>{{ block.settings.description | escape }}</p>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+        {% if section.settings.contact_text != blank %}
+          <div class="system-compatibility__contact">{{ section.settings.contact_text }}</div>
+        {% endif %}
+        {% if section.settings.disclaimer != blank %}
+          <p class="system-compatibility__disclaimer">{{ section.settings.disclaimer | escape }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</variant-visibility-scope>
+
+<script src="{{ 'variant-visibility.js' | asset_url }}" defer></script>
+
+{% stylesheet %}
+  .section-system-compatibility > variant-visibility-scope[hidden],
+  .section-system-compatibility:has(> variant-visibility-scope[hidden]) { display: none !important; }
+  .system-compatibility { padding: 68px 24px; background: #e9f3fa; color: #172635; font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.5; }
+  .system-compatibility *, .system-compatibility *::before, .system-compatibility *::after { box-sizing: border-box; }
+  .system-compatibility__inner { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; gap: 50px; max-width: 1280px; margin-inline: auto; }
+  .system-compatibility__figure { display: flex; flex-direction: column; gap: 12px; min-width: 0; margin: 0; padding: 10px; border: 1px dashed #bfd3e2; border-radius: 16px; background: #f7fafc; }
+  .system-compatibility__image-label { align-self: flex-start; max-width: 100%; padding: 3px 8px; border-radius: 5px; background: #29445e; color: #fff; font-size: 10px; line-height: 1.5; }
+  .system-compatibility__image, .system-compatibility__placeholder { display: block; width: 100%; height: auto; aspect-ratio: 2.3; object-fit: contain; }
+  .system-compatibility__placeholder { fill: #bfd3e2; }
+  .system-compatibility__video { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 6px; }
+  .system-compatibility__video iframe, .system-compatibility__video video { display: block; width: 100%; height: 100%; border: 0; }
+  .system-compatibility__video > div { width: 100%; height: 100%; }
+  .system-compatibility__figure figcaption { padding: 5px 8px; border-radius: 6px; background: #fff; color: #455e75; font-size: 10px; }
+  .system-compatibility__content { min-width: 0; overflow-wrap: anywhere; }
+  .system-compatibility .system-compatibility__eyebrow { margin: 0 0 8px; color: #0075ce; font-family: 'Inter Bold', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+  .system-compatibility h2 { margin: 0 0 16px; color: #082b49; font-family: 'Inter Bold', sans-serif; font-size: clamp(28px, 2.5vw, 36px); font-weight: 700; line-height: 1.2; letter-spacing: -0.6px; }
+  .system-compatibility__list { margin: 0; padding: 0; list-style: none; }
+  .system-compatibility__row { display: grid; grid-template-columns: 25px minmax(0, 1fr); gap: 12px; padding: 11px 0; border-bottom: 1px solid #bfd3e2; }
+  .system-compatibility__icon { display: flex; align-items: center; justify-content: center; width: 25px; height: 25px; border-radius: 50%; background: #dcf4ed; color: #008c78; font-weight: 700; }
+  .system-compatibility__icon--warning { background: #fff1d4; color: #a85f00; }
+  .system-compatibility h3 { margin: 0; color: inherit; font-family: 'Inter Bold', sans-serif; font-size: 14px; font-weight: 700; line-height: 1.5; }
+  .system-compatibility__row p { margin: 0; font-size: 14px; line-height: 1.5; }
+  .system-compatibility__contact { margin-top: 16px; padding: 12px 14px; border-radius: 12px; background: #fff; font-size: 13px; }
+  .system-compatibility__contact p { margin: 0; }
+  .system-compatibility__contact a { color: #006ab8; font-family: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+  .system-compatibility__contact a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+  .system-compatibility .system-compatibility__disclaimer { margin: 9px 0 0; color: #596d7e; font-size: 10px; line-height: 1.5; }
+  @media (max-width: 989px) {
+    .system-compatibility { padding: 40px 20px; }
+    .system-compatibility__inner { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+    .system-compatibility__image, .system-compatibility__placeholder { aspect-ratio: 1.8; max-height: 400px; }
+  }
+  @media (max-width: 480px) {
+    .system-compatibility { padding: 32px 16px; }
+    .system-compatibility__row { gap: 10px; padding-block: 12px; }
+    .system-compatibility__figure { border-radius: 12px; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "System compatibility",
+  "class": "section-system-compatibility",
+  "settings": [
+    { "type": "textarea", "id": "variant_ids", "label": "Variant IDs", "info": "Comma-separated variant IDs. Leave blank to show everywhere. With IDs entered, this section only shows for a matching selected product variant and updates when the variant changes." },
+    { "type": "image_picker", "id": "image", "label": "Fit-guide image" },
+    { "type": "liquid", "id": "video_embed", "label": "Video embed code", "info": "Paste your video iframe embed code here. Video replaces the image when filled. Include a descriptive title on the iframe." },
+    { "type": "text", "id": "image_label", "label": "Image label", "default": "IMG 04 · Fit guide: element with dimensions & thread callouts" },
+    { "type": "text", "id": "image_caption", "label": "Image caption", "default": "Height · diameter · stem thread: values to be confirmed by product team" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Compatibility" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Will These Fit My System?" },
+    { "type": "richtext", "id": "contact_text", "label": "Contact note", "default": "<p>Not sure? Send us a photo of your system at <a href=\"mailto:hello@phoenixwaterfilters.com\">hello@phoenixwaterfilters.com</a> and we'll confirm the fit before you buy.</p>" },
+    { "type": "textarea", "id": "disclaimer", "label": "Trademark disclaimer", "default": "Berkey® is a registered trademark of its owner. Phoenix Gravity is not affiliated with Berkey®." }
+  ],
+  "blocks": [
+    {
+      "type": "compatibility_row",
+      "name": "Compatibility row",
+      "settings": [
+        { "type": "select", "id": "status", "label": "Icon", "default": "check", "options": [{ "value": "check", "label": "Check mark" }, { "value": "warning", "label": "Warning" }] },
+        { "type": "text", "id": "title", "label": "Title", "default": "Compatible system" },
+        { "type": "textarea", "id": "description", "label": "Description" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "System compatibility",
+      "blocks": [
+        { "type": "compatibility_row", "settings": { "title": "Every Phoenix Gravity system", "description": "1.5, 2.25, 3.25 and 4.25 gallon" } },
+        { "type": "compatibility_row", "settings": { "title": "Black Berkey®-style systems", "description": "Standard threaded stem and wingnut" } },
+        { "type": "compatibility_row", "settings": { "title": "POSTreat® Steel fluoride elements", "description": "Thread directly under each carbon element" } },
+        { "type": "compatibility_row", "settings": { "status": "warning", "title": "Other brands' fluoride post-filters", "description": "They may not thread onto our stems. Use POSTreat® for a guaranteed fit." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

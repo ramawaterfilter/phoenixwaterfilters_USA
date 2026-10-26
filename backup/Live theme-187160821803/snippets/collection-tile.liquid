@@ -1,0 +1,20 @@
+{% comment %} Check if featured image exist, fallback to first product image {% endcomment %}
+{%- if collection.image -%}
+  {%- assign collection_image = collection.image -%}
+{%- elsif collection.products.first and collection.products.first.images != empty -%}
+  {%- assign collection_image = collection.products.first.featured_image -%}
+{%- else -%}
+  {%- assign collection_image = blank -%}
+{%- endif -%}
+
+<a href="{{ collection.url }}" class="collection-tile">
+  <div class="collection-tile__image mb-5">
+    {% if collection_image != blank %}
+      {{ collection_image | image_url: width: 600 | image_tag: loading: "lazy" }}
+    {% endif %}
+  </div>
+
+  <p class="h4">
+    {{ collection.title }}
+  </p>
+</a>

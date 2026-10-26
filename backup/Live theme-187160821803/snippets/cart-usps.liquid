@@ -1,0 +1,34 @@
+<div class="cart-usps">
+  {% if settings.cart_usp_1_text != blank %}
+    <div class="cart-usps__item">
+      <div class="cart-usps__item__img">
+        {{ settings.cart_usp_1_image | image_url: width: 1000 | image_tag }}
+      </div>
+      <div class="cart-usps__item__text">
+        {{ settings.cart_usp_1_text }}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if settings.cart_usp_2_text != blank %}
+    <div class="cart-usps__item">
+      <div class="cart-usps__item__img">
+        {{ settings.cart_usp_2_image | image_url: width: 1000 | image_tag }}
+      </div>
+      <div class="cart-usps__item__text">
+        {{ settings.cart_usp_2_text }}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if settings.cart_usp_3_text != blank %}
+    <div class="cart-usps__item">
+      <div class="cart-usps__item__img">
+        {{ settings.cart_usp_3_image | image_url: width: 1000 | image_tag }}
+      </div>
+      <div class="cart-usps__item__text">
+        {{ settings.cart_usp_3_text }}
+      </div>
+    </div>
+  {% endif %}
+</div>

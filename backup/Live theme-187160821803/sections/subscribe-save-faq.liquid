@@ -1,0 +1,240 @@
+{{ 'subscribe-save.css' | asset_url | stylesheet_tag }}
+{% style %}
+  #shopify-section-{{ section.id }} .ss-faq { --ss-bg: {{ section.settings.background_color }}; --ss-ink: {{ section.settings.text_color }}; --ss-pad: {{ section.settings.desktop_padding }}px; --ss-pad-mobile: {{ section.settings.mobile_padding }}px; }
+{% endstyle %}
+<section id="{{ section.settings.anchor_id | escape }}" class="ss ss-faq">
+  <div class="ss-wrap">
+    <div class="ss-faq-layout">
+      <aside>
+        <header class="ss-intro">
+          <p class="ss-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          <h2>{{ section.settings.heading }}</h2>
+        </header>
+        <nav aria-label="FAQ categories" class="faq-aside">
+          {% for block in section.blocks -%}
+            {%- if block.type == 'category' -%}
+              <a href="#{{ block.settings.anchor_id | escape }}">{{ block.settings.title | escape }} <span>→</span></a>
+            {%- endif -%}
+          {%- endfor %}
+        </nav>
+        <div class="ss-card ss-quick-answer">
+          <span class="ss-mono">{{ section.settings.quick_label | escape }}</span>
+          <div class="ss-copy">{{ section.settings.body }}</div>
+        </div>
+      </aside>
+      <div class="ss-faq-list">
+        {% for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'category' %}
+              <h3 id="{{ block.settings.anchor_id | escape }}" class="ss-faq-category" {{ block.shopify_attributes }}>
+                {{ block.settings.title | escape }}
+              </h3>
+            {% when 'question' %}
+              <details
+                id="{{ block.settings.anchor_id | escape }}"
+                class="ss-disclosure"
+                {% if block.settings.open_by_default %}
+                  open
+                {% endif %}
+                {{ block.shopify_attributes }}
+              >
+                <summary>{{ block.settings.question | escape }}</summary>
+                <div class="ss-copy">
+                  {% render 'ss-qa-body', body: block.settings.answer, qa_1: block.settings.qa_1, qa_2: block.settings.qa_2, qa_3: block.settings.qa_3 %}
+                </div>
+              </details>
+          {% endcase -%}
+        {%- endfor %}
+        <div class="ss-card ss-faq-help">
+          <h3>{{ section.settings.help_heading }}</h3>
+          <div class="ss-copy">{{ section.settings.help_body }}</div>
+          <a class="ss-button" href="mailto:{{ section.settings.help_email | escape }}">
+            {{- section.settings.help_button | escape -}}</a
+          ><a class="ss-text-link" href="tel:+18009170455">{{ section.settings.help_phone | escape }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Subscribe Save FAQ",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body copy"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "faq"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#153a5b"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop vertical spacing",
+      "default": 88,
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile vertical spacing",
+      "default": 56,
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "quick_label",
+      "label": "Quick answer label"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "help_heading",
+      "label": "Closing help heading"
+    },
+    {
+      "type": "richtext",
+      "id": "help_body",
+      "label": "Closing help copy"
+    },
+    {
+      "type": "text",
+      "id": "help_email",
+      "label": "Email"
+    },
+    {
+      "type": "text",
+      "id": "help_button",
+      "label": "Email button label"
+    },
+    {
+      "type": "text",
+      "id": "help_phone",
+      "label": "Phone"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "FAQ category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "anchor_id",
+          "label": "Stable anchor ID"
+        }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "FAQ question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "anchor_id",
+          "label": "Stable anchor ID"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Initially open",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "qa_1",
+          "label": "QA value 1"
+        },
+        {
+          "type": "text",
+          "id": "qa_2",
+          "label": "QA value 2"
+        },
+        {
+          "type": "text",
+          "id": "qa_3",
+          "label": "QA value 3"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subscribe Save FAQ",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "title": "The Basics",
+            "anchor_id": "faq-the-basics"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-what-is-subscribe-save",
+            "question": "What is Subscribe & Save?",
+            "answer": "<p>A recurring purchase of replacement filters. Your first order is charged at checkout, then your saved payment method is automatically charged at each renewal. Carbon is every 12 months; fluoride plans are every 4 months. It is separate from signing up for Phoenix newsletters and offers.</p>",
+            "open_by_default": true
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-is-there-a-fee-or-a-minimum-number-of-orders",
+            "question": "Is there a fee, or a minimum number of orders?",
+            "answer": "<p>No to both. There is no signup fee, no membership cost, no minimum term and no cancellation fee. You can cancel after your first delivery if you want to.</p>",
+            "open_by_default": false
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

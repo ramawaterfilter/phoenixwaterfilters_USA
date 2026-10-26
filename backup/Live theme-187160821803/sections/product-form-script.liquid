@@ -1,0 +1,72 @@
+<script>
+    let productObj = {{ product | json }}
+  	let productVariants = {{ product.variants | json }};
+  	let defaultVariantOption = productVariants[0].options
+  	let query = defaultVariantOption
+    const addToCartForm = document.querySelector("#add-to-cart")
+
+    // Update query and assign the product ID
+    addToCartForm.addEventListener('input', (e) => {
+        let productToAdd = document.querySelector('#product-field')
+        let filterSize = addToCartForm.querySelector("#size-options input:checked").value
+        let filterType = addToCartForm.querySelector("#filter-type-options input:checked").value
+         
+
+        // Create query
+        newQuery = [filterSize, filterType]
+
+        console.log(newQuery)
+
+        console.log(filterSize, filterType )
+
+        // Get product ID
+        let productID = getProductID(newQuery)
+
+        // Assign the product ID to the product hidden field
+        productToAdd.value = productID
+    })
+
+    // Create a global variable and store all product variants ID
+    // The global variable is used in the upsell add to cart functionality in cart.js
+    window.addToCartUpsell = []
+    window.addToCartUpsellActivated = false
+
+    // Push all the variant IDs into global variable
+    productVariants.forEach(variant => window.addToCartUpsell.push(variant.id))
+    
+    // Helpers
+  	function getProductID(newQuery) {
+        let variantID
+
+        productVariants.forEach(variant => {
+            if(checkOptionsMatch(variant.options, newQuery)) {
+                variantID = variant.id
+                updatePrice(variant.price)
+                
+            }
+  	    });
+
+        return variantID
+    }
+
+  	function checkOptionsMatch(arr1, arr2) {
+  		if (arr1.length !== arr2.length) {
+  			return false;
+  		}
+
+  		const sortedArr1 = arr1.slice().sort();
+  		const sortedArr2 = arr2.slice().sort();
+
+  		for (let i = 0; i < sortedArr1.length; i++) {
+  			if (sortedArr1[i] !== sortedArr2[i]) {
+  			return false;
+  			}
+  		}
+
+  		return true;
+  	}
+
+    function updatePrice(price) {
+        document.querySelector('span.product-dyn-price').innerText = Shopify.formatMoney(price)
+    }
+</script>

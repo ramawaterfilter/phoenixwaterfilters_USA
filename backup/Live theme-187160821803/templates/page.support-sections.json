@@ -1,0 +1,85 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "support_3kAGTr": {
+      "type": "support",
+      "name": "Support Section",
+      "settings": {
+        "heading": "Register your product now and activate the 10-year warranty on your Stainless Steel System.",
+        "button_link": "shopify://pages/warranty-registration",
+        "button_text": "Register Here"
+      }
+    },
+    "pagetitle_9RijHx": {
+      "type": "pagetitle",
+      "name": "Page Title",
+      "settings": {
+        "pagetitle": "Need Help with your Phoenix Gravity Water Filter?",
+        "show_breadcrumbs": false,
+        "show_back": false,
+        "show_back_text": "",
+        "show_back_url": ""
+      }
+    },
+    "icon_links_yP66J9": {
+      "type": "icon-links",
+      "blocks": {
+        "icon_link_t3KAV9": {
+          "type": "icon_link",
+          "settings": {
+            "icon": "shopify://shop_images/Set_up.png",
+            "label": "Set up your filter",
+            "link": "shopify://pages/set-up-your-filter"
+          }
+        },
+        "icon_link_dUYzJX": {
+          "type": "icon_link",
+          "settings": {
+            "icon": "shopify://shop_images/Set_up_filter.png",
+            "label": "How the filter works",
+            "link": "/pages/how-it-works"
+          }
+        },
+        "icon_link_aYCxb4": {
+          "type": "icon_link",
+          "settings": {
+            "icon": "shopify://shop_images/F_Q.png",
+            "label": "FAQs",
+            "link": "/pages/faqs"
+          }
+        },
+        "icon_link_JhCigL": {
+          "type": "icon_link",
+          "settings": {
+            "icon": "shopify://shop_images/contact-support.png",
+            "label": "Get Support",
+            "link": "/pages/contact-us"
+          }
+        }
+      },
+      "block_order": [
+        "icon_link_t3KAV9",
+        "icon_link_dUYzJX",
+        "icon_link_aYCxb4",
+        "icon_link_JhCigL"
+      ],
+      "name": "Icon Links Grid",
+      "settings": {
+        "heading": "We take our performance seriously."
+      }
+    }
+  },
+  "order": [
+    "support_3kAGTr",
+    "pagetitle_9RijHx",
+    "icon_links_yP66J9"
+  ]
+}

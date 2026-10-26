@@ -1,0 +1,107 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="blogfilters">
+                <div class="blogfilters__dropdown blogfilters__dropdown--category">
+                    <label for="category-select">{{ 'blogs.filters.category' | t }}:</label>
+
+                    <select id="category-select" name="category">
+                        <option {% if request.path contains 'cat-' %}{% else %}selected{% endif %} value="">
+                            {{ 'blogs.filters.all_categories' | t }}
+                        </option>
+
+                        {% for tag in blog.all_tags %}
+                            {% if tag.handle contains 'cat-' %}
+
+                                <option {% if request.path contains tag.handle %}selected{% endif %} value="{{ tag.handle }}">
+                                    {{ tag.title | replace: 'cat-','' }}
+                                </option>
+
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="blogfilters__dropdown blogfilters__dropdown--tags">
+                    <label for="tag-select">{{ 'blogs.filters.tags' | t }}:</label>
+                    <select id="tag-select" name="tag">
+                        <option {% if request.path contains 'tagged' %}{% else %}selected{% endif %} value="">
+                            {{ 'blogs.filters.all_tags' | t }}
+                        </option>
+
+                        {% for tag in blog.all_tags %}
+                            {% if tag.handle contains 'cat-' %}{% else %}
+                                <option {% if request.path contains tag.handle %}selected{% endif %} value="{{ tag.handle }}">
+                                    {{ tag.title }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="blogfilters__submit">
+                    <button class="btn" type="submit" id="blogfilterbtn">
+                        {{ 'blogs.filters.submit' | t }}
+                    </button>
+                    <button class="btn" type="submit" id="clearblogfilterbtn">
+                        {{ 'blogs.filters.clear' | t }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    let blogfilterbtn = document.querySelector('#blogfilterbtn');
+    let clearblogfilterbtn = document.querySelector('#clearblogfilterbtn');
+    let filterURL = '/blogs/all';
+    let tagFilter = document.querySelector('#tag-select');
+    let categoryFilter = document.querySelector('#category-select');
+    let addedTag = false;
+
+    blogfilterbtn.addEventListener('click', function(e){
+        if(tagFilter.value || categoryFilter.value){
+            filterURL += '/tagged/';
+        }
+        if(tagFilter.value !== ""){
+            filterURL += tagFilter.value;
+            addedTag = true;
+        }
+        if(categoryFilter.value  !== ""){
+            if(addedTag){
+                filterURL += "+";
+            }
+            
+            filterURL += categoryFilter.value;
+        }
+
+        window.location.href = filterURL;
+    });
+
+    clearblogfilterbtn.addEventListener('click', function(e){
+        window.location.href = filterURL;
+    });
+</script>
+
+
+{% schema %}
+    {
+        "name": "Blog Filters",
+        "tag": "section",
+        "class": "section-blogfilters",
+        "settings": [
+        ],
+        "presets": [
+            {
+                "name": "Blog Filters",
+                "category": "Sections"
+            }
+        ],
+        "enabled_on": {
+            "templates": ["blog"]
+        }
+    }
+{% endschema %}
+

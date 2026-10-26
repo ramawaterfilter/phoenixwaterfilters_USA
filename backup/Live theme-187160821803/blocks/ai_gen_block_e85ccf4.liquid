@@ -1,0 +1,428 @@
+{% doc %}
+  @prompt
+    Design requirements:
+    - Full width, height around 45px on desktop, 50px on mobile.
+    - Background color customizable via color picker (default: #d43d2f).
+    - Text color customizable via color picker (default: #ffffff).
+    - Add padding (6px top and bottom) and ensure text is vertically centered.
+    - Use a clean sans-serif font.
+    - Messages slide automatically every few seconds and can also be changed manually using left/right arrows.
+    - Arrows appear on both sides of the text, centered vertically, and move with the slide.
+    - Arrows should be customizable in color and have a hover opacity effect.
+    - The entire message text can include a clickable link (e.g., clicking opens a product or policy page).
+    - Fully responsive on all devices: 
+      - On mobile, the text stays perfectly centered.
+      - Arrows adjust position and size responsively.
+    
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-announcement-bar-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+    padding: 6px 0;
+    position: relative;
+    overflow: hidden;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar-{{ ai_gen_id }} {
+      height: 50px;
+    }
+  }
+
+  .ai-announcement-bar-container-{{ ai_gen_id }} {
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .ai-announcement-bar-slider-{{ ai_gen_id }} {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-announcement-bar-slides-{{ ai_gen_id }} {
+    display: flex;
+    transition: transform 0.5s ease;
+    height: 100%;
+    align-items: center;
+  }
+
+  .ai-announcement-bar-slide-{{ ai_gen_id }} {
+    min-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 60px;
+    height: 100%;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar-slide-{{ ai_gen_id }} {
+      padding: 0 50px;
+    }
+  }
+
+  .ai-announcement-bar-slide-{{ ai_gen_id }} a {
+    color: {{ block.settings.text_color }};
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    display: block;
+    width: 100%;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar-slide-{{ ai_gen_id }} a {
+      font-size: 13px;
+    }
+  }
+
+  .ai-announcement-bar-slide-{{ ai_gen_id }} a:hover {
+    opacity: 0.9;
+  }
+
+  .ai-announcement-bar-arrow-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: {{ block.settings.arrow_color }};
+    cursor: pointer;
+    padding: 8px;
+    z-index: 2;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-announcement-bar-arrow-{{ ai_gen_id }}:hover {
+    opacity: 0.7;
+  }
+
+  .ai-announcement-bar-arrow-left-{{ ai_gen_id }} {
+    left: 10px;
+  }
+
+  .ai-announcement-bar-arrow-right-{{ ai_gen_id }} {
+    right: 10px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar-arrow-{{ ai_gen_id }} {
+      padding: 6px;
+    }
+
+    .ai-announcement-bar-arrow-left-{{ ai_gen_id }} {
+      left: 5px;
+    }
+
+    .ai-announcement-bar-arrow-right-{{ ai_gen_id }} {
+      right: 5px;
+    }
+  }
+
+  .ai-announcement-bar-arrow-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar-arrow-{{ ai_gen_id }} svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+{% endstyle %}
+
+<announcement-bar-{{ ai_gen_id }} class="ai-announcement-bar-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-announcement-bar-container-{{ ai_gen_id }}">
+    {% if block.settings.show_arrows %}
+      <button class="ai-announcement-bar-arrow-{{ ai_gen_id }} ai-announcement-bar-arrow-left-{{ ai_gen_id }}" aria-label="Previous announcement">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+    {% endif %}
+
+    <div class="ai-announcement-bar-slider-{{ ai_gen_id }}">
+      <div class="ai-announcement-bar-slides-{{ ai_gen_id }}">
+        {% if block.settings.message_1 != blank %}
+          <div class="ai-announcement-bar-slide-{{ ai_gen_id }}">
+            {% if block.settings.link_1 != blank %}
+              <a href="{{ block.settings.link_1 }}">{{ block.settings.message_1 }}</a>
+            {% else %}
+              <span>{{ block.settings.message_1 }}</span>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if block.settings.message_2 != blank %}
+          <div class="ai-announcement-bar-slide-{{ ai_gen_id }}">
+            {% if block.settings.link_2 != blank %}
+              <a href="{{ block.settings.link_2 }}">{{ block.settings.message_2 }}</a>
+            {% else %}
+              <span>{{ block.settings.message_2 }}</span>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if block.settings.message_3 != blank %}
+          <div class="ai-announcement-bar-slide-{{ ai_gen_id }}">
+            {% if block.settings.link_3 != blank %}
+              <a href="{{ block.settings.link_3 }}">{{ block.settings.message_3 }}</a>
+            {% else %}
+              <span>{{ block.settings.message_3 }}</span>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if block.settings.message_4 != blank %}
+          <div class="ai-announcement-bar-slide-{{ ai_gen_id }}">
+            {% if block.settings.link_4 != blank %}
+              <a href="{{ block.settings.link_4 }}">{{ block.settings.message_4 }}</a>
+            {% else %}
+              <span>{{ block.settings.message_4 }}</span>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if block.settings.message_5 != blank %}
+          <div class="ai-announcement-bar-slide-{{ ai_gen_id }}">
+            {% if block.settings.link_5 != blank %}
+              <a href="{{ block.settings.link_5 }}">{{ block.settings.message_5 }}</a>
+            {% else %}
+              <span>{{ block.settings.message_5 }}</span>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if block.settings.show_arrows %}
+      <button class="ai-announcement-bar-arrow-{{ ai_gen_id }} ai-announcement-bar-arrow-right-{{ ai_gen_id }}" aria-label="Next announcement">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    {% endif %}
+  </div>
+</announcement-bar-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AnnouncementBar{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentSlide = 0;
+        this.autoplayInterval = null;
+      }
+
+      connectedCallback() {
+        this.slidesContainer = this.querySelector('.ai-announcement-bar-slides-{{ ai_gen_id }}');
+        this.slides = this.querySelectorAll('.ai-announcement-bar-slide-{{ ai_gen_id }}');
+        this.leftArrow = this.querySelector('.ai-announcement-bar-arrow-left-{{ ai_gen_id }}');
+        this.rightArrow = this.querySelector('.ai-announcement-bar-arrow-right-{{ ai_gen_id }}');
+        this.totalSlides = this.slides.length;
+
+        if (this.totalSlides <= 1) {
+          if (this.leftArrow) this.leftArrow.style.display = 'none';
+          if (this.rightArrow) this.rightArrow.style.display = 'none';
+          return;
+        }
+
+        this.setupEventListeners();
+        this.startAutoplay();
+      }
+
+      setupEventListeners() {
+        if (this.leftArrow) {
+          this.leftArrow.addEventListener('click', () => {
+            this.previousSlide();
+            this.resetAutoplay();
+          });
+        }
+
+        if (this.rightArrow) {
+          this.rightArrow.addEventListener('click', () => {
+            this.nextSlide();
+            this.resetAutoplay();
+          });
+        }
+      }
+
+      nextSlide() {
+        this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+        this.updateSlidePosition();
+      }
+
+      previousSlide() {
+        this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+        this.updateSlidePosition();
+      }
+
+      updateSlidePosition() {
+        const offset = -this.currentSlide * 100;
+        this.slidesContainer.style.transform = `translateX(${offset}%)`;
+      }
+
+      startAutoplay() {
+        const autoplaySpeed = {{ block.settings.autoplay_speed | times: 1000 }};
+        this.autoplayInterval = setInterval(() => {
+          this.nextSlide();
+        }, autoplaySpeed);
+      }
+
+      resetAutoplay() {
+        clearInterval(this.autoplayInterval);
+        this.startAutoplay();
+      }
+
+      disconnectedCallback() {
+        if (this.autoplayInterval) {
+          clearInterval(this.autoplayInterval);
+        }
+      }
+    }
+
+    customElements.define('announcement-bar-{{ ai_gen_id }}', AnnouncementBar{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Messages"
+    },
+    {
+      "type": "text",
+      "id": "message_1",
+      "label": "Message 1",
+      "default": "Free shipping on orders over $50"
+    },
+    {
+      "type": "url",
+      "id": "link_1",
+      "label": "Link 1"
+    },
+    {
+      "type": "text",
+      "id": "message_2",
+      "label": "Message 2",
+      "default": "Shop our new collection now"
+    },
+    {
+      "type": "url",
+      "id": "link_2",
+      "label": "Link 2"
+    },
+    {
+      "type": "text",
+      "id": "message_3",
+      "label": "Message 3"
+    },
+    {
+      "type": "url",
+      "id": "link_3",
+      "label": "Link 3"
+    },
+    {
+      "type": "text",
+      "id": "message_4",
+      "label": "Message 4"
+    },
+    {
+      "type": "url",
+      "id": "link_4",
+      "label": "Link 4"
+    },
+    {
+      "type": "text",
+      "id": "message_5",
+      "label": "Message 5"
+    },
+    {
+      "type": "url",
+      "id": "link_5",
+      "label": "Link 5"
+    },
+    {
+      "type": "header",
+      "content": "Autoplay"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay speed",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show arrows",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#d43d2f"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement bar"
+    }
+  ]
+}
+{% endschema %}

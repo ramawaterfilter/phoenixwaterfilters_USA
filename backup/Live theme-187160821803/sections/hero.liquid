@@ -1,0 +1,418 @@
+{%- comment -%}
+  Hero — the page header used across About, Blog, Collections, FAQs and other pages.
+  Figma `7809:13907` (desktop), `7809:16553` (mobile).
+
+  Breadcrumbs (built from the page type), the page heading, optional text, then the social
+  proof row and up to three highlights. The heading and text are per page. The social proof
+  and highlights are global: Theme settings > Page hero, so they change on every page at
+  once. Each Hero can hide either row.
+
+  Highlights are desktop and tablet only, as in the mobile Figma.
+{%- endcomment -%}
+
+{%- liquid
+  assign style = section.settings.style | default: 'light'
+
+  assign heading = section.settings.heading
+  if heading == blank
+    case request.page_type
+      when 'page'
+        assign heading = page.title
+      when 'collection'
+        assign heading = collection.title
+      when 'blog'
+        assign heading = blog.title
+      when 'article'
+        assign heading = article.title
+      when 'list-collections'
+        assign heading = 'Collections'
+      else
+        assign heading = page_title
+    endcase
+  endif
+
+  assign show_usps = false
+  if section.settings.show_usps
+    for i in (1..3)
+      assign text_key = 'page_hero_usp_' | append: i | append: '_text'
+      if settings[text_key] != blank
+        assign show_usps = true
+        break
+      endif
+    endfor
+  endif
+-%}
+
+<div class="page-hero page-hero--{{ style }}">
+  <div class="page-hero__container">
+    <div class="page-hero__intro">
+      {%- if section.settings.show_breadcrumbs -%}
+        {%- render 'page-hero-breadcrumbs' -%}
+      {%- endif -%}
+
+      <h1 class="page-hero__heading">{{ heading }}</h1>
+
+      {%- if section.settings.content != blank -%}
+        <div class="page-hero__text">{{ section.settings.content }}</div>
+      {%- elsif request.page_type == 'collection' and collection.description != blank -%}
+        <div class="page-hero__text">{{ collection.description }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.show_proof -%}
+        <div class="page-hero__proof">
+          {%- render 'customer-proof', settings: settings, prefix: 'page_hero_', align: 'center', loading: 'eager' -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if show_usps -%}
+      <ul class="page-hero__usps">
+        {%- for i in (1..3) -%}
+          {%- liquid
+            assign text_key = 'page_hero_usp_' | append: i | append: '_text'
+            assign icon_key = 'page_hero_usp_' | append: i | append: '_icon'
+            assign image_key = 'page_hero_usp_' | append: i | append: '_image'
+          -%}
+          {%- if settings[text_key] != blank -%}
+            <li class="page-hero__usp">
+              {%- if settings[image_key] != blank or settings[icon_key] != 'none' -%}
+                <span class="page-hero__usp-icon">
+                  {%- if settings[image_key] != blank -%}
+                    {{
+                      settings[image_key]
+                      | image_url: width: 40, height: 40
+                      | image_tag: class: 'page-hero__usp-image', width: 20, height: 20, alt: ''
+                    }}
+                  {%- else -%}
+                    {%- assign icon_file = 'page-hero-icon-' | append: settings[icon_key] | append: '.svg' -%}
+                    <img
+                      class="page-hero__usp-image"
+                      src="{{ icon_file | asset_url }}"
+                      alt=""
+                      width="20"
+                      height="20"
+                      aria-hidden="true"
+                    >
+                  {%- endif -%}
+                </span>
+              {%- endif -%}
+              {{ settings[text_key] }}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'custom_code' and block.settings.custom_code != blank -%}
+      {%- liquid
+        assign style_open = '<' | append: 'style>'
+        assign style_close = '</' | append: 'style>'
+      -%}
+      {%- capture custom_style_open %}{{ style_open }}@scope (#hero-custom-code-{{ block.id }}) { {% endcapture -%}
+      {%- capture custom_style_close %} } {{ style_close }}{% endcapture -%}
+      <div id="hero-custom-code-{{ block.id }}" class="hero-custom-code" {{ block.shopify_attributes }}>
+        {{ block.settings.custom_code | replace: style_open, custom_style_open | replace: style_close, custom_style_close }}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+
+{% stylesheet %}
+  /* Figma `7809:13907`: #f5f6f8 band with a 1px #e3e7ee bottom rule, 68px top / 56px bottom.
+     Breadcrumbs, heading and proof 21px apart, the highlights 36px under them. */
+  .page-hero {
+    --page-hero-background: #f5f6f8;
+    --page-hero-ink: #0b1638;
+    --page-hero-muted: #6b7085;
+    --page-hero-body: #4a5068;
+    --customer-proof-ring: var(--page-hero-background);
+
+    padding: 6.8rem 0 5.6rem;
+    border-bottom: 1px solid #e3e7ee;
+    background: var(--page-hero-background);
+  }
+
+  .page-hero--white {
+    --page-hero-background: #ffffff;
+  }
+
+  .page-hero__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3.6rem;
+    width: min(100% - 12.8rem, 131.2rem);
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .page-hero__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.1rem;
+    max-width: 100%;
+  }
+
+  .page-hero__crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    color: var(--page-hero-muted);
+  }
+
+  .page-hero__crumb {
+    margin: 0;
+  }
+
+  .page-hero__crumb + .page-hero__crumb::before {
+    content: '/';
+    padding: 0 0.4em;
+    color: var(--page-hero-muted);
+  }
+
+  .page-hero__crumb-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .page-hero__crumb-link:hover,
+  .page-hero__crumb-link:focus-visible {
+    color: var(--page-hero-ink);
+    text-decoration: underline;
+  }
+
+  .page-hero__crumb--current {
+    color: var(--page-hero-ink);
+  }
+
+  .page-hero__heading {
+    margin: 0;
+    padding: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 7.2rem;
+    line-height: 1.05;
+    letter-spacing: -0.14rem;
+    text-transform: none;
+    color: var(--page-hero-ink);
+  }
+
+  .page-hero__text {
+    max-width: 72rem;
+  }
+
+  .page-hero__text,
+  .page-hero__text p {
+    margin: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.8rem;
+    line-height: 1.55;
+    color: var(--page-hero-body);
+  }
+
+  .page-hero__text p + p {
+    margin-top: 1.2rem;
+  }
+
+  .page-hero__proof .customer-proof {
+    font-family: 'Value Sans Medium', sans-serif;
+  }
+
+  .page-hero__proof .customer-proof__count {
+    font-family: 'Value Sans Bold', sans-serif;
+  }
+
+  /* Highlights — Figma `7809:13932`: 48px apart; a 40px white tile with 12px corners holds
+     the 20px icon, 10px from 17px navy text. */
+  .page-hero__usps {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.6rem 4.8rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .page-hero__usp {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.7rem;
+    line-height: 1.2;
+    text-align: left;
+    color: var(--page-hero-ink);
+  }
+
+  .page-hero__usp-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1.2rem;
+    background: #ffffff;
+  }
+
+  .page-hero--white .page-hero__usp-icon {
+    background: #f5f6f8;
+  }
+
+  .page-hero__usp-image {
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+  }
+
+  .section-hero .hero-custom-code {
+    position: relative;
+    width: 100%;
+  }
+
+  @media (max-width: 989px) {
+    .page-hero {
+      padding: 5.6rem 0 4.8rem;
+    }
+
+    .page-hero__container {
+      gap: 3.2rem;
+      width: min(100% - 4rem, 72rem);
+    }
+
+    .page-hero__intro {
+      gap: 1.6rem;
+    }
+
+    .page-hero__heading {
+      font-size: 5.6rem;
+      letter-spacing: -0.11rem;
+    }
+
+    .page-hero__usps {
+      gap: 1.6rem 3.2rem;
+    }
+  }
+
+  /* Mobile — Figma `7809:16553`: 42px top / 34px bottom, everything 10px apart, 41px heading,
+     no highlights. */
+  @media (max-width: 749px) {
+    .page-hero {
+      padding: 4.2rem 0 3.4rem;
+    }
+
+    .page-hero__intro {
+      gap: 1rem;
+    }
+
+    .page-hero__heading {
+      font-size: 4.1rem;
+      letter-spacing: -0.08rem;
+    }
+
+    .page-hero__text,
+    .page-hero__text p {
+      font-size: 1.6rem;
+    }
+
+    .page-hero__usps {
+      display: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "class": "section-hero p-0 trigger-observer",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The social proof and highlights are shared by every Hero. Edit them in Theme settings > Page hero."
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Background",
+      "default": "light",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "white", "label": "White" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "Show breadcrumbs",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Leave empty to use the page, collection or blog title."
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Text",
+      "info": "Optional, under the heading."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_proof",
+      "label": "Show social proof",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_usps",
+      "label": "Show highlights",
+      "info": "Desktop and tablet only.",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "custom_code",
+      "name": "Custom code",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_code",
+          "label": "HTML, CSS, JS, or Liquid code",
+          "info": "Use style and script tags when adding CSS or JavaScript."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

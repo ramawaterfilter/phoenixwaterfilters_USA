@@ -1,0 +1,53 @@
+{% doc %}
+Renders a private line-item image property and keeps it synchronized to the selected variant.
+@param {product} product - Product being added to the cart.
+@param {variant} current_variant - Initially selected variant.
+@example
+{% render 'variant-cart-image-property', product: product, current_variant: product.selected_or_first_available_variant %}
+{% enddoc %}
+{% capture cart_image_url -%}
+  {% render 'variant-cart-image-url', product: product, variant: current_variant %}
+{%- endcapture %}
+<input
+  type="hidden"
+  name="properties[_variant_image]"
+  value="{{ cart_image_url | strip | escape }}"
+  data-variant-cart-image
+>
+<script type="application/json" data-variant-cart-images>
+  {
+    {% for variant in product.variants %}
+      {% capture variant_cart_image_url -%}
+        {% render 'variant-cart-image-url', product: product, variant: variant %}
+      {%- endcapture %}
+      "{{ variant.id }}": {{ variant_cart_image_url | strip | json }}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  }
+</script>
+<script>
+  (() => {
+    const script = document.currentScript;
+    const form = script && script.closest('form');
+    if (!form) return;
+
+    const input = form.querySelector('[data-variant-cart-image]');
+    const data = form.querySelector('[data-variant-cart-images]');
+    if (!input || !data) return;
+
+    let images = {};
+    try {
+      images = JSON.parse(data.textContent);
+    } catch (error) {
+      console.error('Unable to read variant cart images.', error);
+    }
+
+    const syncImage = () => {
+      const variantId = form.querySelector('[name="id"]')?.value;
+      input.value = images[String(variantId)] || '';
+    };
+
+    form.addEventListener('change', syncImage);
+    form.addEventListener('submit', syncImage, true);
+    syncImage();
+  })();
+</script>

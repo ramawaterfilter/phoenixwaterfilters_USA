@@ -1,0 +1,55 @@
+{% doc %}
+  Resolves an optional product or variant metafield with a merchant-authored fallback.
+  @param {object} owner - Product or selected variant
+  @param {string} key - Metafield path in namespace.key format
+  @param {string} kind - richtext, text, url, or image
+  @param {object} fallback - Theme editor fallback value
+{% enddoc %}
+{%- liquid
+  assign path = key | strip | split: '.'
+  assign field = nil
+  if path.size == 2
+    assign field = owner.metafields[path.first][path.last]
+  endif
+  assign value = fallback
+  if field.value != blank
+    case kind
+      when 'image'
+        if field.type == 'file_reference' and field.value.media_type == 'image'
+          assign value = field.value
+        elsif field.type == 'list.file_reference'
+          assign first_file = field.value | first
+          if first_file.media_type == 'image'
+            assign value = first_file
+          endif
+        endif
+      when 'url'
+        if field.type == 'url'
+          assign value = field.value
+        elsif field.type == 'file_reference' and field.value.url != blank
+          assign value = field.value.url
+        endif
+      when 'text'
+        if field.type == 'single_line_text_field' or field.type == 'multi_line_text_field' or field.type == 'number_integer' or field.type == 'number_decimal'
+          assign value = field.value
+        endif
+      when 'richtext'
+        if field.type == 'rich_text_field' or field.type == 'single_line_text_field' or field.type == 'multi_line_text_field' or field.type == 'number_integer' or field.type == 'number_decimal'
+          echo field | metafield_tag
+          assign value = nil
+        endif
+    endcase
+  endif
+  if value != blank
+    case kind
+      when 'image'
+        echo value | image_url: width: 1400 | image_tag: loading: 'lazy'
+      when 'richtext'
+        echo value
+      when 'text'
+        echo value | escape
+      when 'url'
+        echo value
+    endcase
+  endif
+-%}

@@ -1,0 +1,1711 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "ss_hero": {
+      "type": "subscribe-save-hero",
+      "blocks": {
+        "proof_1": {
+          "type": "proof_item",
+          "settings": {
+            "text": "Price + frequency before checkout"
+          }
+        },
+        "proof_2": {
+          "type": "proof_item",
+          "settings": {
+            "text": "Automatic recurring filter orders"
+          }
+        },
+        "proof_3": {
+          "type": "proof_item",
+          "settings": {
+            "text": "Skip, pause or cancel online"
+          }
+        },
+        "proof_4": {
+          "type": "proof_item",
+          "settings": {
+            "text": "Free subscription shipping"
+          }
+        },
+        "nav_1": {
+          "type": "nav_link",
+          "settings": {
+            "text": "Which filters?",
+            "url": "#choosing"
+          }
+        },
+        "nav_2": {
+          "type": "nav_link",
+          "settings": {
+            "text": "Your controls",
+            "url": "#manage"
+          }
+        },
+        "nav_3": {
+          "type": "nav_link",
+          "settings": {
+            "text": "FAQ",
+            "url": "#faq"
+          }
+        },
+        "nav_4": {
+          "type": "nav_link",
+          "settings": {
+            "text": "Find my filters",
+            "url": "#plans"
+          }
+        }
+      },
+      "block_order": [
+        "proof_1",
+        "proof_2",
+        "proof_3",
+        "proof_4",
+        "nav_1",
+        "nav_2",
+        "nav_3",
+        "nav_4"
+      ],
+      "custom_css": [
+        ".ss-hero-media {right: -33px;}",
+        "@media (max-width: 767px) {.ss-hero-media {right: -15px; }}"
+      ],
+      "settings": {
+        "eyebrow": "REPLACEMENT FILTERS.",
+        "heading": "Your filters arrive before you <em>run out.</em>",
+        "body": "<p>The replacement filters you need, delivered on your schedule. Skip, pause or cancel online.</p>",
+        "background_color": "#ffffff",
+        "text_color": "#153a5b",
+        "desktop_padding": 40,
+        "mobile_padding": 24,
+        "primary_label": "Find my replacement",
+        "primary_link": "#plans",
+        "secondary_label": "How it works",
+        "secondary_link": "#how-it-works",
+        "proof_heading": "Automatic filter orders. Always your choice.",
+        "proof_body": "<p>Your saved payment method is charged at each renewal until you change, pause or cancel.</p>",
+        "proof_bar_label": "NO SURPRISES",
+        "nav_title": "Subscribe & Save",
+        "image_alt": "Phoenix Gravity system with carbon cartridges, optional POSTreat elements and stainless steel stand",
+        "teak_image_alt": "Phoenix Gravity system with carbon cartridges, optional POSTreat elements and teakwood stand",
+        "refill_image": "shopify://shop_images/8_1.jpg",
+        "refill_image_alt": "FluoRid refill media pouch",
+        "media_label": "PHOENIX GRAVITY",
+        "media_label_secondary": "MADE TO KEEP.",
+        "media_heading": "Your system stays.",
+        "media_body": "<p>Replace only the filter elements.</p>",
+        "media_note": "System and stand shown for context. Replacement plans do not include the system or stand.",
+        "refill_label": "FluoRid\nrefill media",
+        "stand_view_label": "View stand",
+        "steel_label": "Steel",
+        "teak_label": "Teakwood"
+      }
+    },
+    "ss_definition": {
+      "type": "subscribe-save-definition",
+      "blocks": {
+        "comparison_1": {
+          "type": "comparison_item",
+          "settings": {
+            "state": "positive",
+            "label": "IT IS",
+            "title": "Filters on a schedule.",
+            "body": "<p>Subscribe & Save means automatic filter deliveries and recurring charges.</p>"
+          }
+        },
+        "comparison_2": {
+          "type": "comparison_item",
+          "settings": {
+            "state": "negative",
+            "label": "IT ISN'T",
+            "title": "A newsletter signup.",
+            "body": "<p>Phoenix email updates mean news and offers. Joining or leaving the email list does not start or stop a filter subscription.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "comparison_1",
+        "comparison_2"
+      ],
+      "settings": {
+        "eyebrow": "LET'S MAKE IT CLEAR",
+        "heading": "What Subscribe & Save is - and what it isn't",
+        "body": "<p>It is a recurring order for replacement filters. Your first order is charged at checkout. After that, your saved payment method is automatically charged on each renewal date.</p><p>Choose only the products you need. There is no membership fee, no minimum number of orders and no cancellation fee.</p>",
+        "background_color": "#ffffff",
+        "text_color": "#153a5b",
+        "desktop_padding": 40,
+        "mobile_padding": 24,
+        "link_label": "See exactly how billing works ↓",
+        "link_url": "#billing"
+      }
+    },
+    "ss_plans": {
+      "type": "subscribe-save-plans",
+      "blocks": {
+        "plan_1": {
+          "type": "plan",
+          "settings": {
+            "product": "carbon-filter-element",
+            "variant_id_override": "41058263236651",
+            "selling_plan_id_override": "8646197291",
+            "anchor_id": "plan-carbon",
+            "eyebrow": "PLAN 01 · CARBON",
+            "title": "Carbon Filter Elements",
+            "tab_title": "Carbon filters",
+            "description": "<p>Pack of 2 your main filter</p>",
+            "image_alt": "Phoenix Gravity carbon cartridge; plan includes a pair",
+            "interval": "every 12 months",
+            "badge": "Main filters",
+            "show_badge": true,
+            "features": "<ul><li>Reduces chlorine taste and odor, plus tested chemical contaminants</li><li>CTC-60 coconut-shell carbon</li><li>Made for Phoenix Gravity systems. Contact us to confirm compatibility with other housings.</li><li>Rated capacity: 5,500 gal / pair</li><li>Replace at: 12 month or 5,500 gal</li><li>Cost to run: 2 ¢ / gallon</li><li>Certified: NSF/ANSI 42 & 372</li></ul>",
+            "warning": "",
+            "cta_label": "Subscribe & Save",
+            "one_time_label": "Prefer one-time purchase? View options",
+            "one_time_url": "/products/carbon-filter-element?variant=41058263236651",
+            "note": "<p>First charge at checkout. No cancellation fee.</p>",
+            "terms_label": "Review recurring order terms.",
+            "style": "primary"
+          }
+        },
+        "plan_2": {
+          "type": "plan",
+          "settings": {
+            "product": "fluoride-refill-media",
+            "variant_id_override": "41996479987755",
+            "selling_plan_id_override": "8646230059",
+            "anchor_id": "plan-refill",
+            "eyebrow": "PLAN 02 FLUORIDE",
+            "title": "FluoRid Refill Media",
+            "tab_title": "Refill media",
+            "description": "<p>Existing POSTreat owners only 250g— 2</p>",
+            "image_alt": "POSTreat FluoRid refill media pouch",
+            "interval": "every 4 months",
+            "badge": "POSTreat owners",
+            "show_badge": true,
+            "features": "<ul><li>Reduces more than 95% of fluoride</li><li>Refills your existing POSTreat steel elements</li><li>Not needed if you have not purchased POSTreat filters</li><li>Rated capacity: 1,060 gal / pair</li><li>Media life: 4-6 months</li><li>Cost to run: 5.6 ¢ / gallon</li><li>Requires: POSTreat housings</li></ul>",
+            "warning": "",
+            "cta_label": "Subscribe & Save",
+            "one_time_label": "Prefer one-time purchase? View options",
+            "one_time_url": "/products/fluoride-refill-media?variant=41996479987755",
+            "note": "<p>First charge at checkout. No cancellation fee.</p>",
+            "terms_label": "Review recurring order terms.",
+            "style": "featured"
+          }
+        },
+        "plan_3": {
+          "type": "plan",
+          "settings": {
+            "product": "fluoride-reduction-elements",
+            "variant_id_override": "44066273099819",
+            "selling_plan_id_override": "9052553259",
+            "anchor_id": "plan-steel",
+            "eyebrow": "PLAN 03 FLUORIDE",
+            "title": "POSTreat Steel Elements",
+            "tab_title": "Steel elements",
+            "description": "<p>One pair of stainless steel housings + media</p>",
+            "image_alt": "POSTreat stainless steel element; plan includes a pair",
+            "interval": "every 4 months",
+            "badge": "Optional add-on",
+            "show_badge": true,
+            "features": "<ul><li>AISI 304 stainless steel housing, 10-year warranty</li><li>Arrives pre-filled with FluoRid media</li><li>Works alongside your carbon elements, not instead of them</li><li>Rated capacity: 1,060 gal / pair</li><li>Media life: 4 - 6 months</li><li>Cost to run: 8.9 ¢ / gallon</li><li>Housing warranty: 10 years</li></ul>",
+            "warning": "<p>This plan sends new steel elements every 4 months. Already own housings? Choose refill media. For a first purchase, consider steel elements once.</p>",
+            "cta_label": "Subscribe & Save",
+            "one_time_label": "Prefer one-time purchase? View options",
+            "one_time_url": "shopify://products/fluoride-reduction-elements",
+            "note": "<p>First charge at checkout. No cancellation fee.</p>",
+            "terms_label": "Review recurring order terms.",
+            "style": "outline"
+          }
+        }
+      },
+      "block_order": [
+        "plan_1",
+        "plan_2",
+        "plan_3"
+      ],
+      "settings": {
+        "eyebrow": "YOUR REPLACEMENTS",
+        "heading": "Keep the system. Refresh the filters.",
+        "body": "<p>Use carbon filters? Choose carbon replacements. Refill media is for existing POSTreat owners. Prices are in USD.</p>",
+        "anchor_id": "plans",
+        "background_color": "#ffffff",
+        "text_color": "#153a5b",
+        "desktop_padding": 40,
+        "mobile_padding": 24,
+        "selector_label": "Choose a replacement to see your plan",
+        "footnote": "<p>Refill media is only for POSTreat owners. If you use carbon filters alone, you do not need refill media. If you own POSTreat filters, keep the steel housings and replace the media inside.</p>",
+        "gift_heading": "Buying a gift?",
+        "gift_body": "<p>Choose a one-time purchase unless you intend to pay for ongoing replacements. A filter subscription keeps charging the payment method used at signup.</p>",
+        "sold_heading": "Sold or returned your system?",
+        "sold_body": "<p>Cancel each filter subscription separately. Selling, gifting or returning a system does not automatically end recurring filter orders.</p>",
+        "legal_note": "<p>Berkey®, Purewell® and Waterdrop® are trademarks of their respective owners. Phoenix Gravity is not affiliated with, endorsed by or sponsored by any of them; compatibility references describe physical fit only.</p>",
+        "qa_1": "[CONFIRM FIT + TRADEMARK DISCLAIMER]",
+        "qa_2": "[CONFIRM WORDING WITH COUNSEL]",
+        "footnote_link_label": "Which one do I need?",
+        "footnote_link_url": "#choosing"
+      }
+    },
+    "ss_video": {
+      "type": "subscribe-save-video",
+      "settings": {
+        "eyebrow": "ILLUSTRATED SUBSCRIPTION GUIDE",
+        "heading": "Your replacement routine, explained",
+        "body": "<p>See which filters you need, how recurring deliveries work, and how to stay in control of your schedule.</p>",
+        "anchor_id": "how-it-works",
+        "background_color": "#ffffff",
+        "text_color": "#153a5b",
+        "desktop_padding": 40,
+        "mobile_padding": 24,
+        "video": "shopify://files/videos/03.mp4",
+        "external_video": "",
+        "poster_alt": "Illustrated guide: Your replacement routine, explained",
+        "play_label": "Play Your replacement routine, explained",
+        "status": "",
+        "transcript": "<p>Read transcript</p><p>1. Start with the filters you use. Carbon filters are the main replacements. FluoRid refill media is for existing POSTreat owners.&nbsp;</p><p>2. Choose your delivery plan. Review the current price and delivery frequency before checkout. One-time purchase is also available.&nbsp;</p><p>3. Know how renewals work. Your first charge is at checkout. Future orders charge your saved payment method on the renewal schedule.&nbsp;</p><p>4. You stay in control. Skip, reschedule, pause or cancel from your account. Review your next charge and keep the confirmation.</p>"
+      }
+    },
+    "ss_process": {
+      "type": "subscribe-save-process",
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "number": "01",
+            "label": "Today",
+            "title": "Choose your plan",
+            "body": "<p>Review your items, price, frequency and next charge date before you pay.</p>",
+            "qa_1": "",
+            "qa_2": ""
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "number": "02",
+            "label": "First order",
+            "title": "Pay at checkout",
+            "body": "<p>Your first replacement order is processed at the subscriber price.</p>",
+            "qa_1": "",
+            "qa_2": ""
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "number": "03",
+            "label": "Before renewal",
+            "title": "Check your reminder",
+            "body": "<p>An email shows the next order, amount and date. sent 3 days before renewal.</p>",
+            "qa_1": "[3 DAYS]",
+            "qa_2": ""
+          }
+        },
+        "step_4": {
+          "type": "step",
+          "settings": {
+            "number": "04",
+            "label": "Before the cutoff",
+            "title": "Make any changes",
+            "body": "<p>Skip, pause, reschedule, cancel, or update your address and payment method upto 24 hours before renewal</p>",
+            "qa_1": "[24 HOURS]",
+            "qa_2": ""
+          }
+        },
+        "step_5": {
+          "type": "step",
+          "settings": {
+            "number": "05",
+            "label": "Renewal date",
+            "title": "Automatic charge + order",
+            "body": "<p>Your saved payment method is charged and your next filter order is created.</p>",
+            "qa_1": "",
+            "qa_2": ""
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3",
+        "step_4",
+        "step_5"
+      ],
+      "settings": {
+        "eyebrow": "FROM YOUR FIRST ORDER TO YOUR NEXT",
+        "heading": "What happens after I subscribe?",
+        "body": "<p>No calendar math and no hidden commitment. Here is the full order cycle.</p>",
+        "anchor_id": "after-subscribe",
+        "background_color": "#ffffff",
+        "text_color": "#153a5b",
+        "desktop_padding": 40,
+        "mobile_padding": 24,
+        "closing_note": "Each subscription has its own schedule. Canceling one does not cancel the others. Already created orders are separate from future renewals."
+      }
+    },
+    "ss_benefits": {
+      "type": "subscribe-save-benefits",
+      "blocks": {
+        "benefit_1": {
+          "type": "benefit",
+          "settings": {
+            "icon": "price",
+            "eyebrow": "",
+            "title": "A lower price, every order",
+            "body": "Subscriber pricing applies to your first order and every one after it - up to $10 off per delivery. It is not an introductory discount. Any price changes require advance notice; see the billing details."
+          }
+        },
+        "benefit_2": {
+          "type": "benefit",
+          "settings": {
+            "icon": "shipping",
+            "eyebrow": "",
+            "title": "Free shipping, no minimum",
+            "body": "Every subscription order ships free, whatever it costs. One-time orders have to reach $99 first - which a $69 refill never does."
+          }
+        },
+        "benefit_3": {
+          "type": "benefit",
+          "settings": {
+            "icon": "calendar",
+            "eyebrow": "",
+            "title": "A replacement routine",
+            "body": "<p>Keep track of replacement dates with scheduled deliveries. Replace by time or rated capacity, whichever comes first.</p>"
+          }
+        },
+        "benefit_4": {
+          "type": "benefit",
+          "settings": {
+            "icon": "control",
+            "eyebrow": "",
+            "title": "No lock-in, ever",
+            "body": "<p>No membership fee, no minimum term, no cancellation fee. Skip, pause, reschedule or cancel from your account in a couple of clicks.</p>"
+          }
+        },
+        "savings_band_pD3bCg": {
+          "type": "savings_band",
+          "settings": {
+            "amount": "$40",
+            "label": "SAVED PER YEAR",
+            "heading": "&nbsp;For households with carbon + POSTreat&nbsp;",
+            "body": "<p>One pair of carbon elements a year and three refills of FluoRid media costs $336 at one-time prices and $296 on Subscribe & Save - before free shipping, which one-time refill orders do not qualify for.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "benefit_1",
+        "benefit_2",
+        "benefit_3",
+        "benefit_4",
+        "savings_band_pD3bCg"
+      ],
+      "custom_css": [],
+      "settings": {
+        "eyebrow": "WHY SUBSCRIBE",
+        "heading": "A little less to think about.",
+        "body": "<p>Every one of these applies from your first order.</p>",
+        "background_color": "#f5f3f1",
+        "text_color": "#153a5b",
+        "desktop_padding": 40,
+        "mobile_padding": 24
+      }
+    },
+    "ss_chooser": {
+      "type": "subscribe-save-chooser",
+      "blocks": {
+        "choice_1": {
+          "type": "choice_step",
+          "settings": {
+            "eyebrow": "FIRST TIME BUYING FLUORIDE REDUCTION",
+            "title": "Start with the steel elements",
+            "body": "<p>They arrive as a complete pair— AISI 304 stainless steel housings pre-filled with FluoRid media—and drop into your Phoenix Gravity system alongside your carbon elements.</p><p>$99 one-time, or $94 on subscription. The housings are warranted for ten years, so our recommendation is to buy the housings once and subscribe to refills. The steel subscription would send new housings every 4 months.</p>",
+            "button_label": "Explore the steel elements",
+            "button_url": "/products/fluoride-reduction-elements",
+            "style": "default"
+          }
+        },
+        "choice_2": {
+          "type": "choice_step",
+          "settings": {
+            "eyebrow": "ALREADY OWN POSTREAT ELEMENTS",
+            "title": "Subscribe to the refill media",
+            "body": "<p>Only the media inside is used up. Refilling costs $59 instead of $94 for a whole new element, so you keep the housings and replace only the media.</p><p>$177 a year instead of $282 - a saving of $105 compared with renewing the complete steel-element plan three times a year. Initial housings cost extra.</p>",
+            "button_label": "Choose refill media",
+            "button_url": "#plan-refill",
+            "style": "featured"
+          }
+        },
+        "part_1": {
+          "type": "replacement_item",
+          "settings": {
+            "image": "shopify://shop_images/Carbon_-_Hero-removebg-preview.png",
+            "image_alt": "Carbon filter cartridge",
+            "title": "Carbon cartridges",
+            "body": "<p>Your main filters. Replace the pair every 12 months or at its rated capacity, whichever comes first.</p>",
+            "button_label": "",
+            "button_url": ""
+          }
+        },
+        "part_2": {
+          "type": "replacement_item",
+          "settings": {
+            "image": "shopify://shop_images/01_3-removebg-preview.png",
+            "image_alt": "POSTreat stainless steel housing",
+            "title": "POSTreat steel housings",
+            "body": "<p>The refillable housings used alongside your carbon filters. Keep them when you replace the media.</p>",
+            "button_label": "",
+            "button_url": ""
+          }
+        },
+        "part_3": {
+          "type": "replacement_item",
+          "settings": {
+            "image": "shopify://shop_images/Fluoride_Media_Refil-removebg-preview.png",
+            "image_alt": "FluoRid refill media pouch",
+            "title": "FluoRid refill media",
+            "body": "<p>The replaceable media inside POSTreat housings. Refill pouches do not include steel housings.</p>",
+            "button_label": "",
+            "button_url": ""
+          }
+        },
+        "refill_step_1": {
+          "type": "info_card",
+          "settings": {
+            "number": "1",
+            "title": "Unscrew the top cap on each steel element",
+            "body": "<p></p>"
+          }
+        },
+        "refill_step_2": {
+          "type": "info_card",
+          "settings": {
+            "number": "2",
+            "title": "Tip out the spent media and rinse the housing",
+            "body": "<p></p>"
+          }
+        },
+        "refill_step_3": {
+          "type": "info_card",
+          "settings": {
+            "number": "3",
+            "title": "Pour in one 250g pouch of FluoRid media per element",
+            "body": "<p></p>"
+          }
+        },
+        "refill_step_4": {
+          "type": "info_card",
+          "settings": {
+            "number": "4",
+            "title": "Reseal, prime, and discard the first two batches of water",
+            "body": "<p></p>"
+          }
+        }
+      },
+      "block_order": [
+        "choice_1",
+        "choice_2",
+        "part_1",
+        "part_2",
+        "part_3",
+        "refill_step_1",
+        "refill_step_2",
+        "refill_step_3",
+        "refill_step_4"
+      ],
+      "settings": {
+        "eyebrow": "CHOOSING",
+        "heading": "Which fluoride option do I need?",
+        "body": "<p>You do not need refill media unless you already own POSTreat filters. Carbon-only customers can continue with carbon replacements alone. If you choose to add fluoride filtration, buy POSTreat steel elements first; refill media is for later replacements.</p>",
+        "anchor_id": "choosing",
+        "background_color": "#ffffff",
+        "text_color": "#153a5b",
+        "desktop_padding": 40,
+        "mobile_padding": 24,
+        "recommendation_label": "OUR RECOMMENDATION",
+        "recommendation_body": "<p>POSTreat fluoride filtration is optional. If you choose to add it, buy the steel elements once, then consider refill media on a 4-month subscription. If you have not opted for POSTreat filters, you do not need refill media.</p>",
+        "parts_eyebrow": "THREE PARTS. TWO REPLACEMENT CYCLES.",
+        "parts_heading": "Match the part. Find your replacement.",
+        "walkthrough_media_type": "video",
+        "walkthrough_video": "shopify://files/videos/POSTreat + Refill Media.mp4",
+        "walkthrough_eyebrow": "POSTREAT REFILL WALKTHROUGH",
+        "walkthrough_heading": "Refilling POSTreat is easier than it sounds",
+        "walkthrough_body": "<p>For existing POSTreat owners: a close-up guide to replacing the media while keeping your steel housings.</p>",
+        "walkthrough_status": "",
+        "walkthrough_outline": "",
+        "refill_image": "shopify://shop_images/05.jpg",
+        "refill_caption": "FluoRid refill media 250g X 2",
+        "refill_heading": "What \"refilling\" involves",
+        "refill_intro": "",
+        "refill_closing": "<p>Full instructions ship in the box and live in the Help Manual.</p>",
+        "help_link_label": "Help Manual",
+        "help_link": "",
+        "help_link_placeholder": ""
+      }
+    },
+    "ss_intervals": {
+      "type": "subscribe-save-intervals",
+      "blocks": {
+        "interval_1": {
+          "type": "interval_item",
+          "settings": {
+            "filter": "Carbon Filter Elements",
+            "filter_note": "Pack of 2",
+            "replace": "12 months",
+            "capacity": "5,500 gal / pair",
+            "due": "Flow slows noticeably, or a chlorine taste returns. Most families reach 12 months before 5,500 gallons.",
+            "plan": "Every 12 months"
+          }
+        },
+        "interval_2": {
+          "type": "interval_item",
+          "settings": {
+            "filter": "POSTreat FluoRid Media",
+            "filter_note": "250g X 2",
+            "replace": "4 - 6 months",
+            "capacity": "1,060 gal / pair",
+            "due": "Track time and water use. Some households replace media closer to 6 months; stay within the media's rated time and capacity limits.",
+            "plan": "Every 4 months"
+          }
+        },
+        "interval_3": {
+          "type": "interval_item",
+          "settings": {
+            "filter": "POSTreat Steel Housing",
+            "filter_note": "The stainless shell",
+            "replace": "Not consumable",
+            "capacity": "-",
+            "due": "Warranted for 10 years. Replace it only if it is dented, cracked, or has a damaged thread.",
+            "plan": "n/a"
+          }
+        },
+        "timeline_1": {
+          "type": "timeline_event",
+          "settings": {
+            "period": "MONTH 0",
+            "title": "Carbon elements + FluoRid media",
+            "description": "",
+            "product_type": "carbon + fluoride",
+            "emphasis": true
+          }
+        },
+        "timeline_2": {
+          "type": "timeline_event",
+          "settings": {
+            "period": "MONTH 4",
+            "title": "FluoRid media",
+            "description": "",
+            "product_type": "fluoride only",
+            "emphasis": false
+          }
+        },
+        "timeline_3": {
+          "type": "timeline_event",
+          "settings": {
+            "period": "MONTH 8",
+            "title": "FluoRid media",
+            "description": "",
+            "product_type": "fluoride only",
+            "emphasis": false
+          }
+        },
+        "timeline_4": {
+          "type": "timeline_event",
+          "settings": {
+            "period": "MONTH 12",
+            "title": "Carbon elements + FluoRid media",
+            "description": "",
+            "product_type": "carbon + fluoride",
+            "emphasis": true
+          }
+        }
+      },
+      "block_order": [
+        "interval_1",
+        "interval_2",
+        "interval_3",
+        "timeline_1",
+        "timeline_2",
+        "timeline_3",
+        "timeline_4"
+      ],
+      "custom_css": [
+        "thead {background: #edf5fa;}"
+      ],
+      "settings": {
+        "eyebrow": "REPLACEMENT INTERVALS",
+        "heading": "When each filter is actually due",
+        "body": "<p>The refill plan defaults to a delivery every 4 months; media replacement can fall anywhere within 4–6 months, depending on usage and water conditions.</p>",
+        "anchor_id": "intervals",
+        "background_color": "#f5f3f1",
+        "text_color": "#153a5b",
+        "desktop_padding": 40,
+        "mobile_padding": 24,
+        "schedule_note": "<p>Carbon-only setup? Your schedule is one carbon pair every 12 months. The example below adds refill deliveries only for customers who already own POSTreat filters.</p>",
+        "timeline_heading": "Example year: carbon + optional POSTreat refills",
+        "interval_explanation": "<p>Need your next refill closer to 6 months? &nbsp;FluoRid media has a 4–6-month replacement window. Some households reach the later end of that window, depending on water use and conditions. Your default subscription delivery is every 4 months. Reschedule the next delivery or choose an available frequency in your account; follow the product's time and capacity limits, whichever comes first. Our team can help you choose a suitable schedule.</p>"
+      }
+    },
+    "ss_costs": {
+      "type": "subscribe-save-costs",
+      "blocks": {
+        "metric_1": {
+          "type": "cost_item",
+          "settings": {
+            "mode": "metric",
+            "label": "per gallon",
+            "value": "2.2¢",
+            "support": "carbon filtration",
+            "deliveries": "",
+            "one_time": "",
+            "subscriber": "",
+            "saving": "",
+            "per_gallon": ""
+          }
+        },
+        "metric_2": {
+          "type": "cost_item",
+          "settings": {
+            "mode": "metric",
+            "label": "per gallon",
+            "value": "5.6¢",
+            "support": "fluoride reduction",
+            "deliveries": "",
+            "one_time": "",
+            "subscriber": "",
+            "saving": "",
+            "per_gallon": ""
+          }
+        },
+        "metric_3": {
+          "type": "cost_item",
+          "settings": {
+            "mode": "metric",
+            "label": "a year",
+            "value": "$296",
+            "support": "with optional POSTreat",
+            "deliveries": "",
+            "one_time": "",
+            "subscriber": "",
+            "saving": "",
+            "per_gallon": ""
+          }
+        },
+        "metric_4": {
+          "type": "cost_item",
+          "settings": {
+            "mode": "metric",
+            "label": "saved a year",
+            "value": "$40",
+            "support": "carbon + POSTreat refills",
+            "deliveries": "",
+            "one_time": "",
+            "subscriber": "",
+            "saving": "",
+            "per_gallon": ""
+          }
+        },
+        "cost_row_1": {
+          "type": "cost_item",
+          "settings": {
+            "mode": "row",
+            "label": "Carbon Filter Elements",
+            "value": "",
+            "support": "5,500 gal a year",
+            "deliveries": "1 X 12 mo",
+            "one_time": "$129",
+            "subscriber": "$119",
+            "saving": "$10",
+            "per_gallon": "2.2¢"
+          }
+        },
+        "cost_row_2": {
+          "type": "cost_item",
+          "settings": {
+            "mode": "row",
+            "label": "FluoRid Refill Media",
+            "value": "",
+            "support": "3,180 gal a year",
+            "deliveries": "3 X 4 mo",
+            "one_time": "$207",
+            "subscriber": "$177",
+            "saving": "$30",
+            "per_gallon": "5.6¢"
+          }
+        },
+        "cost_row_3": {
+          "type": "cost_item",
+          "settings": {
+            "mode": "row",
+            "label": "POSTreat Steel Elements",
+            "value": "",
+            "support": "if bought new each cycle",
+            "deliveries": "3 X 4 mo",
+            "one_time": "$297",
+            "subscriber": "$282",
+            "saving": "$15",
+            "per_gallon": "8.9¢"
+          }
+        },
+        "cost_row_4": {
+          "type": "cost_item",
+          "settings": {
+            "mode": "row",
+            "label": "Carbon + refill media",
+            "value": "",
+            "support": "for existing POSTreat owners",
+            "deliveries": "4 orders",
+            "one_time": "$336",
+            "subscriber": "$296",
+            "saving": "$40",
+            "per_gallon": "-"
+          }
+        }
+      },
+      "block_order": [
+        "metric_1",
+        "metric_2",
+        "metric_3",
+        "metric_4",
+        "cost_row_1",
+        "cost_row_2",
+        "cost_row_3",
+        "cost_row_4"
+      ],
+      "disabled": true,
+      "custom_css": [
+        ".ss-costs .ss-cost-metrics {grid-template-columns: repeat(2, 1fr);}",
+        ".ss tbody tr:last-child {background: #f5f3f1 !important;}",
+        "thead {background: #f5f3f1;}"
+      ],
+      "settings": {
+        "eyebrow": "RUNNING COST",
+        "heading": "Good water. Clear numbers.",
+        "body": "<p>Compare the annual charges for each replacement plan. Cost per gallon uses rated filter capacity; your actual cost depends on use.</p>",
+        "anchor_id": "costs",
+        "background_color": "#ffffff",
+        "text_color": "#153a5b",
+        "desktop_padding": 40,
+        "mobile_padding": 24,
+        "footnote": "<p>Figures exclude tax. Shipping is free on every subscription order; one-time orders under $99 pay standard shipping, so the real difference on a refill order is larger than the table shows.</p>"
+      }
+    },
+    "ss_controls": {
+      "type": "subscribe-save-controls",
+      "blocks": {
+        "control_1": {
+          "type": "control_action",
+          "settings": {
+            "title": "Skip a delivery",
+            "body": "<p>Immediately</p>",
+            "link_label": "Account Subscriptions",
+            "link_url": ""
+          }
+        },
+        "control_2": {
+          "type": "control_action",
+          "settings": {
+            "title": "Reschedule",
+            "body": "<p>Immediately</p>",
+            "link_label": "Account Subscriptions Reschedule",
+            "link_url": ""
+          }
+        },
+        "control_3": {
+          "type": "control_action",
+          "settings": {
+            "title": "Shipping Address",
+            "body": "<p>From the next order</p>",
+            "link_label": "Account Subscriptions Frequency",
+            "link_url": ""
+          }
+        },
+        "control_4": {
+          "type": "control_action",
+          "settings": {
+            "title": "Payment Method",
+            "body": "<p>From the next order</p>",
+            "link_label": "Account Subscriptions Edit items",
+            "link_url": ""
+          }
+        },
+        "control_7": {
+          "type": "control_action",
+          "settings": {
+            "title": "Pause for a while",
+            "body": "<p>Immediately</p>",
+            "link_label": "Account Subscriptions Pause",
+            "link_url": ""
+          }
+        },
+        "control_8": {
+          "type": "control_action",
+          "settings": {
+            "title": "Cancel",
+            "body": "<p>Immediately no fee</p>",
+            "link_label": "Account Subscriptions Cancel",
+            "link_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "control_1",
+        "control_2",
+        "control_3",
+        "control_4",
+        "control_7",
+        "control_8"
+      ],
+      "custom_css": [
+        "button {text-transform: capitalize;}"
+      ],
+      "settings": {
+        "eyebrow": "YOUR ACCOUNT. YOUR CALL.",
+        "heading": "You are always in control.",
+        "body": "<p>More filters than you need? Going away? Moving? You can manage each subscription from your Phoenix account or the manage link in your subscription email.</p>",
+        "anchor_id": "manage",
+        "background_color": "#ffffff",
+        "text_color": "#153a5b",
+        "desktop_padding": 40,
+        "mobile_padding": 24,
+        "account_video": "shopify://files/videos/02.mp4",
+        "account_external_video": "",
+        "account_video_alt": "Illustrated guide: How to log in and change your delivery date",
+        "account_video_play": "Play How to log in and change your delivery date",
+        "account_video_eyebrow": "ILLUSTRATED ACCOUNT GUIDE",
+        "account_video_heading": "How to log in and change your delivery date",
+        "account_video_body": "<p>Sign in with the email used for your order, open your subscription, and change the next delivery date or an available frequency. Save, then check your next charge date.</p>",
+        "account_video_status": "",
+        "account_video_transcript": "<p>1. Open your Phoenix account. Sign in with the email used for your order. Follow the sign-in steps shown on your account page.&nbsp;</p><p>2. Select your subscription. Open Subscriptions. Choose the filter plan you want to change and review its next scheduled charge.&nbsp;</p><p>3. Change the delivery date. Choose Reschedule, or an available frequency. Pick a date that suits your replacement needs.&nbsp;</p><p>4. Save. Then check the date. Save your changes and confirm the updated next charge date. Update each active subscription separately.</p>",
+        "promises": "<ul><li>No minimum term or cancellation fee</li><li>Skip one delivery or pause for a while</li><li>Cancel online &nbsp;- no phone call required</li></ul>",
+        "account_button": "Manage my subscription",
+        "canceled_note": "<p>Already canceled? Check for a Canceled status and keep your confirmation. Unsubscribing from emails does not cancel filter orders.</p>",
+        "account_label": "My Phoenix  Subscriptions",
+        "portal_image": "shopify://shop_images/Carbon_-_Hero-removebg-preview.png",
+        "portal_title": "Carbon Filter Elements",
+        "portal_status": "Active",
+        "portal_next_label": "Next charge & delivery",
+        "portal_next_value": "Your next scheduled date",
+        "portal_example_heading": "Skip a delivery",
+        "portal_example_body": "Skip only the upcoming order. Later orders continue on your schedule.",
+        "portal_disclosure": "Illustrative Appstle portal experience. Labels and available controls must be verified in the live Phoenix account.",
+        "controls_heading": "View every account control and when changes take effect",
+        "cutoff_eyebrow": "ONE THING TO KNOW",
+        "cutoff_heading": "There is a cutoff before each renewal",
+        "cutoff_body": "<p>Changes must be made at least 24 hours before your renewal date. After that, we charge automatically on each renewal date: every 12 months for carbon elements and every 4 months for fluoride.</p>",
+        "cutoff_qa": "[24 HOURS]",
+        "help_eyebrow": "RATHER TALK TO A PERSON?",
+        "help_heading": "We'll make any of these changes for you",
+        "help_email": "hello@phoenixwaterfilters.com",
+        "help_phone": "1 (800) 917-0455  - [Mon–Fri, 9 a.m.–5 p.m. CT]",
+        "help_hours": "",
+        "help_note": "You never have to call to cancel. Check the final Canceled status and keep the confirmation.",
+        "portal_product": "carbon-filter-element",
+        "portal_variant_id_override": "41058263236651",
+        "portal_plan_id_override": "8646197291",
+        "portal_interval": "every 12 months + applicable tax"
+      }
+    },
+    "ss_billing": {
+      "type": "subscribe-save-billing",
+      "blocks": {
+        "billing_1": {
+          "type": "billing_step",
+          "settings": {
+            "mode": "row",
+            "label": "01",
+            "title": "When you're charged",
+            "body": "<p>Your first order is charged at checkout. After that we charge automatically on each renewal date every 12 months for carbon elements, every 4 months for fluoride.</p>",
+            "qa_1": "",
+            "qa_2": ""
+          }
+        },
+        "billing_2": {
+          "type": "billing_step",
+          "settings": {
+            "mode": "row",
+            "label": "02",
+            "title": "What you're charged",
+            "body": "<p>The subscriber price in effect on the renewal date, plus applicable sales tax. No shipping charge, ever.</p>",
+            "qa_1": "",
+            "qa_2": ""
+          }
+        },
+        "billing_3": {
+          "type": "billing_step",
+          "settings": {
+            "mode": "row",
+            "label": "03",
+            "title": "Advance notice",
+            "body": "<p>We email you at least 3 days before every renewal, with the date, the amount and a link to skip or cancel.</p>",
+            "qa_1": "[3 DAYS]",
+            "qa_2": ""
+          }
+        },
+        "billing_4": {
+          "type": "billing_step",
+          "settings": {
+            "mode": "row",
+            "label": "04",
+            "title": "Your payment method",
+            "body": "<p>The card or wallet you used at signup, stored securely by Shopify. Phoenix never holds your card details.</p>",
+            "qa_1": "",
+            "qa_2": ""
+          }
+        },
+        "billing_5": {
+          "type": "billing_step",
+          "settings": {
+            "mode": "row",
+            "label": "05",
+            "title": "If a payment fails",
+            "body": "<p>We retry and email you each time. Update your card and the order goes out. Nothing is canceled without notice.</p>",
+            "qa_1": "[3 TIMES OVER 7 DAYS]",
+            "qa_2": ""
+          }
+        },
+        "billing_6": {
+          "type": "billing_step",
+          "settings": {
+            "mode": "row",
+            "label": "06",
+            "title": "Shipping",
+            "body": "<p>Free on every subscription order, no minimum. Ships from our US warehouse, typically, with tracking by email.</p>",
+            "qa_1": "[2â€“5 BUSINESS DAYS]",
+            "qa_2": ""
+          }
+        },
+        "billing_7": {
+          "type": "billing_step",
+          "settings": {
+            "mode": "row",
+            "label": "07",
+            "title": "Where we ship",
+            "body": "<p>Shipping Across 49 U.S. States. We also ship to Alaska and Hawaii; free shipping does not apply to these destinations.<br/>Please note: We do not ship to California.</p>",
+            "qa_1": "",
+            "qa_2": ""
+          }
+        },
+        "billing_8": {
+          "type": "billing_step",
+          "settings": {
+            "mode": "row",
+            "label": "08",
+            "title": "If the price changes",
+            "body": "<p>We email you at least 30 before any change to your subscription price, so you can skip, change or cancel first.</p>",
+            "qa_1": "[30 DAYS]",
+            "qa_2": ""
+          }
+        },
+        "billing_note_1": {
+          "type": "billing_step",
+          "settings": {
+            "mode": "card",
+            "label": "01",
+            "title": "Same price, order one",
+            "body": "<p>Your subscriber price applies to the first order and every renewal. It does not step up after an introductory period, because there isn't one.</p>",
+            "qa_1": "",
+            "qa_2": ""
+          }
+        },
+        "billing_note_2": {
+          "type": "billing_step",
+          "settings": {
+            "mode": "card",
+            "label": "02",
+            "title": "Nothing hidden in the cart",
+            "body": "<p>Price, interval and next charge date are shown on the product page, in the cart and on the checkout page before you pay.</p>",
+            "qa_1": "",
+            "qa_2": ""
+          }
+        },
+        "billing_note_3": {
+          "type": "billing_step",
+          "settings": {
+            "mode": "card",
+            "label": "03",
+            "title": "One email per event",
+            "body": "<p>Renewal reminder, order confirmation, shipping notice. No marketing inside your subscription emails.</p>",
+            "qa_1": "",
+            "qa_2": ""
+          }
+        }
+      },
+      "block_order": [
+        "billing_1",
+        "billing_2",
+        "billing_3",
+        "billing_4",
+        "billing_5",
+        "billing_6",
+        "billing_7",
+        "billing_8",
+        "billing_note_1",
+        "billing_note_2",
+        "billing_note_3"
+      ],
+      "settings": {
+        "eyebrow": "BILLING & DELIVERY",
+        "heading": "Exactly what happens, and when",
+        "body": "<p>Your first charge, future renewals and delivery details, in one place.</p>",
+        "anchor_id": "billing",
+        "background_color": "#f5f3f1",
+        "text_color": "#153a5b",
+        "desktop_padding": 40,
+        "mobile_padding": 24
+      }
+    },
+    "ss_faq": {
+      "type": "subscribe-save-faq",
+      "blocks": {
+        "faq_category_1": {
+          "type": "category",
+          "settings": {
+            "title": "The Basics",
+            "anchor_id": "faq-the-basics"
+          }
+        },
+        "faq_1_1": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-what-is-subscribe-save",
+            "question": "What is Subscribe & Save?",
+            "answer": "<p>A recurring purchase of replacement filters. Your first order is charged at checkout, then your saved payment method is automatically charged at each renewal. Carbon is every 12 months; fluoride plans are every 4 months. It is separate from signing up for Phoenix newsletters and offers.</p>",
+            "open_by_default": true,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_1_2": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-is-there-a-fee-or-a-minimum-number-of-orders",
+            "question": "Is there a fee, or a minimum number of orders?",
+            "answer": "<p>No to both. There is no signup fee, no membership cost, no minimum term and no cancellation fee. You can cancel after your first delivery if you want to.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_1_3": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-is-the-discount-only-on-renewals-or-on-my-first-order-too",
+            "question": "Is the discount only on renewals, or on my first order too?",
+            "answer": "<p>Your first order too. Subscriber pricing applies from order one and is not an introductory discount. Carbon is currently $119 every 12 months. Any future price change requires advance notice; see Billing &amp; Delivery.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_1_4": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-which-products-can-i-subscribe-to",
+            "question": "Which products can I subscribe to?",
+            "answer": "<p>You can subscribe to Carbon Filter Elements (every 12 months) and FluoRid Refill Media (every 4 months). Refill media is only for customers who already own POSTreat filters; carbon-only customers do not need it. Adding POSTreat is optional. If you choose to add fluoride filtration, buy steel elements first, then consider refills. The steel subscription sends new housings and media every 4 months. Systems, stands, spigots and spare parts are one-time purchases.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_1_5": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-does-joining-or-leaving-the-email-list-change-my-subscription",
+            "question": "Does joining or leaving the email list change my subscription?",
+            "answer": "<p>No. Phoenix email updates are newsletters and offers only. Subscribe & Save is a recurring product purchase. Unsubscribing from marketing emails does not cancel scheduled filter orders or their charges. Manage those in Account Subscriptions.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_category_2": {
+          "type": "category",
+          "settings": {
+            "title": "Choosing A Plan",
+            "anchor_id": "faq-choosing-a-plan"
+          }
+        },
+        "faq_2_1": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-i-already-own-postreat-steel-elements-which-plan-do-i-need",
+            "question": "I already own POSTreat steel elements. Which plan do I need?",
+            "answer": "<p>The FluoRid Refill Media plan at $59 every 4 months. Your stainless housings are warranted for ten years; only the media inside is used up. Refilling costs $105 a year less than buying new steel elements.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_2_2": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-can-i-subscribe-to-more-than-one-filter",
+            "question": "Can I subscribe to more than one filter?",
+            "answer": "<p>Yes, if you use both carbon and POSTreat filters. Carbon runs on a 12-month cycle; refill media for existing POSTreat filters runs on a 4-month cycle. If you have not opted for POSTreat, you do not need refill media. Each subscription has its own schedule and can be managed separately.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_2_3": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-can-i-switch-plans-later",
+            "question": "Can I switch plans later?",
+            "answer": "<p>Yes. Cancel the one you no longer want and start the other from its product page. If you would rather we handle it, email hello@phoenixwaterfilters.com and we will switch it for you without a gap in your deliveries.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_2_4": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-do-the-carbon-elements-fit-my-berkey-housing",
+            "question": "Do the carbon elements fit my Berkey® housing?",
+            "answer": "<p>These plans are intended for Phoenix Gravity systems. Compatibility with other housings requires physical-fit verification before we can promise a fit. Please send us your brand and model before ordering.</p>",
+            "open_by_default": false,
+            "qa_1": "[CONFIRM FIT + TRADEMARK DISCLAIMER]",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_category_3": {
+          "type": "category",
+          "settings": {
+            "title": "Deliveries And Timing",
+            "anchor_id": "faq-deliveries-and-timing"
+          }
+        },
+        "faq_3_1": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-when-does-my-first-order-ship",
+            "question": "When does my first order ship?",
+            "answer": "<p>Your first order is charged at checkout and processed on the usual warehouse schedule, at the subscriber price. Dispatch/transit timing is still being confirmed 2–5 business days. Review the next charge date shown before paying; do not infer it from the delivery date.</p>",
+            "open_by_default": false,
+            "qa_1": "2–5 business days",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_3_2": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-will-you-tell-me-before-you-charge-me",
+            "question": "Will you tell me before you charge me?",
+            "answer": "<p>The planned renewal email shows the date, amount and items, plus links to manage the subscription. The exact reminder setting must be confirmed: We email you at least 3 days<br/>before every renewal. Keep your subscription email address current and check your next renewal in your account.</p>",
+            "open_by_default": false,
+            "qa_1": "[3 DAYS]",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_3_3": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-can-i-get-a-delivery-earlier-or-push-one-back",
+            "question": "Can I get a delivery earlier, or push one back?",
+            "answer": "<p>Both. Open Account Subscriptions and either ship now or pick a new date. Changes must be made at least 24 hours before a renewal. After that, the order is already being packed.</p>",
+            "open_by_default": false,
+            "qa_1": "[24 HOURS]",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_3_4": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-my-household-uses-less-water-can-i-stretch-the-interval",
+            "question": "My household uses less water. Can I stretch the interval?",
+            "answer": "<p>Yes. Some households replace FluoRid media closer to 6 months, depending on water use and conditions. The refill plan defaults to every 4 months. Reschedule the next delivery or choose an available frequency in your account. Stay within the rated 6-month life or 1,060 gallons per pair, whichever comes first. Carbon remains 12 months or 5,500 gallons per pair. Ask our team if you are unsure which schedule suits your setup.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_3_5": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-what-if-i-m-away-when-a-delivery-is-due",
+            "question": "What if I'm away when a delivery is due?",
+            "answer": "<p>Skip it, move the date, or pause the whole subscription all three take effect immediately and none of them cost anything. Pausing is the right one if you are away for a while and do not know when you will be back.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_category_4": {
+          "type": "category",
+          "settings": {
+            "title": "Price And Payment",
+            "anchor_id": "faq-price-and-payment"
+          }
+        },
+        "faq_4_1": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-how-much-do-i-actually-save",
+            "question": "How much do I actually save?",
+            "answer": "<p>$10 a delivery on carbon elements, $10 on FluoRid refill media, $5 on POSTreat steel elements. For households with carbon + POSTreat refills, the saving is $40 a year, plus free shipping on all four orders (a $69 refill would not otherwise qualify).</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_4_2": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-do-subscription-orders-always-ship-free",
+            "question": "Do subscription orders always ship free?",
+            "answer": "<p>Shipping Across 49 U.S. States. Enjoy free shipping within the contiguous U.S., excluding California. We also ship to Alaska and Hawaii; free shipping does not apply to these destinations. Please note: We do not ship to California.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_4_3": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-what-happens-if-my-card-is-declined",
+            "question": "What happens if my card is declined?",
+            "answer": "<p>We retry and email you each time with a link to update your card. Nothing is canceled silently if we cannot collect payment we tell you before the subscription stops.</p>",
+            "open_by_default": false,
+            "qa_1": "[3 TIMES OVER 7 DAYS]",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_4_4": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-can-the-price-change",
+            "question": "Can the price change?",
+            "answer": "<p>It can, but not without warning. We email you at least %%QA1%% before any change to your subscription price, and you can skip, change or cancel before it applies.</p>",
+            "open_by_default": false,
+            "qa_1": "[30 DAYS]",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_category_5": {
+          "type": "category",
+          "settings": {
+            "title": "Changing And Canceling",
+            "anchor_id": "faq-changing-and-canceling"
+          }
+        },
+        "faq_5_1": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-how-do-i-cancel",
+            "question": "How do I cancel?",
+            "answer": "<p>Open Account Subscriptions, select the subscription, and choose Cancel. Complete the cancellation, look for a Canceled status, and keep the confirmation. Repeat for any other active subscriptions you want to end. Unsubscribing from newsletters is separate. No phone call is required, and there is no cancellation fee. An order that has already been created may still be processed; contact support about that order.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_5_2": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-is-there-a-cancellation-fee-do-i-lose-anything",
+            "question": "Is there a cancellation fee? Do I lose anything?",
+            "answer": "<p>No fee, and nothing to return. Any order already placed still ships and is still yours. What you give up is the subscriber price go back to one-time purchases and you pay the standard price again.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_5_3": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-if-i-cancel-and-come-back-later-do-i-get-the-subscriber-price-again",
+            "question": "If I cancel and come back later, do I get the subscriber price again?",
+            "answer": "<p>Yes. Resubscribing puts you back on whatever the current subscriber price is. There is no penalty for having left and no waiting period.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_5_4": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-can-i-return-a-subscription-order",
+            "question": "Can I return a subscription order?",
+            "answer": "<p>Subscription orders are covered by our standard Return Policy, the same as any other order. %%QA1%% Return shipping to our US warehouse is the customer&#x27;s cost.</p>",
+            "open_by_default": false,
+            "qa_1": "[CONFIRM: whether the 100-day money-back guarantee applies to subscription orders, and whether it applies to every order or only the first. Do not publish this answer until that is settled.]",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_5_5": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-i-thought-i-canceled-why-is-another-order-scheduled",
+            "question": "I thought I canceled. Why is another order scheduled?",
+            "answer": "<p>Leaving an email list does not cancel any subscription, and canceling one subscription does not cancel the others. Look for Canceled and keep the confirmation. If an order still appears, contact hello@phoenixwaterfilters.com with your order details; do not email card information.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_5_6": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-how-do-i-change-my-shipping-address-or-payment-method",
+            "question": "How do I change my shipping address or payment method?",
+            "answer": "<p>Open the specific subscription, then Address or Payment. Check each active subscription separately; an address in your main account or a one-time checkout may not update the subscription. Make changes before the renewal cutoff 24 Hours, review the saved details, and use the secure payment update flow.</p>",
+            "open_by_default": false,
+            "qa_1": "24 Hours",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_5_7": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-can-i-buy-a-subscription-as-a-gift",
+            "question": "Can I buy a subscription as a gift?",
+            "answer": "<p>Choose a one-time purchase if you only intend to pay for one order. A subscription gift continues to charge the payment method used at signup. Giving the system to someone else does not transfer the subscription or change the saved payer. Contact support before arranging ongoing deliveries for another person.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_5_8": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-what-if-i-sold-gifted-or-returned-my-system",
+            "question": "What if I sold, gifted or returned my system?",
+            "answer": "<p>Cancel each active filter subscription separately and confirm its Canceled status. Selling, gifting or returning the system does not automatically cancel recurring replacements. Cancellation stops future renewals; contact support separately about any order already created.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "faq_5_9": {
+          "type": "question",
+          "settings": {
+            "anchor_id": "faq-do-i-need-new-steel-housings-every-time-i-replace-fluoride-media",
+            "question": "Do I need new steel housings every time I replace fluoride media?",
+            "answer": "<p>No. Refill media is only for customers who already own compatible POSTreat filters with usable steel housings. If you have not opted for POSTreat, you do not need refill media. If you decide to add optional fluoride filtration, buy steel elements with media first. Follow the supplied refill instructions; contact support if any step is unclear.</p>",
+            "open_by_default": false,
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        }
+      },
+      "block_order": [
+        "faq_category_1",
+        "faq_1_1",
+        "faq_1_2",
+        "faq_1_3",
+        "faq_1_4",
+        "faq_1_5",
+        "faq_category_2",
+        "faq_2_1",
+        "faq_2_2",
+        "faq_2_3",
+        "faq_2_4",
+        "faq_category_3",
+        "faq_3_1",
+        "faq_3_2",
+        "faq_3_3",
+        "faq_3_4",
+        "faq_3_5",
+        "faq_category_4",
+        "faq_4_1",
+        "faq_4_2",
+        "faq_4_3",
+        "faq_4_4",
+        "faq_category_5",
+        "faq_5_1",
+        "faq_5_2",
+        "faq_5_3",
+        "faq_5_4",
+        "faq_5_5",
+        "faq_5_6",
+        "faq_5_7",
+        "faq_5_8",
+        "faq_5_9"
+      ],
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading": "A clear answer, before you commit.",
+        "body": "<p>Carbon elements are the main replacement filters. Refill media is only for existing POSTreat owners. If you have not opted for POSTreat filters, you do not need refill media. Fluoride filtration and subscriptions are optional; one-time purchases remain available.</p>",
+        "anchor_id": "faq",
+        "background_color": "#ffffff",
+        "text_color": "#153a5b",
+        "desktop_padding": 40,
+        "mobile_padding": 24,
+        "quick_label": "QUICK ANSWER",
+        "help_heading": "Still not sure which plan you need?",
+        "help_body": "<p>Tell us what system you own and how many people drink from it, and we will tell you exactly what to subscribe to, even if that means telling you that you do not need one.</p>",
+        "help_email": "hello@phoenixwaterfilters.com",
+        "help_button": "Email us",
+        "help_phone": "1 (800) 917-0455"
+      }
+    },
+    "ss_terms": {
+      "type": "subscribe-save-terms",
+      "blocks": {
+        "term_1": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-1",
+            "number": "01",
+            "title": "What these terms cover",
+            "body": "<p>They govern the Phoenix Gravity Subscribe &amp; Save program on phoenixwaterfilters.com for customers in the United States. Enrolling in a plan means you accept them.</p>",
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "term_2": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-2",
+            "number": "02",
+            "title": "Eligibility and account",
+            "body": "<p>You must be 18 or over, have a valid payment method and a US shipping address. A Phoenix account is created for you at checkout so you can manage the subscription yourself.</p>",
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "term_3": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-3",
+            "number": "03",
+            "title": "Enrolling",
+            "body": "<p>Select Subscribe &amp; Save instead of One-time purchase on an eligible product page and complete checkout. Before you pay we show you the subscriber price, the delivery interval and the date of your next charge. Completing checkout is your authorization for recurring charges on that schedule. Newsletter opt-in is separate and is not authorization for recurring product charges. Review the recurring amount and frequency and actively agree to the subscription before paying.</p>",
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "term_4": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-4",
+            "number": "04",
+            "title": "Subscriber pricing",
+            "body": "<p>The subscriber price applies to your first order and to every renewal for as long as the subscription is active. It is not an introductory rate and does not step up. Current prices: Carbon Filter Elements $119 every 12 months; POSTreat FluoRid Refill Media $59 every 4 months; POSTreat Steel Elements $94 every 4 months. Prices exclude sales tax.</p>",
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "term_5": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-5",
+            "number": "05",
+            "title": "Billing and authorization",
+            "body": "<p>Your first order is charged at checkout. Each renewal is then charged automatically to your stored payment method on the renewal date, until you cancel. Payment details are stored by Shopify; Phoenix does not hold your card number. Gift orders use the payment method supplied at enrollment unless updated. Giving away, selling or returning a system does not cancel its separate filter subscriptions.</p>",
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "term_6": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-6",
+            "number": "06",
+            "title": "Renewal notices",
+            "body": "<p>We email you at least %%QA1%% before each renewal, stating the date, the amount and the items, with links to skip, change or cancel.</p>",
+            "qa_1": "[3 DAYS]",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "term_7": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-7",
+            "number": "07",
+            "title": "Shipping",
+            "body": "<p>Shipping Across 49 U.S. States Enjoy free shipping within the contiguous U.S., excluding California. We also ship to Alaska and Hawaii; free shipping does not apply to these destinations. Please note: We do not ship to California.</p>",
+            "qa_1": "[2â€“5 BUSINESS DAYS]",
+            "qa_2": "[CONFIRM SHIPPING TERRITORY]",
+            "qa_3": ""
+          }
+        },
+        "term_8": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-8",
+            "number": "08",
+            "title": "Changes and the cutoff",
+            "body": "<p>You may change the delivery date, frequency, items, shipping address or payment method at any time from your account. Changes must be made at least before a scheduled renewal; after that, the order is in processing and the change applies from the following delivery.</p>",
+            "qa_1": "24 Hours",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "term_9": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-9",
+            "number": "09",
+            "title": "Skipping and pausing",
+            "body": "<p>You may skip any individual delivery or pause the subscription indefinitely from your account. Skipping and pausing are free, take effect immediately, and do not affect your subscriber price when deliveries resume.</p>",
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "term_10": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-10",
+            "number": "10",
+            "title": "Cancellation",
+            "body": "<p>You may cancel at any time from Account â†’ Subscriptions, from the manage link in any subscription email, or by contacting us. Cancellation is immediate and free; there is no minimum term and no cancellation fee. Orders already placed before you cancel will still be fulfilled and charged. Canceling ends your subscriber pricing future one-time purchases are at the standard price. Check for Canceled status and keep the confirmation. Cancel every active subscription you want to end; unsubscribing from marketing emails does not cancel product subscriptions.</p>",
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "term_11": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-11",
+            "number": "11",
+            "title": "Failed payments",
+            "body": "<p>If a renewal payment fails We retry 3 times over 7 days and email you each time. If payment still cannot be collected we may pause or cancel the subscription, and we will tell you when we do. We will never cancel a subscription for non-payment without notifying you.</p>",
+            "qa_1": "",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "term_12": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-12",
+            "number": "12",
+            "title": "Price changes",
+            "body": "<p>We may change subscription prices. If we do, we will email you at least 30Days before the new price applies to your subscription, so that you can skip, change or cancel beforehand. Continuing after that notice period means you accept the new price.</p>",
+            "qa_1": "[30 DAYS]",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "term_13": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-13",
+            "number": "13",
+            "title": "Returns, refunds and the guarantee",
+            "body": "<p>Subscription orders are covered by our standard Return Policy. Return shipping to our US warehouse is at the customer's cost. %%QA1%%</p>",
+            "qa_1": "[CONFIRM AND INSERT: whether the 100-day money-back guarantee applies to subscription orders; whether it applies to every order or the first only; and the condition of goods required for a refund.]",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        },
+        "term_14": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-14",
+            "number": "14",
+            "title": "Availability, changes to the program and these terms",
+            "body": "<p>Plans are offered subject to availability, and we may add, change or withdraw a plan. If we withdraw a plan you are enrolled in, we will notify you and no further charges will be made. We may update these terms; material changes will be notified by email at least 30 Days in advance and the \"last updated\" date above will change. These terms are governed by the laws of the States.</p>",
+            "qa_1": "[30 DAYS]",
+            "qa_2": "[CONFIRM GOVERNING LAW / STATE]",
+            "qa_3": ""
+          }
+        },
+        "term_15": {
+          "type": "term",
+          "settings": {
+            "anchor_id": "terms-15",
+            "number": "15",
+            "title": "Contact",
+            "body": "<p>Phoenix Gravity Water Filters hello@phoenixwaterfilters.com 1 (800) 917-0455. &nbsp;Phoenix Gravity Water Filters· 5900 Balcones Drive STE 100, Austin, TX 78731&nbsp;</p>",
+            "qa_1": "Phoenix Gravity Water Filters· 5900 Balcones Drive STE 100, Austin, TX 78731 ",
+            "qa_2": "",
+            "qa_3": ""
+          }
+        }
+      },
+      "block_order": [
+        "term_1",
+        "term_2",
+        "term_3",
+        "term_4",
+        "term_5",
+        "term_6",
+        "term_7",
+        "term_8",
+        "term_9",
+        "term_10",
+        "term_11",
+        "term_12",
+        "term_13",
+        "term_14",
+        "term_15"
+      ],
+      "settings": {
+        "eyebrow": "THE TERMS",
+        "heading": "Subscribe & Save Terms",
+        "anchor_id": "terms",
+        "background_color": "#f5f3f1",
+        "text_color": "#153a5b",
+        "desktop_padding": 40,
+        "mobile_padding": 24,
+        "last_updated": "October 15, 2026",
+        "terms_link": "/policies/terms-of-service",
+        "shipping_link": "/policies/shipping-policy",
+        "return_link": "/policies/refund-policy",
+        "privacy_link": "/policies/privacy-policy"
+      }
+    }
+  },
+  "order": [
+    "ss_hero",
+    "ss_definition",
+    "ss_plans",
+    "ss_video",
+    "ss_process",
+    "ss_benefits",
+    "ss_chooser",
+    "ss_intervals",
+    "ss_costs",
+    "ss_controls",
+    "ss_billing",
+    "ss_faq",
+    "ss_terms"
+  ]
+}

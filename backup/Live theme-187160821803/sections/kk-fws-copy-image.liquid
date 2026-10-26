@@ -1,0 +1,950 @@
+{%- comment -%}
+  KK FWS Copy Image — Figma `7985:294` (variants `7985:290`–`7985:293`).
+
+  Copy (eyebrow, heading, text, CTA and trust row) beside an optional image, with the copy on
+  the left or right. Every element is optional.
+
+  "Background" sets the section colour like the other sections. "Container background" draws
+  a rounded panel behind the content in the opposite colour, the way the Cards section does:
+  White section = light panel, Light = white panel, Dark = a lighter navy panel. The
+  container image sits inside that panel on the side away from the copy, fading into the
+  panel colour behind the copy (Figma `7985:254`). Without the panel it fades into the
+  section colour instead.
+
+  "Show social proof above the heading" (Figma `7809:8243`): the customer-proof row
+  (snippets/customer-proof.liquid) and the heading move out of the copy column into a centred
+  intro above both columns. The eyebrow stays in the column.
+{%- endcomment -%}
+
+{%- liquid
+  assign trust_blocks = section.blocks | where: 'type', 'trust'
+  assign background = section.settings.style | default: 'bg-white'
+  assign copy_position = section.settings.copy_position | default: 'left'
+
+  assign show_button = false
+  if section.settings.button_label != blank and section.settings.button_link != blank
+    assign show_button = true
+  endif
+
+  assign show_trust = false
+  for block in trust_blocks
+    if block.settings.text != blank
+      assign show_trust = true
+      break
+    endif
+  endfor
+
+  assign centred_intro = section.settings.show_social_proof
+
+  assign has_column_heading = false
+  if section.settings.heading != blank
+    unless centred_intro
+      assign has_column_heading = true
+    endunless
+  endif
+
+  assign has_copy = false
+  if section.settings.eyebrow != blank or has_column_heading or section.settings.text != blank or show_button or show_trust
+    assign has_copy = true
+  endif
+  if section.settings.subheading != blank or section.settings.text_2 != blank
+    assign has_copy = true
+  endif
+
+  if copy_position == 'right'
+    assign copy_reveal = 'data-kk-fws-reveal-right'
+    assign image_reveal = 'data-kk-fws-reveal-left'
+  else
+    assign copy_reveal = 'data-kk-fws-reveal-left'
+    assign image_reveal = 'data-kk-fws-reveal-right'
+  endif
+
+  capture modifiers
+    echo ' kk-fws-copy-image--' | append: background
+    echo ' kk-fws-copy-image--copy-' | append: copy_position
+    if section.settings.show_container
+      echo ' kk-fws-copy-image--container'
+    endif
+    if section.settings.container_image != blank
+      echo ' kk-fws-copy-image--decorated'
+    endif
+    if section.settings.image == blank
+      echo ' kk-fws-copy-image--no-image'
+    endif
+    if section.settings.image_contain
+      echo ' kk-fws-copy-image--image-contain'
+    endif
+    if centred_intro
+      echo ' kk-fws-copy-image--centred-intro'
+    endif
+  endcapture
+-%}
+
+<section
+  class="kk-fws-copy-image kk-fws-section{{ modifiers }}"
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handle }}"{% endif %}
+  {%- if section.settings.copy_max_width != blank or section.settings.image_max_width != blank %}
+    style="
+      {%- if section.settings.copy_max_width != blank %}--kk-fws-copy-image-copy-max: {{ section.settings.copy_max_width }}px;{% endif -%}
+      {%- if section.settings.image_max_width != blank %}--kk-fws-copy-image-image-max: {{ section.settings.image_max_width }}px;{% endif -%}
+    "
+  {%- endif %}
+>
+  <div class="kk-fws-copy-image__container kk-fws-container">
+    {%- if centred_intro -%}
+      <div class="kk-fws-copy-image__intro" data-kk-fws-reveal>
+        {%- render 'customer-proof', settings: section.settings, align: 'center' -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="kk-fws-copy-image__heading kk-fws-copy-image__heading--centred kk-fws-heading">
+            {{- section.settings.heading -}}
+          </h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="kk-fws-copy-image__panel">
+      {%- if section.settings.container_image != blank -%}
+        <div class="kk-fws-copy-image__backdrop" aria-hidden="true">
+          {{
+            section.settings.container_image
+            | image_url: width: 1800
+            | image_tag:
+              class: 'kk-fws-copy-image__backdrop-image',
+              widths: '600, 900, 1200, 1800',
+              sizes: '(min-width: 990px) 66vw, 100vw',
+              loading: 'lazy',
+              alt: ''
+          }}
+        </div>
+      {%- endif -%}
+
+      {%- if has_copy -%}
+        <div class="kk-fws-copy-image__copy" {{ copy_reveal }}>
+          {%- if section.settings.eyebrow != blank or has_column_heading -%}
+            <div class="kk-fws-copy-image__titles">
+              {%- if section.settings.eyebrow != blank -%}
+                <p class="kk-fws-copy-image__eyebrow">{{ section.settings.eyebrow }}</p>
+              {%- endif -%}
+              {%- if has_column_heading -%}
+                <h2 class="kk-fws-copy-image__heading kk-fws-heading">{{ section.settings.heading }}</h2>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} Mobile only: the image moves up under the heading. {%- endcomment -%}
+          {%- if section.settings.image != blank -%}
+            <div class="kk-fws-copy-image__media kk-fws-copy-image__media--mobile">
+              {{
+                section.settings.image
+                | image_url: width: 1100
+                | image_tag:
+                  class: 'kk-fws-copy-image__image',
+                  widths: '400, 700, 1100',
+                  sizes: '100vw',
+                  loading: 'lazy'
+              }}
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.text != blank -%}
+            <div class="kk-fws-copy-image__text">{{ section.settings.text }}</div>
+          {%- endif -%}
+
+          {%- if section.settings.subheading != blank or section.settings.text_2 != blank -%}
+            <div class="kk-fws-copy-image__more">
+              {%- if section.settings.subheading != blank -%}
+                <h3 class="kk-fws-copy-image__subheading">{{ section.settings.subheading }}</h3>
+              {%- endif -%}
+              {%- if section.settings.text_2 != blank -%}
+                <div class="kk-fws-copy-image__text">{{ section.settings.text_2 }}</div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- if show_button or show_trust -%}
+            <div class="kk-fws-copy-image__cta">
+              {%- if show_button and section.settings.button_link == '#addtocart' and product != blank -%}
+                {%- comment -%} A real add-to-cart form, as snippets/kk-fws-cta.liquid does. {%- endcomment -%}
+                {%- render 'basic-add-to-cart' -%}
+              {%- elsif show_button -%}
+                <a
+                  class="kk-fws-copy-image__button kk-fws-button{% if section.settings.button_style == 'secondary' %} kk-fws-button--secondary{% endif %}"
+                  href="{{ section.settings.button_link }}"
+                >
+                  {{- section.settings.button_label -}}
+                  {%- if section.settings.button_arrow -%}
+                    <img
+                      class="kk-fws-button__arrow"
+                      src="{{ 'kk-fws-icon-button-arrow.svg' | asset_url }}"
+                      alt=""
+                      width="22"
+                      height="22"
+                      aria-hidden="true"
+                      loading="lazy"
+                    >
+                  {%- endif -%}
+                </a>
+              {%- endif -%}
+
+              {%- if show_trust -%}
+                <ul class="kk-fws-copy-image__trust-list">
+                  {%- for block in trust_blocks -%}
+                    {%- if block.settings.text != blank -%}
+                      <li class="kk-fws-copy-image__trust" {{ block.shopify_attributes }}>
+                        <img
+                          class="kk-fws-copy-image__trust-icon"
+                          src="{{ 'wellness-hero-check.svg' | asset_url }}"
+                          alt=""
+                          width="20"
+                          height="20"
+                          aria-hidden="true"
+                          loading="lazy"
+                        >
+                        {{- block.settings.text -}}
+                      </li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.image != blank -%}
+        <div class="kk-fws-copy-image__media{% if has_copy %} kk-fws-copy-image__media--desktop{% endif %}" {{ image_reveal }}>
+          {{
+            section.settings.image
+            | image_url: width: 1400
+            | image_tag:
+              class: 'kk-fws-copy-image__image',
+              widths: '400, 700, 1000, 1400',
+              sizes: '(min-width: 990px) 655px, 100vw',
+              loading: 'lazy'
+          }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  /* Figma `7985:294`: 88px top and bottom, 1312px content. Image column 655 x 560, copy at
+     most 560 wide, the two pushed to opposite edges. */
+  .kk-fws-copy-image {
+    --kk-fws-copy-image-section: #ffffff;
+    --kk-fws-copy-image-panel-colour: var(--light);
+    --kk-fws-copy-image-eyebrow: var(--primary-600);
+    --kk-fws-copy-image-ink: var(--primary);
+    --kk-fws-copy-image-body: var(--primary-100);
+    /* What the container image fades into: the panel when it's shown, else the section. */
+    --kk-fws-copy-image-fade: var(--kk-fws-copy-image-section);
+
+    background: var(--kk-fws-copy-image-section);
+  }
+
+  .kk-fws-copy-image--bg-light {
+    --kk-fws-copy-image-section: var(--light);
+    --kk-fws-copy-image-panel-colour: #ffffff;
+  }
+
+  /* Figma `7985:293`: navy section, white copy, lighter blue eyebrow. */
+  .kk-fws-copy-image--bg-dark {
+    --kk-fws-copy-image-section: var(--primary-900);
+    --kk-fws-copy-image-panel-colour: #16224a;
+    --kk-fws-copy-image-eyebrow: #6e9bff;
+    --kk-fws-copy-image-ink: #ffffff;
+    --kk-fws-copy-image-body: #ffffff;
+  }
+
+  .kk-fws-copy-image--container {
+    --kk-fws-copy-image-fade: var(--kk-fws-copy-image-panel-colour);
+  }
+
+  .kk-fws-copy-image__container {
+    align-items: stretch;
+  }
+
+  /* Centred intro — Figma `7809:8243`: proof row 21px above a 52px heading (1050px wide),
+     40px above the columns. The badge outline matches the section colour. */
+  .kk-fws-copy-image__intro {
+    --customer-proof-ring: var(--kk-fws-copy-image-section);
+    --customer-proof-text: var(--kk-fws-copy-image-body);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.1rem;
+    max-width: 105rem;
+    margin: 0 auto 4rem;
+    text-align: center;
+  }
+
+  /* Balanced lines, so the Figma's two lines break where the design does. */
+  .kk-fws-copy-image__heading--centred {
+    --kk-fws-heading-size: 5.2rem;
+
+    text-wrap: balance;
+  }
+
+  .kk-fws-copy-image__panel {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8.8rem;
+  }
+
+  .kk-fws-copy-image--copy-right .kk-fws-copy-image__panel {
+    flex-direction: row-reverse;
+  }
+
+  /* Figma `7985:253`: the panel, 80px in from the sides. Only the panel is rounded and
+     clipped (for the container image); without it nothing is clipped, so the reveal slide,
+     the button shadow and the heading's first letter aren't cropped. */
+  .kk-fws-copy-image--container .kk-fws-copy-image__panel {
+    padding: 2rem 8rem;
+    overflow: hidden;
+    border-radius: 3.6rem;
+    background: var(--kk-fws-copy-image-panel-colour);
+  }
+
+  .kk-fws-copy-image--container:not(.kk-fws-copy-image--decorated) .kk-fws-copy-image__panel {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+
+  /* Container image — Figma `7985:254`: the right 868 of the 1312 panel, fading in from the
+     panel colour (solid to 16.6%, clear by 57.8%). Mirrored when the copy is on the right. */
+  .kk-fws-copy-image__backdrop {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 66.16%;
+    pointer-events: none;
+  }
+
+  .kk-fws-copy-image--copy-right .kk-fws-copy-image__backdrop {
+    right: auto;
+    left: 0;
+  }
+
+  .kk-fws-copy-image__backdrop-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: right center;
+  }
+
+  /* Anchor the image to the side away from the copy, so cropping eats into the faded side. */
+  .kk-fws-copy-image--copy-right .kk-fws-copy-image__backdrop-image {
+    object-position: left center;
+  }
+
+  .kk-fws-copy-image__backdrop::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      var(--kk-fws-copy-image-fade) 16.585%,
+      transparent 57.805%
+    );
+  }
+
+  .kk-fws-copy-image--copy-right .kk-fws-copy-image__backdrop::after {
+    background: linear-gradient(
+      to left,
+      var(--kk-fws-copy-image-fade) 16.585%,
+      transparent 57.805%
+    );
+  }
+
+  .kk-fws-copy-image__copy {
+    position: relative;
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.2rem;
+    max-width: var(--kk-fws-copy-image-copy-max, calc(50% - 4.4rem));
+    min-width: 0;
+  }
+
+  /* With a container image the copy sets the panel height (720px in the Figma). */
+  .kk-fws-copy-image--decorated .kk-fws-copy-image__copy {
+    padding: 15.2rem 0;
+  }
+
+  .kk-fws-copy-image__titles {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .kk-fws-copy-image__eyebrow {
+    margin: 0;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    letter-spacing: 0.18rem;
+    text-transform: uppercase;
+    color: var(--kk-fws-copy-image-eyebrow);
+  }
+
+  .kk-fws-copy-image__heading {
+    color: var(--kk-fws-copy-image-ink);
+  }
+
+  .kk-fws-copy-image__text,
+  .kk-fws-copy-image__text p {
+    margin: 0;
+    font-family: 'Value Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.8rem;
+    line-height: 1.55;
+    color: var(--kk-fws-copy-image-body);
+  }
+
+  .kk-fws-copy-image__text p + p {
+    margin-top: 1.6rem;
+  }
+
+  .kk-fws-copy-image__text a {
+    color: var(--kk-fws-copy-image-eyebrow);
+  }
+
+  /* Optional second block — Figma `7809:10057`: 26px subheading, 22px above its text, the
+     block ~29px under the first text (the copy's 22px gap plus this margin). */
+  .kk-fws-copy-image__more {
+    display: flex;
+    flex-direction: column;
+    gap: 2.2rem;
+    width: 100%;
+    margin-top: 0.7rem;
+  }
+
+  .kk-fws-copy-image__subheading {
+    margin: 0;
+    padding: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.6rem;
+    line-height: 1.3;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--kk-fws-copy-image-ink);
+  }
+
+  /* Button and trust row — Figma `7985:373`: 14px apart, trust items 36px apart. */
+  .kk-fws-copy-image__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.4rem;
+  }
+
+  .kk-fws-copy-image__trust-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem 3.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-copy-image__trust {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 1.8rem;
+    line-height: 1.2;
+    color: var(--kk-fws-copy-image-ink);
+  }
+
+  .kk-fws-copy-image__trust-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  /* Image — Figma `7985:392`: 655 x 560 shape, 32px corners, soft navy drop shadow. Copy and
+     image share the row equally unless a max width is set for either column. Unset, each
+     column caps at half the row (less half the 88px gap), so copy without an image keeps a
+     readable line length instead of running the full width. */
+  .kk-fws-copy-image__media {
+    position: relative;
+    flex: 1 1 0;
+    max-width: var(--kk-fws-copy-image-image-max, calc(50% - 4.4rem));
+    min-width: 0;
+    border-radius: 3.2rem;
+    filter: drop-shadow(0 2.4rem 6rem rgba(11, 22, 56, 0.1));
+    overflow: hidden;
+  }
+
+  .kk-fws-copy-image__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  /* "Contain image": letterbox inside the frame instead of cropping, e.g. a cut-out product
+     shot. The frame keeps its desktop min-height, so the image centres in it. */
+  .kk-fws-copy-image--image-contain .kk-fws-copy-image__image {
+    object-fit: contain;
+  }
+
+  @media (min-width: 990px) {
+    .kk-fws-copy-image__image {
+      min-height: 56rem;
+       
+    }
+  }
+  /* The copy of the image that sits under the heading once the columns stack (below 990px). */
+  .kk-fws-copy-image__media--mobile {
+    display: none;
+  }
+
+  /* Copy only: keep it on its chosen side (row-reverse flips flex-start for Right). */
+  .kk-fws-copy-image--no-image .kk-fws-copy-image__panel {
+    justify-content: flex-start;
+  }
+
+  /* Tablet: stack, the image under the heading. With no image, the container image drops to
+     the bottom of the panel and fades upward into it. */
+  @media (max-width: 989px) {
+    .kk-fws-copy-image__panel,
+    .kk-fws-copy-image--copy-right .kk-fws-copy-image__panel {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 4.4rem;
+    }
+
+    .kk-fws-copy-image--container .kk-fws-copy-image__panel,
+    .kk-fws-copy-image--container:not(.kk-fws-copy-image--decorated) .kk-fws-copy-image__panel {
+      padding: 4.8rem 4rem;
+      border-radius: 2.8rem;
+    }
+
+    .kk-fws-copy-image--decorated .kk-fws-copy-image__panel {
+      padding-bottom: 30rem;
+    }
+
+    .kk-fws-copy-image--decorated .kk-fws-copy-image__copy {
+      padding: 0;
+    }
+
+    .kk-fws-copy-image__backdrop,
+    .kk-fws-copy-image--copy-right .kk-fws-copy-image__backdrop {
+      top: auto;
+      right: 0;
+      left: 0;
+      width: 100%;
+      height: 36rem;
+    }
+
+    .kk-fws-copy-image__backdrop::after,
+    .kk-fws-copy-image--copy-right .kk-fws-copy-image__backdrop::after {
+      background: linear-gradient(to bottom, var(--kk-fws-copy-image-fade) 0%, transparent 45%);
+    }
+
+    .kk-fws-copy-image__copy {
+      max-width: none;
+    }
+
+    .kk-fws-copy-image__media {
+      flex-basis: auto;
+      max-width: none;
+      border-radius: 2.4rem;
+    }
+
+    /* Stacked, the image moves up under the heading: the copy inside the copy column shows,
+       the one beside it hides (it stays when there's no copy to sit in). */
+    .kk-fws-copy-image__media--mobile {
+      display: block;
+      align-self: stretch;
+      flex: none;
+      width: 100%;
+      filter: none;
+    }
+
+    .kk-fws-copy-image__media--desktop {
+      display: none;
+    }
+
+    /* Container image and image: the image wins while stacked, the container image hides. */
+    .kk-fws-copy-image--decorated:not(.kk-fws-copy-image--no-image) .kk-fws-copy-image__backdrop {
+      display: none;
+    }
+
+    .kk-fws-copy-image--decorated:not(.kk-fws-copy-image--no-image) .kk-fws-copy-image__panel {
+      padding-bottom: 0;
+    }
+
+    .kk-fws-copy-image--container.kk-fws-copy-image--decorated:not(.kk-fws-copy-image--no-image) .kk-fws-copy-image__panel {
+      padding-bottom: 4.8rem;
+    }
+  }
+
+  /* Mobile: left-aligned copy, full-width button. */
+  @media (max-width: 749px) {
+    .kk-fws-copy-image__intro {
+      gap: 1.6rem;
+      margin-bottom: 3.2rem;
+    }
+
+    .kk-fws-copy-image--container .kk-fws-copy-image__panel,
+    .kk-fws-copy-image--container:not(.kk-fws-copy-image--decorated) .kk-fws-copy-image__panel {
+      padding: 4rem 2rem;
+      border-radius: 2.4rem;
+    }
+
+    .kk-fws-copy-image--decorated .kk-fws-copy-image__panel {
+      padding-bottom: 24rem;
+    }
+
+    .kk-fws-copy-image__backdrop,
+    .kk-fws-copy-image--copy-right .kk-fws-copy-image__backdrop {
+      height: 28rem;
+    }
+
+    /* The side anchoring stops at tablet; mobile crops from the centre. */
+    .kk-fws-copy-image__backdrop-image,
+    .kk-fws-copy-image--copy-right .kk-fws-copy-image__backdrop-image {
+      object-position: center;
+    }
+
+    .kk-fws-copy-image__copy {
+      gap: 1.8rem;
+    }
+
+    .kk-fws-copy-image__text,
+    .kk-fws-copy-image__text p {
+      font-size: 1.6rem;
+    }
+
+    .kk-fws-copy-image__cta {
+      align-items: stretch;
+      width: 100%;
+    }
+
+    .kk-fws-copy-image__trust-list {
+      justify-content: center;
+      gap: 0.8rem 1.8rem;
+    }
+
+    .kk-fws-copy-image__trust {
+      font-size: 1.5rem;
+    }
+
+    .kk-fws-copy-image__media {
+      border-radius: 2rem;
+    }
+
+    .kk-fws-copy-image--container.kk-fws-copy-image--decorated:not(.kk-fws-copy-image--no-image) .kk-fws-copy-image__panel {
+      padding-bottom: 4rem;
+    }
+
+    /* Container image, no image — Figma `7809:11513`: 44px / 52px section padding, the
+       container image as an unfaded 280px photo across the top of the 26px-round panel,
+       then left-aligned copy 22px in, 28px under the trust row. */
+    .kk-fws-copy-image--decorated.kk-fws-copy-image--no-image {
+      --kk-fws-button-size-sm: 2rem;
+    }
+
+    .kk-fws-copy-image--decorated.kk-fws-copy-image--no-image.kk-fws-section {
+      padding: 4.4rem 0 5.2rem;
+    }
+
+    .kk-fws-copy-image--decorated.kk-fws-copy-image--no-image .kk-fws-copy-image__panel {
+      gap: 2rem;
+      padding: 0;
+    }
+
+    .kk-fws-copy-image--container.kk-fws-copy-image--decorated.kk-fws-copy-image--no-image .kk-fws-copy-image__panel {
+      padding: 0 0 2.8rem;
+      border-radius: 2.6rem;
+    }
+
+    .kk-fws-copy-image--decorated.kk-fws-copy-image--no-image .kk-fws-copy-image__backdrop {
+      position: relative;
+      inset: auto;
+      flex: none;
+      width: 100%;
+      height: 28rem;
+    }
+
+    /* Without the panel the photo is rounded on its own. */
+    .kk-fws-copy-image--decorated.kk-fws-copy-image--no-image:not(.kk-fws-copy-image--container) .kk-fws-copy-image__backdrop {
+      border-radius: 2rem;
+      overflow: hidden;
+    }
+
+    .kk-fws-copy-image--decorated.kk-fws-copy-image--no-image .kk-fws-copy-image__backdrop::after {
+      content: none;
+    }
+
+    .kk-fws-copy-image--decorated.kk-fws-copy-image--no-image .kk-fws-copy-image__copy {
+      gap: 2.2rem;
+    }
+
+    .kk-fws-copy-image--container.kk-fws-copy-image--decorated.kk-fws-copy-image--no-image .kk-fws-copy-image__copy {
+      padding: 0 2.2rem;
+    }
+
+    /* 10px eyebrow to heading, 13px heading to text (the copy's 22px gap less 9). */
+    .kk-fws-copy-image--decorated.kk-fws-copy-image--no-image .kk-fws-copy-image__titles {
+      gap: 1rem;
+      margin-bottom: -0.9rem;
+    }
+
+    .kk-fws-copy-image--decorated.kk-fws-copy-image--no-image .kk-fws-copy-image__text,
+    .kk-fws-copy-image--decorated.kk-fws-copy-image--no-image .kk-fws-copy-image__text p {
+      font-size: 1.7rem;
+    }
+
+    .kk-fws-copy-image--decorated.kk-fws-copy-image--no-image .kk-fws-copy-image__cta {
+      gap: 1.2rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Copy Image",
+  "tag": "div",
+  "class": "section-kk-fws-copy-image",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Background",
+      "default": "bg-white",
+      "options": [
+        {
+          "label": "White",
+          "value": "bg-white"
+        },
+        {
+          "label": "Light",
+          "value": "bg-light"
+        },
+        {
+          "label": "Dark",
+          "value": "bg-dark"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "copy_position",
+      "label": "Copy position",
+      "default": "left",
+      "options": [
+        {
+          "label": "Left",
+          "value": "left"
+        },
+        {
+          "label": "Right",
+          "value": "right"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_container",
+      "label": "Container background",
+      "info": "A rounded panel behind the content in the opposite colour to the section background.",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "container_image",
+      "label": "Container background image",
+      "info": "Fills the side away from the copy and fades in behind it. About 1740 x 1440px."
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor id",
+      "info": "Optional, without the '#'. Link to it as #your-id."
+    },
+    {
+      "type": "header",
+      "content": "Social proof",
+      "info": "When on, the social proof and the heading sit centred above both columns."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_proof",
+      "label": "Show social proof above the heading",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_avatars",
+      "label": "Show customer photos",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "avatars",
+      "label": "Customer photos",
+      "info": "One image of the overlapping photos, about 360 × 96px. Leave empty to use the default photos."
+    },
+    {
+      "type": "text",
+      "id": "avatar_count",
+      "label": "Count badge",
+      "default": "700+",
+      "info": "Leave empty to hide the badge."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stars",
+      "label": "Show stars",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "proof_text",
+      "label": "Social proof text",
+      "default": "Trusted by over 700+ Families"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "50 years in the making"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Most Advanced Water Filter Ever"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>The Phoenix Gravity Water Filter represents the pinnacle of our 50 years of dedication to research and development. Crafted to redefine your water experience, it embodies both elegance and efficiency.</p>"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "info": "Optional smaller heading under the text, e.g. \"How does it work?\"."
+    },
+    {
+      "type": "richtext",
+      "id": "text_2",
+      "label": "Second text",
+      "info": "Optional text under the subheading."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Shown at 655 x 560 proportions. Set the alt text on the image in Files."
+    },
+    {
+      "type": "checkbox",
+      "id": "image_contain",
+      "label": "Contain image",
+      "default": false,
+      "info": "Off: the image fills the frame and is cropped (cover). On: the whole image shows, without cropping (contain)."
+    },
+    {
+      "type": "header",
+      "content": "Column widths",
+      "info": "Desktop only. Leave blank and each column is at most half the width: two equal columns with an 88px gap (44px when stacked), and copy without an image stays half width."
+    },
+    {
+      "type": "number",
+      "id": "copy_max_width",
+      "label": "Copy max width (px)",
+      "info": "E.g. 560."
+    },
+    {
+      "type": "number",
+      "id": "image_max_width",
+      "label": "Image max width (px)",
+      "info": "E.g. 655."
+    },
+    {
+      "type": "header",
+      "content": "Call to action",
+      "info": "The button shows only when it has both a label and a link. Add \"Trust item\" blocks for the row underneath."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_arrow",
+      "label": "Show arrow on button",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "primary",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Copy Image",
+      "blocks": [
+        {
+          "type": "trust",
+          "settings": { "text": "100-day trial" }
+        },
+        {
+          "type": "trust",
+          "settings": { "text": "Cancel any time" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

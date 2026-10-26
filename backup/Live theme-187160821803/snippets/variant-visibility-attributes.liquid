@@ -1,0 +1,23 @@
+{% doc %}
+  Renders visibility attributes for a section or block's allowed variants.
+  @param {string} [variant_ids] - Comma-separated allowed variant IDs.
+  @param {string} [current_variant_id] - Currently selected variant ID.
+{% enddoc %}
+{%- liquid
+  assign allowed_ids = variant_ids | default: '' | split: ','
+  assign selected_id = current_variant_id | append: ''
+  assign has_allowed_ids = false
+  assign matches_variant = false
+  for allowed_id in allowed_ids
+    assign trimmed_id = allowed_id | strip
+    if trimmed_id != blank
+      assign has_allowed_ids = true
+      if trimmed_id == selected_id
+        assign matches_variant = true
+      endif
+    endif
+  endfor
+-%}
+data-variant-visibility-item
+data-variant-visibility-ids="{{ variant_ids | escape }}"
+{% if has_allowed_ids and matches_variant == false %}hidden{% endif %}

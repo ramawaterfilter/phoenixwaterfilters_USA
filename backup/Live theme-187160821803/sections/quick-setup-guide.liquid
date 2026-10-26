@@ -1,0 +1,139 @@
+{%- liquid
+  assign current_variant_id = product.selected_or_first_available_variant.id | append: ''
+  assign steps = section.blocks | where: 'type', 'step'
+  assign tips = section.blocks | where: 'type', 'tip'
+  assign video_embed = section.settings.video_embed | strip
+-%}
+
+<variant-visibility-scope
+  current-variant-id="{{ current_variant_id }}"
+  {% render 'variant-visibility-attributes', variant_ids: section.settings.variant_ids, current_variant_id: current_variant_id %}
+>
+  <section class="quick-setup" aria-labelledby="quick-setup-heading-{{ section.id }}">
+    <div class="quick-setup__inner">
+      <figure class="quick-setup__figure">
+        {% if section.settings.image_label != blank %}
+          <span class="quick-setup__label">{{ section.settings.image_label | escape }}</span>
+        {% endif %}
+        {% if video_embed != blank %}
+          <div class="quick-setup__video">{{ video_embed }}</div>
+        {% elsif section.settings.image != blank %}
+          {{ section.settings.image | image_url: width: 1400 | image_tag: widths: '320, 480, 640, 960, 1400', sizes: '(min-width: 1328px) 615px, (min-width: 990px) calc((100vw - 98px) / 2), calc(100vw - 56px)', loading: 'lazy', class: 'quick-setup__image' }}
+        {% else %}
+          {{ 'image' | placeholder_svg_tag: 'quick-setup__placeholder' }}
+        {% endif %}
+        {% if section.settings.image_caption != blank %}
+          <figcaption>{{ section.settings.image_caption | escape }}</figcaption>
+        {% endif %}
+      </figure>
+
+      <div class="quick-setup__content">
+        {% if section.settings.eyebrow != blank %}
+          <p class="quick-setup__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {% endif %}
+        <h2 id="quick-setup-heading-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+        {% if steps.size > 0 %}
+          <ol class="quick-setup__steps">
+            {% for block in steps %}
+              <li {{ block.shopify_attributes }}><strong>{{ block.settings.title | escape }}</strong> {{ block.settings.description | escape }}</li>
+            {% endfor %}
+          </ol>
+        {% endif %}
+        {% if tips.size > 0 %}
+          <div class="quick-setup__tips">
+            {% for block in tips %}
+              <div class="quick-setup__tip" {{ block.shopify_attributes }}>
+                <h3>{{ block.settings.title | escape }}</h3>
+                <p>{{ block.settings.description | escape }}</p>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</variant-visibility-scope>
+
+<script src="{{ 'variant-visibility.js' | asset_url }}" defer></script>
+
+{% stylesheet %}
+  .section-quick-setup > variant-visibility-scope[hidden],
+  .section-quick-setup:has(> variant-visibility-scope[hidden]) { display: none !important; }
+  .quick-setup { padding: 68px 24px; background: #0c2842; color: #dce7f0; font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.5; }
+  .quick-setup *, .quick-setup *::before, .quick-setup *::after { box-sizing: border-box; }
+  .quick-setup__inner { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; gap: 50px; max-width: 1280px; margin-inline: auto; }
+  .quick-setup__figure { display: flex; flex-direction: column; gap: 12px; min-width: 0; margin: 0; padding: 10px; border: 1px dashed #2c526f; border-radius: 16px; background: linear-gradient(135deg, #193a54, #0c2842); overflow-wrap: anywhere; }
+  .quick-setup__label { align-self: flex-start; max-width: 100%; padding: 3px 8px; border-radius: 5px; background: #f5b316; color: #0c2842; font-size: 10px; line-height: 1.5; }
+  .quick-setup__image, .quick-setup__placeholder { display: block; width: 100%; height: auto; aspect-ratio: 2.5; object-fit: contain; }
+  .quick-setup__placeholder { fill: #527087; }
+  .quick-setup__video { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 6px; }
+  .quick-setup__video iframe, .quick-setup__video video, .quick-setup__video embed, .quick-setup__video object { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-width: 100%; border: 0; }
+  .quick-setup__figure figcaption { padding: 5px 8px; border-radius: 5px; background: #29445c; color: #dce7f0; font-size: 10px; }
+  .quick-setup__content { min-width: 0; overflow-wrap: anywhere; }
+  .quick-setup .quick-setup__eyebrow { margin: 0 0 8px; color: #ffba00; font-family: 'Inter Bold', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+  .quick-setup h2 { margin: 0 0 14px; color: #fff; font-family: 'Inter Bold', sans-serif; font-size: clamp(28px, 2.5vw, 36px); font-weight: 700; line-height: 1.2; letter-spacing: -0.6px; }
+  .quick-setup__steps { margin: 0; padding-left: 18px; list-style: decimal; }
+  .quick-setup__steps li { margin: 0 0 8px; padding: 0; color: inherit; font-size: 14px; line-height: 1.5; }
+  .quick-setup__steps li:last-child { margin-bottom: 0; }
+  .quick-setup__steps strong { color: #fff; font-family: 'Inter Bold', sans-serif; font-weight: 700; }
+  .quick-setup__tips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 22px; }
+  .quick-setup__tip { padding: 13px; border: 1px solid #3c5368; border-radius: 10px; background: #1c3851; }
+  .quick-setup__tip h3 { margin: 0 0 4px; color: #ffba00; font-family: 'Inter Bold', sans-serif; font-size: 12px; font-weight: 700; line-height: 1.5; }
+  .quick-setup__tip p { margin: 0; color: inherit; font-size: 12px; line-height: 1.5; }
+  @media (max-width: 989px) {
+    .quick-setup { padding: 40px 20px; }
+    .quick-setup__inner { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+    .quick-setup__image, .quick-setup__placeholder { aspect-ratio: 2; max-height: 400px; }
+  }
+  @media (max-width: 600px) {
+    .quick-setup { padding: 32px 16px; }
+    .quick-setup__tips { grid-template-columns: minmax(0, 1fr); }
+    .quick-setup__figure { border-radius: 12px; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Quick setup guide",
+  "class": "section-quick-setup",
+  "settings": [
+    { "type": "textarea", "id": "variant_ids", "label": "Variant IDs", "info": "Comma-separated variant IDs. Leave blank to show everywhere. With IDs entered, show only for a matching selected product variant, including when the variant changes." },
+    { "type": "image_picker", "id": "image", "label": "Setup image" },
+    { "type": "textarea", "id": "video_embed", "label": "Video embed code", "info": "Paste the embed code from your video provider, including an iframe title for accessibility. Replaces the image when filled in. Leave blank to use the setup image." },
+    { "type": "text", "id": "image_label", "label": "Image label", "default": "VIDEO · Prime & install in 90 seconds" },
+    { "type": "text", "id": "image_caption", "label": "Image caption", "default": "Real hands, real kitchen. Captioned." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Set up right the first time" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Ready in About 10 Minutes" }
+  ],
+  "blocks": [
+    {
+      "type": "step", "name": "Setup step",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Prime each element." },
+        { "type": "textarea", "id": "description", "label": "Description" }
+      ]
+    },
+    {
+      "type": "tip", "name": "Troubleshooting tip", "limit": 3,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Flow too slow?" },
+        { "type": "textarea", "id": "description", "label": "Description" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quick setup guide",
+      "blocks": [
+        { "type": "step", "settings": { "title": "Prime each element.", "description": "Follow the priming steps on your instruction card for at least 3 minutes. This flushes out harmless carbon dust." } },
+        { "type": "step", "settings": { "title": "Install hand-tight.", "description": "Push the stem through the upper chamber, washer on top, then turn the wingnut snug by hand. No tools needed." } },
+        { "type": "step", "settings": { "title": "Seal spare holes.", "description": "Using fewer filters than your system has holes? Fit the hole blockers." } },
+        { "type": "step", "settings": { "title": "Discard the first 2–4 batches if cloudy.", "description": "That's normal carbon dust. It's harmless and clears fast." } },
+        { "type": "tip", "settings": { "title": "Flow too slow?", "description": "Air may be trapped. Re-prime the elements. Well water with iron can clog carbon sooner." } },
+        { "type": "tip", "settings": { "title": "Flow too fast?", "description": "Check that the washer sits flat and the wingnut is snug." } },
+        { "type": "tip", "settings": { "title": "Water between chambers?", "description": "The lower chamber is full. Check it before you top up." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

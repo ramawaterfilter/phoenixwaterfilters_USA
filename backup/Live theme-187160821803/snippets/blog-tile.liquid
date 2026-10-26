@@ -1,0 +1,80 @@
+{%- comment -%}
+  Article card, styled to sit with the collection product cards (snippets/collection-card.liquid):
+  same grey card, inset white image panel and type scale. No Figma design exists for it.
+
+  - Category: the article's `cat-` tag, as the navy pill on the image (the product card's badge).
+  - Meta line: the publish date, where the product card has its rating line.
+  - Title, then the excerpt when the article has one (clamped to three lines).
+  - "Read article" in the product card's button type, as a link rather than a filled button.
+
+  Styles live in assets/blog-tile.css. Used by Blog Index, Blog Related and Search Results.
+
+  Params:
+  - article (required)
+{%- endcomment -%}
+
+{%- liquid
+  assign article_cat = ''
+  for tag in article.tags
+    if tag.handle contains 'cat-'
+      assign article_cat = tag | remove_first: 'cat-' | remove_first: 'Cat-' | replace: '-', ' '
+    endif
+  endfor
+-%}
+
+{{ 'blog-tile.css' | asset_url | stylesheet_tag }}
+
+<a href="{{ article.url }}" class="article-card">
+  <div
+    class="article-card__media"
+    {% if article.image %}style="--article-card-ratio: {{ article.image.aspect_ratio }};"{% endif %}
+  >
+    {%- if article_cat != blank -%}
+      <span class="article-card__badge">{{ article_cat }}</span>
+    {%- endif -%}
+
+    {%- if article.image -%}
+      {{
+        article.image
+        | image_url: width: 1000
+        | image_tag:
+          class: 'article-card__image',
+          widths: '400, 600, 800, 1000',
+          sizes: '(min-width: 990px) 400px, (min-width: 750px) 50vw, 100vw',
+          loading: 'lazy',
+          alt: article.image.alt | default: article.title
+      }}
+    {%- else -%}
+      {{ 'image' | placeholder_svg_tag: 'article-card__image article-card__image--placeholder' }}
+    {%- endif -%}
+  </div>
+
+  <div class="article-card__body">
+    <div class="article-card__info">
+      <p class="article-card__meta">
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+          {{- article.published_at | date: '%B %-d, %Y' -}}
+        </time>
+      </p>
+
+      <h3 class="article-card__title">{{ article.title }}</h3>
+
+      {%- if article.excerpt != blank -%}
+        <p class="article-card__excerpt">{{ article.excerpt | strip_html | truncatewords: 30 }}</p>
+      {%- endif -%}
+    </div>
+
+    <span class="article-card__link">
+      Read article
+      <img
+        class="article-card__link-icon"
+        src="{{ 'blog-tile-icon-arrow.svg' | asset_url }}"
+        alt=""
+        width="18"
+        height="18"
+        aria-hidden="true"
+        loading="lazy"
+      >
+    </span>
+  </div>
+</a>

@@ -1,0 +1,726 @@
+{%- liquid
+  assign link_blocks = section.blocks | where: 'type', 'link'
+  assign start_count = 0
+  assign end_count = 0
+  for block in link_blocks
+    if block.settings.label == blank
+      continue
+    endif
+    if block.settings.position == 'end'
+      assign end_count = end_count | plus: 1
+    else
+      assign start_count = start_count | plus: 1
+    endif
+  endfor
+  assign show_drawer = false
+  if section.settings.show_menu_icon and start_count > 0
+    assign show_drawer = true
+  endif
+  assign drawer_id = 'kk-fws-header-drawer-' | append: section.id
+-%}
+
+<div
+  class="kk-fws-header"
+  style="
+    --kk-fws-header-background: {{ section.settings.background_color }};
+    --kk-fws-header-text: {{ section.settings.text_color }};
+    --kk-fws-header-divider: {{ section.settings.divider_color }};
+  "
+  data-kk-fws-header
+>
+  <div class="kk-fws-header__container">
+    <div class="kk-fws-header__group kk-fws-header__group--start">
+      {%- if section.settings.show_menu_icon -%}
+        {%- if show_drawer -%}
+          <button
+            class="kk-fws-header__menu kk-fws-header__menu--toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="{{ drawer_id }}"
+            aria-label="{{ section.settings.menu_label | escape }}"
+            data-kk-fws-header-toggle
+          >
+            <img
+              class="kk-fws-header__menu-icon"
+              src="{{ 'kk-fws-icon-menu.svg' | asset_url }}"
+              alt=""
+              width="18"
+              height="16"
+              loading="eager"
+            >
+          </button>
+        {%- else -%}
+          <span class="kk-fws-header__menu" aria-hidden="true">
+            <img
+              class="kk-fws-header__menu-icon"
+              src="{{ 'kk-fws-icon-menu.svg' | asset_url }}"
+              alt=""
+              width="18"
+              height="16"
+              loading="eager"
+            >
+          </span>
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if start_count > 0 -%}
+        <nav class="kk-fws-header__nav kk-fws-header__nav--start" aria-label="{{ section.settings.nav_label_start | escape }}">
+          <ul class="kk-fws-header__list">
+            {%- for block in link_blocks -%}
+              {%- if block.settings.position != 'end' and block.settings.label != blank -%}
+                <li class="kk-fws-header__item" {{ block.shopify_attributes }}>
+                  <a class="kk-fws-header__link" href="{{ block.settings.link | default: '#' }}">
+                    {{- block.settings.label -}}
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- endif -%}
+    </div>
+
+    <div class="kk-fws-header__brand">
+      {%- if section.settings.logo != blank -%}
+        <a class="kk-fws-header__brand-link" href="{{ section.settings.brand_link | default: routes.root_url }}">
+          {{
+            section.settings.logo
+            | image_url: width: 600
+            | image_tag: class: 'kk-fws-header__logo', loading: 'eager', alt: section.settings.brand_text
+          }}
+        </a>
+      {%- elsif section.settings.brand_text != blank -%}
+        <a class="kk-fws-header__brand-link" href="{{ section.settings.brand_link | default: routes.root_url }}">
+          <span class="kk-fws-header__wordmark">{{ section.settings.brand_text }}</span>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="kk-fws-header__group kk-fws-header__group--end">
+      {%- if end_count > 0 -%}
+        <nav class="kk-fws-header__nav kk-fws-header__nav--end" aria-label="{{ section.settings.nav_label_end | escape }}">
+          <ul class="kk-fws-header__list">
+            {%- for block in link_blocks -%}
+              {%- if block.settings.position == 'end' and block.settings.label != blank -%}
+                <li class="kk-fws-header__item" {{ block.shopify_attributes }}>
+                  <a class="kk-fws-header__link" href="{{ block.settings.link | default: '#' }}">
+                    {{- block.settings.label -}}
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if show_drawer -%}
+    <div
+      class="kk-fws-header__drawer"
+      id="{{ drawer_id }}"
+      hidden
+      data-kk-fws-header-drawer
+    >
+      <button
+        class="kk-fws-header__drawer-close"
+        type="button"
+        aria-label="{{ section.settings.menu_close_label | escape }}"
+        data-kk-fws-header-close
+      >
+        <img
+          class="kk-fws-header__drawer-close-icon"
+          src="{{ 'kk-fws-icon-close.svg' | asset_url }}"
+          alt=""
+          width="18"
+          height="18"
+          loading="lazy"
+        >
+      </button>
+
+      <nav class="kk-fws-header__drawer-nav" aria-label="{{ section.settings.nav_label_start | escape }}">
+        <ul class="kk-fws-header__drawer-list">
+          {%- for block in link_blocks -%}
+            {%- if block.settings.position != 'end' and block.settings.label != blank -%}
+              <li class="kk-fws-header__drawer-item" {{ block.shopify_attributes }}>
+                <a class="kk-fws-header__drawer-link" href="{{ block.settings.link | default: '#' }}">
+                  {{- block.settings.label -}}
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </nav>
+    </div>
+  {%- endif -%}
+</div>
+
+{%- if show_drawer -%}
+  <script>
+    (function () {
+      var root = document.getElementById('shopify-section-{{ section.id }}');
+      if (!root) return;
+
+      var header = root.querySelector('[data-kk-fws-header]');
+      var toggle = root.querySelector('[data-kk-fws-header-toggle]');
+      var drawer = root.querySelector('[data-kk-fws-header-drawer]');
+      var closeBtn = root.querySelector('[data-kk-fws-header-close]');
+      if (!header || !toggle || !drawer) return;
+
+      var OPEN_CLASS = 'kk-fws-header__drawer--open';
+      var HEADER_OPEN_CLASS = 'kk-fws-header--drawer-open';
+      var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      var mobileQuery = window.matchMedia('(max-width: 749px)');
+      var openTimer = null;
+      var closeTimer = null;
+
+      function duration() {
+        return motionQuery.matches ? 0 : 200;
+      }
+
+      function isOpen() {
+        return toggle.getAttribute('aria-expanded') === 'true';
+      }
+
+      function focusables() {
+        return Array.prototype.filter.call(
+          drawer.querySelectorAll('a[href], button:not([disabled])'),
+          function (el) {
+            return el.offsetWidth > 0 || el.offsetHeight > 0;
+          }
+        );
+      }
+
+      function open() {
+        if (isOpen()) return;
+        window.clearTimeout(closeTimer);
+        drawer.hidden = false;
+        toggle.setAttribute('aria-expanded', 'true');
+        header.classList.add(HEADER_OPEN_CLASS);
+        openTimer = window.setTimeout(function () {
+          drawer.classList.add(OPEN_CLASS);
+        }, 0);
+        var first = closeBtn || focusables()[0];
+        if (first) first.focus();
+      }
+
+      function close(returnFocus) {
+        if (!isOpen()) return;
+        window.clearTimeout(openTimer);
+        drawer.classList.remove(OPEN_CLASS);
+        toggle.setAttribute('aria-expanded', 'false');
+        header.classList.remove(HEADER_OPEN_CLASS);
+        closeTimer = window.setTimeout(function () {
+          drawer.hidden = true;
+        }, duration());
+        if (returnFocus) toggle.focus();
+      }
+
+      toggle.addEventListener('click', function () {
+        if (isOpen()) {
+          close(false);
+        } else {
+          open();
+        }
+      });
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
+          close(true);
+        });
+      }
+
+      drawer.addEventListener('keydown', function (event) {
+        if (event.key !== 'Tab') return;
+        var items = focusables();
+        if (!items.length) return;
+        var first = items[0];
+        var last = items[items.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      });
+
+      root.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' || event.key === 'Esc') {
+          if (isOpen()) {
+            event.preventDefault();
+            close(true);
+          }
+        }
+      });
+
+      drawer.addEventListener('click', function (event) {
+        if (event.target.closest('.kk-fws-header__drawer-link')) close(false);
+      });
+
+      document.addEventListener('click', function (event) {
+        if (!isOpen()) return;
+        if (header.contains(event.target)) return;
+        close(false);
+      });
+
+      function handleViewport() {
+        if (!mobileQuery.matches) close(false);
+      }
+
+      if (mobileQuery.addEventListener) {
+        mobileQuery.addEventListener('change', handleViewport);
+      } else if (mobileQuery.addListener) {
+        mobileQuery.addListener(handleViewport);
+      }
+
+      document.addEventListener('shopify:section:unload', function (event) {
+        if (event.target === root) close(false);
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  .kk-fws-header {
+    position: relative;
+    background: var(--kk-fws-header-background, #f5f3f1);
+  }
+
+  .kk-fws-header--drawer-open {
+    z-index: 20;
+  }
+
+  .kk-fws-header__container {
+    display: flex;
+    align-items: center;
+    width: min(100% - 3.2rem, 114rem);
+    min-height: 7.544rem;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .kk-fws-header__group {
+    display: flex;
+    align-items: center;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .kk-fws-header__group--start {
+    justify-content: flex-start;
+  }
+
+  .kk-fws-header__group--end {
+    justify-content: flex-end;
+  }
+
+  .kk-fws-header__brand {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+  }
+
+  .kk-fws-header__brand-link {
+    display: block;
+    text-decoration: none;
+  }
+
+  .kk-fws-header__wordmark {
+    display: block;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.5348rem;
+    line-height: 1.105;
+    text-align: center;
+    white-space: nowrap;
+    color: var(--kk-fws-header-text, #153a5b);
+  }
+
+  .kk-fws-header__logo {
+    display: block;
+    width: auto;
+    max-width: 20rem;
+    height: 2.8rem;
+    object-fit: contain;
+  }
+
+  .kk-fws-header__menu {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.8rem;
+    height: 1.6rem;
+    margin-right: 1.8rem;
+  }
+
+  .kk-fws-header__menu--toggle {
+    padding: 0;
+    border: 0;
+    background: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .kk-fws-header__menu-icon {
+    display: block;
+    width: 1.8rem;
+    height: 1.55rem;
+    object-fit: contain;
+  }
+
+  .kk-fws-header__nav {
+    display: block;
+  }
+
+  .kk-fws-header__list {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-header__item {
+    display: block;
+  }
+
+  .kk-fws-header__link {
+    display: block;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.3563rem;
+    line-height: 2rem;
+    letter-spacing: 0.15rem;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--kk-fws-header-text, #153a5b);
+    transition: opacity 0.2s ease;
+  }
+
+  .kk-fws-header__link:hover,
+  .kk-fws-header__link:focus-visible {
+    opacity: 0.7;
+    color: var(--kk-fws-header-text, #153a5b);
+    text-decoration: none;
+  }
+
+  /* Mobile drawer (Figma 7511:3) — desktop never renders it. */
+  .kk-fws-header__drawer {
+    display: none;
+  }
+
+  .kk-fws-header__drawer-nav {
+    display: block;
+    width: 100%;
+  }
+
+  .kk-fws-header__drawer-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kk-fws-header__drawer-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .kk-fws-header__drawer-item + .kk-fws-header__drawer-item::before {
+    content: '';
+    display: block;
+    width: min(100%, 25.2rem);
+    height: 0;
+    margin-bottom: 3rem;
+    border-top: 1px solid var(--kk-fws-header-divider, #e2e2e2);
+  }
+
+  .kk-fws-header__drawer-link {
+    display: block;
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.3563rem;
+    line-height: 2rem;
+    letter-spacing: 0.15rem;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--kk-fws-header-text, #153a5b);
+  }
+
+  .kk-fws-header__drawer-link:hover,
+  .kk-fws-header__drawer-link:focus-visible {
+    opacity: 0.7;
+    color: var(--kk-fws-header-text, #153a5b);
+    text-decoration: none;
+  }
+
+  .kk-fws-header__drawer-close {
+    position: absolute;
+    top: 1.153rem;
+    right: 1.206rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4944rem;
+    height: 2.4944rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .kk-fws-header__drawer-close-icon {
+    display: block;
+    width: 1.7638rem;
+    height: 1.7638rem;
+    object-fit: contain;
+    /* Figma 7511:8 is a "+" glyph rotated -45deg to read as a close cross. */
+    transform: rotate(-45deg);
+  }
+
+  @media (max-width: 989px) {
+    .kk-fws-header__list {
+      gap: 2.4rem;
+    }
+
+    .kk-fws-header__wordmark {
+      font-size: 2.2rem;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .kk-fws-header__container {
+      width: min(100% - 4rem, 54rem);
+      min-height: 6.4rem;
+    }
+
+    .kk-fws-header__group--start {
+      flex: 0 0 auto;
+    }
+
+    .kk-fws-header__group--end {
+      flex: 0 0 auto;
+    }
+
+    .kk-fws-header__brand {
+      flex: 1 1 auto;
+      justify-content: flex-start;
+    }
+
+    .kk-fws-header__menu {
+      display: flex;
+    }
+
+    .kk-fws-header__nav--start {
+      display: none;
+    }
+
+    .kk-fws-header__list {
+      gap: 1.2rem;
+    }
+
+    .kk-fws-header__link {
+      font-size: 1.2rem;
+      letter-spacing: 0.05rem;
+    }
+
+    .kk-fws-header__logo {
+      height: 2.4rem;
+    }
+
+    .kk-fws-header__drawer {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
+      width: min(100% - 4rem, 54rem);
+      padding: 7rem 2rem 5rem;
+      background: var(--kk-fws-header-background, #f5f3f1);
+      opacity: 0;
+      transform: translate(-50%, -0.8rem);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .kk-fws-header__drawer--open {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .kk-fws-header__drawer[hidden] {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kk-fws-header__drawer {
+      transition: none;
+      transform: translate(-50%, 0);
+    }
+
+    .kk-fws-header__link {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "KK FWS Header",
+  "tag": "div",
+  "class": "section-kk-fws-header",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_text",
+      "label": "Wordmark",
+      "default": "Phoenix Gravity"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image",
+      "info": "Optional. Replaces the wordmark text when set."
+    },
+    {
+      "type": "url",
+      "id": "brand_link",
+      "label": "Wordmark link",
+      "info": "Defaults to the store home page."
+    },
+    {
+      "type": "header",
+      "content": "Mobile menu drawer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_menu_icon",
+      "label": "Show menu icon on mobile",
+      "default": true,
+      "info": "The icon opens a drawer containing every nav link positioned left of the wordmark."
+    },
+    {
+      "type": "text",
+      "id": "menu_label",
+      "label": "Menu icon accessible label",
+      "default": "Menu"
+    },
+    {
+      "type": "text",
+      "id": "menu_close_label",
+      "label": "Drawer close accessible label",
+      "default": "Close menu"
+    },
+    {
+      "type": "header",
+      "content": "Navigation labels"
+    },
+    {
+      "type": "text",
+      "id": "nav_label_start",
+      "label": "Left nav accessible label",
+      "default": "Campaign navigation"
+    },
+    {
+      "type": "text",
+      "id": "nav_label_end",
+      "label": "Right nav accessible label",
+      "default": "Campaign navigation secondary"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f5f3f1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#153a5b"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Mobile drawer divider",
+      "default": "#e2e2e2"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Nav link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "why it works"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Use an on-page anchor, e.g. #kk-fws-offer."
+        },
+        {
+          "type": "select",
+          "id": "position",
+          "label": "Position",
+          "options": [
+            { "value": "start", "label": "Left of wordmark (moves into the mobile drawer)" },
+            { "value": "end", "label": "Right of wordmark" }
+          ],
+          "default": "start"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KK FWS Header",
+      "blocks": [
+        {
+          "type": "link",
+          "settings": { "label": "why it works", "position": "start" }
+        },
+        {
+          "type": "link",
+          "settings": { "label": "Build Your System", "position": "start" }
+        },
+        {
+          "type": "link",
+          "settings": { "label": "reviews", "position": "end" }
+        },
+        {
+          "type": "link",
+          "settings": { "label": "FAQ", "position": "end" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

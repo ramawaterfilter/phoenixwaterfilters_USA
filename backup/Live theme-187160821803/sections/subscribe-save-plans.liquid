@@ -1,0 +1,583 @@
+{{ 'subscribe-save.css' | asset_url | stylesheet_tag }}
+{% style %}
+  #shopify-section-{{ section.id }} .ss-plans { --ss-bg: {{ section.settings.background_color }}; --ss-ink: {{ section.settings.text_color }}; --ss-pad: {{ section.settings.desktop_padding }}px; --ss-pad-mobile: {{ section.settings.mobile_padding }}px; }
+{% endstyle %}
+<section id="{{ section.settings.anchor_id | escape }}" class="ss ss-plans">
+  <div class="ss-wrap">
+    <header class="ss-intro">
+      <p class="ss-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h2>{{ section.settings.heading }}</h2>
+      <div class="ss-intro-copy">
+        {% render 'ss-qa-body', body: section.settings.body, qa_1: section.settings.qa_1, qa_2: section.settings.qa_2, qa_3: section.settings.qa_3 %}
+      </div>
+    </header>
+    <p class="ss-mono ss-selector-label">{{ section.settings.selector_label | escape }}</p>
+    <div class="ss-plan-tabs" id="ss-tabs-{{ section.id }}">
+      <div class="group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-horizontal/tabs:h-8 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col data-[variant=line]:rounded-none bg-muted plan-options" role="tablist" aria-label="{{ section.settings.selector_label | escape }}" data-orientation="horizontal" data-variant="default">
+        {% for block in section.blocks -%}
+          <button
+            type="button"
+            role="tab"
+            id="ss-tab-{{ block.id }}"
+            aria-controls="ss-panel-{{ block.id }}"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
+            data-tab-index="{{ forloop.index0 }}"
+          >
+            <strong>{{ block.settings.tab_title | default: block.settings.title | default: block.settings.product.title | strip_html | escape }}</strong>
+            {%- if block.settings.badge != blank -%}
+              <span>{{ block.settings.badge | escape }}</span>
+            {%- endif -%}
+          </button>
+        {%- endfor %}
+      </div>
+      <div class="ss-plan-panels">
+        {% for block in section.blocks -%}
+          {%- assign ss_product = block.settings.product -%}
+          {%- assign ss_variant = ss_product.selected_or_first_available_variant -%}
+          {%- if block.settings.variant_id_override != blank -%}
+            {%- assign ss_variant = null -%}
+            {%- for candidate in ss_product.variants -%}
+              {%- assign candidate_id = candidate.id | append: '' -%}
+              {%- if candidate_id == block.settings.variant_id_override -%}
+                {%- assign ss_variant = candidate -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          {%- assign ss_allocation = null -%}
+          {%- if ss_variant != blank -%}
+            {%- for candidate in ss_variant.selling_plan_allocations -%}
+              {%- assign candidate_id = candidate.selling_plan.id | append: '' -%}
+              {%- if block.settings.selling_plan_id_override == blank
+                or candidate_id == block.settings.selling_plan_id_override
+              -%}
+                {%- assign ss_allocation = candidate -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          {%- assign ss_image = block.settings.image | default: ss_variant.image | default: ss_product.featured_image %}
+          <article
+            id="ss-panel-{{ block.id }}"
+            class="ss-card ss-plan-card ss-plan-card--{{ block.settings.style }}"
+            role="tabpanel"
+            aria-labelledby="ss-tab-{{ block.id }}"
+            tabindex="0"
+            {{ block.shopify_attributes }}
+          >
+            <span id="{{ block.settings.anchor_id | escape }}"></span>
+            <div class="ss-plan-top">
+              <span class="ss-mono">{{ block.settings.eyebrow | escape }}</span>
+              {%- if block.settings.show_badge and block.settings.badge != blank -%}
+                <span class="ss-badge">{{ block.settings.badge | escape }}</span>
+              {%- endif %}
+            </div>
+            <div class="ss-plan-main">
+              <div class="ss-product-image">
+                {% if ss_image != blank -%}
+                  {{-
+                    ss_image
+                    | image_url: width: 960
+                    | image_tag:
+                      widths: '320, 480, 640, 960',
+                      sizes: '(min-width: 900px) 30vw, 90vw',
+                      loading: 'lazy',
+                      alt: block.settings.image_alt
+                  -}}
+                {%- else %}
+                  <div class="ss-media-placeholder" aria-hidden="true"></div>
+                {% endif %}
+              </div>
+              <div class="ss-plan-copy">
+                <h3>{{ block.settings.title | default: ss_product.title }}</h3>
+                <div class="ss-copy">{{ block.settings.description }}</div>
+                {% if ss_allocation != blank %}
+                  <div class="ss-plan-price">
+                    <strong>{{ ss_allocation.price | money }}</strong>
+                    {%- if ss_allocation.compare_at_price > ss_allocation.price -%}
+                      <del>{{ ss_allocation.compare_at_price | money }}</del>
+                      {%- assign ss_saving = ss_allocation.compare_at_price | minus: ss_allocation.price -%}
+                      <span class="ss-savings">Save {{ ss_saving | money }} every delivery</span>
+                    {%- endif %}
+                  </div>
+                {% endif %}
+                <p class="ss-interval">{{ block.settings.interval | escape }} · free shipping</p>
+                {% if ss_allocation != blank %}
+                  <p class="ss-recurring">
+                    You will be charged {{ ss_allocation.price | money }}
+                    {{ block.settings.interval | escape }} until you pause, change or cancel.Applicable sales tax will be added.
+                  </p>
+                {% endif -%}
+                {%- if block.settings.warning != blank %}
+                  <div class="ss-recurring">{{ block.settings.warning }}</div>
+                {% endif %}
+                <details class="ss-disclosure">
+                  <summary>Filter details &amp; capacity</summary>
+                  <div class="ss-copy">{{ block.settings.features }}</div>
+                </details>
+                {% if ss_product != blank
+                  and ss_variant != blank
+                  and ss_variant.available
+                  and ss_allocation != blank
+                -%}
+                  {%- assign ss_form_id = 'ss-form-' | append: block.id %}
+                  {% form 'product', ss_product, id: ss_form_id %}
+                    <input type="hidden" name="id" value="{{ ss_variant.id }}"
+                    ><input type="hidden" name="quantity" value="1"
+                    ><input type="hidden" name="selling_plan" value="{{ ss_allocation.selling_plan.id }}"
+                    ><button class="ss-button" type="submit">{{ block.settings.cta_label | escape }}</button>
+                  {% endform %}
+                {% else -%}
+                  <button class="ss-button" type="button" disabled>Subscription unavailable</button>
+                  <p class="ss-form-status" role="status">
+                    {% if ss_product == blank -%}
+                      Select a product in the theme editor.
+                    {%- elsif ss_variant == blank -%}
+                      The selected variant ID does not belong to this product.
+                    {%- elsif ss_variant.available == false -%}
+                      This variant is currently unavailable.
+                    {%- else -%}
+                      Select a valid selling plan for this variant.
+                    {%- endif %}
+                  </p>
+                {% endif -%}
+                {%- if ss_product != blank -%}
+                  <a
+                    class="ss-text-link"
+                    href="{{ ss_product.url }}?variant={{ ss_variant.id | default: ss_product.selected_or_first_available_variant.id }}"
+                  >
+                    {{- block.settings.one_time_label | escape -}}
+                  </a>
+                {%- elsif block.settings.one_time_url != blank -%}
+                  <a class="ss-text-link" href="{{ block.settings.one_time_url }}">
+                    {{- block.settings.one_time_label | escape -}}
+                  </a>
+                {%- endif %}
+                <div class="ss-small">
+                  {{ block.settings.note -}}
+                  <a href="#terms">{{ block.settings.terms_label | escape }}</a>
+                </div>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="ss-copy ss-plan-footnote">
+      {{ section.settings.footnote -}}
+      <a class="ss-text-link" href="{{ section.settings.footnote_link_url | default: '#choosing' }}">
+        {{- section.settings.footnote_link_label | escape -}}
+      </a>
+    </div>
+    <div class="ss-reminders">
+      <article class="ss-card">
+        <h3>{{ section.settings.gift_heading | escape }}</h3>
+        {{ section.settings.gift_body }}
+      </article>
+      <article class="ss-card">
+        <h3>{{ section.settings.sold_heading | escape }}</h3>
+        {{ section.settings.sold_body }}
+      </article>
+    </div>
+    <div class="ss-small">
+      {% render 'ss-qa-body', body: section.settings.legal_note, qa_1: section.settings.qa_1, qa_2: section.settings.qa_2, qa_3: section.settings.qa_3 %}
+    </div>
+    <script>
+      (function () {
+        function init(root) {
+          if (!root || root.dataset.ready) return;
+          root.dataset.ready = '1';
+          const tabs = [...root.querySelectorAll('[role="tab"]')],
+            panels = [...root.querySelectorAll('[role="tabpanel"]')];
+          function show(i, focus) {
+            tabs.forEach((tab, n) => {
+              tab.setAttribute('aria-selected', String(n === i));
+              tab.tabIndex = n === i ? 0 : -1;
+              panels[n].hidden = n !== i;
+            });
+            if (focus) tabs[i].focus();
+          }
+          show(0, false);
+          tabs.forEach((tab, i) => {
+            tab.addEventListener('click', () => show(i, false));
+            tab.addEventListener('keydown', (e) => {
+              let next = i;
+              if (e.key === 'ArrowRight') next = (i + 1) % tabs.length;
+              else if (e.key === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+              else if (e.key === 'Home') next = 0;
+              else if (e.key === 'End') next = tabs.length - 1;
+              else return;
+              e.preventDefault();
+              show(next, true);
+            });
+          });
+          function fromHash() {
+            const h = location.hash.slice(1);
+            if (!h) return;
+            const i = panels.findIndex((p) => p.querySelector('#' + CSS.escape(h)));
+            if (i >= 0) show(i, false);
+          }
+          root._ssFromHash = fromHash;
+          fromHash();
+        }
+        const id = 'ss-tabs-{{ section.id }}';
+        const key = '__ssPlans_' + id;
+        if (window[key]) window[key].abort();
+        const controller = new AbortController();
+        window[key] = controller;
+        window.addEventListener(
+          'hashchange',
+          () => {
+            const root = document.getElementById(id);
+            if (root && root._ssFromHash) root._ssFromHash();
+          },
+          { signal: controller.signal }
+        );
+        init(document.getElementById(id));
+        document.addEventListener('shopify:section:load', (e) => init(e.target.querySelector('#' + id)), {
+          signal: controller.signal,
+        });
+        document.addEventListener(
+          'shopify:block:select',
+          (e) => {
+            const root = document.getElementById(id);
+            if (!root || !root.contains(e.target)) return;
+            const panels = [...root.querySelectorAll('[role="tabpanel"]')],
+              i = panels.findIndex((p) => p.contains(e.target) || p === e.target);
+            if (i < 0) return;
+            root.querySelectorAll('[role="tab"]')[i].click();
+          },
+          { signal: controller.signal }
+        );
+      })();
+    </script>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Subscribe Save Plans",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body copy"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "plans"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#153a5b"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop vertical spacing",
+      "default": 88,
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile vertical spacing",
+      "default": 56,
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "selector_label",
+      "label": "Selector label"
+    },
+    {
+      "type": "richtext",
+      "id": "footnote",
+      "label": "Footnote"
+    },
+    {
+      "type": "text",
+      "id": "gift_heading",
+      "label": "Gift heading"
+    },
+    {
+      "type": "richtext",
+      "id": "gift_body",
+      "label": "Gift copy"
+    },
+    {
+      "type": "text",
+      "id": "sold_heading",
+      "label": "Sold heading"
+    },
+    {
+      "type": "richtext",
+      "id": "sold_body",
+      "label": "Sold copy"
+    },
+    {
+      "type": "richtext",
+      "id": "legal_note",
+      "label": "Trademark note"
+    },
+    {
+      "type": "text",
+      "id": "qa_1",
+      "label": "QA value 1"
+    },
+    {
+      "type": "text",
+      "id": "qa_2",
+      "label": "QA value 2"
+    },
+    {
+      "type": "text",
+      "id": "footnote_link_label",
+      "label": "Footnote link label"
+    },
+    {
+      "type": "url",
+      "id": "footnote_link_url",
+      "label": "Footnote link URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "plan",
+      "name": "Subscription plan",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "variant_id_override",
+          "label": "Variant ID override"
+        },
+        {
+          "type": "text",
+          "id": "selling_plan_id_override",
+          "label": "Selling plan ID override"
+        },
+        {
+          "type": "text",
+          "id": "anchor_id",
+          "label": "Card anchor ID"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Display title"
+        },
+        {
+          "type": "text",
+          "id": "tab_title",
+          "label": "Tab title"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image override"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image alt text"
+        },
+        {
+          "type": "text",
+          "id": "interval",
+          "label": "Frequency label"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_badge",
+          "label": "Show badge",
+          "default": true
+        },
+        {
+          "type": "richtext",
+          "id": "features",
+          "label": "Filter details and capacity"
+        },
+        {
+          "type": "richtext",
+          "id": "warning",
+          "label": "Plan warning"
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "Subscribe button label",
+          "default": "Subscribe & Save"
+        },
+        {
+          "type": "text",
+          "id": "one_time_label",
+          "label": "One-time link label"
+        },
+        {
+          "type": "url",
+          "id": "one_time_url",
+          "label": "One-time link fallback"
+        },
+        {
+          "type": "richtext",
+          "id": "note",
+          "label": "Details note"
+        },
+        {
+          "type": "text",
+          "id": "terms_label",
+          "label": "Terms link label"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Visual style",
+          "default": "primary",
+          "options": [
+            {
+              "value": "primary",
+              "label": "Primary"
+            },
+            {
+              "value": "featured",
+              "label": "Featured"
+            },
+            {
+              "value": "outline",
+              "label": "Outline"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subscribe Save Plans",
+      "blocks": [
+        {
+          "type": "plan",
+          "settings": {
+            "product": "carbon-filter-element",
+            "variant_id_override": "41058263236651",
+            "selling_plan_id_override": "8646197291",
+            "anchor_id": "plan-carbon",
+            "eyebrow": "PLAN 01 · CARBON",
+            "title": "Carbon Filter Elements",
+            "tab_title": "Carbon filters",
+            "description": "<p>Pack of 2 · your main filter</p>",
+            "image_alt": "Phoenix Gravity carbon cartridge; plan includes a pair",
+            "interval": "every 12 months",
+            "badge": "Main filters",
+            "show_badge": true,
+            "features": "<ul><li>Reduces chlorine, taste, odor and tested chemical contaminants</li><li>CTC-60 coconut-shell carbon</li><li>For Phoenix Gravity; ask us to confirm other housing compatibility</li><li>Rated capacity: 5,500 gal / pair</li><li>Replace at: 12 mo or 5,500 gal</li><li>Cost to run: 2.2¢ / gallon</li><li>Certified: NSF/ANSI 42 &amp; 372</li></ul>",
+            "warning": "",
+            "cta_label": "Subscribe & Save",
+            "one_time_label": "Prefer one-time purchase? View options",
+            "one_time_url": "/products/carbon-filter-element?variant=41058263236651",
+            "note": "<p>First charge at checkout. No cancellation fee.</p>",
+            "terms_label": "Review recurring order terms.",
+            "style": "primary"
+          }
+        },
+        {
+          "type": "plan",
+          "settings": {
+            "product": "fluoride-refill-media",
+            "variant_id_override": "41996479987755",
+            "selling_plan_id_override": "8646230059",
+            "anchor_id": "plan-refill",
+            "eyebrow": "PLAN 02 · FLUORIDE",
+            "title": "FluoRid Refill Media",
+            "tab_title": "Refill media",
+            "description": "<p>Existing POSTreat owners only · 250g × 2</p>",
+            "image_alt": "POSTreat FluoRid refill media pouch",
+            "interval": "every 4 months",
+            "badge": "POSTreat owners",
+            "show_badge": true,
+            "features": "<ul><li>Reduces over 95% of fluoride</li><li>Refills your existing POSTreat steel elements</li><li>Not needed if you have not purchased POSTreat filters</li><li>Rated capacity: 1,060 gal / pair</li><li>Media life: 4–6 months</li><li>Cost to run: 5.6¢ / gallon</li><li>Requires: POSTreat housings</li></ul>",
+            "warning": "",
+            "cta_label": "Subscribe & Save",
+            "one_time_label": "Prefer one-time purchase? View options",
+            "one_time_url": "/products/fluoride-refill-media?variant=41996479987755",
+            "note": "<p>First charge at checkout. No cancellation fee.</p>",
+            "terms_label": "Review recurring order terms.",
+            "style": "featured"
+          }
+        },
+        {
+          "type": "plan",
+          "settings": {
+            "product": "fluoride-reduction-elements",
+            "variant_id_override": "41217741520939",
+            "selling_plan_id_override": "9052553259",
+            "anchor_id": "plan-steel",
+            "eyebrow": "PLAN 03 · FLUORIDE",
+            "title": "POSTreat™ Steel Elements",
+            "tab_title": "Steel elements",
+            "description": "<p>Pair · stainless housing + media</p>",
+            "image_alt": "POSTreat stainless steel element; plan includes a pair",
+            "interval": "every 4 months",
+            "badge": "Optional add-on",
+            "show_badge": true,
+            "features": "<ul><li>AISI 304 stainless housing, 10-year warranty</li><li>Arrives pre-filled with FluoRid media</li><li>Works alongside your carbon elements, not instead of them</li><li>Rated capacity: 1,060 gal / pair</li><li>Media life: 4–6 months</li><li>Cost to run: 8.9¢ / gallon</li><li>Housing warranty: 10 years</li></ul>",
+            "warning": "<p>This plan sends new steel elements every 4 months. Already own housings? Choose refill media. For a first purchase, consider steel elements once.</p>",
+            "cta_label": "Subscribe & Save",
+            "one_time_label": "Prefer one-time purchase? View options",
+            "one_time_url": "/products/fluoride-reduction-elements?variant=41217741520939",
+            "note": "<p>First charge at checkout. No cancellation fee.</p>",
+            "terms_label": "Review recurring order terms.",
+            "style": "outline"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

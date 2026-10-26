@@ -1,0 +1,52 @@
+<div class="container">
+  <div class="background-image-container bg-light "></div>
+  <div class="row justify-content-center">
+    <div class="col-12 mb-5">
+      <h2 class="text-center">
+        {{ section.settings.section_heading }}
+      </h2>
+    </div>
+    <div class="col-12">
+      <div class="main-widget">
+       
+{% for block in section.blocks %}
+          {% case block.type %}
+            {% when '@app' %}
+              {% render block %}
+
+               
+          {% endcase %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Product Reviews",
+    "tag": "section",
+    "class": "section-reviews",
+    "settings": [
+      {
+        "type": "text",
+        "id": "section_heading",
+        "label": "Section Heading",
+        "default": "Customer Reviews"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product Reviews"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["product"]
+    }
+  }
+{% endschema %}

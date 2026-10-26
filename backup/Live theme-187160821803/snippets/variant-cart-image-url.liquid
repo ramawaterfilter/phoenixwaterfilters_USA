@@ -1,0 +1,64 @@
+{% doc %}
+Outputs the cart image URL for a selected product variant.
+@param {product} product - Product that owns the variant.
+@param {variant} variant - Variant whose cart image should be resolved.
+@example
+{% render 'variant-cart-image-url', product: product, variant: product.selected_or_first_available_variant %}
+{% enddoc %}
+{% liquid
+  assign cart_image_variant = variant | default: product.selected_or_first_available_variant
+  assign cart_image_metafield = cart_image_variant.metafields.custom.varint_image
+
+  if cart_image_metafield == blank
+    assign cart_image_metafield = cart_image_variant.metafields.custom.variant_image
+  endif
+  if cart_image_metafield == blank
+    assign cart_image_metafield = cart_image_variant.metafields.custom.variant_images
+  endif
+
+  assign cart_image = cart_image_metafield.value
+  if cart_image_metafield.type contains 'list.'
+    assign cart_image = cart_image | first
+  endif
+
+  if cart_image == blank
+    assign cart_image_metafield = product.metafields.custom.varint_image
+    if cart_image_metafield == blank
+      assign cart_image_metafield = product.metafields.custom.variant_image
+    endif
+    if cart_image_metafield == blank
+      assign cart_image_metafield = product.metafields.custom.variant_images
+    endif
+
+    assign cart_image = cart_image_metafield.value
+    if cart_image_metafield.type contains 'list.'
+      assign cart_image = cart_image | first
+    endif
+  endif
+
+  if cart_image == blank
+    assign combo_images = product.metafields.custom.variant_combo_image.value
+    assign combo_key = cart_image_variant.options[1] | append: '|' | append: cart_image_variant.options[2]
+    assign cart_image_url = combo_images[combo_key]
+  endif
+
+  if cart_image.preview_image != blank
+    assign cart_image = cart_image.preview_image
+  endif
+
+  if cart_image_url == blank and cart_image != blank
+    if cart_image.width != blank
+      assign cart_image_url = cart_image | image_url: width: 600
+    else
+      assign cart_image_url = cart_image
+    endif
+  endif
+
+  if cart_image_url == blank
+    assign cart_image = product.media.first.preview_image | default: product.featured_image
+    if cart_image != blank
+      assign cart_image_url = cart_image | image_url: width: 600
+    endif
+  endif
+%}
+{{- cart_image_url -}}

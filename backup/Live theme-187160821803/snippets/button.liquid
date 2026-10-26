@@ -1,0 +1,66 @@
+{%- comment -%}
+  Shared section CTA: the button, optional trust items under it, and the after-button text.
+
+  Reads section.settings: buttonlink, buttontext, button_arrow, afterbutton, and
+  show_trust_items with trust_text_1 / trust_text_2 (the two ticks under the button).
+  Button and trust styles live in assets/kk-fws-button.css.
+
+  Accepts:
+  - class: extra classes for the .btn-container
+{%- endcomment -%}
+
+{%- liquid
+  assign show_trust = false
+  if section.settings.show_trust_items
+    if section.settings.trust_text_1 != blank or section.settings.trust_text_2 != blank
+      assign show_trust = true
+    endif
+  endif
+-%}
+
+{% if section.settings.buttonlink %}
+  <div class="btn-container {{ class }}">
+    {% if section.settings.buttonlink == "#addtocart" %}
+      {% render 'basic-add-to-cart' %}
+    {% else %}
+      <a class="kk-fws-button{% if section.settings.button_style == 'secondary' %} kk-fws-button--secondary{% endif %} {% if show_trust %}mb-0{% else %}mb-4{% endif %}" href="{{ section.settings.buttonlink }}">
+        {{- section.settings.buttontext -}}
+        {%- if section.settings.button_arrow -%}
+          <img
+            class="kk-fws-button__arrow"
+            src="{{ 'kk-fws-icon-button-arrow.svg' | asset_url }}"
+            alt=""
+            width="22"
+            height="22"
+            aria-hidden="true"
+            loading="lazy"
+          >
+        {%- endif -%}
+      </a>
+    {% endif %}
+    {%- if show_trust -%}
+      <ul class="kk-fws-button-trust">
+        {%- for i in (1..2) -%}
+          {%- assign trust_key = 'trust_text_' | append: i -%}
+          {%- if section.settings[trust_key] != blank -%}
+            <li class="kk-fws-button-trust__item">
+              <img
+                class="kk-fws-button-trust__icon"
+                src="{{ 'wellness-hero-check.svg' | asset_url }}"
+                alt=""
+                width="20"
+                height="20"
+                aria-hidden="true"
+                loading="lazy"
+              >
+              {{- section.settings[trust_key] -}}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+    {% if section.settings.afterbutton %}
+      <p class="small">{{ section.settings.afterbutton }}</p>
+    {% endif %}
+  </div>
+{% endif %}

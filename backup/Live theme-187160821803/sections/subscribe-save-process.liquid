@@ -1,0 +1,185 @@
+{{ 'subscribe-save.css' | asset_url | stylesheet_tag }}
+{% style %}
+  #shopify-section-{{ section.id }} .ss-process { --ss-bg: {{ section.settings.background_color }}; --ss-ink: {{ section.settings.text_color }}; --ss-pad: {{ section.settings.desktop_padding }}px; --ss-pad-mobile: {{ section.settings.mobile_padding }}px; }
+{% endstyle %}
+<section id="{{ section.settings.anchor_id | escape }}" class="ss ss-process">
+  <div class="ss-wrap">
+    <header class="ss-intro">
+      <p class="ss-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h2>{{ section.settings.heading }}</h2>
+      <div class="ss-intro-copy">
+        {% render 'ss-qa-body', body: section.settings.body, qa_1: section.settings.qa_1, qa_2: section.settings.qa_2, qa_3: section.settings.qa_3 %}
+      </div>
+    </header>
+    <ol class="ss-process-grid">
+      {% for block in section.blocks %}
+        <li class="ss-step" {{ block.shopify_attributes }}>
+          <span class="ss-step-number">{{ block.settings.number | escape }}</span
+          ><span class="ss-mono">{{ block.settings.label | escape }}</span>
+          <h3>{{ block.settings.title }}</h3>
+          <div class="ss-copy">
+            {% render 'ss-qa-body', body: block.settings.body, qa_1: block.settings.qa_1, qa_2: block.settings.qa_2 %}
+          </div>
+        </li>
+      {% endfor %}
+    </ol>
+    <p class="ss-small">{{ section.settings.closing_note | escape }}</p>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Subscribe Save Process",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body copy"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "after-subscribe"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#153a5b"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop vertical spacing",
+      "default": 88,
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile vertical spacing",
+      "default": 56,
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "closing_note",
+      "label": "Closing note"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Process step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Time label"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body"
+        },
+        {
+          "type": "text",
+          "id": "qa_1",
+          "label": "QA value 1"
+        },
+        {
+          "type": "text",
+          "id": "qa_2",
+          "label": "QA value 2"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subscribe Save Process",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "number": "01",
+            "label": "Today",
+            "title": "Choose your plan",
+            "body": "<p>Review your items, price, frequency and next charge date before you pay.</p>"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "number": "02",
+            "label": "First order",
+            "title": "Pay at checkout",
+            "body": "<p>Your first replacement order is processed at the subscriber price.</p>"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "number": "03",
+            "label": "Before renewal",
+            "title": "Check your reminder",
+            "body": "<p>An email shows the next order, amount and date. Notice timing: %%QA1%%.</p>",
+            "qa_1": "[3 DAYS]"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "number": "04",
+            "label": "Before the cut-off",
+            "title": "Make any changes",
+            "body": "<p>Skip, pause, reschedule, cancel, or update your address and payment method. Cut-off: %%QA1%%.</p>",
+            "qa_1": "[24 HOURS]"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "number": "05",
+            "label": "Renewal date",
+            "title": "Automatic charge + order",
+            "body": "<p>Your saved payment method is charged and your next filter order is created.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

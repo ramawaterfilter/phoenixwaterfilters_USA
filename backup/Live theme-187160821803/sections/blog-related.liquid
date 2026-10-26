@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="row">
+    {% if section.settings.section_heading != blank %}
+      <div class="col-12 text-center mb-4">
+        <h2>{{ section.settings.section_heading }}</h2>
+      </div>
+    {% endif %}
+
+    {% assign blogCount = 0 %}
+    {% for related_article in blog.articles %}
+      {% if article.id != related_article.id %}
+        {% assign blogCount = blogCount | plus: 1 %}
+
+        {% if blogCount < 4 %}
+          <div class="col-12 col-md-4 col-lg-4 mb-5 mb-lg-0 blogindex__col">
+            {% render 'blog-tile'
+              , article: article %}
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Blog Related",
+    "tag": "section",
+    "class": "section-blogrelated",
+    "settings": [
+      {
+        "type": "text",
+        "id": "section_heading",
+        "label": "Section Heading",
+        "default": "Related Articles"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Blog Related"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["article"]
+    }
+  }
+{% endschema %}

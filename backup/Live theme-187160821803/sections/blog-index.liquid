@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      {% paginate blog.articles by 9 %}
+
+        <div class="blogindex row">
+
+          {% for article in blog.articles %}
+            <div class="col-12 col-md-6 col-lg-4 blogindex__col">
+              {% render 'blog-tile'
+                , article: article %}
+            </div>
+          {% endfor %}
+
+        </div>
+
+        {% if paginate.pages > 1 %}
+          {% render 'pagination'
+            , paginate: paginate %}
+        {% endif %}
+
+      {% endpaginate %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Blog Index",
+    "tag": "section",
+    "class": "section-blogindex",
+    "settings": [],
+    "presets": [
+      {
+        "name": "Blog Index",
+        "category": "Sections"
+      }
+    ],
+    "enabled_on": {
+      "templates": ["blog"]
+    }
+  }
+{% endschema %}

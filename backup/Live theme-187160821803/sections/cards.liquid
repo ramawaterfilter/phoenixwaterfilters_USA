@@ -1,0 +1,541 @@
+{%- comment -%}
+  Cards Section — Figma `7809:10190`.
+
+  Phoenix mark and centred heading, a 3-column grid of cards (tinted icon tile, then an
+  optional heading and the copy, on a pale bordered card), then the shared CTA button and its
+  optional trust items (snippets/button.liquid).
+
+  Image or video cards keep the original layout (and its styles in src/css/sections/_cards.scss).
+  A card with no icon shows its number in the icon tile.
+{%- endcomment -%}
+
+{% unless template_suffix == 'page.article' %}
+  {%- liquid
+    comment
+      "Background" sets the section colour, like the other sections; the cards take the other
+      one: White = light cards on a white section (Figma `7809:10190`), Light = white cards on
+      a light section.
+    endcomment
+    assign bg_style = 'bg-light'
+    assign card_style = 'bg-white'
+    if section.settings.style == 'bg-white'
+      assign bg_style = 'bg-white'
+      assign card_style = 'bg-light'
+    endif
+
+    assign card_blocks = section.blocks | where: 'type', 'text'
+
+    assign has_image_or_video = false
+    for block in card_blocks
+      if block.settings.image != blank or block.settings.video_id != blank
+        assign has_image_or_video = true
+        break
+      endif
+    endfor
+  -%}
+
+  <div class="background-image-container trigger-observer {{ bg_style }} ">
+    {% if section.settings.section_bgimg != blank %}
+      {{ section.settings.section_bgimg | image_url: width: 1920 | image_tag: class: 'view-animation fade-up' }}
+    {% endif %}
+  </div>
+
+  <div class="{{ section.settings.custom_class }}" id="{{ section.settings.custom_id }}">
+    <div class="container cards-grid cards-grid--{{ section.settings.style }}">
+      {%- if section.settings.show_logo or section.settings.logo != blank or section.settings.heading != blank or section.settings.paragraph != blank -%}
+        <div class="cards-grid__intro">
+          {%- if section.settings.logo != blank -%}
+            {{
+              section.settings.logo
+              | image_url: width: 96
+              | image_tag: class: 'cards-grid__logo', width: 48, height: 44, loading: 'lazy', alt: ''
+            }}
+          {%- elsif section.settings.show_logo -%}
+            <img
+              class="cards-grid__logo"
+              src="{{ 'kk-fws-phoenix-mark.png' | asset_url }}"
+              alt=""
+              width="48"
+              height="44"
+              loading="lazy"
+            >
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="cards-grid__heading">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+          {%- if section.settings.paragraph != blank -%}
+            <div class="cards-grid__paragraph">{{ section.settings.paragraph }}</div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if has_image_or_video -%}
+        <div class="row justify-content-center mb-5">
+          <div class="col-11 col-md-10 col-lg-11 cards feature">
+            {%- for block in card_blocks -%}
+              <div class="card {{ card_style }}" data-kk-fws-reveal {{ block.shopify_attributes }}>
+                {%- if block.settings.icon != blank -%}
+                  <div class="card__icon">
+                    {{ block.settings.icon | image_url: width: 400 | image_tag: class: 'view-animation fade-up img-fluid', loading: 'lazy' }}
+                  </div>
+                {%- elsif block.settings.image != blank and block.settings.video_id == blank -%}
+                  <div class="card__img">
+                    {{ block.settings.image | image_url: width: 900 | image_tag: class: 'view-animation fade-up img-fluid', loading: 'lazy' }}
+                  </div>
+                {%- elsif block.settings.video_id != blank -%}
+                  <div class="video-preview-container view-animation fade-up" data-wistia-vid-id="{{ block.settings.video_id }}"></div>
+                {%- endif -%}
+                <div class="card__content{% if block.settings.image != blank or block.settings.video_id != blank %} p-5{% endif %}">
+                  {%- if block.settings.heading != blank -%}
+                    <h3 class="card__content__title">{{ block.settings.heading }}</h3>
+                  {%- endif -%}
+                  {%- if block.settings.copy != blank -%}
+                    <p class="card__content__description{% if block.settings.image != blank %} alt{% endif %}">
+                      {{ block.settings.copy | strip_html }}
+                    </p>
+                  {%- endif -%}
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- elsif card_blocks.size > 0 -%}
+        <ul class="cards-grid__list">
+          {%- for block in card_blocks -%}
+            <li
+              class="cards-grid__card{% if block.settings.heading == blank %} cards-grid__card--copy-only{% endif %}"
+              data-kk-fws-reveal
+              {{ block.shopify_attributes }}
+            >
+              <div class="cards-grid__icon">
+                {%- liquid
+                  assign icon_is_svg = false
+                  if block.settings.icon != blank
+                    assign icon_path = block.settings.icon.src | split: '?' | first | downcase
+                    if icon_path contains '.svg'
+                      assign icon_is_svg = true
+                    endif
+                  endif
+                -%}
+                {%- if icon_is_svg -%}
+                  {%- comment -%}
+                    Liquid can't read the file, so an SVG icon is drawn as a mask over a
+                    primary-600 fill: its shape, recoloured to the brand blue.
+                  {%- endcomment -%}
+                  <span
+                    class="cards-grid__icon-svg"
+                    style="--cards-grid-icon: url('{{ block.settings.icon | image_url }}');"
+                    aria-hidden="true"
+                  ></span>
+                {%- elsif block.settings.icon != blank -%}
+                  {{
+                    block.settings.icon
+                    | image_url: width: 120
+                    | image_tag: class: 'cards-grid__icon-image', width: 30, height: 30, loading: 'lazy', alt: ''
+                  }}
+                {%- else -%}
+                  <span class="cards-grid__number">{{ forloop.index }}</span>
+                {%- endif -%}
+              </div>
+              {%- if block.settings.heading != blank or block.settings.copy != blank -%}
+                <div class="cards-grid__content">
+                  {%- if block.settings.heading != blank -%}
+                    <h3 class="cards-grid__title">{{ block.settings.heading }}</h3>
+                  {%- endif -%}
+                  {%- if block.settings.copy != blank -%}
+                    <p class="cards-grid__copy">{{ block.settings.copy | strip_html }}</p>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if section.settings.buttonlink != blank -%}
+        <div class="cards-grid__cta">
+          {% render 'button', class: 'mx-auto text-center' %}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{% endunless %}
+
+{% stylesheet %}
+  /* Figma `7809:10190`. Class names are new (cards-grid__*) so the legacy .cards/.card rules in
+     src/css/sections/_cards.scss only reach the image/video card layout. */
+  .cards-grid {
+    --cards-grid-ink: var(--primary);
+    --cards-grid-card: #ffffff;
+    --cards-grid-border: #eef0f4;
+    --cards-grid-tile: #f2f6ff;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  /* White section: light cards, as in the Figma. */
+  .cards-grid--bg-white {
+    --cards-grid-card: var(--light);
+  }
+
+  .cards-grid__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    max-width: 80rem;
+    text-align: center;
+  }
+
+  .cards-grid__logo {
+    display: block;
+    width: 48px;
+    height: 44px;
+    object-fit: contain;
+  }
+
+  .cards-grid__heading {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  .cards-grid__paragraph p:last-child {
+    margin-bottom: 0;
+  }
+
+  .cards-grid__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cards-grid__card,
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 21px;
+    min-width: 0;
+    margin: 0;
+    padding: 34px 32px;
+    border: 1px solid var(--cards-grid-border);
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--cards-grid-card);
+  }
+
+  .cards-grid__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: var(--cards-grid-tile);
+  }
+
+  .cards-grid__icon-image {
+    display: block;
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+  }
+
+  .cards-grid__icon-svg {
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-color: var(--primary-600);
+    -webkit-mask: var(--cards-grid-icon) center / contain no-repeat;
+    mask: var(--cards-grid-icon) center / contain no-repeat;
+  }
+
+  .cards-grid__number {
+    font-family: 'Value Sans Bold', sans-serif;
+    font-weight: 700;
+    font-size: 2.2rem;
+    line-height: 1;
+    color: var(--primary-600);
+  }
+
+  .cards-grid__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cards-grid__title {
+    margin: 0;
+    padding: 0;
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.2rem;
+    line-height: 1.4;
+    text-align: left;
+    color: var(--cards-grid-ink);
+  }
+
+  .cards-grid__copy {
+    margin: 0;
+    font-size: 1.7rem;
+    line-height: 1.5;
+    text-align: left;
+    color: #4a5068;
+  }
+
+  /* No heading: the copy takes the Figma card text style. */
+  .cards-grid__card--copy-only .cards-grid__copy {
+    font-family: 'Value Sans Medium', sans-serif;
+    font-weight: 500;
+    font-size: 2.2rem;
+    line-height: 1.4;
+    color: var(--cards-grid-ink);
+  }
+
+  .cards-grid__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -4px;
+  }
+
+  .cards-grid__cta .btn-container {
+    margin: 0 auto;
+  }
+
+  .cards-grid__cta .btn-container .kk-fws-button {
+    margin-bottom: 0 !important;
+  }
+
+
+
+
+  @media (max-width: 991px) {
+    .cards-grid__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .cards-grid__card {
+      padding: 28px 24px;
+    }
+
+    .cards-grid__title,
+    .cards-grid__card--copy-only .cards-grid__copy {
+      font-size: 2rem;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cards-grid {
+      gap: 32px;
+    }
+
+    .cards-grid__intro {
+      gap: 20px;
+    }
+
+    .cards-grid__list {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .cards-grid__card {
+      gap: 16px;
+      padding: 24px 20px;
+      border-radius: 16px;
+    }
+
+    .cards-grid__icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+    }
+
+    .cards-grid__icon-image,
+    .cards-grid__icon-svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .cards-grid__title,
+    .cards-grid__card--copy-only .cards-grid__copy {
+      font-size: 1.8rem;
+    }
+
+    .cards-grid__copy {
+      font-size: 1.5rem;
+    }
+
+    .cards-grid__cta {
+      align-self: stretch;
+      margin-top: 0;
+    }
+
+
+  }
+{% endstylesheet %}
+
+{% schema %}
+  {
+    "name": "Cards Section",
+    "tag": "section",
+    "class": "section-cards",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "select",
+        "id": "style",
+        "label": "Background",
+        "info": "The cards take the opposite colour.",
+        "default": "bg-light",
+        "options": [
+          {
+            "label": "White",
+            "value": "bg-white"
+          }, {
+            "label": "Light",
+            "value": "bg-light"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "show_logo",
+        "label": "Show Phoenix logo above the heading",
+        "default": true
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Custom logo",
+        "info": "Replaces the Phoenix logo. Shown at 48 × 44px."
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "Headline"
+      },
+      {
+        "type": "richtext",
+        "id": "paragraph",
+        "label": "Paragraph"
+      }, {
+        "type": "image_picker",
+        "id": "section_bgimg",
+        "label": "Background Image"
+      }, {
+        "type": "text",
+        "id": "buttontext",
+        "label": "Button text"
+      }, {
+        "type": "url",
+        "id": "buttonlink",
+        "label": "Button Url"
+      }, {
+        "type": "checkbox",
+        "id": "button_arrow",
+        "label": "Show arrow on button",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "button_style",
+        "label": "Button style",
+        "default": "primary",
+        "options": [
+          { "value": "primary", "label": "Primary" },
+          { "value": "secondary", "label": "Secondary" }
+        ]
+      }, {
+        "type": "checkbox",
+        "id": "show_trust_items",
+        "label": "Show trust items under the button",
+        "default": false
+      }, {
+        "type": "text",
+        "id": "trust_text_1",
+        "label": "Trust item 1",
+        "default": "100-day trial"
+      }, {
+        "type": "text",
+        "id": "trust_text_2",
+        "label": "Trust item 2",
+        "default": "Cancel any time"
+      }, {
+        "type": "text",
+        "id": "afterbutton",
+        "label": "After Button text"
+      }, {
+        "type": "header",
+        "content": "Custom Code",
+        "info": "Add classes or ID to the section"
+      }, {
+        "type": "text",
+        "id": "custom_id",
+        "label": "Custom ID"
+      }, {
+        "type": "text",
+        "id": "custom_class",
+        "label": "Custom Class"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Card",
+        "settings": [
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading"
+          },
+          {
+            "type": "richtext",
+            "id": "copy",
+            "label": "Copy"
+          },
+          {
+            "type": "image_picker",
+            "id": "icon",
+            "label": "Icon"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image",
+            "info": "Image "
+          }, {
+            "type": "text",
+            "id": "video_id",
+            "label": "Video ID",
+            "info": "Wistia Video ID"
+          }
+
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Cards Section"
+      }
+    ],
+    "disabled_on": {
+      "groups": ["header"]
+    }
+  }
+{% endschema %}

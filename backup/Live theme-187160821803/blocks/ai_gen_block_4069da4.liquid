@@ -1,0 +1,1079 @@
+{% doc %}
+  @prompt
+    Create a custom section:
+    A 5-item horizontal carousel (five cards per row on desktop, slider on mobile).
+    Each card contains:
+    
+    CARD LAYOUT
+    
+    Heading (text field) – Example: “Clear water is the foundation of wellness.”
+    
+    Influencer Name + Instagram icon with optional profile link.
+    
+    Video container using Wistia embed code (merchant will paste embed manually).
+    
+    Video controls needed:
+    
+    Mute/Unmute toggle button
+    
+    Play/Pause button
+    
+    Autoplay disabled unless user taps
+    
+    Second media field: Upload mobile-optimized image, shown only on mobile screens.
+    
+    Product title + optional product link below the video.
+    
+    SECTION REQUIREMENTS
+    
+    Support 5 blocks shown in one row on desktop (equal width cards).
+    
+    Convert automatically into a scrollable carousel on mobile.
+    
+    Each block should include:
+    
+    Heading (text)
+    
+    Influencer name (text)
+    
+    Instagram profile link (URL)
+    
+    Wistia embed code (textarea)
+    
+    Desktop thumbnail image
+    
+    Mobile image (shown only under 768px)
+    
+    Product name (text)
+    
+    Product link (URL)
+    
+    VIDEO BEHAVIOR
+    
+    Video only plays when clicked.
+    
+    Default state: muted + paused.
+    
+    When clicking play:
+    
+    Only the selected video plays
+    
+    All others pause
+    
+    Show overlay play button + mute icon.
+    
+    Mute/unmute button should switch Wistia player volume.
+    
+    DESIGN REQUIREMENTS
+    
+    Rounded corners (12px)
+    
+    Soft shadow
+    
+    Light background block
+    
+    Equal spacing between cards (20px)
+    
+    Use flexbox/grid for desktop row layout
+    
+    Smooth mobile scroll with snapping
+    
+    Typography similar to screenshot: bold heading, small influencer line, clean product name.
+    
+    OUTPUT FORMAT
+    
+    Generate:
+    
+    Liquid section file with schema
+    
+    HTML structure
+    
+    CSS for layout + responsive behavior
+    
+    JS for:
+    
+    Wistia embed initialization
+    
+    Play/Pause
+    
+    Mute/Unmute
+    
+    Pause all other videos when one plays, When a video is selected (clicked to play):
+    
+    ✔ The entire card background turns green (#D9F5E4 or similar soft green) — like the screenshot
+    ✔ All other cards return to normal background
+    ✔ Only the selected video's card should stay highlighted while playing
+    ✔ When video is paused → green background removes
+    ✔ Smooth CSS transition on background change, in mobile view ewmov the slide add the dont pagination button and  .. selected reel only play and the selected video bagrounf will cahnge to gree only if select also add the custom css bar, in mobile view add the pagination buttona nd i need the every sinlg video take 70% tatoal width andd below the dot dot button, i dont need all video play in single time add the pause button only the selected vdeo should ply, if selected video onlyshow the instagram and if that time the heght will increase and the background change to green color\, in mobile view i need the first staring reels will in left 0% and in overall width will be 80% and next reels comes and  customer see in right side and it the customer want add scrool it also click the dot button, add the cutsom css section i need to edit i can modieif usgin that, remove the dot button in desctop view and one mobile view i need the  pagination button good and the above the video that white color buttlon like that come i  need to remove that but in mobile view i need the pagination button, in mobile view i need if the fist video finish automatically change the nxt video and in desctop view that white color come in above the video remove that ... in mobile view the scrool the video using the slide screen hand and desctp view in selected video i need the backgound chang eto diffenren color , remove the pagination button in desctop viw that vide above some white color come i need to remove that aslo add the valum button in everysing video , remove the white color buttor or something come above the vdieo remove that -- selectd video change hte bgound coloe make the eveysing video heading and that will be tha one block like tha if section is actiove white this that bachrougnd chang to green 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-wistia-carousel-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 40px 0;
+  }
+
+  .ai-wistia-carousel__container-{{ ai_gen_id }} {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-wistia-carousel__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+  }
+
+  .ai-wistia-carousel__card-{{ ai_gen_id }} {
+    background-color: {{ block.settings.card_background }};
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+
+  .ai-wistia-carousel__card-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.active_card_background }};
+  }
+
+  .ai-wistia-carousel__heading-{{ ai_gen_id }} {
+    padding: 20px 20px 12px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: {{ block.settings.heading_color }};
+    margin: 0;
+  }
+
+  .ai-wistia-carousel__influencer-{{ ai_gen_id }} {
+    padding: 0 20px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: {{ block.settings.text_color }};
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+  }
+
+  .ai-wistia-carousel__card-{{ ai_gen_id }}.active .ai-wistia-carousel__influencer-{{ ai_gen_id }} {
+    max-height: 50px;
+    opacity: 1;
+    padding: 0 20px 12px;
+  }
+
+  .ai-wistia-carousel__influencer-link-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ai-wistia-carousel__instagram-icon-{{ ai_gen_id }} {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .ai-wistia-carousel__video-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    background-color: #000;
+  }
+
+  .ai-wistia-carousel__video-container-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-wistia-carousel__mobile-image-{{ ai_gen_id }} {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-wistia-carousel__controls-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  }
+
+  .ai-wistia-carousel__control-btn-{{ ai_gen_id }} {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+  }
+
+  .ai-wistia-carousel__control-btn-{{ ai_gen_id }}:hover {
+    background-color: rgba(255, 255, 255, 1);
+  }
+
+  .ai-wistia-carousel__control-btn-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .ai-wistia-carousel__product-{{ ai_gen_id }} {
+    padding: 16px 20px 20px;
+    margin-top: auto;
+  }
+
+  .ai-wistia-carousel__product-title-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+  }
+
+  .ai-wistia-carousel__product-link-{{ ai_gen_id }} {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ai-wistia-carousel__product-link-{{ ai_gen_id }}:hover {
+    text-decoration: underline;
+  }
+
+  .ai-wistia-carousel__pagination-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  @media screen and (max-width: 767px) {
+    .ai-wistia-carousel__container-{{ ai_gen_id }} {
+      padding: 0;
+    }
+
+    .ai-wistia-carousel__grid-{{ ai_gen_id }} {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      padding: 0 0 0 0;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .ai-wistia-carousel__grid-{{ ai_gen_id }}::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ai-wistia-carousel__card-{{ ai_gen_id }} {
+      flex: 0 0 80%;
+      scroll-snap-align: start;
+      margin-left: 0;
+    }
+
+    .ai-wistia-carousel__card-{{ ai_gen_id }}:first-child {
+      margin-left: 0;
+    }
+
+    .ai-wistia-carousel__video-wrapper-{{ ai_gen_id }} {
+      aspect-ratio: 9 / 16;
+    }
+
+    .ai-wistia-carousel__video-container-{{ ai_gen_id }} {
+      display: block;
+    }
+
+    .ai-wistia-carousel__mobile-image-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-wistia-carousel__heading-{{ ai_gen_id }} {
+      font-size: 16px;
+    }
+
+    .ai-wistia-carousel__product-title-{{ ai_gen_id }} {
+      font-size: 14px;
+    }
+
+    .ai-wistia-carousel__pagination-{{ ai_gen_id }} {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 0 20px;
+    }
+
+    .ai-wistia-carousel__dot-{{ ai_gen_id }} {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #d0d0d0;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .ai-wistia-carousel__dot-{{ ai_gen_id }}.active {
+      background-color: {{ block.settings.pagination_active_color }};
+      width: 24px;
+      border-radius: 4px;
+    }
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1024px) {
+    .ai-wistia-carousel__grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  {{ block.settings.custom_css }}
+{% endstyle %}
+
+<wistia-carousel-{{ ai_gen_id }}
+  class="ai-wistia-carousel-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-wistia-carousel__container-{{ ai_gen_id }}">
+    <div class="ai-wistia-carousel__grid-{{ ai_gen_id }}" data-carousel-grid>
+      {% for i in (1..5) %}
+        {% assign card_id = ai_gen_id | append: '-card-' | append: i %}
+        {% assign heading_key = 'heading_' | append: i %}
+        {% assign influencer_key = 'influencer_name_' | append: i %}
+        {% assign instagram_key = 'instagram_link_' | append: i %}
+        {% assign wistia_key = 'wistia_embed_' | append: i %}
+        {% assign mobile_image_key = 'mobile_image_' | append: i %}
+        {% assign product_title_key = 'product_title_' | append: i %}
+        {% assign product_link_key = 'product_link_' | append: i %}
+        
+        <div class="ai-wistia-carousel__card-{{ ai_gen_id }}" data-card-id="{{ card_id }}" data-card-index="{{ i }}">
+          {% if block.settings[heading_key] != blank %}
+            <h3 class="ai-wistia-carousel__heading-{{ ai_gen_id }}">
+              {{ block.settings[heading_key] }}
+            </h3>
+          {% endif %}
+
+          {% if block.settings[influencer_key] != blank %}
+            <div class="ai-wistia-carousel__influencer-{{ ai_gen_id }}">
+              {% if block.settings[instagram_key] != blank %}
+                <a
+                  href="{{ block.settings[instagram_key] }}"
+                  class="ai-wistia-carousel__influencer-link-{{ ai_gen_id }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg
+                    class="ai-wistia-carousel__instagram-icon-{{ ai_gen_id }}"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  <span>{{ block.settings[influencer_key] }}</span>
+                </a>
+              {% else %}
+                <svg
+                  class="ai-wistia-carousel__instagram-icon-{{ ai_gen_id }}"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <span>{{ block.settings[influencer_key] }}</span>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          <div class="ai-wistia-carousel__video-wrapper-{{ ai_gen_id }}">
+            {% if block.settings[wistia_key] != blank %}
+              <div
+                class="ai-wistia-carousel__video-container-{{ ai_gen_id }}"
+                data-wistia-id="{{ card_id }}"
+              >
+                {{ block.settings[wistia_key] }}
+              </div>
+
+              <div class="ai-wistia-carousel__controls-{{ ai_gen_id }}">
+                <button
+                  class="ai-wistia-carousel__control-btn-{{ ai_gen_id }}"
+                  data-play-pause="{{ card_id }}"
+                  aria-label="Play or pause video"
+                >
+                  <svg class="play-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 5v14l11-7z" fill="currentColor"/>
+                  </svg>
+                  <svg class="pause-icon" style="display: none;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" fill="currentColor"/>
+                  </svg>
+                </button>
+
+                <button
+                  class="ai-wistia-carousel__control-btn-{{ ai_gen_id }}"
+                  data-volume-toggle="{{ card_id }}"
+                  aria-label="Adjust volume"
+                >
+                  <svg class="volume-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" fill="currentColor"/>
+                  </svg>
+                  <svg class="mute-icon" style="display: none;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" fill="currentColor"/>
+                  </svg>
+                </button>
+              </div>
+            {% endif %}
+
+            {% if block.settings[mobile_image_key] %}
+              <img
+                src="{{ block.settings[mobile_image_key] | image_url: width: 600 }}"
+                alt="{{ block.settings[mobile_image_key].alt | escape }}"
+                class="ai-wistia-carousel__mobile-image-{{ ai_gen_id }}"
+                loading="lazy"
+                width="600"
+                height="1067"
+              >
+            {% endif %}
+          </div>
+
+          {% if block.settings[product_title_key] != blank %}
+            <div class="ai-wistia-carousel__product-{{ ai_gen_id }}">
+              {% if block.settings[product_link_key] != blank %}
+                <a
+                  href="{{ block.settings[product_link_key] }}"
+                  class="ai-wistia-carousel__product-link-{{ ai_gen_id }}"
+                >
+                  <p class="ai-wistia-carousel__product-title-{{ ai_gen_id }}">
+                    {{ block.settings[product_title_key] }}
+                  </p>
+                </a>
+              {% else %}
+                <p class="ai-wistia-carousel__product-title-{{ ai_gen_id }}">
+                  {{ block.settings[product_title_key] }}
+                </p>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    
+    <div class="ai-wistia-carousel__pagination-{{ ai_gen_id }}" data-pagination>
+      {% for i in (1..5) %}
+        <button
+          class="ai-wistia-carousel__dot-{{ ai_gen_id }} {% if i == 1 %}active{% endif %}"
+          data-dot-index="{{ i }}"
+          aria-label="Go to slide {{ i }}"
+        ></button>
+      {% endfor %}
+    </div>
+  </div>
+</wistia-carousel-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class WistiaCarousel{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.videos = {};
+        this.isWistiaReady = false;
+        this.isMobile = window.innerWidth <= 767;
+        this.currentIndex = 0;
+        this.currentPlayingCardId = null;
+      }
+
+      connectedCallback() {
+        this.loadWistiaScript();
+        this.setupEventListeners();
+        this.setupScrollObserver();
+        
+        window.addEventListener('resize', () => {
+          this.isMobile = window.innerWidth <= 767;
+        });
+      }
+
+      loadWistiaScript() {
+        if (window._wq) {
+          this.isWistiaReady = true;
+          this.initializeVideos();
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.src = 'https://fast.wistia.com/assets/external/E-v1.js';
+        script.async = true;
+        script.onload = () => {
+          this.isWistiaReady = true;
+          this.initializeVideos();
+        };
+        document.head.appendChild(script);
+      }
+
+      initializeVideos() {
+        const videoContainers = this.querySelectorAll('[data-wistia-id]');
+        
+        videoContainers.forEach((container) => {
+          const cardId = container.getAttribute('data-wistia-id');
+          const embedCode = container.innerHTML;
+          const match = embedCode.match(/wistia_async_([a-zA-Z0-9]+)/);
+          
+          if (match && match[1]) {
+            const wistiaId = match[1];
+            
+            window._wq = window._wq || [];
+            window._wq.push({
+              id: wistiaId,
+              onReady: (video) => {
+                this.videos[cardId] = video;
+                video.mute();
+                video.pause();
+                
+                video.bind('play', () => {
+                  this.handleVideoPlay(cardId);
+                });
+                
+                video.bind('pause', () => {
+                  this.handleVideoPause(cardId);
+                });
+
+                video.bind('end', () => {
+                  this.handleVideoEnd(cardId);
+                });
+              }
+            });
+          }
+        });
+      }
+
+      setupEventListeners() {
+        const playPauseButtons = this.querySelectorAll('[data-play-pause]');
+        const volumeButtons = this.querySelectorAll('[data-volume-toggle]');
+        const dots = this.querySelectorAll('[data-dot-index]');
+        const cards = this.querySelectorAll('.ai-wistia-carousel__card-{{ ai_gen_id }}');
+
+        playPauseButtons.forEach((button) => {
+          button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const cardId = button.getAttribute('data-play-pause');
+            this.togglePlayPause(cardId);
+          });
+        });
+
+        volumeButtons.forEach((button) => {
+          button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const cardId = button.getAttribute('data-volume-toggle');
+            this.toggleVolume(cardId);
+          });
+        });
+
+        dots.forEach((dot) => {
+          dot.addEventListener('click', () => {
+            const index = parseInt(dot.getAttribute('data-dot-index'));
+            this.scrollToCard(index);
+          });
+        });
+
+        cards.forEach((card) => {
+          card.addEventListener('click', (e) => {
+            if (e.target.closest('button') || e.target.closest('a')) {
+              return;
+            }
+            const cardId = card.getAttribute('data-card-id');
+            this.handleCardClick(cardId);
+          });
+        });
+      }
+
+      setupScrollObserver() {
+        if (!this.isMobile) return;
+
+        const grid = this.querySelector('[data-carousel-grid]');
+        const cards = this.querySelectorAll('.ai-wistia-carousel__card-{{ ai_gen_id }}');
+        
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                const card = entry.target;
+                const index = parseInt(card.getAttribute('data-card-index'));
+                this.updateActiveDot(index);
+                this.currentIndex = index;
+              }
+            });
+          },
+          {
+            root: grid,
+            threshold: 0.5
+          }
+        );
+
+        cards.forEach((card) => {
+          observer.observe(card);
+        });
+      }
+
+      scrollToCard(index) {
+        const grid = this.querySelector('[data-carousel-grid]');
+        const cards = this.querySelectorAll('.ai-wistia-carousel__card-{{ ai_gen_id }}');
+        const targetCard = Array.from(cards).find(
+          (card) => parseInt(card.getAttribute('data-card-index')) === index
+        );
+        
+        if (targetCard && grid) {
+          const cardWidth = targetCard.offsetWidth;
+          const gap = 16;
+          const scrollPosition = (cardWidth + gap) * (index - 1);
+          
+          grid.scrollTo({
+            left: scrollPosition,
+            behavior: 'smooth'
+          });
+        }
+      }
+
+      updateActiveDot(index) {
+        const dots = this.querySelectorAll('[data-dot-index]');
+        dots.forEach((dot) => {
+          const dotIndex = parseInt(dot.getAttribute('data-dot-index'));
+          if (dotIndex === index) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+
+      handleCardClick(cardId) {
+        const video = this.videos[cardId];
+        if (!video) return;
+
+        if (this.currentPlayingCardId === cardId) {
+          return;
+        }
+
+        this.pauseAllVideos();
+        this.setActiveCard(cardId);
+        video.play();
+      }
+
+      handleVideoPlay(cardId) {
+        this.currentPlayingCardId = cardId;
+        this.updatePlayButton(cardId, true);
+        this.setActiveCard(cardId);
+      }
+
+      handleVideoPause(cardId) {
+        if (this.currentPlayingCardId === cardId) {
+          this.currentPlayingCardId = null;
+        }
+        this.updatePlayButton(cardId, false);
+        this.removeActiveCard(cardId);
+      }
+
+      handleVideoEnd(cardId) {
+        if (this.isMobile) {
+          const cards = Array.from(this.querySelectorAll('.ai-wistia-carousel__card-{{ ai_gen_id }}'));
+          const currentCard = this.querySelector(`[data-card-id="${cardId}"]`);
+          const currentIndex = cards.indexOf(currentCard);
+          
+          if (currentIndex < cards.length - 1) {
+            const nextIndex = currentIndex + 2;
+            this.scrollToCard(nextIndex);
+            
+            setTimeout(() => {
+              const nextCard = cards[currentIndex + 1];
+              const nextCardId = nextCard.getAttribute('data-card-id');
+              this.playVideo(nextCardId);
+            }, 500);
+          }
+        }
+      }
+
+      togglePlayPause(cardId) {
+        const video = this.videos[cardId];
+        if (!video) return;
+
+        if (video.state() === 'playing') {
+          video.pause();
+        } else {
+          this.pauseAllVideos();
+          video.play();
+        }
+      }
+
+      playVideo(cardId) {
+        const video = this.videos[cardId];
+        if (!video) return;
+        
+        this.pauseAllVideos();
+        video.play();
+      }
+
+      toggleVolume(cardId) {
+        const video = this.videos[cardId];
+        if (!video) return;
+
+        const button = this.querySelector(`[data-volume-toggle="${cardId}"]`);
+        const volumeIcon = button.querySelector('.volume-icon');
+        const muteIcon = button.querySelector('.mute-icon');
+
+        if (video.isMuted()) {
+          video.unmute();
+          volumeIcon.style.display = 'block';
+          muteIcon.style.display = 'none';
+        } else {
+          video.mute();
+          volumeIcon.style.display = 'none';
+          muteIcon.style.display = 'block';
+        }
+      }
+
+      pauseAllVideos() {
+        Object.keys(this.videos).forEach((cardId) => {
+          const video = this.videos[cardId];
+          if (video && video.state() === 'playing') {
+            video.pause();
+          }
+        });
+      }
+
+      updatePlayButton(cardId, isPlaying) {
+        const button = this.querySelector(`[data-play-pause="${cardId}"]`);
+        if (!button) return;
+
+        const playIcon = button.querySelector('.play-icon');
+        const pauseIcon = button.querySelector('.pause-icon');
+
+        if (isPlaying) {
+          playIcon.style.display = 'none';
+          pauseIcon.style.display = 'block';
+        } else {
+          playIcon.style.display = 'block';
+          pauseIcon.style.display = 'none';
+        }
+      }
+
+      setActiveCard(cardId) {
+        const allCards = this.querySelectorAll('.ai-wistia-carousel__card-{{ ai_gen_id }}');
+        allCards.forEach((card) => {
+          card.classList.remove('active');
+        });
+
+        const activeCard = this.querySelector(`[data-card-id="${cardId}"]`);
+        if (activeCard) {
+          activeCard.classList.add('active');
+        }
+      }
+
+      removeActiveCard(cardId) {
+        const card = this.querySelector(`[data-card-id="${cardId}"]`);
+        if (card) {
+          card.classList.remove('active');
+        }
+      }
+    }
+
+    customElements.define('wistia-carousel-{{ ai_gen_id }}', WistiaCarousel{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Wistia video carousel",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "active_card_background",
+      "label": "Active background",
+      "default": "#D9F5E4",
+      "info": "Background color when video is playing"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "pagination_active_color",
+      "label": "Pagination active color",
+      "default": "#000000",
+      "info": "Color of active pagination dot"
+    },
+    {
+      "type": "header",
+      "content": "Custom CSS"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_css",
+      "label": "Custom CSS",
+      "info": "Add your custom CSS here to override default styles"
+    },
+    {
+      "type": "header",
+      "content": "Card 1"
+    },
+    {
+      "type": "text",
+      "id": "heading_1",
+      "label": "Heading",
+      "default": "Clear water is the foundation of wellness"
+    },
+    {
+      "type": "text",
+      "id": "influencer_name_1",
+      "label": "Influencer name",
+      "default": "Influencer Name"
+    },
+    {
+      "type": "url",
+      "id": "instagram_link_1",
+      "label": "Instagram profile link"
+    },
+    {
+      "type": "textarea",
+      "id": "wistia_embed_1",
+      "label": "Wistia embed code",
+      "info": "Paste the full Wistia embed code here"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image_1",
+      "label": "Mobile image",
+      "info": "Shown on mobile devices instead of video"
+    },
+    {
+      "type": "text",
+      "id": "product_title_1",
+      "label": "Product title",
+      "default": "Product Name"
+    },
+    {
+      "type": "url",
+      "id": "product_link_1",
+      "label": "Product link"
+    },
+    {
+      "type": "header",
+      "content": "Card 2"
+    },
+    {
+      "type": "text",
+      "id": "heading_2",
+      "label": "Heading",
+      "default": "Clear water is the foundation of wellness"
+    },
+    {
+      "type": "text",
+      "id": "influencer_name_2",
+      "label": "Influencer name",
+      "default": "Influencer Name"
+    },
+    {
+      "type": "url",
+      "id": "instagram_link_2",
+      "label": "Instagram profile link"
+    },
+    {
+      "type": "textarea",
+      "id": "wistia_embed_2",
+      "label": "Wistia embed code",
+      "info": "Paste the full Wistia embed code here"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image_2",
+      "label": "Mobile image",
+      "info": "Shown on mobile devices instead of video"
+    },
+    {
+      "type": "text",
+      "id": "product_title_2",
+      "label": "Product title",
+      "default": "Product Name"
+    },
+    {
+      "type": "url",
+      "id": "product_link_2",
+      "label": "Product link"
+    },
+    {
+      "type": "header",
+      "content": "Card 3"
+    },
+    {
+      "type": "text",
+      "id": "heading_3",
+      "label": "Heading",
+      "default": "Clear water is the foundation of wellness"
+    },
+    {
+      "type": "text",
+      "id": "influencer_name_3",
+      "label": "Influencer name",
+      "default": "Influencer Name"
+    },
+    {
+      "type": "url",
+      "id": "instagram_link_3",
+      "label": "Instagram profile link"
+    },
+    {
+      "type": "textarea",
+      "id": "wistia_embed_3",
+      "label": "Wistia embed code",
+      "info": "Paste the full Wistia embed code here"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image_3",
+      "label": "Mobile image",
+      "info": "Shown on mobile devices instead of video"
+    },
+    {
+      "type": "text",
+      "id": "product_title_3",
+      "label": "Product title",
+      "default": "Product Name"
+    },
+    {
+      "type": "url",
+      "id": "product_link_3",
+      "label": "Product link"
+    },
+    {
+      "type": "header",
+      "content": "Card 4"
+    },
+    {
+      "type": "text",
+      "id": "heading_4",
+      "label": "Heading",
+      "default": "Clear water is the foundation of wellness"
+    },
+    {
+      "type": "text",
+      "id": "influencer_name_4",
+      "label": "Influencer name",
+      "default": "Influencer Name"
+    },
+    {
+      "type": "url",
+      "id": "instagram_link_4",
+      "label": "Instagram profile link"
+    },
+    {
+      "type": "textarea",
+      "id": "wistia_embed_4",
+      "label": "Wistia embed code",
+      "info": "Paste the full Wistia embed code here"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image_4",
+      "label": "Mobile image",
+      "info": "Shown on mobile devices instead of video"
+    },
+    {
+      "type": "text",
+      "id": "product_title_4",
+      "label": "Product title",
+      "default": "Product Name"
+    },
+    {
+      "type": "url",
+      "id": "product_link_4",
+      "label": "Product link"
+    },
+    {
+      "type": "header",
+      "content": "Card 5"
+    },
+    {
+      "type": "text",
+      "id": "heading_5",
+      "label": "Heading",
+      "default": "Clear water is the foundation of wellness"
+    },
+    {
+      "type": "text",
+      "id": "influencer_name_5",
+      "label": "Influencer name",
+      "default": "Influencer Name"
+    },
+    {
+      "type": "url",
+      "id": "instagram_link_5",
+      "label": "Instagram profile link"
+    },
+    {
+      "type": "textarea",
+      "id": "wistia_embed_5",
+      "label": "Wistia embed code",
+      "info": "Paste the full Wistia embed code here"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image_5",
+      "label": "Mobile image",
+      "info": "Shown on mobile devices instead of video"
+    },
+    {
+      "type": "text",
+      "id": "product_title_5",
+      "label": "Product title",
+      "default": "Product Name"
+    },
+    {
+      "type": "url",
+      "id": "product_link_5",
+      "label": "Product link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wistia video carousel"
+    }
+  ]
+}
+{% endschema %}

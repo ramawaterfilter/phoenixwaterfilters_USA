@@ -1,0 +1,478 @@
+{{ 'subscribe-save.css' | asset_url | stylesheet_tag }}
+{% style %}
+  #shopify-section-{{ section.id }} .ss-chooser { --ss-bg: {{ section.settings.background_color }}; --ss-ink: {{ section.settings.text_color }}; --ss-pad: {{ section.settings.desktop_padding }}px; --ss-pad-mobile: {{ section.settings.mobile_padding }}px; }
+{% endstyle %}
+<section id="{{ section.settings.anchor_id | escape }}" class="ss ss-chooser">
+  <div class="ss-wrap">
+    <header class="ss-intro">
+      <p class="ss-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h2>{{ section.settings.heading }}</h2>
+      <div class="ss-intro-copy">
+        {% render 'ss-qa-body',
+          body: section.settings.body,
+          qa_1: section.settings.qa_1,
+          qa_2: section.settings.qa_2,
+          qa_3: section.settings.qa_3
+        %}
+      </div>
+    </header>
+    <div class="ss-decision-grid">
+      {% for block in section.blocks -%}
+        {%- if block.type == 'choice_step' %}
+          <article
+            class="ss-card {% if block.settings.style == 'featured' %}ss-card-featured{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            <span class="ss-mono">{{ block.settings.eyebrow | escape }}</span>
+            <h3>{{ block.settings.title }}</h3>
+            <div class="ss-copy">{{ block.settings.body }}</div>
+            {% if block.settings.button_url != blank -%}
+              <a class="ss-text-link" href="{{ block.settings.button_url }}">
+                {{- block.settings.button_label | escape -}}
+              </a>
+            {%- endif %}
+          </article>
+        {% endif -%}
+      {%- endfor %}
+    </div>
+    <aside class="ss-recommendation">
+      <strong class="ss-mono">{{ section.settings.recommendation_label | escape }}</strong>
+      <div class="ss-copy">{{ section.settings.recommendation_body }}</div>
+    </aside>
+    <div class="ss-parts-heading">
+      <p class="ss-eyebrow">{{ section.settings.parts_eyebrow | escape }}</p>
+      <h3>{{ section.settings.parts_heading }}</h3>
+    </div>
+    <div class="ss-parts-grid">
+      {% for block in section.blocks -%}
+        {%- if block.type == 'replacement_item' %}
+          <article class="ss-card" {{ block.shopify_attributes }}>
+            <div class="ss-part-image">
+              {% if block.settings.image != blank -%}
+                {{-
+                  block.settings.image
+                  | image_url: width: 720
+                  | image_tag:
+                    widths: '320, 480, 720',
+                    sizes: '(min-width: 900px) 28vw, 90vw',
+                    loading: 'lazy',
+                    alt: block.settings.image_alt
+                -}}
+              {%- else %}
+                <div class="ss-media-placeholder" aria-hidden="true"></div>
+              {% endif %}
+            </div>
+            <h4>{{ block.settings.title }}</h4>
+            <div class="ss-copy">{{ block.settings.body }}</div>
+            {% if block.settings.button_url != blank -%}
+              <a class="ss-text-link" href="{{ block.settings.button_url }}">
+                {{- block.settings.button_label | escape -}}
+              </a>
+            {%- endif %}
+          </article>
+        {% endif -%}
+      {%- endfor %}
+    </div>
+    <div class="ss-video-layout ss-refill-preview">
+      <div class="ss-video-frame">
+        {% if section.settings.walkthrough_media_type == 'video' and section.settings.walkthrough_video != blank -%}
+          {%- assign walkthrough_video_poster = section.settings.walkthrough_poster
+            | default: section.settings.walkthrough_video.preview_image
+          -%}
+          <video
+            controls
+            preload="none"
+            playsinline
+            aria-label="{{ section.settings.walkthrough_heading | strip_html | escape }}"
+            {% if walkthrough_video_poster != blank %}
+              poster="{{ walkthrough_video_poster | image_url: width: 1200 }}"
+            {% endif %}
+          >
+            {% for source in section.settings.walkthrough_video.sources %}
+              <source src="{{ source.url | escape }}" type="{{ source.mime_type | escape }}">
+            {% endfor %}
+          </video>
+        {%- elsif section.settings.walkthrough_poster != blank -%}
+          {{-
+            section.settings.walkthrough_poster
+            | image_url: width: 1200
+            | image_tag:
+              widths: '480, 720, 960, 1200',
+              sizes: '(min-width: 900px) 52vw, 100vw',
+              loading: 'lazy',
+              alt: section.settings.walkthrough_heading
+          -}}
+        {%- else %}
+          <div class="ss-media-placeholder" aria-hidden="true"></div>
+        {% endif %}
+      </div>
+      <div>
+        <p class="ss-eyebrow">{{ section.settings.walkthrough_eyebrow | escape }}</p>
+        <h3>{{ section.settings.walkthrough_heading }}</h3>
+        <div class="ss-copy">{{ section.settings.walkthrough_body }}</div>
+        <p class="ss-small">{{ section.settings.walkthrough_status | escape }}</p>
+      </div>
+    </div>
+    <div class="ss-refill-guide">
+      <figure>
+        {% if section.settings.refill_image != blank -%}
+          {{-
+            section.settings.refill_image
+            | image_url: width: 960
+            | image_tag:
+              widths: '480, 720, 960',
+              sizes: '(min-width: 900px) 38vw, 100vw',
+              loading: 'lazy',
+              alt: section.settings.refill_caption
+          -}}
+        {%- else %}
+          <div class="ss-media-placeholder" aria-hidden="true"></div>
+        {% endif %}
+        <figcaption>{{ section.settings.refill_caption | escape }}</figcaption>
+      </figure>
+      <div>
+        <h3>{{ section.settings.refill_heading }}</h3>
+        {% if section.settings.refill_intro != blank %}
+          <div class="ss-copy">{{ section.settings.refill_intro }}</div>
+        {% endif %}
+        <ol class="ss-refill-steps">
+          {% for block in section.blocks -%}
+            {%- if block.type == 'info_card' %}
+              <li {{ block.shopify_attributes }}>
+                <span class="ss-step-number">{{ block.settings.number | escape }}</span>
+                {{- block.settings.title | escape }}
+              </li>
+            {% endif -%}
+          {%- endfor %}
+        </ol>
+        <div class="ss-copy">{{ section.settings.refill_closing }}</div>
+        {% if section.settings.help_link != blank -%}
+          <a class="ss-text-link" href="{{ section.settings.help_link }}">
+            {{- section.settings.help_link_label | escape -}}
+          </a>
+        {%- else -%}
+          <span class="ss-small">
+            {%- render 'ss-qa-body', body: '%%QA1%%', qa_1: section.settings.help_link_placeholder -%}
+          </span>
+        {%- endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Subscribe Save Chooser",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body copy"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "choosing"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#153a5b"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop vertical spacing",
+      "default": 88,
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile vertical spacing",
+      "default": 56,
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "recommendation_label",
+      "label": "Recommendation label"
+    },
+    {
+      "type": "richtext",
+      "id": "recommendation_body",
+      "label": "Recommendation copy"
+    },
+    {
+      "type": "text",
+      "id": "parts_eyebrow",
+      "label": "Parts eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "parts_heading",
+      "label": "Parts heading"
+    },
+    {
+      "type": "select",
+      "id": "walkthrough_media_type",
+      "label": "Walkthrough media type",
+      "default": "image",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "id": "walkthrough_video",
+      "label": "Walkthrough Shopify-hosted video",
+      "info": "Plays when clicked with controls. If no video is selected, the walkthrough image is shown."
+    },
+    {
+      "type": "image_picker",
+      "id": "walkthrough_poster",
+      "label": "Walkthrough image / video poster"
+    },
+    {
+      "type": "text",
+      "id": "walkthrough_eyebrow",
+      "label": "Walkthrough eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "walkthrough_heading",
+      "label": "Walkthrough heading"
+    },
+    {
+      "type": "richtext",
+      "id": "walkthrough_body",
+      "label": "Walkthrough copy"
+    },
+    {
+      "type": "text",
+      "id": "walkthrough_status",
+      "label": "Walkthrough status"
+    },
+    {
+      "type": "richtext",
+      "id": "walkthrough_outline",
+      "label": "Walkthrough outline"
+    },
+    {
+      "type": "image_picker",
+      "id": "refill_image",
+      "label": "Refill image"
+    },
+    {
+      "type": "text",
+      "id": "refill_caption",
+      "label": "Refill image caption"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "refill_heading",
+      "label": "Refill heading"
+    },
+    {
+      "type": "richtext",
+      "id": "refill_intro",
+      "label": "Refill intro"
+    },
+    {
+      "type": "richtext",
+      "id": "refill_closing",
+      "label": "Refill closing"
+    },
+    {
+      "type": "text",
+      "id": "help_link_label",
+      "label": "Help link label",
+      "default": "Help Manual"
+    },
+    {
+      "type": "url",
+      "id": "help_link",
+      "label": "Help Manual URL"
+    },
+    {
+      "type": "text",
+      "id": "help_link_placeholder",
+      "label": "Unconfirmed link",
+      "default": "[CONFIRM: link URL]"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "choice_step",
+      "name": "Choice step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "default": "default",
+          "options": [
+            {
+              "value": "default",
+              "label": "Default"
+            },
+            {
+              "value": "featured",
+              "label": "Featured"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "replacement_item",
+      "name": "Replacement item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image alt text"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Link label"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Link URL"
+        }
+      ]
+    },
+    {
+      "type": "info_card",
+      "name": "Refill step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Step text"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "More detail"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subscribe Save Chooser",
+      "blocks": [
+        {
+          "type": "choice_step",
+          "settings": {
+            "eyebrow": "FIRST TIME BUYING FLUORIDE REDUCTION",
+            "title": "Start with the steel elements",
+            "body": "<p>They arrive as a complete pair — AISI 304 stainless housing, pre-filled with FluoRid media — and drop into your Phoenix Gravity system alongside your carbon elements.</p><p>$99 one-time, or $94 on subscription. The housings are warranted for ten years, so our recommendation is to buy the housings once and subscribe to refills. The steel subscription would send new housings every 4 months.</p>",
+            "button_label": "Explore the steel elements",
+            "button_url": "/products/fluoride-reduction-elements",
+            "style": "default"
+          }
+        },
+        {
+          "type": "choice_step",
+          "settings": {
+            "eyebrow": "ALREADY OWN POSTREAT ELEMENTS",
+            "title": "Subscribe to the refill media",
+            "body": "<p>Only the media inside is used up. Refilling costs $59 instead of $94 for a whole new element, so you keep the housings and replace only the media.</p><p>$177 a year instead of $282 — a saving of $105 compared with renewing the complete steel-element plan three times a year. Initial housings cost extra.</p>",
+            "button_label": "Choose refill media",
+            "button_url": "#plan-refill",
+            "style": "featured"
+          }
+        },
+        {
+          "type": "replacement_item",
+          "settings": {
+            "title": "Carbon cartridges",
+            "body": "<p>Your main filters. Replace the pair every 12 months or at its rated capacity, whichever comes first.</p>",
+            "image_alt": "Carbon filter cartridge"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

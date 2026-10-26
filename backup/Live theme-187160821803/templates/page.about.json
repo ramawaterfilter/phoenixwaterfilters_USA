@@ -1,0 +1,149 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero_fGiC9Y": {
+      "type": "hero",
+      "settings": {
+        "heading": "About Us",
+        "content": ""
+      }
+    },
+    "article_callout_66xp3E": {
+      "type": "article-callout",
+      "settings": {
+        "style": "style-2",
+        "reducepadding": true,
+        "heading": "Established 1970",
+        "content": ""
+      }
+    },
+    "copy_image_VPPNeV": {
+      "type": "copy-image",
+      "settings": {
+        "style": "bg-white",
+        "layout": "copy-image-copy",
+        "vertical_align": "align-items-center",
+        "heading": "Our Story So Far",
+        "content": "<p>In London, a soon-to-be-father was increasingly concerned about the quality of tap water. Existing solutions were expensive, complicated, and not guaranteed to do the job. So, starting from scratch and leveraging innovative new technology, he designed and manufactured high-quality, low-waste drinking water filter ceramics in the UK.<br/><br/>Meanwhile in Chennai, another soon-to-be father saw an opportunity to manufacture water filters using the highest-grade stainless steel. So, he created a sustainable factory (run exclusively on solar power) to do just that. By 1985, it had become the go-to global supplier for 304 stainless steel water filter housings.<br/><br/>The two fathers joined forces in the early 2000s and by 2005, the partnership blossomed to provide a unique combination of high-quality water filtration and manufacturing expertise.<br/><br/>Years later their children, having worked in water filtration their whole lives, decided to combine this expertise with their passion for health and sustainability.</p><p>Manufactured in our solar-powered factory in Chennai, India — shipped from our US warehouse.</p>",
+        "column_img": "shopify://shop_images/water-filter-eCom1.webp",
+        "video_id": "",
+        "large_image": "img-standard",
+        "second_content": "<p>The Phoenix Gravity Water Filters offer the highest-grade stainless steel gravity drinking water filtration on the market, Phoenix Gravity Water Filters are bringing better- tasting, and better-nourishing water back to 800,000 + homes globally (and counting!) - just as nature intended.</p>",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "bg_image_style": "contain",
+        "section_randoimg_position": "bottom"
+      }
+    },
+    "copy_image_EF7HdE": {
+      "type": "copy-image",
+      "custom_css": [
+        "@media (max-width: 768px) {h2 {font-size: 20px; }}"
+      ],
+      "settings": {
+        "style": "bg-white",
+        "layout": "copy-image-copy",
+        "vertical_align": "align-items-center",
+        "heading": "Great Technology, Greater Purpose",
+        "content": "<p>For over 50 years, we've poured passion, precision, and purpose into every drop of what we do. At the core of our gravity water filters is a beautiful balance - natural materials, thoughtful design, and technology that stands the test of time.</p><p>We believe great technology isn’t just about what goes into our filters, it’s about the people behind them. Innovators, problem-solvers, and caretakers of health and the planet. Together, we’ve created a legacy of trust, transforming everyday water into something purer, safer, and simply better.<br/><br/></p>",
+        "video_id": "",
+        "large_image": "img-standard",
+        "second_content": "",
+        "buttonlink": "",
+        "buttontext": "",
+        "afterbutton": "",
+        "custom_id": "",
+        "custom_class": "",
+        "bg_image_style": "contain",
+        "section_randoimg_position": "bottom"
+      }
+    },
+    "kk_fws_gallery_about": {
+      "type": "kk-fws-gallery",
+      "blocks": {
+        "gallery_images_block_GTmJpj": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home.png"
+          }
+        },
+        "gallery_images_block_D3CfhP": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-1.png"
+          }
+        },
+        "gallery_images_block_iPzqzW": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-2.png"
+          }
+        },
+        "gallery_images_block_tXmUUi": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-3.png"
+          }
+        },
+        "gallery_images_block_eUJehM": {
+          "type": "gallery_images_block",
+          "settings": {
+            "gallery_image": "shopify://shop_images/Phoenix_Gravity_tower_in_a_customer_home-4.png"
+          }
+        },
+        "trust_q8bdk8": {
+          "type": "trust",
+          "settings": {
+            "text": "Cancel any time"
+          }
+        },
+        "trust_7gggtk": {
+          "type": "trust",
+          "settings": {
+            "text": "100-day trial"
+          }
+        }
+      },
+      "block_order": [
+        "gallery_images_block_GTmJpj",
+        "gallery_images_block_D3CfhP",
+        "gallery_images_block_iPzqzW",
+        "gallery_images_block_tXmUUi",
+        "gallery_images_block_eUJehM",
+        "trust_q8bdk8",
+        "trust_7gggtk"
+      ],
+      "name": "KK FWS Gallery",
+      "settings": {
+        "rating_text": "Based on 7495 Reviews",
+        "certification_text": "NSF/ANSI 42 & 372 Certified",
+        "heading": "Enjoy Safe Drinking Water for the Whole Family!",
+        "content": "",
+        "image_alt": "",
+        "button_label": "Shop Now",
+        "button_link": "shopify://products/gravity-water-filter",
+        "button_arrow": true,
+        "button_style": "primary",
+        "background_color": "#ffffff"
+      }
+    }
+  },
+  "order": [
+    "hero_fGiC9Y",
+    "article_callout_66xp3E",
+    "copy_image_VPPNeV",
+    "copy_image_EF7HdE",
+    "kk_fws_gallery_about"
+  ]
+}

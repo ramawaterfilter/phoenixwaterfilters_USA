@@ -1,0 +1,37 @@
+{% doc %}
+Renders selling plan controls for the product hero form.
+@param {product} product - Product with selling plan groups.
+@example
+{% render 'product-hero-subscriptions', product: product %}
+{% enddoc %}
+
+{% if product.selling_plan_groups.size > 0 %}
+  <div class="subscriptions d-none">
+    {% for group in product.selling_plan_groups %}
+      <div class="subscriptions__group">
+        {% assign group_index = forloop.index %}
+        <p class="h4">{{ group.name }}</p>
+        {% for selling_plan in group.selling_plans %}
+          <label for="plan-{{ forloop.index }}-{{ group_index }}">
+            <input
+              type="radio"
+              id="plan-{{ forloop.index }}-{{ group_index }}"
+              name="selling_plan"
+              value="{{ selling_plan.id }}"
+              {% if forloop.index == 1 %}
+                checked
+              {% endif %}
+            >
+            {{ selling_plan.name }}
+          </label>
+        {% endfor %}
+        {% if group_index == product.selling_plan_groups.size and product.requires_selling_plan != true %}
+          <label for="plan-none">
+            <input type="radio" id="plan-none" name="selling_plan" value="">
+            {{ 'products.product.no_selling_plan' | t }}
+          </label>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}

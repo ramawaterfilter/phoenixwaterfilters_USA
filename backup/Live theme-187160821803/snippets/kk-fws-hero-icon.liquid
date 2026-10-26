@@ -1,0 +1,38 @@
+{%- comment -%}
+  Renders one icon for the KK FWS hero.
+
+  Accepts:
+  - block: {Object} Block with an `icon` select setting and an optional `custom_icon` image.
+  - size: {String} 'micro' or 'badge'.
+
+  Usage:
+  {% render 'kk-fws-hero-icon', block: block, size: 'micro' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign icon_class = 'kk-fws-hero__icon kk-fws-hero__icon--' | append: size
+
+  if size == 'badge'
+    assign icon_width = 35
+  else
+    assign icon_width = 24
+  endif
+-%}
+
+{%- if block.settings.custom_icon != blank -%}
+  {{
+    block.settings.custom_icon
+    | image_url: width: icon_width
+    | image_tag: class: icon_class, loading: 'eager', alt: ''
+  }}
+{%- else -%}
+  {%- assign icon_asset = 'kk-fws-icon-' | append: block.settings.icon | append: '.svg' -%}
+  <img
+    class="{{ icon_class }}"
+    src="{{ icon_asset | asset_url }}"
+    alt=""
+    width="{{ icon_width }}"
+    height="{{ icon_width }}"
+    loading="eager"
+  >
+{%- endif -%}

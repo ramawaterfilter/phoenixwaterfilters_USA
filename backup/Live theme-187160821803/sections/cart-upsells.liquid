@@ -1,0 +1,126 @@
+{% comment %}
+  Extract 'Size' from variant titles where titles are in the format "Feature / Size".
+{% endcomment %}
+
+{% assign product_upsell = false %}
+{% assign cart_product_size = "" %}
+
+<script>
+    var _upsellHeading = "{{ section.settings.upsell_heading }}";
+    var _upsellProducts = [];
+</script>
+
+{% for block in section.blocks %}
+  {% assign match_handle = block.settings.upsell_match.handle %}
+  {% assign sell_product = block.settings.upsell_product %}
+  {% assign product_upsell = false %}
+  {% assign donotcontinue = false %}
+
+  {% comment %} Avoid duplicates and check if the product is already in the cart or on its page or if it's sold out {% endcomment %}
+  {% for item in cart.items %}
+    {% if item.product.handle == sell_product.handle or product.handle == sell_product.handle %}
+      {% assign donotcontinue = true %}
+    {% endif %}
+  {% endfor %}
+  {% if sell_product.available == false %}
+    {% assign donotcontinue = true %}
+  {% endif %}
+
+  {% if match_handle != blank and donotcontinue == false %}
+    {% for item in cart.items %}
+      {% if item.product.handle == match_handle %}
+        {% assign product_upsell = sell_product %}
+        {% assign cart_product_size = item.variant.title | split: ' / ' | last | upcase %}
+        <!-- Extract the size from the variant title -->
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% if product_upsell and product_upsell.available %}
+    {% for variant in product_upsell.variants %}
+      {% assign variant_size = variant.title | split: ' / ' | last | upcase %}
+      {% assign variant_id= variant.id  %}
+      <!-- Extract the size from the variant title -->
+      <script>
+              //  console.log('Checking Variant ID: {{ variant.id }} with Size: {{ variant_size }}');
+      </script>
+      {% if variant_size == cart_product_size and variant_size != "" %}
+        <script>
+          _upsellProducts.push({
+            'url': '{{ product_upsell.url }}',
+            'image': '{{ variant.image | default: product_upsell.featured_image | image_url: width: 1000 | image_tag }}',
+            'title': '{{ product_upsell.title }}',
+            'price': '{{ variant.price | money_without_currency }}',
+            'compareprice': '{{ product_upsell.compare_at_price | money_without_currency   }}',
+            'id': '{{ variant.id }}',
+            'size': '{{ variant_size }}'
+          });
+          // console.log('Match found for Variant ID: {{ variant.id }} with Size: {{ variant_size }}');
+        </script>
+      {% else %}
+        <script>
+          // console.log('No Match for Variant ID: {{ variant.id }} with Size: {{ variant_size }}, expected Size: {{ cart_product_size }}');
+        </script>
+      {% endif %}
+
+      {% if variant.id == 41217741520939 %}
+        <script>
+          _upsellProducts.push({
+            'url': '{{ product_upsell.url }}',
+            'image': '{{ variant.image | default: product_upsell.featured_image | image_url: width: 1000 | image_tag }}',
+            'title': '{{ product_upsell.title }}',
+            'price': '{{ variant.price | money_without_currency }}',
+            'compareprice': '{{ product_upsell.compare_at_price | money_without_currency   }}',
+            'id': '{{ variant.id }}',
+            'size': '{{ variant_size }}'
+          });
+        </script>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endfor %}
+
+
+{% schema %}
+  {
+    "name": "Cart Upsells",
+    "settings": [
+      {
+        "type": "text",
+        "id": "upsell_heading",
+        "label": "Upsell Heading",
+        "default": "You Might Also Like"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Upsell",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Upsell Blocks",
+            "info": "Select the product to upsell, and the condition that the cart has to match in order to show the product. Leave the conditional product empty to show this product always. This will only ever show the first block that gets matched."
+          }, {
+            "type": "product",
+            "id": "upsell_product",
+            "label": "Product Upsell"
+          }, {
+            "type": "product",
+            "id": "upsell_match",
+            "label": "Condition (show above product when this is in the cart)"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Cart Upsells",
+        "category": "Sections"
+      }
+    ],
+    "enabled_on": {
+      "groups": ["header"]
+    }
+  }
+{% endschema %}

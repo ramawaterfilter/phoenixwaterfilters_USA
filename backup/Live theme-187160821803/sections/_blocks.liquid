@@ -1,0 +1,39 @@
+{% assign current_variant_id = product.selected_or_first_available_variant.id | append: '' %}
+
+<variant-visibility-scope
+  current-variant-id="{{ current_variant_id }}"
+  {% render 'variant-visibility-attributes', variant_ids: section.settings.variant_ids, current_variant_id: current_variant_id %}
+>
+  {% content_for 'blocks' %}
+</variant-visibility-scope>
+
+<script src="{{ 'variant-visibility.js' | asset_url }}" defer></script>
+
+{% stylesheet %}
+  .section-theme-blocks > variant-visibility-scope[hidden],
+  .section-theme-blocks:has(> variant-visibility-scope[hidden]) {
+    display: none !important;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Section",
+  "class": "section-theme-blocks",
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "variant_ids",
+      "label": "Section Variant IDs",
+      "info": "Comma-separated variant IDs that should display this entire section. Leave empty to always show."
+    }
+  ],
+  "presets": [
+    { "name": "Section" }
+  ]
+}
+{% endschema %}

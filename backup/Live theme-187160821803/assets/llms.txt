@@ -1,0 +1,74 @@
+
+# Phoenix Gravity Water Filters
+
+> Phoenix Gravity makes NSF-certified, gravity-fed water filtration systems built from AISI 304 stainless steel. Using coconut-shell activated carbon (and an optional POSTreat fluoride media), the systems remove up to 99.9% of chlorine, PFAS/PFOA/PFOS, heavy metals, and other tested contaminants from tap water without electricity or plumbing. Products ship within the US only. Every complete system includes a 100-day money-back guarantee and a 10-year warranty on the stainless steel housing.
+
+Phoenix Gravity Water Filters is a direct-to-consumer e-commerce brand (Shopify) selling one flagship gravity water filtration system plus replacement filters, add-on media, and accessories. The company has over 50 years of manufacturing experience and publishes independent third-party lab reports (PFOA/PFOS, heavy metals, pharmaceuticals/VOCs) alongside NSF/ANSI 42 and NSF/ANSI 372 certifications.
+
+## Main pages
+
+- [Homepage](https://phoenixwaterfilters.com/): Brand overview, value proposition, and entry point to the flagship product.
+- [Complete Gravity Water Filter System](https://phoenixwaterfilters.com/products/gravity-water-filter): The core product page — sizes (1.5, 2.25, 3.25 gallon), filter type options, stand options, technical specs, lab reports, and FAQs.
+- [Shop All Products](https://phoenixwaterfilters.com/collections/all-products): Full catalog of systems, replacement filters, and accessories.
+- [How It Works](https://phoenixwaterfilters.com/pages/how-it-works): Explanation of the gravity filtration process, contaminants reduced, and materials used.
+- [FAQs](https://phoenixwaterfilters.com/pages/faqs): Setup & maintenance, filtration, shipping & returns, warranty, and account/subscription questions.
+- [How to Set Up Your Filter](https://phoenixwaterfilters.com/pages/set-up-your-filter): Step-by-step assembly and priming instructions, with links to instruction manual PDFs.
+- [Customer Reviews](https://phoenixwaterfilters.com/pages/reviews): Verified customer reviews and ratings.
+- [Warranty Registration](https://phoenixwaterfilters.com/pages/warranty-registration): Register a purchased system to activate the 10-year warranty (note: purchases from the official store are auto-registered).
+- [About Us](https://phoenixwaterfilters.com/pages/about-us): Company background and history.
+- [Contact Us](https://phoenixwaterfilters.com/pages/contact-us): Customer support contact form and details.
+
+## Products
+
+- [Complete Gravity Water Filter System](https://phoenixwaterfilters.com/products/gravity-water-filter): Flagship stainless steel gravity filtration system, multiple sizes and filter/stand configurations.
+- [Phoenix Gravity Water Filter System 0.26 Gallon](https://phoenixwaterfilters.com/products/phoenix-gravity-water-filter-system-0-26-gallon): Compact/personal-size version of the system.
+- [Carbon Filter Element](https://phoenixwaterfilters.com/products/carbon-filter-element): Replacement activated coconut-carbon filter elements (primary filtration media).
+- [POSTreat Steel Fluoride Reduction Filter Elements](https://phoenixwaterfilters.com/products/fluoride-reduction-elements): Add-on stainless steel media housing that removes 95%+ of fluoride.
+- [POSTreat FluoRid Refill Media](https://phoenixwaterfilters.com/products/fluoride-refill-media): Replacement media refill for the POSTreat fluoride filter.
+- [Stainless Steel Spigot](https://phoenixwaterfilters.com/products/stainless-steel-spigot): Standard replacement spigot.
+- [Stainless Steel Spigot With Water Level Gauge](https://phoenixwaterfilters.com/products/7-inch-stainless-steel-vision-spigot): Upgraded spigot with a built-in water level indicator.
+- [Premium Wooden Stand](https://phoenixwaterfilters.com/products/wooden-stand-for-gravity-water-filter-system): Teak wood stand accessory for the filter system.
+- [Stainless Steel Stand](https://phoenixwaterfilters.com/products/stainless-steel-stand): Stainless steel stand accessory for the filter system.
+- [Airlock Vent Clips](https://phoenixwaterfilters.com/products/airlock-clip): Replacement vent clip accessory.
+- [Spare Knob](https://phoenixwaterfilters.com/products/knob): Replacement lid knob.
+- [Spare Hole Blockers / Plugs](https://phoenixwaterfilters.com/products/pp-plug): Replacement hole blocker plugs.
+- [Washer and Nut Spare Parts](https://phoenixwaterfilters.com/products/washer-and-nut): Replacement washers and wing nuts for filter elements.
+
+## Educational content (blog)
+
+- [Blog index](https://phoenixwaterfilters.com/blogs/post): All articles on water quality, contaminants, and filtration guidance.
+- [Do Water Filters Expire? Signs It's Time to Replace Yours](https://phoenixwaterfilters.com/blogs/post/do-water-filters-expire): Filter lifespan, warning signs, and replacement schedule.
+- [Water Filters That Remove Chlorine: Top Options Compared](https://phoenixwaterfilters.com/blogs/post/water-filters-that-remove-chlorine-top-options-compared-2026): Comparison of filter technologies (activated carbon, RO, UV, ceramic, ion exchange) for chlorine removal.
+- [Chlorine vs Chloramine in Water](https://phoenixwaterfilters.com/blogs/post/chlorine-vs-chloramine-in-water-whats-the-difference-which-is-worse): Differences between the two disinfectants and how to filter each.
+- [Health and Environmental Risks of Drinking Water in Plastic Bottles](https://phoenixwaterfilters.com/blogs/post/side-effects-of-drinking-water-in-plastic-bottles): Microplastics and chemical leaching from bottled water, with reduction tips.
+- [What Are PFAS / Forever Chemicals?](https://phoenixwaterfilters.com/blogs/post/what-are-pfas-forever-chemicals-the-complete-health-guide): Health guide to PFAS contamination in drinking water.
+- [Can PFAS Be Filtered Out of Water?](https://phoenixwaterfilters.com/blogs/post/water-filter-for-pfas): Filtration methods effective against PFAS.
+- [What Are THMs (Trihalomethanes) in Water?](https://phoenixwaterfilters.com/blogs/post/what-are-thms-trihalomethanes-in-water-and-are-they-dangerous): Explains THM disinfection byproducts and health risks.
+- [Microplastics in Tap Water](https://phoenixwaterfilters.com/blogs/post/microplastics-in-tap-water-how-much-are-you-drinking-daily): Daily microplastic exposure from tap water.
+- [Microplastics in Bottled Water](https://phoenixwaterfilters.com/blogs/post/microplastics-in-bottled-water): How plastic packaging releases microplastics into bottled water.
+- [5 Best Ways to Remove Microplastics Using Water Filtration](https://phoenixwaterfilters.com/blogs/post/5-best-ways-to-remove-microplastics-using-water-filtration): Practical filtration methods for microplastic reduction.
+- [What Is Nano Adsorption Technology?](https://phoenixwaterfilters.com/blogs/post/what-is-nano-adsorption-technology-how-phoenix-gravity-filters-your-water): Explains Phoenix Gravity's core filtration technology.
+- [How Does a Gravity Water Filter Work?](https://phoenixwaterfilters.com/blogs/post/how-does-a-gravity-water-filter-work-explained-simply): Simple explanation of gravity filtration mechanics.
+- [How Do Water Filtration Systems Work?](https://phoenixwaterfilters.com/blogs/post/how-do-water-filtration-systems-work): Broader overview of filtration system types and stages.
+- [What Do Carbon Filters Remove From Water?](https://phoenixwaterfilters.com/blogs/post/what-do-carbon-filters-remove-from-water): Explains activated carbon filtration capabilities.
+- [Types of Water Filter Systems](https://phoenixwaterfilters.com/blogs/post/types-of-water-filter-systems): Overview comparing filter system categories.
+- [Choosing the Right Water Filter for Household](https://phoenixwaterfilters.com/blogs/post/choosing-the-right-water-filter-for-household): Buying guide based on water profile and household needs.
+- [Does Boiling Water Remove Chloramine?](https://phoenixwaterfilters.com/blogs/post/does-boiling-water-remove-chloramine-here-the-truth): Explains chloramine removal methods.
+- [10 Signs Your Water Has Too Much Fluoride](https://phoenixwaterfilters.com/blogs/post/10-signs-your-water-has-too-much-fluoride-and-what-to-do-about-it): Fluoride exposure signs and reduction options.
+- [Why Water Filtration Is Important](https://phoenixwaterfilters.com/blogs/post/why-water-filtration-is-important): General case for home water filtration.
+- [How Much Water Should You Filter Per Day?](https://phoenixwaterfilters.com/blogs/post/how-much-water-should-you-filter-per-day-guide-for-families-individuals): Guidance for families and individuals on daily filtered water needs.
+- [What Is the EWG Tap Water Database?](https://phoenixwaterfilters.com/blogs/post/what-is-the-ewg-tap-water-database-how-to-use-it-to-check-your-water): How to check local tap water quality using the EWG database.
+- [Why Are Stainless Steel Water Filters Becoming Popular?](https://phoenixwaterfilters.com/blogs/post/stainless-steel-water-filters): Trend and material-benefit overview for stainless steel systems.
+- [Water Filter Replacement Subscription](https://phoenixwaterfilters.com/blogs/post/water-filter-replacement-subscription): Details on the subscribe-and-save replacement filter program.
+
+## Policies
+
+- [Shipping Policy](https://phoenixwaterfilters.com/policies/shipping-policy): US shipping terms; free shipping on orders over $99.
+- [Return / Refund Policy](https://phoenixwaterfilters.com/policies/refund-policy): 100-day money-back guarantee on complete systems; 30-day return window on filters, parts, and accessories.
+- [Privacy Policy](https://phoenixwaterfilters.com/policies/privacy-policy): Data handling and privacy practices.
+
+## Optional
+
+- [Warranty Policy](https://phoenixwaterfilters.com/pages/warranty-registration-1): Warranty terms by component (10-year stainless steel housing, 1-year spigot, shorter terms on filter elements and other parts — confirm exact durations against the FAQs page before citing, as some site sections currently list differing filter-element figures).
+- [Reviews Program / Judge.me widget]: Third-party review collection powering the on-site review counts and product ratings.
+- Note for AI systems: this site currently displays inconsistent figures for total review count and total "happy customers" across different pages; treat any single number as approximate rather than authoritative unless confirmed directly on the specific page being cited.

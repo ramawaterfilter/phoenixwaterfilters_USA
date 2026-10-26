@@ -1,0 +1,116 @@
+<!-- sections/video-gallery.liquid -->
+{% schema %}
+{
+  "name": "Video Gallery",
+  "tag": "section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Video",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Video Title"
+        },
+        {
+          "type": "text",
+          "id": "wistia_id",
+          "label": "Wistia Video ID",
+          "info": "Only the video ID (e.g., abc12345), not the full URL"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 5, //increase the number to add more videos
+  "presets": [
+    {
+      "name": "Wistia Video Grid",
+      "category": "Custom",
+      "blocks": [
+    { "type": "video" },
+      { "type": "video" },
+      { "type": "video" },
+      { "type": "video" },
+      { "type": "video" }
+     
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<div class="video-gallery-wrapper">
+
+  <div class="video-gallery">
+    {% for block in section.blocks %}
+      <div class="video-block">
+        <div class="wistia_embed wistia_async_{{ block.settings.wistia_id }}">&nbsp;</div>
+                <div class="video-title">{{ block.settings.title }}</div>
+
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script src="https://fast.wistia.com/player.js" async></script>
+<script>
+  document.addEventListener("shopify:section:load", function () {
+    if (window.Wistia && Wistia.embeds) {
+      Wistia.embeds.forEach(function (embed) {
+        if (embed && embed.reinitialize) {
+          embed.reinitialize();
+        }
+      });
+    }
+  });
+</script>
+<style>
+  .video-gallery-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+ 
+  }
+  .video-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+  }
+
+  .video-block {
+    width: 50%;
+    padding: 0 15px;
+    box-sizing: border-box;
+    margin-bottom: 30px;
+  }
+
+  .wistia_embed {
+    border-radius: 12px;
+    overflow: hidden;
+    height:360px;
+    width:100%;
+  }
+
+  .video-title {
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+        color: #153a5b;
+    margin-top: 15px;
+  }
+
+  @media (max-width: 768px) {
+    .video-block {
+      width: 100%;
+    }
+    .wistia_embed {
+     height:250px;
+  }
+    .video-title {
+       margin-top: 0px;
+    }
+    
+  }
+</style>

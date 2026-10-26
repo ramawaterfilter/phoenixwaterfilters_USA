@@ -1,0 +1,45 @@
+{%- assign testimonial_content = product.metafields.custom.testimonial_content -%}
+{%- assign testimonial_image = product.metafields.custom.testimonial_image -%}
+{%- if testimonial_content -%}
+
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-12">
+			<div class="section-testimonial__row">
+				{% if testimonial_image %}
+					<div class="section-testimonial__img">
+						{{ testimonial_image.value | image_url: width: 1000 | image_tag: loading: "lazy" }}
+					</div>
+				{% endif %}
+				
+				<div class="section-testimonial__copy">
+					{{ testimonial_content | metafield_tag }}
+
+					<svg width="98" height="19" viewBox="0 0 98 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M8.4483 14.8047L13.6694 18.421L12.2838 11.6052L16.8966 7.01938L10.8223 6.42797L8.4483 0L6.07433 6.42797L0 7.01938L4.61277 11.6052L3.22725 18.421L8.4483 14.8047Z" fill="black"/>
+						<path d="M28.7256 14.8047L33.9467 18.421L32.5612 11.6052L37.174 7.01938L31.0996 6.42797L28.7256 0L26.3517 6.42797L20.2773 7.01938L24.8901 11.6052L23.5046 18.421L28.7256 14.8047Z" fill="black"/>
+						<path d="M48.9991 14.8047L54.2201 18.421L52.8346 11.6052L57.4474 7.01938L51.3731 6.42797L48.9991 0L46.6251 6.42797L40.5508 7.01938L45.1636 11.6052L43.778 18.421L48.9991 14.8047Z" fill="black"/>
+						<path d="M89.5499 14.8047L94.7709 18.421L93.3854 11.6052L97.9982 7.01938L91.9238 6.42797L89.5499 0L87.1759 6.42797L81.1016 7.01938L85.7143 11.6052L84.3288 18.421L89.5499 14.8047Z" fill="black"/>
+						<path d="M69.2764 14.8047L74.4975 18.421L73.112 11.6052L77.7247 7.01938L71.6504 6.42797L69.2764 0L66.9025 6.42797L60.8281 7.01938L65.4409 11.6052L64.0554 18.421L69.2764 14.8047Z" fill="black"/>
+					</svg>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{%- endif -%}
+{% schema %}
+{
+    "name": "Singular Testimonial",
+    "tag": "section",
+	"class": "section-testimonial",
+    "presets":[
+        {
+            "name":"Singular Testimonial"
+        }
+    ],
+    "enabled_on": {
+        "templates": ["product"]
+    }
+}
+{% endschema %}

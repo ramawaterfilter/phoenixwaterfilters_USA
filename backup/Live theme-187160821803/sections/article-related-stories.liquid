@@ -1,0 +1,98 @@
+<div class="container">
+  <div class="row article-footer">
+    {% if section.settings.related_title != blank or section.settings.content %}
+      <div class="col-12 col-lg-10 related-intro pb-4">
+        {% if section.settings.related_title != blank %}
+          <h2 class="article-title">{{ section.settings.related_title }}</h2>
+        {% endif %}
+
+        {% if section.settings.content != blank %}
+          {{ section.settings.content }}
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="col-12 col-lg-10">
+      {% if section.blocks != blank %}
+        <ul class="stories d-flex flex-wrap px-0 mb-5">
+          {% for block in section.blocks %}
+            <li class="d-flex align-items-start py-2 ">
+              <div class="post-image">
+                {% if block.settings.story_image %}
+                  {{ block.settings.story_image | image_url: width: 200 | image_tag: class: "img-fluid view-animation me-3", loading: "lazy" }}
+                {% endif %}
+              </div>
+
+              <div class="story-post-details">
+                <ul class="post-meta">
+                  <li>{{ block.settings.category }}</li>
+                  <li>{{ block.settings.date_picker }}</li>
+                </ul>
+                <p class="post-title">{{ block.settings.story_text }}</p>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <div class="row p-0 mt-5">
+      <div class="col-12 col-xl-10 me-5 mb-5 divider"></div>
+    </div>
+
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Article Related Stories",
+    "tag": "section",
+    "class": "section-related-stories",
+    "settings": [
+      {
+        "type": "text",
+        "id": "related_title",
+        "label": "Title"
+      }, {
+        "type": "richtext",
+        "id": "content",
+        "label": "Content"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Story",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "story_image",
+            "label": "Feature Image"
+          }, {
+            "type": "text",
+            "id": "story_text",
+            "label": "Title"
+          }, {
+            "type": "text",
+            "id": "category",
+            "label": "Category"
+          }, {
+            "type": "text",
+            "id": "date_picker",
+            "label": "Published Date",
+            "default": "April 09, 2022",
+            "info": "e.g. April 09, 2022"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Article Related Stories"
+      }
+    ],
+    "enabled_on": {
+      "groups": ["footer"]
+    }
+  }
+{% endschema %}

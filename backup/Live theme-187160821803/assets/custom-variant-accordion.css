@@ -1,0 +1,50 @@
+custom-variant-accordion { display: block; }
+.cva [hidden] { display: none !important; }
+.cva__panel > summary { position: relative; padding: 15px 40px 15px 15px; color: #0b1638; cursor: pointer; font-family: 'Value Sans Bold', sans-serif; font-size: 1.75rem; font-weight: 700; line-height: 1.4; border-top: 1px solid #cecece; list-style: none; }
+.cva__panel > summary::-webkit-details-marker { display: none; }
+.cva__panel > summary::after { content: '+'; position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); }
+.cva__panel[open] > summary { border-bottom: 1px solid #cecece; }
+.cva__panel[open] > summary::after { content: '-'; }
+.cva__panel:first-child > summary { border-top: 0; }
+.cva__panel > summary:focus-visible { outline: 2px solid #0b1638; outline-offset: -2px; }
+.cva__body { padding: 20px; overflow-wrap: anywhere; }
+.cva__body--specifications { padding: 0; }
+.cva__body img { max-width: 100%; height: auto; }
+.cva__split { display: flex; align-items: stretch; border-radius: 12px; overflow: hidden; }
+.cva__specs { flex: 1; min-width: 0; padding: 20px; display: flex; align-items: center; }
+.cva__text { flex: 1; min-width: 0; }
+.cva__table { width: 100%; border-collapse: collapse; }
+.cva__table tr { border-bottom: 1px solid #ddd; }
+.cva__table tr:last-child { border-bottom: 0; }
+.cva__table th, .cva__table td { padding: 12px; color: #333; vertical-align: top; font-size: 15px; text-align: left; }
+.cva__table th { width: 40%; font-weight: 600; color: #111; }
+.cva__table p:last-child { margin-bottom: 0; }
+.cva__image { width: 35%; display: flex; align-items: center; justify-content: center; }
+.cva__image img { width: 75%; height: auto; object-fit: contain; }
+.cva__reports { display: flex; flex-wrap: wrap; justify-content: center; gap: 80px; padding-top: 20px; }
+.cva__report { text-align: center; max-width: 200px; flex: 1 1 150px; }
+.cva__report img { width: 30px; margin-bottom: 10px; }
+.cva__report h3 { font-size: 13px; color: #143d66; line-height: 1.3; margin-bottom: 6px; }
+.cva__report a { color: #08c1ff; font-size: 12px; }
+@media (prefers-reduced-motion: no-preference) {
+  @supports (interpolate-size: allow-keywords) {
+    .cva__panel { interpolate-size: allow-keywords; }
+    .cva__panel::details-content { height: 0; overflow: clip; transition: height .3s, content-visibility .3s allow-discrete; }
+    .cva__panel[open]::details-content { height: auto; }
+  }
+}
+@media (min-width: 992px) {
+  .cva__panel > summary { font-size: 2.3rem; padding: 20px 60px 20px 20px; }
+  .cva__panel > summary::after { right: 25px; }
+}
+@media (max-width: 768px) {
+  .cva__split { flex-direction: column; }
+  .cva__specs { padding: 20px; }
+  .cva__table th, .cva__table td { padding: 10px 6px; font-size: 13px; }
+  .cva__image { width: 100%; margin-top: 15px; }
+  .cva__image img { max-height: 320px; }
+  .cva__reports { justify-content: space-between; gap: 10px; }
+  .cva__report { max-width: 110px; flex-basis: 85px; }
+  .cva__report h3 { font-size: 10px; }
+  .cva__report a { font-size: 11px; }
+}

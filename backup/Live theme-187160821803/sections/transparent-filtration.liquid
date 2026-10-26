@@ -1,0 +1,220 @@
+{%- liquid
+  assign evidence_rows = section.blocks | where: 'type', 'evidence'
+  assign limitations = section.blocks | where: 'type', 'limitation'
+  assign current_variant_id = product.selected_or_first_available_variant.id | append: ''
+-%}
+
+<variant-visibility-scope
+  current-variant-id="{{ current_variant_id }}"
+  {% render 'variant-visibility-attributes', variant_ids: section.settings.variant_ids, current_variant_id: current_variant_id %}
+>
+<section class="transparent-filtration" aria-labelledby="filtration-heading-{{ section.id }}">
+  <div class="transparent-filtration__inner">
+    <header class="transparent-filtration__header">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="transparent-filtration__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 id="filtration-heading-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+      <div class="transparent-filtration__intro">{{ section.settings.intro }}</div>
+    </header>
+
+    <div class="transparent-filtration__layout{% if limitations.size == 0 %} transparent-filtration__layout--single{% endif %}">
+      <div class="transparent-filtration__evidence">
+        <table class="transparent-filtration__table" role="table" aria-label="{{ section.settings.table_label | escape }}">
+          <thead role="rowgroup">
+            <tr role="row">
+              <th scope="col" role="columnheader">Reduces</th>
+              <th scope="col" role="columnheader">Status</th>
+              <th scope="col" role="columnheader">Evidence</th>
+              <th scope="col" role="columnheader"><span class="transparent-filtration__sr">Report links</span></th>
+            </tr>
+          </thead>
+          <tbody role="rowgroup">
+            {%- for block in evidence_rows -%}
+              <tr role="row" {{ block.shopify_attributes }}>
+                <th scope="row" role="rowheader">{{ block.settings.title | escape }}</th>
+                <td role="cell">
+                  <span class="transparent-filtration__badge transparent-filtration__badge--{{ block.settings.status }}">
+                    {%- if block.settings.status == 'certified' -%}Certified{%- else -%}Lab-tested{%- endif -%}
+                  </span>
+                </td>
+                <td class="transparent-filtration__source" role="cell">{{ block.settings.evidence | escape }}</td>
+                <td class="transparent-filtration__report" role="cell">
+                  {%- if block.settings.link != blank -%}
+                    <a href="{{ block.settings.link }}" target="_blank" rel="noopener" aria-label="{{ block.settings.link_label | escape }}: {{ block.settings.title | escape }} (opens in a new tab)">
+                      <span class="transparent-filtration__link-label">{{ block.settings.link_label | escape }}</span> <span aria-hidden="true">→</span>
+                    </a>
+                  {%- else -%}
+                    <span class="transparent-filtration__unlinked">{{ block.settings.link_label | escape }}</span>
+                  {%- endif -%}
+                </td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+        {%- if section.settings.footnote != blank -%}
+          <p class="transparent-filtration__footnote">{{ section.settings.footnote | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if limitations.size > 0 -%}
+        <aside class="transparent-filtration__limitations" aria-labelledby="filtration-limitations-{{ section.id }}">
+          <h3 id="filtration-limitations-{{ section.id }}">{{ section.settings.limitations_heading | escape }}</h3>
+          {%- for block in limitations -%}
+            <div class="transparent-filtration__limitation" {{ block.shopify_attributes }}>
+              <h4>{{ block.settings.title | escape }}</h4>
+              <div>{{ block.settings.text }}</div>
+            </div>
+          {%- endfor -%}
+        </aside>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+</variant-visibility-scope>
+
+<script src="{{ 'variant-visibility.js' | asset_url }}" defer></script>
+
+{% stylesheet %}
+  .section-transparent-filtration > variant-visibility-scope[hidden],
+  .section-transparent-filtration:has(> variant-visibility-scope[hidden]) {
+    display: none !important;
+  }
+
+  .transparent-filtration {
+    padding: 28px 24px 32px;
+    background: #fff;
+    color: #172635;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .transparent-filtration *, .transparent-filtration *::before, .transparent-filtration *::after { box-sizing: border-box; }
+  .transparent-filtration__inner { max-width: 1280px; margin-inline: auto; }
+  .transparent-filtration__header { margin: 0 auto 32px; text-align: center; }
+  .transparent-filtration p { margin: 0; }
+  .transparent-filtration strong { font-family: 'Inter Bold', sans-serif; font-weight: 700; }
+  .transparent-filtration .transparent-filtration__eyebrow {
+    margin-bottom: 8px;
+    color: #0876ce;
+    font-family: 'Inter Bold', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+  }
+  .transparent-filtration__header h2 {
+    margin: 0 0 14px;
+    color: #0c2840;
+    font-family: 'Inter Bold', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.7px;
+  }
+  .transparent-filtration__intro { max-width: 680px; margin-inline: auto; color: #435466; font-size: 16px; line-height: 1.45; }
+  .transparent-filtration__layout { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); align-items: start; gap: 22px; }
+  .transparent-filtration__layout--single { grid-template-columns: minmax(0, 1fr); }
+  .transparent-filtration__evidence { overflow: hidden; border: 1px solid #d7e1ec; border-radius: 17px; }
+  .transparent-filtration__table { width: 100%; margin: 0; border: 0; border-collapse: collapse; table-layout: fixed; text-align: left; }
+  .transparent-filtration__table th, .transparent-filtration__table td { padding: 12px 14px; border: 0; background: transparent; text-align: left; vertical-align: middle; overflow-wrap: anywhere; }
+  .transparent-filtration__table thead { background: #f2f7fb; }
+  .transparent-filtration__table thead th { color: #5b7289; font-family: 'Inter Bold', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; }
+  .transparent-filtration__table thead th:nth-child(1) { width: 23.5%; }
+  .transparent-filtration__table thead th:nth-child(2) { width: 14%; }
+  .transparent-filtration__table thead th:nth-child(3) { width: 44%; }
+  .transparent-filtration__table thead th:nth-child(4) { width: 18.5%; }
+  .transparent-filtration__table tbody tr { border-top: 1px solid #d7e1ec; }
+  .transparent-filtration__table tbody th { font-family: 'Inter Bold', sans-serif; font-size: 13px; font-weight: 700; }
+  .transparent-filtration__badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-family: 'Inter Bold', sans-serif; font-size: 11px; font-weight: 700; line-height: 1.6; white-space: nowrap; }
+  .transparent-filtration__badge--certified { background: #ddf2ed; color: #00766f; }
+  .transparent-filtration__badge--lab-tested { background: #d6e9f7; color: #005b9b; }
+  .transparent-filtration__source { color: #5d7188; font-size: 12px; }
+  .transparent-filtration a { color: #0671c7; text-decoration: none; }
+  .transparent-filtration a:hover { text-decoration: underline; }
+  .transparent-filtration a:focus-visible { outline: 2px solid #0671c7; outline-offset: 4px; border-radius: 2px; }
+  .transparent-filtration__table .transparent-filtration__report { padding-inline: 8px; font-size: 13px; }
+  .transparent-filtration__link-label { white-space: nowrap; }
+  .transparent-filtration__report a { display: inline-block; font-family: 'Inter', sans-serif; }
+  .transparent-filtration__unlinked { color: #5d7188; }
+  .transparent-filtration .transparent-filtration__footnote { padding: 10px 14px; border-top: 1px solid #d7e1ec; background: #f9fcff; color: #5d7188; font-size: 11px; line-height: 1.5; }
+  .transparent-filtration__limitations { padding: 24px; border-radius: 18px; background: #f6f5f1; }
+  .transparent-filtration__limitations h3 { margin: 0 0 14px; color: #0c2840; font-family: 'Inter Bold', sans-serif; font-size: 18px; font-weight: 700; line-height: 1.4; }
+  .transparent-filtration__limitation { padding: 10px 0; border-top: 1px solid #dedbd1; }
+  .transparent-filtration__limitation:last-child { padding-bottom: 10px; }
+  .transparent-filtration__limitation h4 { margin: 0; color: #0c2840; font-family: 'Inter Bold', sans-serif; font-size: 14px; font-weight: 700; line-height: 1.5; }
+  .transparent-filtration__limitation p { font-size: 14px; line-height: 1.5; }
+  .transparent-filtration__limitation a { font-family: 'Inter', sans-serif; }
+  .transparent-filtration__sr { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  @media (max-width: 1100px) {
+    .transparent-filtration__layout { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .transparent-filtration { padding: 32px 16px; }
+    .transparent-filtration__header { margin-bottom: 24px; }
+    .transparent-filtration__header h2 { font-size: 28px; letter-spacing: -0.4px; }
+    .transparent-filtration__intro { font-size: 15px; }
+    .transparent-filtration__layout { gap: 20px; }
+    .transparent-filtration__table, .transparent-filtration__table tbody { display: block; }
+    .transparent-filtration__table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .transparent-filtration__table tbody tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; padding: 16px; }
+    .transparent-filtration__table tbody tr:first-child { border-top: 0; }
+    .transparent-filtration__table tbody th, .transparent-filtration__table tbody td { display: block; padding: 0; }
+    .transparent-filtration__table tbody td:nth-child(2) { text-align: right; }
+    .transparent-filtration__table .transparent-filtration__source, .transparent-filtration__table .transparent-filtration__report { grid-column: 1 / -1; }
+    .transparent-filtration__report a { padding-block: 6px; }
+    .transparent-filtration .transparent-filtration__footnote { padding: 12px 16px; }
+    .transparent-filtration__limitations { padding: 20px; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Transparent filtration",
+  "class": "section-transparent-filtration",
+  "settings": [
+    { "type": "textarea", "id": "variant_ids", "label": "Variant IDs", "info": "Comma-separated variant IDs. Leave blank to show for every variant." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Transparent filtration" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Know Exactly What's in Your Glass" },
+    { "type": "richtext", "id": "intro", "label": "Introduction", "default": "<p>We separate what's <strong>certified</strong> from what's <strong>independently lab-tested</strong>, and we publish every report. No fine print, no guesswork.</p>" },
+    { "type": "text", "id": "table_label", "label": "Accessible table description", "default": "Filtration reductions, certification status and supporting evidence" },
+    { "type": "textarea", "id": "footnote", "label": "Table footnote", "default": "Results from independent testing of Phoenix Gravity Carbon Filter Elements. Performance varies with your water." },
+    { "type": "text", "id": "limitations_heading", "label": "Limitations heading", "default": "What these filters don't do" }
+  ],
+  "blocks": [
+    {
+      "type": "evidence", "name": "Evidence row",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Reduces", "default": "Chlorine (taste & odor)" },
+        { "type": "select", "id": "status", "label": "Status", "default": "lab-tested", "options": [{ "value": "certified", "label": "Certified" }, { "value": "lab-tested", "label": "Lab-tested" }] },
+        { "type": "text", "id": "evidence", "label": "Evidence", "default": "Independent lab report" },
+        { "type": "text", "id": "link_label", "label": "Link label", "default": "View report (PDF)" },
+        { "type": "url", "id": "link", "label": "Report or listing URL", "info": "Add the matching evidence URL. Without a URL, the label displays as plain text." }
+      ]
+    },
+    {
+      "type": "limitation", "name": "Limitation",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Healthy minerals" },
+        { "type": "richtext", "id": "text", "label": "Description", "default": "<p>Calcium and magnesium stay in, on purpose. These filters won't soften hard water.</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Transparent filtration",
+      "blocks": [
+        { "type": "evidence", "settings": { "title": "Chlorine (taste & odor)", "status": "certified", "evidence": "NSF/ANSI 42", "link_label": "View NSF listing", "link": "https://info.nsf.org/Certified/DWTU/Listings.asp?Company=C0799666&Standard=042" } },
+        { "type": "evidence", "settings": { "title": "Lead-free components", "status": "certified", "evidence": "NSF/ANSI 372 (certifies the materials, not a reduction claim)", "link_label": "View NSF listing" } },
+        { "type": "evidence", "settings": { "title": "PFOA & PFOS (PFAS)", "status": "lab-tested", "evidence": "Independent lab report", "link": "https://cdn.shopify.com/s/files/1/2644/2852/files/Phoenix_Gravity_USA_Report.pdf?v=1789408627" } },
+        { "type": "evidence", "settings": { "title": "Heavy metals, incl. lead", "status": "lab-tested", "evidence": "Independent lab report, Nov 2023", "link": "https://cdn.shopify.com/s/files/1/2644/2852/files/20231120_Atom_Lab_-_Phoenix_Carbon_Filter_-_Heavy_Metals.pdf?v=1713736816" } },
+        { "type": "evidence", "settings": { "title": "Pharmaceutical residues", "status": "lab-tested", "evidence": "Independent lab report", "link": "https://cdn.shopify.com/s/files/1/2644/2852/files/20231120-Atom-Lab-Phoenix_Carbon-Filte_-Pharmaceuticals-VOCs.pdf?v=1713508930" } },
+        { "type": "evidence", "settings": { "title": "Microplastics", "status": "lab-tested", "evidence": "Independent lab report" } },
+        { "type": "limitation", "settings": { "title": "Fluoride", "text": "<p>Add POSTreat® Steel elements beneath your carbon filters for 95%+ fluoride reduction.</p>" } },
+        { "type": "limitation", "settings": { "title": "Healthy minerals", "text": "<p>Calcium and magnesium stay in, on purpose. These filters won't soften hard water.</p>" } },
+        { "type": "limitation", "settings": { "title": "Microbiological purification", "text": "<p>Designed for municipally treated tap water. Not a microbiological purifier.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
